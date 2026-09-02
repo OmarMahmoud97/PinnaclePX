@@ -7,6 +7,7 @@ const BASE =
 const VARIANTS = {
   primary: 'bg-brand text-on-brand hover:bg-brand-deep',
   cta: 'bg-linear-to-b from-brand to-brand-deep text-on-brand shadow-cta ring-2 ring-brand-deep hover:from-brand-deep hover:to-brand-deeper',
+  contrast: 'bg-on-surface text-surface hover:bg-on-surface/80',
   outline: 'border border-border bg-surface hover:bg-accent hover:text-on-accent',
   ghost: 'hover:bg-accent hover:text-on-accent',
 } as const

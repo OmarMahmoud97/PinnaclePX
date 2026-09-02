@@ -4,7 +4,7 @@ test('home page renders', async ({ page }) => {
   await page.goto('/')
   await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
   await expect(page.getByRole('navigation', { name: 'Main' })).toBeVisible()
-  await expect(page.getByRole('heading', { level: 2 })).toBeVisible()
+  await expect(page.getByRole('heading', { level: 2, name: /shareable page/ })).toBeVisible()
 })
 
 test('demo tabs switch the preview', async ({ page }) => {
@@ -23,4 +23,12 @@ test('theme toggle persists across reloads', async ({ page }) => {
   await expect(html).toHaveClass(/dark/)
   await page.reload()
   await expect(html).toHaveClass(/dark/)
+})
+
+test('billing toggle switches plan prices', async ({ page }) => {
+  await page.goto('/')
+  const pricing = page.locator('#pricing')
+  await expect(pricing.getByText('$19')).toBeVisible()
+  await pricing.getByRole('button', { name: 'Annually' }).click()
+  await expect(pricing.getByText('$15')).toBeVisible()
 })

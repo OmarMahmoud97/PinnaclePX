@@ -4,6 +4,7 @@ import { CTA } from '@/app/_components/nav-links'
 import { Badge } from '@/components/ui/badge'
 import { buttonStyles } from '@/components/ui/button'
 import { CornerTicks } from '@/components/ui/corner-ticks'
+import { GlowBackdrop } from '@/components/ui/glow-backdrop'
 
 export function Hero() {
   return (
@@ -12,14 +13,7 @@ export function Hero() {
       className="relative flex flex-col items-center justify-center px-4 py-16 md:py-24"
     >
       <CornerTicks />
-      <div
-        aria-hidden="true"
-        className="absolute inset-0 -z-1 bg-radial-[at_45%_85%] from-glow/40 via-glow-secondary/4 mask-[linear-gradient(to_bottom,transparent,black_100%)]"
-      />
-      <div
-        aria-hidden="true"
-        className="absolute inset-0 -z-1 bg-radial-[at_45%_68%] from-glow/68 via-glow-secondary/3 mask-[linear-gradient(to_bottom,transparent,black_100%)] blur-[50px]"
-      />
+      <GlowBackdrop />
 
       <div className="relative z-10 mx-auto flex max-w-4xl flex-col items-center gap-6 text-center">
         <Badge icon={<Layers />}>Introducing brief-to-page previews</Badge>
