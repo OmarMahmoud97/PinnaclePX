@@ -6,5 +6,26 @@
   "typescript.tsdk": "node_modules/typescript/lib",
   "typescript.enablePromptUseWorkspaceTsdk": true,
   // VERIFY exact regex against current Tailwind CSS IntelliSense docs before relying on cn() hints:
-  "tailwindCSS.experimental.classRegex": [["cn\\(([^)]*)\\)", "[\"'`]([^\"'`]*)[\"'`]"]]
+  "tailwindCSS.experimental.classRegex": [["cn\\(([^)]*)\\)", "[\"'`]([^\"'`]*)[\"'`]"]],
+
+  // Hide generated output. Nothing here is edited by hand.
+  "files.exclude": {
+    ".next": true,
+    "coverage": true,
+    "playwright-report": true,
+    "test-results": true,
+    "tsconfig.tsbuildinfo": true
+  },
+
+  // Group root config files under their owner so the explorer shows a short list.
+  "explorer.fileNesting.enabled": true,
+  "explorer.fileNesting.expand": false,
+  "explorer.fileNesting.patterns": {
+    "package.json": "pnpm-lock.yaml, .npmrc, .editorconfig, .prettierrc, .prettierignore, eslint.config.mjs, postcss.config.mjs, vitest.config.mts, playwright.config.ts, drizzle.config.ts, knip.jsonc, lefthook.yml",
+    "next.config.ts": "next-env.d.ts",
+    "tsconfig.json": "tsconfig.tsbuildinfo",
+    ".gitignore": ".gitattributes",
+    ".env.example": ".env, .env.*",
+    "README.md": "CONTRIBUTING.md, AGENTS.md, CLAUDE.md"
+  }
 }
