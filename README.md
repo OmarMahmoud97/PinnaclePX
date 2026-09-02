@@ -36,7 +36,9 @@ Every environment variable is validated in `lib/env.ts` and the build fails fast
 
 ```
 app/          routes only (thin: validate, delegate, respond)
+  _components/                 home page sections (private, not routable)
 components/   shared UI primitives
+  ui/ brand/ logos/
 lib/          all application logic
   ai/ images/ db/ inngest/     IO modules
   select/ tokens/ copy-slots/  pure modules

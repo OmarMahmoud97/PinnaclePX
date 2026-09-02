@@ -1,10 +1,17 @@
+import { DemoTabs } from '@/app/_components/demo-tabs'
+import { Hero } from '@/app/_components/hero'
+import { LogoCloud } from '@/app/_components/logo-cloud'
+import { SiteHeader } from '@/app/_components/site-header'
+
 export default function HomePage() {
   return (
-    <main className="mx-auto flex min-h-screen max-w-3xl flex-col justify-center gap-4 px-6">
-      <h1 className="text-4xl font-semibold tracking-tight">PinnaclePX</h1>
-      <p className="text-lg text-on-surface-muted">
-        Answer five questions and get a branded landing page preview.
-      </p>
-    </main>
+    <div className="mx-auto max-w-7xl border-x border-border">
+      <SiteHeader />
+      <main className="flex flex-col divide-y divide-border pt-16">
+        <Hero />
+        <DemoTabs />
+        <LogoCloud />
+      </main>
+    </div>
   )
 }

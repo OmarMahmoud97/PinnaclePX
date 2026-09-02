@@ -87,6 +87,8 @@ export default defineConfig([
     },
     rules: {
       '@typescript-eslint/no-explicit-any': 'error',
+      // The standards doc prefers type aliases; the stylistic preset defaults to interface.
+      '@typescript-eslint/consistent-type-definitions': ['error', 'type'],
       '@typescript-eslint/no-non-null-assertion': 'error',
       'no-console': 'error', // only lib/log.ts may console; see override
       'no-empty': ['error', { allowEmptyCatch: false }],
