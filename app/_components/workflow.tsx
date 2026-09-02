@@ -7,10 +7,10 @@ import { CornerTicks } from '@/components/ui/corner-ticks'
 
 export function Workflow() {
   return (
-    <section id="workflow" className="w-full">
+    <section id="workflow">
       <div className="border-b border-border p-6 md:p-24">
         <div className="mx-auto flex max-w-lg flex-col items-center gap-4 text-center">
-          <Badge icon={<Sparkles />}>How it works</Badge>
+          <Badge Icon={Sparkles}>How it works</Badge>
           <h2 className="text-3xl font-medium tracking-tighter text-balance md:text-4xl lg:text-6xl">
             From a short brief to a{' '}
             <span className="bg-radial from-brand-deep to-glow-secondary/40 bg-clip-text text-transparent">
@@ -24,7 +24,7 @@ export function Workflow() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-6">
+      <div className="grid md:grid-cols-6">
         <div className="flex flex-col gap-7 p-8 md:sticky md:top-20 md:col-span-2 md:self-start md:p-10 lg:p-14">
           <h3 className="text-3xl font-medium tracking-tighter text-balance lg:text-4xl">
             A preview in minutes, not a project in weeks
@@ -42,8 +42,8 @@ export function Workflow() {
         <div className="relative border-t border-border md:col-span-4 md:border-t-0 md:border-l">
           <CornerTicks edges={['top', 'bottom']} />
           <div className="divide-y divide-border">
-            {WORKFLOW_FEATURES.map(({ id, label, description, Icon, Mockup }, index) => (
-              <article key={id} className="relative">
+            {WORKFLOW_FEATURES.map(({ label, description, Icon, Mockup }, index) => (
+              <article key={label} className="relative">
                 {index > 0 && <CornerTicks edges={['top']} />}
                 <div className="flex min-h-100 items-center justify-center p-6 md:min-h-125 md:p-12">
                   <Mockup />

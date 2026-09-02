@@ -2,14 +2,14 @@ import type { ComponentProps } from 'react'
 import { cn } from '@/lib/cn'
 
 const BASE =
-  'inline-flex shrink-0 cursor-pointer items-center justify-center gap-2 rounded-full font-medium whitespace-nowrap transition-colors outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0'
+  'inline-flex cursor-pointer items-center justify-center gap-2 rounded-full font-medium whitespace-nowrap transition-colors outline-none focus-visible:ring-[3px] focus-visible:ring-brand/50'
 
 const VARIANTS = {
   primary: 'bg-brand text-on-brand hover:bg-brand-deep',
   cta: 'bg-linear-to-b from-brand to-brand-deep text-on-brand shadow-cta ring-2 ring-brand-deep hover:from-brand-deep hover:to-brand-deeper',
   contrast: 'bg-on-surface text-surface hover:bg-on-surface/80',
-  outline: 'border border-border bg-surface hover:bg-accent hover:text-on-accent',
-  ghost: 'hover:bg-accent hover:text-on-accent',
+  outline: 'border border-border bg-surface hover:bg-accent',
+  ghost: 'border border-transparent hover:border-border hover:bg-accent',
 } as const
 
 const SIZES = {

@@ -17,14 +17,7 @@ export function SiteHeader() {
           <ul className="flex items-center gap-1">
             {NAV_LINKS.map((link) => (
               <li key={link.href}>
-                <Link
-                  href={link.href}
-                  className={buttonStyles({
-                    variant: 'ghost',
-                    size: 'sm',
-                    className: 'border border-transparent hover:border-border',
-                  })}
-                >
+                <Link href={link.href} className={buttonStyles({ variant: 'ghost', size: 'sm' })}>
                   {link.label}
                 </Link>
               </li>

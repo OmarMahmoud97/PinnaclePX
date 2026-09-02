@@ -16,7 +16,7 @@ export function Pricing() {
   const [period, setPeriod] = useState<BillingPeriod>('monthly')
 
   return (
-    <section id="pricing" className="w-full">
+    <section id="pricing">
       <div className="grid divide-border md:grid-cols-6 md:divide-x">
         <div className="flex flex-col gap-4 p-8 md:col-span-2 md:p-14">
           <h2 className="text-3xl font-medium tracking-tighter md:text-4xl">
@@ -44,7 +44,7 @@ export function Pricing() {
                   className={cn(
                     'h-10 cursor-pointer rounded-xl border px-4 text-sm font-medium transition-colors',
                     active
-                      ? 'border-border bg-surface-raised text-on-surface'
+                      ? 'border-border bg-surface-raised'
                       : 'border-transparent text-on-surface-muted',
                   )}
                 >
@@ -58,7 +58,7 @@ export function Pricing() {
         <div className="flex flex-col md:col-span-4">
           <div aria-hidden="true" className={cn(BAND, 'border-b border-border')} />
 
-          <div className="grid grid-cols-1 border-b border-border md:grid-cols-2">
+          <div className="grid border-b border-border md:grid-cols-2">
             <PlanCard
               plan={PLANS.studio}
               period={period}
@@ -74,7 +74,7 @@ export function Pricing() {
             />
           </div>
 
-          <div className="mt-6 grid grid-cols-1 border-t border-border md:grid-cols-5">
+          <div className="mt-6 grid border-t border-border md:grid-cols-5">
             <div className="flex flex-col gap-6 p-6 md:col-span-3 md:p-8">
               <h4 className="text-xl font-medium">{PLANS.free.name}</h4>
               <PlanPrice

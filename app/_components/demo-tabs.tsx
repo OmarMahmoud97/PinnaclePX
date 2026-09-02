@@ -11,7 +11,7 @@ export function DemoTabs() {
   const [active, setActive] = useState<DemoItem>(DEMO_ITEMS[0])
 
   return (
-    <section id="demo" className="w-full">
+    <section id="demo">
       {/* gap-px over a border-coloured background draws the hairlines between cells. */}
       <div
         role="tablist"
@@ -32,8 +32,8 @@ export function DemoTabs() {
                 setActive(item)
               }}
               className={cn(
-                'relative min-h-11 cursor-pointer bg-surface p-5 text-sm font-semibold whitespace-nowrap transition-colors hover:bg-accent',
-                selected ? 'text-on-surface' : 'text-on-surface-muted',
+                'relative cursor-pointer bg-surface p-5 text-sm font-semibold transition-colors hover:bg-accent',
+                !selected && 'text-on-surface-muted',
               )}
             >
               {item.label}

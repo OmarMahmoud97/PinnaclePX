@@ -4,7 +4,7 @@ type Props = { intro: string; items: readonly string[] }
 
 export function FeatureList({ intro, items }: Props) {
   return (
-    <div className="flex flex-1 flex-col gap-4">
+    <div className="flex flex-col gap-4">
       <p className="text-sm font-medium text-on-surface-muted">{intro}</p>
       <ul className="space-y-2">
         {items.map((item) => (

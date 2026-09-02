@@ -4,8 +4,8 @@ import { Logo } from '@/components/brand/logo'
 
 export function SiteFooter() {
   return (
-    <footer className="w-full border-t border-border">
-      <div className="grid grid-cols-1 divide-y divide-border md:grid-cols-3 md:divide-x md:divide-y-0">
+    <footer className="border-t border-border">
+      <div className="grid divide-y divide-border md:grid-cols-3 md:divide-x md:divide-y-0">
         {FOOTER_GROUPS.map(({ heading, links }) => (
           <nav key={heading} aria-label={heading} className="flex flex-col gap-4 p-8 lg:pt-18">
             <h3 className="text-sm font-semibold">{heading}</h3>

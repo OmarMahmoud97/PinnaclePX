@@ -19,11 +19,11 @@ export function ThemeToggle() {
     <Button variant="outline" size="icon" onClick={toggleTheme} className="relative">
       <Sun
         aria-hidden="true"
-        className="size-[1.2rem] transition-all dark:scale-0 dark:-rotate-90"
+        className="size-[1.2rem] transition-transform dark:scale-0 dark:-rotate-90"
       />
       <Moon
         aria-hidden="true"
-        className="absolute size-[1.2rem] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0"
+        className="absolute size-[1.2rem] scale-0 rotate-90 transition-transform dark:scale-100 dark:rotate-0"
       />
       <span className="sr-only">Toggle theme</span>
     </Button>
