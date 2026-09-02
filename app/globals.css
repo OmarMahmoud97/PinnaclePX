@@ -1,0 +1,16 @@
+@import 'tailwindcss';
+
+/*
+ * Semantic design tokens. Templates consume only the utility classes generated from these
+ * variables (bg-surface, text-on-surface, bg-brand, ...), never raw palette classes or hex.
+ * Generated brand tokens override these variables per preview at runtime.
+ */
+@theme {
+  --color-brand: #1d4ed8;
+  --color-on-brand: #ffffff;
+  --color-surface: #ffffff;
+  --color-on-surface: #0f172a;
+  --color-surface-muted: #f1f5f9;
+  --color-on-surface-muted: #475569;
+  --color-border: #e2e8f0;
+}

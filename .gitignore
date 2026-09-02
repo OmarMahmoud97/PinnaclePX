@@ -1,0 +1,23 @@
+# dependencies / build
+node_modules/
+.next/
+out/
+build/
+next-env.d.ts
+*.tsbuildinfo
+
+# env (commit .env.example only)
+.env
+.env.*
+!.env.example
+
+# vercel
+.vercel
+
+# test / coverage
+coverage/
+playwright-report/
+test-results/
+
+# local tooling state
+.claude/settings.local.json

@@ -1,0 +1,33 @@
+name: CI
+on:
+  push: { branches: [main] }
+  pull_request: {}
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.34.5 # pinned explicitly; Corepack is absent from Node 25+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm typecheck
+      - run: pnpm lint
+      - run: pnpm format:check
+      - name: Forbid hex/palette in templates
+        run: |
+          if [ -d templates ] && grep -rEn "#[0-9a-fA-F]{3,8}\b" templates/ --include="*.tsx" --include="*.ts"; then
+            echo "Hex literal found in templates/"; exit 1
+          fi
+          if [ -d templates ] && grep -rEn "\b(bg|text|border|from|via|to|ring|fill|stroke)-(slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-[0-9]{2,3}\b" templates/ --include="*.tsx" --include="*.ts"; then
+            echo "Tailwind palette class found in templates/"; exit 1
+          fi
+      - run: pnpm knip
+      - run: pnpm test
