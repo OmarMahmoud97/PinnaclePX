@@ -13,4 +13,4 @@ Record architecture decisions as Markdown files in `docs/adr/`, numbered sequent
 
 ## Consequences
 
-Each significant structural or tooling change adds or supersedes an ADR. The standards document at the repository root remains the primary reference; ADRs capture deviations and later decisions.
+Each significant structural or tooling change adds or supersedes an ADR. The standards document at `docs/standards.md` remains the primary reference; ADRs capture deviations and later decisions.

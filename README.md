@@ -52,4 +52,4 @@ Import boundaries are enforced by ESLint: templates may import only `lib/tokens`
 
 ## Standards
 
-The full standards document lives at [Code Structure and Maintainability Standards](<./Code Structure and Maintainability Standards — Lead-Gen Tool>). Read it before contributing. See [CONTRIBUTING.md](./CONTRIBUTING.md) for the short version.
+The full standards document lives at [docs/standards.md](./docs/standards.md). Read it before contributing. See [CONTRIBUTING.md](./CONTRIBUTING.md) for the short version.
