@@ -2,6 +2,7 @@ import { DemoTabs } from '@/app/_components/demo-tabs'
 import { Hero } from '@/app/_components/hero'
 import { LogoCloud } from '@/app/_components/logo-cloud'
 import { SiteHeader } from '@/app/_components/site-header'
+import { Workflow } from '@/app/_components/workflow'
 
 export default function HomePage() {
   return (
@@ -11,6 +12,7 @@ export default function HomePage() {
         <Hero />
         <DemoTabs />
         <LogoCloud />
+        <Workflow />
       </main>
     </div>
   )

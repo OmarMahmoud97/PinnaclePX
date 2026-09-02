@@ -26,6 +26,9 @@
   --ring: #0ea5e9;
   --glow: #2cd5ff;
   --glow-secondary: #2c30ff;
+  --danger: #ef4444;
+  --warning: #eab308;
+  --success: #22c55e;
 }
 
 .dark {
@@ -37,6 +40,9 @@
   --border: #262626;
   --accent: #262626;
   --on-accent: #fafafa;
+  --danger: #f87171;
+  --warning: #facc15;
+  --success: #4ade80;
 }
 
 @theme inline {
@@ -55,6 +61,9 @@
   --color-ring: var(--ring);
   --color-glow: var(--glow);
   --color-glow-secondary: var(--glow-secondary);
+  --color-danger: var(--danger);
+  --color-warning: var(--warning);
+  --color-success: var(--success);
 
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
 

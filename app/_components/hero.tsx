@@ -1,6 +1,7 @@
 import { Layers } from 'lucide-react'
 import Link from 'next/link'
 import { CTA } from '@/app/_components/nav-links'
+import { Badge } from '@/components/ui/badge'
 import { buttonStyles } from '@/components/ui/button'
 import { CornerTicks } from '@/components/ui/corner-ticks'
 
@@ -21,10 +22,7 @@ export function Hero() {
       />
 
       <div className="relative z-10 mx-auto flex max-w-4xl flex-col items-center gap-6 text-center">
-        <p className="flex max-w-full items-center gap-2 rounded-full bg-surface-raised px-4 py-1.5 shadow-badge max-[350px]:hidden">
-          <Layers aria-hidden="true" className="size-4 shrink-0" />
-          <span className="truncate text-sm font-medium">Introducing brief-to-page previews</span>
-        </p>
+        <Badge icon={<Layers />}>Introducing brief-to-page previews</Badge>
         <h1 className="text-4xl font-semibold tracking-tighter text-balance md:text-5xl lg:text-6xl">
           A branded landing page preview from a five-question brief
         </h1>

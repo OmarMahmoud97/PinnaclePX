@@ -4,6 +4,7 @@ test('home page renders', async ({ page }) => {
   await page.goto('/')
   await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
   await expect(page.getByRole('navigation', { name: 'Main' })).toBeVisible()
+  await expect(page.getByRole('heading', { level: 2 })).toBeVisible()
 })
 
 test('demo tabs switch the preview', async ({ page }) => {
