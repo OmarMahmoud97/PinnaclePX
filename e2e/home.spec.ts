@@ -3,7 +3,7 @@ import { expect, test } from '@playwright/test'
 test('home page renders the promise and the two actions', async ({ page }) => {
   await page.goto('/')
   await expect(page.getByRole('heading', { level: 1 })).toHaveText(
-    'See your new website before you hire anyone.',
+    'See your new website before you hire.',
   )
   await expect(page.getByRole('navigation', { name: 'Main' })).toBeVisible()
 
@@ -117,7 +117,7 @@ test('mobile menu opens and holds the primary action', async ({ page }) => {
 
 test('metadata and structured data are present', async ({ page }) => {
   await page.goto('/')
-  await expect(page).toHaveTitle(/See your new website before you hire anyone/)
+  await expect(page).toHaveTitle(/See your new website before you hire\./)
   await expect(page.locator('meta[property="og:image"]')).toHaveAttribute(
     'content',
     /opengraph-image/,

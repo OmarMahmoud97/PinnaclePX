@@ -44,7 +44,7 @@ type Status = 'waiting' | 'playing' | 'unavailable'
 // renders the finished sketch; a client that allows motion rewinds it before paint and plays the
 // loop once the hero is on screen and the browser is idle, pausing it off screen. Reduced motion
 // and JavaScript off keep the finished sketch, and so does a visitor whose GSAP chunk never
-// arrives. At lg a field under the sketch takes the visitor's own sentence: the loop stops for
+// arrives. A field under the subhead takes the visitor's own sentence: the loop stops for
 // good, the sketch redraws with their words, and the button carries the sentence to /start.
 export function HeroStage({ children }: { children: ReactNode }) {
   const motionAllowed = useMotionAllowed()

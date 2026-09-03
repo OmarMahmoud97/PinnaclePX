@@ -2,7 +2,7 @@ import { possessive } from '@/lib/brief/names'
 import type { QuestionId } from '@/lib/brief/question-ids'
 import type { Answers } from '@/lib/brief/schema'
 
-export type Question = Readonly<{ title: (answers: Answers) => string; helper: string }>
+type Question = Readonly<{ title: (answers: Answers) => string; helper: string }>
 
 function company(answers: Answers): string | null {
   const name = answers.company.trim()

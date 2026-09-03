@@ -3,7 +3,7 @@ import { SITE } from '@/lib/site'
 
 export type Glyph = 'layouts' | 'colours' | 'wording' | 'link'
 
-export type WhatYouGetItem = Readonly<{ title: string; detail: string; glyph: Glyph }>
+type WhatYouGetItem = Readonly<{ title: string; detail: string; glyph: Glyph }>
 
 // What the visitor will have in five minutes, in their words. Deliverables, not product facts.
 export const WHAT_YOU_GET_ITEMS: readonly WhatYouGetItem[] = [

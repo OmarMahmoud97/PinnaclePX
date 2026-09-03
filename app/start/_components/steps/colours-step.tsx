@@ -66,7 +66,6 @@ export function ColoursStep({ answers, errors, dispatch, onPreview }: Props) {
             <input
               {...attributes}
               type="text"
-              inputMode="text"
               spellCheck={false}
               placeholder="#2F6F4E"
               value={customHex}

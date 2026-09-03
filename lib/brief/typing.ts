@@ -1,4 +1,4 @@
-export type TypingTimings = Readonly<{
+type TypingTimings = Readonly<{
   msPerChar: number
   pauseAfterCommaMs: number
   pauseAfterStopMs: number

@@ -16,10 +16,10 @@ export const SITE = {
   town: null as string | null,
   contactEmail: null as string | null,
   // Replace with the real Cal.com booking link before launch.
-  bookingUrl: 'https://cal.com/pinnaclepx',
+  bookingUrl: 'https://cal.com/pinnaclepx/quick-chat',
 } as const
 
-export type CallAgendaItem = Readonly<{ from: number; to: number; what: string }>
+type CallAgendaItem = Readonly<{ from: number; to: number; what: string }>
 
 // What the call's minutes are spent on, in order, so the feared sales call has a known shape.
 export const CALL_AGENDA: readonly CallAgendaItem[] = [

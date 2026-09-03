@@ -1,6 +1,6 @@
 export type Box = Readonly<{ left: number; top: number; width: number; height: number }>
 
-export type Delta = Readonly<{ x: number; y: number; scaleX: number; scaleY: number }>
+type Delta = Readonly<{ x: number; y: number; scaleX: number; scaleY: number }>
 
 // FLIP's inverse step as arithmetic: the transform that makes an element laid out at `to`
 // appear exactly where `from` is, so it can then tween back to identity. Scale is about the

@@ -29,9 +29,8 @@ const PHONE_FROM = {
 
 type Props = {
   model: SketchModel
-  // The phone frame over the browser's corner, from which breakpoint, and the crosshair ticks on
-  // the browser frame.
-  phone?: boolean | undefined
+  // From which breakpoint the phone frame sits over the browser's corner, and whether the browser
+  // frame carries the crosshair ticks.
   phoneFrom?: keyof typeof PHONE_FROM | undefined
   ticks?: boolean | undefined
   // A finished page laid under the sketch's page area (the hero's build draws it), and the same
@@ -48,20 +47,13 @@ type Props = {
 // The first photo fills the hero image and the next three the feature cards; the dark style
 // turns the whole page dark. Below the browser chrome the page area stacks a finished page, if
 // one is given, under the sketch, which stays in flow and sets the height.
-export function BriefSketch({
-  model,
-  phone = true,
-  phoneFrom = 'lg',
-  ticks = true,
-  built,
-  phoneBuilt,
-}: Props) {
+export function BriefSketch({ model, phoneFrom = 'lg', ticks = true, built, phoneBuilt }: Props) {
   const { company } = model
 
   return (
     <div
       aria-hidden="true"
-      className={cn('relative w-full max-w-2xl', phone && PHONE_FROM[phoneFrom].wrapper)}
+      className={cn('relative w-full max-w-2xl', PHONE_FROM[phoneFrom].wrapper)}
     >
       <div className="relative">
         {ticks && <CornerTicks edges={['top', 'bottom']} />}
@@ -163,13 +155,11 @@ export function BriefSketch({
         </div>
       </div>
 
-      {phone && (
-        <PhoneSketch
-          model={model}
-          built={phoneBuilt}
-          className={cn('absolute right-0 bottom-0', PHONE_FROM[phoneFrom].phone)}
-        />
-      )}
+      <PhoneSketch
+        model={model}
+        built={phoneBuilt}
+        className={cn('absolute right-0 bottom-0', PHONE_FROM[phoneFrom].phone)}
+      />
     </div>
   )
 }

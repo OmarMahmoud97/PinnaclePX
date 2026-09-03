@@ -1,6 +1,6 @@
 import { CONFIG } from '@/lib/config'
 
-export type FaqItem = Readonly<{ question: string; answer: string }>
+type FaqItem = Readonly<{ question: string; answer: string }>
 
 // The remaining reasons not to type, in the sceptic's order. "Is it free?" and "Will someone
 // call?" are answered under the buttons and in Straight answers, so they are not repeated here.

@@ -1,6 +1,6 @@
 import { BOOK_CALL, type NavLink } from '@/app/_components/nav-links'
 
-export type FooterGroup = Readonly<{ heading: string; links: readonly NavLink[] }>
+type FooterGroup = Readonly<{ heading: string; links: readonly NavLink[] }>
 
 // Only destinations that exist. The privacy notice joins the Studio group once it is written.
 export const FOOTER_GROUPS: readonly FooterGroup[] = [

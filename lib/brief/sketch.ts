@@ -33,9 +33,9 @@ export function brandHexFrom(colours: ColoursAnswer): string | null {
   return colours.kind === 'palette' ? paletteFor(colours.paletteId).hex : toSixDigitHex(colours.hex)
 }
 
-export type Scheme = 'light' | 'dark'
+type Scheme = 'light' | 'dark'
 
-export type Tints = Readonly<{ strong: string; onStrong: string; soft: string; glow: string }>
+type Tints = Readonly<{ strong: string; onStrong: string; soft: string; glow: string }>
 
 // Colours derived from one hex with the hue kept and only lightness and chroma moved, which is
 // the rule the real colour engine follows. "strong" is clamped dark enough to carry white text on
@@ -64,7 +64,7 @@ export function tintsFrom(hex: string | null, scheme: Scheme): Tints {
   }
 }
 
-export type BuiltTints = Readonly<{
+type BuiltTints = Readonly<{
   bg: string
   ink: string
   muted: string

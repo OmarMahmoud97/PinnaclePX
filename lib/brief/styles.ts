@@ -6,7 +6,7 @@ export const STYLE_IDS = ['warm', 'minimal', 'bold', 'dark'] as const
 
 export type VisualStyle = (typeof STYLE_IDS)[number]
 
-export type Style = Readonly<{ id: VisualStyle; label: string; detail: string }>
+type Style = Readonly<{ id: VisualStyle; label: string; detail: string }>
 
 export const STYLES: readonly Style[] = [
   { id: 'warm', label: 'Warm and natural', detail: 'Daylight, people, texture.' },

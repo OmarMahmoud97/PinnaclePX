@@ -1,5 +1,4 @@
 import type { ReactNode } from 'react'
-import { cn } from '@/lib/cn'
 
 // Shared input styling so every field in the brief has the same focus ring as the buttons.
 // text-base at every size: anything smaller makes iOS Safari zoom the page on focus.
@@ -16,12 +15,11 @@ type Props = {
     'aria-describedby': string | undefined
     'aria-invalid': boolean
   }) => ReactNode
-  className?: string | undefined
 }
 
 // Label, control, hint and error wired together for assistive tech. The control is a render prop
 // so the same wiring serves an input, a textarea or a group of choices.
-export function Field({ id, label, hint, error, children, className }: Props) {
+export function Field({ id, label, hint, error, children }: Props) {
   const hintId = `${id}-hint`
   const errorId = `${id}-error`
   const describedBy =
@@ -30,7 +28,7 @@ export function Field({ id, label, hint, error, children, className }: Props) {
       .join(' ') || undefined
 
   return (
-    <div className={cn('flex flex-col gap-1.5', className)}>
+    <div className="flex flex-col gap-1.5">
       <label htmlFor={id} className="text-sm font-medium">
         {label}
       </label>

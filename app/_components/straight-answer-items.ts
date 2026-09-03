@@ -1,6 +1,6 @@
 import { Bot, HelpCircle, type LucideIcon, Mail, RefreshCw } from 'lucide-react'
 
-export type StraightAnswerItem = Readonly<{ question: string; answer: string; Icon: LucideIcon }>
+type StraightAnswerItem = Readonly<{ question: string; answer: string; Icon: LucideIcon }>
 
 // The fears a burned buyer has, in the order they have them. "Will it look like everyone
 // else's?" joins this list once the ten templates render. "AI" appears once, then "it".

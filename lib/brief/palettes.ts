@@ -4,9 +4,9 @@ import { AppError } from '@/lib/errors'
 // site design tokens, so hex belongs here. Every value is dark enough to carry white text.
 export const PALETTE_IDS = ['forest', 'ink', 'clay', 'plum'] as const
 
-export type PaletteId = (typeof PALETTE_IDS)[number]
+type PaletteId = (typeof PALETTE_IDS)[number]
 
-export type Palette = Readonly<{ id: PaletteId; label: string; hex: string }>
+type Palette = Readonly<{ id: PaletteId; label: string; hex: string }>
 
 export const PALETTES: readonly Palette[] = [
   { id: 'forest', label: 'Forest', hex: '#2f6f4e' },
