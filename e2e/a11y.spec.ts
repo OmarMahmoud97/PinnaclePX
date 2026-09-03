@@ -5,9 +5,21 @@ import { expect, type Page, test } from '@playwright/test'
 // and with every FAQ entry open.
 const TAGS = ['wcag2a', 'wcag2aa', 'wcag22aa']
 
-// axe reads colours as they are painted, so a list still rising in reads as low contrast. Let
-// every transition and keyframe finish first.
+// axe reads colours as they are painted, and it scrolls each element into view itself, so it
+// would start a list's reveal and read it mid-fade, and it would catch the sketch mid-type.
+// The scan runs on a still page: the hero holding its built page, which it keeps for
+// CONFIG.demo.builtHoldMs (longer than a scan takes), and every list shown, as the page's own
+// fail-safe shows them.
+async function built(page: Page) {
+  await expect(page.locator('#hero')).toHaveAttribute('data-built', '', { timeout: 25_000 })
+}
+
 async function settled(page: Page) {
+  await page.evaluate(() => {
+    for (const list of document.querySelectorAll('[data-reveal]')) {
+      list.setAttribute('data-inview', '')
+    }
+  })
   await page.waitForFunction(() =>
     document.getAnimations().every((animation) => animation.playState !== 'running'),
   )
@@ -15,6 +27,7 @@ async function settled(page: Page) {
 
 test('the home page has no accessibility violations', async ({ page }) => {
   await page.goto('/')
+  await built(page)
   await settled(page)
   const results = await new AxeBuilder({ page }).withTags(TAGS).analyze()
   expect(results.violations).toEqual([])
@@ -22,6 +35,7 @@ test('the home page has no accessibility violations', async ({ page }) => {
 
 test('the open menu and the open FAQ have no accessibility violations', async ({ page }) => {
   await page.goto('/')
+  await built(page)
   const menu = page.getByRole('button', { name: 'Menu' })
   if (await menu.isVisible()) await menu.click()
   for (const summary of await page.locator('#faq summary').all()) await summary.click()
