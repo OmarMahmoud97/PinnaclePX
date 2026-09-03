@@ -4,7 +4,7 @@ import { CONFIG } from '@/lib/config'
 export const SITE = {
   name: 'PinnaclePX',
   legalName: 'Pinnacle PX',
-  tagline: 'See your new website before you hire anyone.',
+  tagline: 'See your new website before you hire.',
   description:
     'Answer five questions and get three homepage designs with your logo, your colours and wording written for you. Free, in about five minutes.',
   reassurance: 'Free. No sign-up. Nobody calls you unless you book.',

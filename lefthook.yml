@@ -1,5 +1,4 @@
 pre-commit:
-  parallel: true
   commands:
     format:
       glob: '*.{ts,tsx,js,jsx,mjs,mts,json,css,md,yml,yaml}'
@@ -9,7 +8,6 @@ pre-commit:
       run: pnpm eslint {staged_files}
 
 pre-push:
-  parallel: true
   commands:
     typecheck:
       run: pnpm typecheck
