@@ -10,7 +10,10 @@ const TAGS = ['wcag2a', 'wcag2aa', 'wcag22aa']
 // The scan runs on a still page: the hero holding its built page, which it keeps for
 // CONFIG.demo.builtHoldMs (longer than a scan takes), and every list shown, as the page's own
 // fail-safe shows them.
+// The loop starts once a quarter of the sketch stage is on screen. On a phone the stage sits at
+// the fold, so bring its frame up first, as a visitor glancing down would.
 async function built(page: Page) {
+  await page.locator('#hero [data-frame]:visible').first().scrollIntoViewIfNeeded()
   await expect(page.locator('#hero')).toHaveAttribute('data-built', '', { timeout: 25_000 })
 }
 
