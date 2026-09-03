@@ -63,3 +63,25 @@ export function tintsFrom(hex: string | null, scheme: Scheme): Tints {
     glow: `oklch(from ${hex} 0.82 calc(c * 0.7) h / 0.7)`,
   }
 }
+
+export type BuiltTints = Readonly<{
+  bg: string
+  ink: string
+  muted: string
+  accent: string
+  footer: string
+}>
+
+// The colours a finished page takes from the same one hex, by the same rule: the ground is
+// near-white with a trace of the hue, headings keep the hue a step lighter than the button, body
+// copy is the hue at half its chroma, the footer is the hue deep, and the accent for a kicker is
+// the hue's warm complement. Hue angles past 360 wrap, as CSS defines.
+export function builtTintsFrom(hex: string): BuiltTints {
+  return {
+    bg: `oklch(from ${hex} 0.975 calc(c * 0.08) h)`,
+    ink: `oklch(from ${hex} clamp(0.42, l, 0.58) c h)`,
+    muted: `oklch(from ${hex} 0.5 calc(c * 0.5) h)`,
+    accent: `oklch(from ${hex} 0.66 0.14 calc(h + 180))`,
+    footer: `oklch(from ${hex} 0.3 calc(c * 0.8) h)`,
+  }
+}

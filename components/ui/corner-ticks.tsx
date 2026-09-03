@@ -16,7 +16,9 @@ const SIDE = {
 
 type Props = { edges?: readonly Edge[] | undefined }
 
-// Crosshair marks at the corners of a bordered block. The parent must be positioned.
+// Crosshair marks at the corners of a stage where the product is shown. The parent must be
+// positioned. Below md the column is the viewport, so the horizontal stroke, which sits outside
+// the column on purpose, is dropped and the mark reads as a clean corner tick.
 export function CornerTicks({ edges = ['bottom'] }: Props) {
   return (
     <>
@@ -25,7 +27,7 @@ export function CornerTicks({ edges = ['bottom'] }: Props) {
           <span key={`${edge}-${corner}`} aria-hidden="true" className="text-on-surface-muted/50">
             <span
               className={cn(
-                'absolute z-40 h-px w-6 bg-current',
+                'absolute z-40 hidden h-px w-6 bg-current md:block',
                 EDGE[edge].line,
                 SIDE[corner].line,
               )}

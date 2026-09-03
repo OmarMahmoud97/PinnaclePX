@@ -1,13 +1,21 @@
 import { Analytics } from '@vercel/analytics/next'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import type { Metadata } from 'next'
-import { Geist } from 'next/font/google'
+import { Geist, Geist_Mono } from 'next/font/google'
 import type { ReactNode } from 'react'
 import { env } from '@/lib/env'
 import { SITE } from '@/lib/site'
 import './globals.css'
 
 const geist = Geist({ subsets: ['latin'], variable: '--font-geist-sans', display: 'swap' })
+
+// The instrument register: captions, labels and measurements. Same designer as Geist.
+const geistMono = Geist_Mono({
+  subsets: ['latin'],
+  weight: ['400', '500'],
+  variable: '--font-geist-mono',
+  display: 'swap',
+})
 
 const TITLE = `${SITE.name}: ${SITE.tagline}`
 
@@ -31,7 +39,7 @@ type Props = Readonly<{ children: ReactNode }>
 
 export default function RootLayout({ children }: Props) {
   return (
-    <html lang="en-GB" className={geist.variable}>
+    <html lang="en-GB" className={`${geist.variable} ${geistMono.variable}`}>
       <body className="bg-surface text-on-surface antialiased">
         <a
           href="#main"

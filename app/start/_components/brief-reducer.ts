@@ -1,4 +1,5 @@
 import type { z } from 'zod'
+import { BLANK_ANSWERS } from '@/lib/brief/answers'
 import { type QuestionId, QUESTION_IDS } from '@/lib/brief/question-ids'
 import {
   type Answers,
@@ -45,18 +46,8 @@ export type BriefAction =
   | { type: 'submitted'; briefId: string }
   | { type: 'submit-failed'; message: string }
 
-export const INITIAL_ANSWERS: Answers = {
-  description: '',
-  name: '',
-  company: '',
-  email: '',
-  logo: { kind: 'wordmark' },
-  imagery: { style: 'minimal', fileNames: [] },
-  colours: { kind: 'palette', paletteId: 'forest' },
-}
-
 export const INITIAL_STATE: BriefState = {
-  answers: INITIAL_ANSWERS,
+  answers: BLANK_ANSWERS,
   errors: {},
   submitError: undefined,
   status: { kind: 'editing' },

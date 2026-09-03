@@ -16,7 +16,7 @@ export const FOOTER_GROUPS: readonly FooterGroup[] = [
     heading: 'Studio',
     links: [
       { label: 'About', href: '/#about' },
-      { label: 'The taster', href: '/#taster' },
+      { label: 'What an hour does', href: '/#taster' },
       BOOK_CALL,
     ],
   },

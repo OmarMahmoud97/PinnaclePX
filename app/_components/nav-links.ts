@@ -1,4 +1,5 @@
 import type { Route } from 'next'
+import { CONFIG } from '@/lib/config'
 import { SITE } from '@/lib/site'
 
 export type NavLink = Readonly<{ label: string; href: Route }>
@@ -14,4 +15,7 @@ export const NAV_LINKS: readonly NavLink[] = [
 export const CTA: NavLink = { label: 'Show me my three designs', href: '/start' }
 
 // Secondary action, always the same one.
-export const BOOK_CALL: NavLink = { label: 'Book a 20-minute call', href: SITE.bookingUrl }
+export const BOOK_CALL: NavLink = {
+  label: `Book a ${String(CONFIG.call.minutes)}-minute call`,
+  href: SITE.bookingUrl,
+}

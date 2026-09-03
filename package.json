@@ -20,7 +20,8 @@
     "knip": "knip",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
-    "prepare": "lefthook install"
+    "prepare": "lefthook install",
+    "budget": "node scripts/bundle-budget.mjs"
   },
   "dependencies": {
     "@neondatabase/serverless": "1.1.0",
@@ -30,6 +31,7 @@
     "client-only": "0.0.1",
     "clsx": "2.1.1",
     "drizzle-orm": "0.45.2",
+    "gsap": "3.15.0",
     "inngest": "4.18.1",
     "lucide-react": "1.39.0",
     "next": "16.3.4",
@@ -41,6 +43,7 @@
     "zod": "3.25.76"
   },
   "devDependencies": {
+    "@axe-core/playwright": "4.13.0",
     "@playwright/test": "1.62.1",
     "@tailwindcss/postcss": "4.3.3",
     "@types/node": "24.13.3",

@@ -1,29 +1,30 @@
-import { LayoutGrid, Link2, type LucideIcon, Palette, PenLine } from 'lucide-react'
 import { CONFIG } from '@/lib/config'
+import { SITE } from '@/lib/site'
 
-export type WhatYouGetItem = Readonly<{ title: string; detail: string; Icon: LucideIcon }>
+export type Glyph = 'layouts' | 'colours' | 'wording' | 'link'
+
+export type WhatYouGetItem = Readonly<{ title: string; detail: string; glyph: Glyph }>
 
 // What the visitor will have in five minutes, in their words. Deliverables, not product facts.
 export const WHAT_YOU_GET_ITEMS: readonly WhatYouGetItem[] = [
   {
     title: 'Three designs, not one',
     detail: 'Different layouts, so you can see what suits you.',
-    Icon: LayoutGrid,
+    glyph: 'layouts',
   },
   {
     title: 'Your logo and your colours',
-    detail:
-      'On every design. We keep your colour and only adjust the lightness so text is easy to read.',
-    Icon: Palette,
+    detail: `On every design. ${SITE.colourPromise}`,
+    glyph: 'colours',
   },
   {
-    title: 'Copy written from your answers',
-    detail: 'Your services, your area, your words.',
-    Icon: PenLine,
+    title: 'Wording written for you',
+    detail: 'From your own answers: your services, your area, your words.',
+    glyph: 'wording',
   },
   {
     title: 'A link you can share',
-    detail: `Send it to a partner or a colleague. It stays live for ${String(CONFIG.retention.days)} days.`,
-    Icon: Link2,
+    detail: `Send it to whoever helps you decide. It stays live for ${String(CONFIG.retention.days)} days.`,
+    glyph: 'link',
   },
 ]

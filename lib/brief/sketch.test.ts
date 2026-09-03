@@ -1,5 +1,11 @@
 import { describe, expect, it } from 'vitest'
-import { brandHexFrom, initialsFrom, tabLabelFrom, tintsFrom } from '@/lib/brief/sketch'
+import {
+  brandHexFrom,
+  builtTintsFrom,
+  initialsFrom,
+  tabLabelFrom,
+  tintsFrom,
+} from '@/lib/brief/sketch'
 
 describe('initialsFrom', () => {
   it('takes the first letter of the first two words', () => {
@@ -58,5 +64,19 @@ describe('tintsFrom', () => {
     const tints = tintsFrom('#1e3a8a', 'dark')
     expect(tints.strong).toContain('clamp(0.68, l, 0.8)')
     expect(tints.onStrong).toBe('var(--scrim)')
+  })
+})
+
+describe('builtTintsFrom', () => {
+  it('derives every colour of the finished page from the one hex', () => {
+    const tints = builtTintsFrom('#2e8c9c')
+    for (const tint of Object.values(tints)) expect(tint).toContain('oklch(from #2e8c9c')
+  })
+
+  it('turns the hue for the warm accent and keeps it everywhere else', () => {
+    const tints = builtTintsFrom('#2e8c9c')
+    expect(tints.accent).toContain('calc(h + 180)')
+    expect(tints.ink.endsWith(' h)')).toBe(true)
+    expect(tints.bg.endsWith(' h)')).toBe(true)
   })
 })

@@ -37,6 +37,9 @@ export type SketchModel = Readonly<{
   imageStyle: VisualStyle | null
   imageLabel: string | null
   photos: readonly string[]
+  // Whether a brand colour has been chosen and its question reached, so a frame can show it
+  // where a real browser would: as a favicon in the tab.
+  coloured: boolean
   // Every --sketch-* variable, for the element that wraps the frames and their glow.
   vars: CSSProperties
 }>
@@ -48,10 +51,8 @@ export function sketchModelFrom(answers: Answers, stage: number, files: SketchFi
   const styled = stage >= STYLE_STAGE
   const imageStyle = styled ? answers.imagery.style : null
   const dark = imageStyle === 'dark'
-  const tints = tintsFrom(
-    stage >= COLOUR_STAGE ? brandHexFrom(answers.colours) : null,
-    dark ? 'dark' : 'light',
-  )
+  const hex = stage >= COLOUR_STAGE ? brandHexFrom(answers.colours) : null
+  const tints = tintsFrom(hex, dark ? 'dark' : 'light')
   return {
     company,
     description: answers.description.trim(),
@@ -60,6 +61,7 @@ export function sketchModelFrom(answers: Answers, stage: number, files: SketchFi
     imageStyle,
     imageLabel: imageStyle === null ? null : styleFor(imageStyle).label,
     photos: styled ? files.photos : [],
+    coloured: hex !== null,
     vars: {
       ...(dark ? DARK_SCHEME : LIGHT_SCHEME),
       '--sketch-strong': tints.strong,

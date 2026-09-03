@@ -3,12 +3,12 @@ import type { BriefState } from '@/app/start/_components/brief-reducer'
 import {
   briefReducer,
   firstInvalidIndex,
-  INITIAL_ANSWERS,
   INITIAL_STATE,
   isLastQuestion,
   questionAt,
   validateQuestion,
 } from '@/app/start/_components/brief-reducer'
+import { BLANK_ANSWERS } from '@/lib/brief/answers'
 import { QUESTION_IDS } from '@/lib/brief/question-ids'
 import type { Answers } from '@/lib/brief/schema'
 
@@ -56,11 +56,11 @@ describe('validateQuestion', () => {
 
 describe('firstInvalidIndex', () => {
   it('is the first question for a blank brief', () => {
-    expect(firstInvalidIndex(INITIAL_ANSWERS)).toBe(0)
+    expect(firstInvalidIndex(BLANK_ANSWERS)).toBe(0)
   })
 
   it('stops at the first question that is not yet valid', () => {
-    expect(firstInvalidIndex({ ...INITIAL_ANSWERS, description: SENTENCE })).toBe(1)
+    expect(firstInvalidIndex({ ...BLANK_ANSWERS, description: SENTENCE })).toBe(1)
     expect(firstInvalidIndex({ ...COMPLETE, email: 'nope' })).toBe(1)
   })
 

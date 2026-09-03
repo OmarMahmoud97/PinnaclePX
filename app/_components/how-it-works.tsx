@@ -1,56 +1,80 @@
+import { Check, Circle } from 'lucide-react'
+import { HowItWorksTrack } from '@/app/_components/how-it-works-track'
 import { CTA } from '@/app/_components/nav-links'
-import { ProgressPanel } from '@/app/_components/progress-panel'
+import { titleHeading } from '@/app/_components/section-styles'
 import { buttonStyles } from '@/components/ui/button'
-import { CornerTicks } from '@/components/ui/corner-ticks'
 import { TrackedLink } from '@/components/ui/tracked-link'
-import { SITE } from '@/lib/site'
 
-// One question at a time. The questions themselves are never listed here.
+// What has already happened by the fourth answer. The ticks match when each stage of the build
+// starts; the third line stays a plain circle until the pipeline runs.
+const LEGEND = [
+  { label: 'Your sentence', state: 'received', done: true },
+  { label: 'Three designs', state: 'picked for you', done: true },
+  { label: 'Your wording', state: 'started by your fourth answer', done: false },
+] as const
+
+// One question at a time. The questions themselves are never listed here: the three beats are
+// the section's paragraphs, and each paints one more answer into the frame beside it.
 export function HowItWorks() {
   return (
     <section id="how-it-works" className="scroll-mt-16">
-      <div className="grid md:grid-cols-6">
-        <div className="flex flex-col gap-6 p-8 md:sticky md:top-20 md:col-span-3 md:self-start md:p-10 lg:p-14">
-          <h2 className="text-3xl font-medium tracking-tighter text-balance md:text-4xl lg:text-5xl">
-            One question at a time.
-          </h2>
-          <p className="text-lg text-balance text-on-surface-muted">
-            You see one question, answer it, and the next one appears. While you answer, we&apos;re
-            already working.
-          </p>
-          <div className="flex flex-col gap-2 text-on-surface-muted">
-            <p>
-              Five short questions. The first is a sentence or two about your business. The rest
-              appear one at a time.
-            </p>
-            <p>
-              No phone number. No budget question. No account. Skip anything you don&apos;t have.
+      <HowItWorksTrack
+        heading={
+          <div className="flex flex-col gap-3">
+            <h2 className={titleHeading}>One question at a time.</h2>
+            <p className="text-lead text-pretty text-on-surface-muted">
+              You see one question, answer it, and the next one appears. While you answer,
+              we&apos;re already working.
             </p>
           </div>
-          <div className="flex flex-col gap-2">
-            <TrackedLink
-              href={CTA.href}
-              event="cta_click"
-              location="how-it-works"
-              className={buttonStyles({ variant: 'primary', className: 'w-fit' })}
-            >
-              {CTA.label}
-            </TrackedLink>
-            <p className="text-sm text-on-surface-muted">{SITE.reassurance}</p>
-          </div>
-        </div>
-
-        <div className="relative border-t border-border md:col-span-3 md:border-t-0 md:border-l">
-          <CornerTicks edges={['top', 'bottom']} />
-          <div className="flex items-center justify-center p-6 md:p-12 lg:p-16">
-            <ProgressPanel />
-          </div>
-          <p className="max-w-md px-6 pb-8 text-sm leading-relaxed text-on-surface-muted md:px-12 lg:px-16">
-            By your fourth answer, we&apos;ve already started on your copy. When your designs are
-            ready, the link appears on screen and lands in your inbox.
-          </p>
-        </div>
-      </div>
+        }
+        beats={
+          <ol className="flex flex-col gap-8">
+            <li data-beat="2">
+              <p className="text-body text-pretty text-on-surface-muted">
+                Five short questions. The first is a sentence or two about your business. The rest
+                appear one at a time.
+              </p>
+            </li>
+            <li data-beat="3">
+              <p className="text-body text-pretty text-on-surface-muted">
+                No phone number. No budget question. Skip anything you don&apos;t have.
+              </p>
+            </li>
+            <li data-beat="5">
+              <div className="flex flex-col gap-4">
+                <p className="text-body text-pretty text-on-surface-muted">
+                  By your fourth answer, we&apos;ve already started on your wording. When your
+                  designs are ready, the link appears on screen and lands in your inbox.
+                </p>
+                <ul className="flex flex-col gap-2 text-small">
+                  {LEGEND.map(({ label, state, done }) => (
+                    <li key={label} className="flex items-center gap-3">
+                      {done ? (
+                        <Check aria-hidden="true" className="size-4 text-success" />
+                      ) : (
+                        <Circle aria-hidden="true" className="size-4 text-on-surface-muted" />
+                      )}
+                      <span className="font-medium">{label}</span>
+                      <span className="text-on-surface-muted">{state}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </li>
+          </ol>
+        }
+        actions={
+          <TrackedLink
+            href={CTA.href}
+            event="cta_click"
+            location="how-it-works"
+            className={buttonStyles({ size: 'lg', className: 'w-full sm:w-fit' })}
+          >
+            {CTA.label}
+          </TrackedLink>
+        }
+      />
     </section>
   )
 }

@@ -20,21 +20,25 @@ import {
   questionAt,
   validateQuestion,
 } from '@/app/start/_components/brief-reducer'
-import { BriefSketch } from '@/app/start/_components/brief-sketch'
 import { type Preview, QuestionPane } from '@/app/start/_components/question-pane'
-import { SketchChips } from '@/app/start/_components/sketch-chips'
-import { sketchModelFrom } from '@/app/start/_components/sketch-model'
 import { StartChrome } from '@/app/start/_components/start-chrome'
 import { StartSkeleton } from '@/app/start/_components/start-skeleton'
 import type { LocalImage } from '@/app/start/_components/step-props'
+import { BriefSketch } from '@/components/sketch/brief-sketch'
+import { SKETCH_CAPTION } from '@/components/sketch/captions'
+import { SketchChips } from '@/components/sketch/sketch-chips'
+import { sketchModelFrom } from '@/components/sketch/sketch-model'
+import { captionStyles } from '@/components/ui/caption'
 import { trackEvent } from '@/lib/analytics/events'
+import { clearDraft, writeDraft } from '@/lib/brief/draft'
+import { readDraft } from '@/lib/brief/read-draft'
 import { QUESTION_IDS } from '@/lib/brief/question-ids'
-import { type Answers, draftSchema } from '@/lib/brief/schema'
+import type { Answers } from '@/lib/brief/schema'
 import { UPLOAD_LIMIT_LABEL, withinUploadLimit } from '@/lib/brief/uploads'
+import { cn } from '@/lib/cn'
 import { CONFIG } from '@/lib/config'
 
 const DONE = 'done'
-const STORAGE_KEY = 'pinnaclepx.brief'
 const LAST = QUESTION_IDS.length - 1
 
 type Target = number | typeof DONE
@@ -48,34 +52,6 @@ function requestedFrom(param: string | null): Target {
 
 function hrefFor(target: Target): `/start?q=${string}` {
   return `/start?q=${target === DONE ? DONE : String(target + 1)}`
-}
-
-// A per-tab convenience: a refresh keeps the answers. Cleared on submit, never read by the server.
-function readDraft(): Answers | null {
-  try {
-    const raw = sessionStorage.getItem(STORAGE_KEY)
-    if (raw === null) return null
-    const parsed = draftSchema.safeParse(JSON.parse(raw))
-    return parsed.success ? parsed.data : null
-  } catch {
-    return null
-  }
-}
-
-function writeDraft(answers: Answers): void {
-  try {
-    sessionStorage.setItem(STORAGE_KEY, JSON.stringify(answers))
-  } catch {
-    // Storage is unavailable; the answers still live in memory for this visit.
-  }
-}
-
-function clearDraft(): void {
-  try {
-    sessionStorage.removeItem(STORAGE_KEY)
-  } catch {
-    // Nothing to clear.
-  }
 }
 
 // useSyncExternalStore needs a subscribe function; hydration never changes again, so it is inert.
@@ -251,9 +227,7 @@ function Flow({ initialAnswers }: { initialAnswers: Answers | null }) {
           <div className="max-h-52 w-full max-w-2xl overflow-hidden mask-[linear-gradient(to_bottom,black_80%,transparent)] lg:max-h-none lg:overflow-visible lg:mask-none">
             <BriefSketch model={model} />
           </div>
-          <p className="hidden text-center text-xs text-on-surface-muted lg:block">
-            Live sketch. Not one of your designs, just your answers taking shape.
-          </p>
+          <p className={cn('hidden text-center lg:block', captionStyles)}>{SKETCH_CAPTION.yours}</p>
           {showDone && (
             <p className="hidden max-w-sm text-center text-sm font-medium text-balance lg:block">
               This is a sketch from five answers. Imagine what an hour does.

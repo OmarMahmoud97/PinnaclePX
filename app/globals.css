@@ -9,6 +9,9 @@
  * Brand ramp: --brand is 2.77:1 on white, so it is for decoration only. Anything carrying text
  * or a meaningful graphic uses --brand-deeper (5.93:1) or darker. The product promises WCAG AA,
  * so the site that sells it has to pass too.
+ *
+ * Motion durations live here because CSS cannot read lib/config.ts; the timings JavaScript uses
+ * live in CONFIG.demo and CONFIG.motion (ADR 0005).
  */
 :root {
   --surface: #ffffff;
@@ -29,6 +32,11 @@
   --danger: #ef4444;
   --warning: #eab308;
   --success: #15803d;
+
+  --motion-tap: 120ms;
+  --motion-enter: 200ms;
+  --motion-settle: 300ms;
+  --motion-stagger: 40ms;
 }
 
 @theme inline {
@@ -52,6 +60,12 @@
   --color-success: var(--success);
 
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+
+  --ease-enter: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --animate-question-in: question-in var(--motion-enter) var(--ease-enter) both;
+  --animate-sketch-in: sketch-in var(--motion-settle) var(--ease-enter) both;
 
   --shadow-badge:
     0 0 0 1px rgb(0 0 0 / 0.06), 0 1px 2px rgb(0 0 0 / 0.06), 0 4px 12px rgb(0 0 0 / 0.04);
@@ -61,43 +75,130 @@
   --shadow-dialog: 0 24px 64px -12px rgb(2 6 23 / 0.28), 0 0 0 1px rgb(2 6 23 / 0.04);
 }
 
+/*
+ * The type and spacing scale. Every size is fluid with a rem term so text still grows at 200%
+ * zoom (WCAG 1.4.4). Two heading recipes consume the top two steps (app/_components/section-styles.ts).
+ */
+@theme {
+  --text-display: clamp(2.25rem, 1.25rem + 3.3vw, 3.75rem);
+  --text-display--line-height: 1.04;
+  --text-display--letter-spacing: -0.04em;
+  --text-title: clamp(1.75rem, 1rem + 2.2vw, 2.75rem);
+  --text-title--line-height: 1.1;
+  --text-title--letter-spacing: -0.03em;
+  --text-heading: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+  --text-heading--line-height: 1.35;
+  --text-heading--letter-spacing: -0.01em;
+  --text-lead: clamp(1.0625rem, 1rem + 0.35vw, 1.25rem);
+  --text-lead--line-height: 1.5;
+  --text-body: 1rem;
+  --text-body--line-height: 1.6;
+  --text-small: 0.875rem;
+  --text-small--line-height: 1.5;
+  --text-label: 0.75rem;
+  --text-label--line-height: 1.4;
+  --text-label--letter-spacing: 0.04em;
+
+  --spacing-section: clamp(3.5rem, 2rem + 5vw, 6rem);
+  --spacing-column: clamp(1.5rem, 0.75rem + 3vw, 3.5rem);
+  --spacing-cell: clamp(1.25rem, 1rem + 1vw, 2rem);
+}
+
 /* The fixed header is 4rem tall; keep every fragment jump and focus scroll clear of it. */
 html {
   scroll-padding-top: 4rem;
 }
 
+/* The corner ticks reach past the column on purpose; clip (not hidden) keeps sticky working. */
+body {
+  overflow-x: clip;
+}
+
 /*
- * The start page. A question slides in as the previous one leaves; a sketch element rises as it
- * is painted. Both are keyed remounts, so a plain animation is enough.
+ * Entrances. A question slides in as the previous one leaves; a sketch element rises as it is
+ * painted. Both are keyed remounts, so a plain animation is enough. Under reduced motion the
+ * same keyframes fade only.
  */
-@keyframes question-in {
-  from {
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  @keyframes question-in {
+    from {
+      opacity: 0;
+      translate: 0.5rem 0;
+    }
+  }
+
+  @keyframes sketch-in {
+    from {
+      opacity: 0;
+      translate: 0 0.25rem;
+    }
+  }
+
+  /*
+   * Lists rise in once. The hidden state exists only after JavaScript has armed motion on <html>,
+   * so the page is complete without it, and each item waits its turn through --i.
+   */
+  html[data-motion] [data-reveal] > * {
     opacity: 0;
-    translate: 0.5rem 0;
+    translate: 0 0.5rem;
+    transition:
+      opacity var(--motion-settle) var(--ease-enter),
+      translate var(--motion-settle) var(--ease-enter);
+    transition-delay: calc(var(--i, 0) * var(--motion-stagger));
+  }
+
+  html[data-motion] [data-reveal][data-inview] > * {
+    opacity: 1;
+    translate: 0 0;
   }
 }
 
-@keyframes sketch-in {
-  from {
-    opacity: 0;
-    translate: 0 0.25rem;
-  }
-}
-
-.question-in {
-  animation: question-in 200ms ease-out both;
-}
-
-.sketch-in {
-  animation: sketch-in 300ms ease-out both;
-}
-
+/*
+ * Reduced motion: movement is instant, colour and opacity keep their timing (WCAG 2.3.3 excludes
+ * both from motion animation), and nothing staggers.
+ */
 @media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion-stagger: 0ms;
+  }
+
+  @keyframes question-in {
+    from {
+      opacity: 0;
+    }
+  }
+
+  @keyframes sketch-in {
+    from {
+      opacity: 0;
+    }
+  }
+
   *,
   ::before,
   ::after,
-  ::backdrop {
-    transition-duration: 0.01ms !important;
-    animation-duration: 0.01ms !important;
+  ::details-content {
+    transition-property: color, background-color, border-color, opacity !important;
   }
+}
+
+/* The FAQ opens by height, where the browser can animate it, and snaps where it cannot. */
+details.faq {
+  interpolate-size: allow-keywords;
+}
+
+details.faq::details-content {
+  height: 0;
+  overflow: clip;
+  transition:
+    height var(--motion-enter) var(--ease-standard),
+    content-visibility var(--motion-enter) allow-discrete;
+}
+
+details.faq[open]::details-content {
+  height: auto;
 }

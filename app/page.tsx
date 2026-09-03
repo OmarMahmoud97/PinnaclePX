@@ -4,7 +4,7 @@ import { Faq } from '@/app/_components/faq'
 import { Hero } from '@/app/_components/hero'
 import { HowItWorks } from '@/app/_components/how-it-works'
 import { JsonLd } from '@/app/_components/json-ld'
-import { SectionViews } from '@/app/_components/section-views'
+import { PageMotion } from '@/app/_components/page-motion'
 import { SiteFooter } from '@/app/_components/site-footer'
 import { SiteHeader } from '@/app/_components/site-header'
 import { StraightAnswers } from '@/app/_components/straight-answers'
@@ -28,7 +28,7 @@ export default function HomePage() {
         <ClosingCta />
       </main>
       <SiteFooter />
-      <SectionViews />
+      <PageMotion />
     </div>
   )
 }

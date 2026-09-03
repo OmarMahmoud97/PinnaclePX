@@ -1,11 +1,19 @@
 import { describe, expect, it } from 'vitest'
-import { INITIAL_ANSWERS } from '@/app/start/_components/brief-reducer'
-import { sketchModelFrom } from '@/app/start/_components/sketch-model'
+import { sketchModelFrom } from '@/components/sketch/sketch-model'
 import type { Answers } from '@/lib/brief/schema'
 
 const NONE = { logo: null, photos: [] }
+const BLANK: Answers = {
+  description: '',
+  name: '',
+  company: '',
+  email: '',
+  logo: { kind: 'wordmark' },
+  imagery: { style: 'minimal', fileNames: [] },
+  colours: { kind: 'palette', paletteId: 'forest' },
+}
 const ANSWERS: Answers = {
-  ...INITIAL_ANSWERS,
+  ...BLANK,
   company: ' Ashgrove Physio ',
   imagery: { style: 'dark', fileNames: ['shop.jpg'] },
   colours: { kind: 'custom', hex: '#abc' },
@@ -33,9 +41,14 @@ describe('sketchModelFrom', () => {
     })
   })
 
+  it('is coloured only once the colour question is reached', () => {
+    expect(sketchModelFrom(ANSWERS, 4, NONE).coloured).toBe(false)
+    expect(sketchModelFrom(ANSWERS, 5, NONE).coloured).toBe(true)
+  })
+
   it('swaps the surfaces for the dark style', () => {
     expect(sketchModelFrom(ANSWERS, 4, NONE).vars).toMatchObject({ '--sketch-bg': 'var(--scrim)' })
-    expect(sketchModelFrom(INITIAL_ANSWERS, 4, NONE).vars).toMatchObject({
+    expect(sketchModelFrom(BLANK, 4, NONE).vars).toMatchObject({
       '--sketch-bg': 'var(--surface)',
     })
   })

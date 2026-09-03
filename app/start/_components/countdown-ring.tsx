@@ -1,4 +1,5 @@
 import { Check } from 'lucide-react'
+import { captionStyles } from '@/components/ui/caption'
 import { formatCountdown } from '@/lib/brief/time'
 import { cn } from '@/lib/cn'
 
@@ -47,11 +48,11 @@ export function CountdownRing({ remainingMs, totalMs, ready }: Props) {
         {ready ? (
           <Check aria-hidden="true" className="size-10 text-success" />
         ) : (
-          <span className="text-4xl font-semibold tracking-tighter tabular-nums sm:text-5xl">
+          <span className="text-display font-semibold tabular-nums">
             {formatCountdown(remainingMs)}
           </span>
         )}
-        <span className="font-mono text-[11px] tracking-wide text-on-surface-muted uppercase">
+        <span className={`${captionStyles} uppercase`}>
           {ready ? 'Ready' : timeUp ? 'Nearly there' : 'Building'}
         </span>
       </div>

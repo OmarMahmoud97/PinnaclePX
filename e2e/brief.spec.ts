@@ -28,7 +28,7 @@ test('every call to action on the home page leads to the start page', async ({ p
   for (const section of ['#hero', '#how-it-works', '#taster', '#cta']) {
     const link = page
       .locator(section)
-      .getByRole('link', { name: /Show me my three designs|start the five questions/ })
+      .getByRole('link', { name: /Show me my three designs|Answer the five questions/ })
       .first()
     await expect(link).toHaveAttribute('href', '/start')
   }

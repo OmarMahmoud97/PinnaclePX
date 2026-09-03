@@ -2,6 +2,7 @@
 
 import { ArrowLeft, LoaderCircle } from 'lucide-react'
 import { type Dispatch, useId } from 'react'
+import { displayHeading } from '@/app/_components/section-styles'
 import { QUESTIONS } from '@/app/start/_components/brief-questions'
 import {
   type BriefAction,
@@ -74,18 +75,14 @@ export function QuestionPane({
         event.preventDefault()
         onNext()
       }}
-      className="question-in flex w-full max-w-lg flex-col gap-6"
+      className="flex w-full max-w-lg animate-question-in flex-col gap-6"
     >
       <div className="sm:hidden">
         <ProgressSteps current={index + 1} total={QUESTION_IDS.length} />
       </div>
 
       <div className="flex flex-col gap-3">
-        <h1
-          ref={headingRef}
-          tabIndex={-1}
-          className="text-3xl font-semibold tracking-tighter text-balance outline-none sm:text-4xl lg:text-5xl"
-        >
+        <h1 ref={headingRef} tabIndex={-1} className={`${displayHeading} outline-none`}>
           {question.title(answers)}
         </h1>
         <p className="text-on-surface-muted">{question.helper}</p>
@@ -151,7 +148,7 @@ export function QuestionPane({
             {last ? 'Show me my three designs' : 'Next'}
           </Button>
         </div>
-        <p className="text-center text-xs text-on-surface-muted sm:text-right">
+        <p className="text-center text-small text-on-surface-muted sm:text-right">
           {SITE.reassurance}
         </p>
       </div>

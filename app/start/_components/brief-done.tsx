@@ -3,12 +3,14 @@
 import { Check } from 'lucide-react'
 import Link from 'next/link'
 import { BOOK_CALL } from '@/app/_components/nav-links'
+import { displayHeading } from '@/app/_components/section-styles'
 import { CountdownRing } from '@/app/start/_components/countdown-ring'
 import { DesignSlots } from '@/app/start/_components/design-slots'
 import { useCountdown } from '@/app/start/_components/use-countdown'
 import { useDesigns } from '@/app/start/_components/use-designs'
 import { useFocusOnMount } from '@/app/start/_components/use-focus-on-mount'
 import { buttonStyles } from '@/components/ui/button'
+import { captionStyles } from '@/components/ui/caption'
 import { TrackedLink } from '@/components/ui/tracked-link'
 import { firstNameFrom } from '@/lib/brief/names'
 import { CONFIG } from '@/lib/config'
@@ -29,17 +31,13 @@ export function BriefDone({ name, email, briefId }: Props) {
   const greeting = first === '' ? 'Your designs' : `${first}, your designs`
 
   return (
-    <div className="question-in flex w-full max-w-lg flex-col gap-8">
+    <div className="flex w-full max-w-lg animate-question-in flex-col gap-8">
       <div className="flex flex-col gap-3">
-        <p className="flex items-center gap-2 font-mono text-xs tracking-wide text-on-surface-muted uppercase">
+        <p className={`${captionStyles} flex items-center gap-2 uppercase`}>
           <Check aria-hidden="true" className="size-3.5 text-success" />
           Brief received
         </p>
-        <h1
-          ref={headingRef}
-          tabIndex={-1}
-          className="text-3xl font-semibold tracking-tighter text-balance outline-none sm:text-4xl lg:text-5xl"
-        >
+        <h1 ref={headingRef} tabIndex={-1} className={`${displayHeading} outline-none`}>
           {ready ? `${greeting} are ready.` : `${greeting} are on their way.`}
         </h1>
         <p className="text-on-surface-muted">

@@ -14,7 +14,7 @@ function company(answers: Answers): string | null {
 export const QUESTIONS: Readonly<Record<QuestionId, Question>> = {
   describe: {
     title: () => 'First, your business.',
-    helper: 'A sentence or two is plenty. This becomes the brief your copy is written from.',
+    helper: 'A sentence or two is plenty. This becomes the brief your wording is written from.',
   },
   details: {
     title: () => 'Where should we send your link?',

@@ -7,6 +7,7 @@ import { Field, fieldStyles } from '@/components/ui/field'
 import { PALETTES } from '@/lib/brief/palettes'
 import type { ColoursAnswer } from '@/lib/brief/schema'
 import { brandHexFrom } from '@/lib/brief/sketch'
+import { SITE } from '@/lib/site'
 
 // What the native picker shows while the typed code does not yet read as a colour.
 const FALLBACK_PICKER_VALUE = '#000000'
@@ -87,9 +88,7 @@ export function ColoursStep({ answers, errors, dispatch, onPreview }: Props) {
         )}
       </Field>
 
-      <p className="text-sm text-on-surface-muted">
-        We keep your colour and adjust only what is needed so every word stays easy to read.
-      </p>
+      <p className="text-sm text-on-surface-muted">{SITE.colourPromise}</p>
     </div>
   )
 }

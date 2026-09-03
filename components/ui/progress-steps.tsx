@@ -1,3 +1,4 @@
+import { captionStyles } from '@/components/ui/caption'
 import { cn } from '@/lib/cn'
 
 type Props = { current: number; total: number }
@@ -6,15 +7,18 @@ type Props = { current: number; total: number }
 // are decorative.
 export function ProgressSteps({ current, total }: Props) {
   return (
-    <div className="flex items-center justify-between gap-4 text-xs text-on-surface-muted">
-      <span>
+    <div className={cn('flex items-center justify-between gap-4', captionStyles)}>
+      <span className="whitespace-nowrap tabular-nums">
         Question {current} of {total}
       </span>
       <span aria-hidden="true" className="flex gap-1">
         {Array.from({ length: total }, (_, i) => (
           <span
             key={i}
-            className={cn('h-1 w-5 rounded-full', i < current ? 'bg-brand-deeper' : 'bg-border')}
+            className={cn(
+              'h-1 w-5 rounded-full transition-colors duration-(--motion-enter)',
+              i < current ? 'bg-brand-deeper' : 'bg-border',
+            )}
           />
         ))}
       </span>
