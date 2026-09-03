@@ -25,6 +25,10 @@ const NO_PEXELS_SDK = {
   regex: '^pexels(/|$)',
   message: 'Only lib/images may talk to Pexels.',
 }
+const NO_GSAP = {
+  regex: '^gsap(/|$)',
+  message: 'Only lib/motion may import gsap; use loadGsap so it stays a lazy chunk (ADR 0005).',
+}
 const TEMPLATES_NO_APP = {
   regex: '^@/app(/|$)',
   message: 'Templates must not import from app.',
@@ -42,7 +46,7 @@ const PURE_NO_IO = {
   message: 'Pure modules must not import IO modules.',
 }
 
-const EVERYWHERE = [NO_BARREL, NO_ANTHROPIC_SDK, NO_PEXELS_SDK]
+const EVERYWHERE = [NO_BARREL, NO_ANTHROPIC_SDK, NO_PEXELS_SDK, NO_GSAP]
 
 const NO_THIRD_PARTY_HOSTS = [
   {
@@ -87,6 +91,18 @@ export default defineConfig([
     },
     rules: {
       '@typescript-eslint/no-explicit-any': 'error',
+      // Underscore marks a binding that exists only to be omitted, such as a rest-sibling drop.
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        {
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+          caughtErrorsIgnorePattern: '^_',
+          ignoreRestSiblings: true,
+        },
+      ],
+      // The standards doc prefers type aliases; the stylistic preset defaults to interface.
+      '@typescript-eslint/consistent-type-definitions': ['error', 'type'],
       '@typescript-eslint/no-non-null-assertion': 'error',
       'no-console': 'error', // only lib/log.ts may console; see override
       'no-empty': ['error', { allowEmptyCatch: false }],
@@ -145,6 +161,17 @@ export default defineConfig([
       'no-restricted-imports': [
         'error',
         { patterns: [...EVERYWHERE, LIB_NO_APP_OR_TEMPLATES, PURE_NO_IO] },
+      ],
+    },
+  },
+
+  // The motion loader is the one place gsap may be imported.
+  {
+    files: ['lib/motion/**/*.ts'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        { patterns: [NO_BARREL, NO_ANTHROPIC_SDK, NO_PEXELS_SDK, LIB_NO_APP_OR_TEMPLATES] },
       ],
     },
   },

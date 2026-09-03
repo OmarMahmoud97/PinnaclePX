@@ -5,6 +5,20 @@ on:
 concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
+
+# The build needs every variable lib/env.ts validates. These placeholders satisfy the shape
+# checks; nothing in CI reaches a real service.
+env:
+  DATABASE_URL: postgresql://ci:ci@localhost/ci?sslmode=require
+  ANTHROPIC_API_KEY: ci-placeholder
+  PEXELS_API_KEY: ci-placeholder
+  HMAC_SECRET: ci-placeholder-secret-that-is-at-least-32-chars
+  BLOB_READ_WRITE_TOKEN: ci-placeholder
+  INNGEST_EVENT_KEY: ci-placeholder
+  INNGEST_SIGNING_KEY: ci-placeholder
+  RESEND_API_KEY: ci-placeholder
+  NEXT_PUBLIC_APP_URL: http://localhost:3000
+
 jobs:
   verify:
     runs-on: ubuntu-latest
@@ -21,7 +35,7 @@ jobs:
       - run: pnpm typecheck
       - run: pnpm lint
       - run: pnpm format:check
-      - name: Forbid hex/palette in templates
+      - name: Forbid hex/palette/viewport units in templates
         run: |
           if [ -d templates ] && grep -rEn "#[0-9a-fA-F]{3,8}\b" templates/ --include="*.tsx" --include="*.ts"; then
             echo "Hex literal found in templates/"; exit 1
@@ -31,3 +45,43 @@ jobs:
           fi
       - run: pnpm knip
       - run: pnpm test
+
+  # The built pages held to their byte budgets (docs/home-page-design-plan.md, section 8).
+  budget:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+        with:
+          version: 10.34.5
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - run: pnpm budget
+
+  # The page as a visitor meets it: desktop, a phone, reduced motion, JavaScript off, and axe.
+  e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+        with:
+          version: 10.34.5
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm e2e
+        env:
+          CI: true
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: playwright-report
+          retention-days: 7
