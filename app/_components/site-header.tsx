@@ -1,15 +1,16 @@
 import Link from 'next/link'
 import { MobileNav } from '@/app/_components/mobile-nav'
 import { CTA, NAV_LINKS } from '@/app/_components/nav-links'
-import { ThemeToggle } from '@/app/_components/theme-toggle'
 import { Logo } from '@/components/brand/logo'
 import { buttonStyles } from '@/components/ui/button'
+import { TrackedLink } from '@/components/ui/tracked-link'
+import { SITE } from '@/lib/site'
 
 export function SiteHeader() {
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-border bg-surface">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
-        <Link href="/" aria-label="PinnaclePX home">
+        <Link href="/" aria-label={`${SITE.name} home`}>
           <Logo />
         </Link>
 
@@ -26,10 +27,14 @@ export function SiteHeader() {
         </nav>
 
         <div className="flex items-center gap-2">
-          <ThemeToggle />
-          <Link href={CTA.href} className={buttonStyles({ className: 'hidden md:inline-flex' })}>
+          <TrackedLink
+            href={CTA.href}
+            event="cta_click"
+            location="header"
+            className={buttonStyles({ className: 'hidden md:inline-flex' })}
+          >
             {CTA.label}
-          </Link>
+          </TrackedLink>
           <MobileNav />
         </div>
       </div>

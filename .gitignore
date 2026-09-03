@@ -21,3 +21,4 @@ test-results/
 
 # local tooling state
 .claude/settings.local.json
+.impeccable/

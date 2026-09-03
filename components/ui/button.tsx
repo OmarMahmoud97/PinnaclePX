@@ -1,12 +1,14 @@
 import type { ComponentProps } from 'react'
 import { cn } from '@/lib/cn'
 
+// Focus ring at full opacity with an offset, so it reads on filled and unfilled surfaces alike.
 const BASE =
-  'inline-flex cursor-pointer items-center justify-center gap-2 rounded-full font-medium whitespace-nowrap transition-colors outline-none focus-visible:ring-[3px] focus-visible:ring-brand/50'
+  'inline-flex cursor-pointer items-center justify-center gap-2 rounded-full font-medium whitespace-nowrap transition-colors outline-none focus-visible:ring-2 focus-visible:ring-brand-deeper focus-visible:ring-offset-2 focus-visible:ring-offset-surface disabled:cursor-not-allowed disabled:opacity-60'
 
+// Fills that carry white text start at --brand-deeper (5.93:1). --brand is decoration only.
 const VARIANTS = {
-  primary: 'bg-brand text-on-brand hover:bg-brand-deep',
-  cta: 'bg-linear-to-b from-brand to-brand-deep text-on-brand shadow-cta ring-2 ring-brand-deep hover:from-brand-deep hover:to-brand-deeper',
+  primary: 'bg-brand-deeper text-on-brand hover:bg-brand-deepest',
+  cta: 'bg-linear-to-b from-brand-deeper to-brand-deepest text-on-brand shadow-cta ring-2 ring-brand-deepest hover:from-brand-deepest hover:to-brand-deepest',
   contrast: 'bg-on-surface text-surface hover:bg-on-surface/80',
   outline: 'border border-border bg-surface hover:bg-accent',
   ghost: 'border border-transparent hover:border-border hover:bg-accent',
@@ -17,6 +19,7 @@ const SIZES = {
   md: 'h-9 px-5 text-sm',
   lg: 'h-12 px-8 text-base',
   icon: 'size-8',
+  'icon-lg': 'size-10', // 40px: a comfortable touch target on a phone
 } as const
 
 type StyleOptions = {

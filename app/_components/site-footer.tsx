@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { FOOTER_GROUPS } from '@/app/_components/footer-links'
 import { Logo } from '@/components/brand/logo'
+import { SITE } from '@/lib/site'
 
 export function SiteFooter() {
   return (
@@ -26,9 +27,11 @@ export function SiteFooter() {
         <div className="flex flex-col gap-4 p-8 lg:pt-18">
           <Logo />
           <p className="text-sm text-on-surface-muted">
-            A branded landing page preview from a five-question brief.
+            A UK web design studio. See three homepage designs in your own brand before you decide.
           </p>
-          <p className="text-sm text-on-surface-muted">© {new Date().getFullYear()} PinnaclePX</p>
+          <p className="text-sm text-on-surface-muted">
+            © {new Date().getFullYear()} {SITE.legalName}
+          </p>
         </div>
       </div>
     </footer>

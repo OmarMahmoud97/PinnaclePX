@@ -1,14 +1,17 @@
 import type { Route } from 'next'
+import { SITE } from '@/lib/site'
 
 export type NavLink = Readonly<{ label: string; href: Route }>
 
 // One list feeds the desktop nav and the mobile panel.
 export const NAV_LINKS: readonly NavLink[] = [
-  { label: 'Product', href: '/#workflow' },
-  { label: 'Pricing', href: '/#pricing' },
+  { label: 'How it works', href: '/#how-it-works' },
+  { label: 'About', href: '/#about' },
   { label: 'FAQ', href: '/#faq' },
-  { label: 'Customers', href: '/#customers' },
 ]
 
-// Points at the demo until the brief route exists.
-export const CTA: NavLink = { label: 'Start your brief', href: '/#demo' }
+// Primary action: the five questions on their own page.
+export const CTA: NavLink = { label: 'Show me my three designs', href: '/start' }
+
+// Secondary action, always the same one.
+export const BOOK_CALL: NavLink = { label: 'Book a 20-minute call', href: SITE.bookingUrl }

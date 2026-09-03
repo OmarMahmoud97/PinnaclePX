@@ -1,34 +1,51 @@
+import { CONFIG } from '@/lib/config'
+
 export type FaqItem = Readonly<{ question: string; answer: string }>
 
+// The remaining reasons not to type, in the sceptic's order. Item 3 is the only place the five
+// topics are named, collapsed for the visitor who wants them. The privacy notice link joins
+// item 6 once the notice exists.
 export const FAQ_ITEMS: readonly FaqItem[] = [
   {
-    question: 'What does PinnaclePX actually produce?',
+    question: 'Is it really free?',
     answer:
-      'A complete landing page preview: a matched template, written copy for every section, imagery, and brand colours derived from your logo. You get a link you can share straight away.',
+      'Yes. The three designs and the link are free. You pay only if you ask us to build the site.',
   },
   {
-    question: 'How long does a brief take?',
-    answer:
-      'Answering the five questions takes a couple of minutes. Generation runs in the background and usually finishes in under five minutes.',
+    question: 'Will someone call me?',
+    answer: 'No. You book a call if you want one.',
   },
   {
-    question: 'Which template will I get?',
+    question: 'What will you ask me?',
     answer:
-      'Your answers are scored against ten templates and the best fit is chosen. You see three concepts before the final page is generated.',
+      'What your business does, then where to send your link: your name, company and email. Then your logo, your photos and your colours, one at a time. No phone number and no budget.',
   },
   {
-    question: 'Can I use my own brand colours and logo?',
+    question: 'How long does it take, and do I have to wait?',
     answer:
-      'Yes. Upload a logo and PinnaclePX extracts a palette, then checks every text and background pair for WCAG AA contrast before rendering.',
+      'Answering takes a couple of minutes. Your designs are ready within about five minutes of your last answer. Watch them appear, or close the tab and use the emailed link.',
   },
   {
-    question: 'Is there a free tier?',
+    question: 'Do I need a logo or brand colours?',
     answer:
-      'Yes. The free tier includes one brief a month with a PinnaclePX watermark on the preview. Paid tiers remove the watermark and add a custom domain.',
+      'No. Without a logo we set your company name as a wordmark. Without colours you pick a palette you like.',
   },
   {
-    question: 'Who owns the generated page?',
+    question: 'What happens to my details?',
+    answer: `We store your name, email, company and what you upload. That is what we need to build your preview and send your link. We delete them after ${String(CONFIG.retention.days)} days unless you have booked a call.`,
+  },
+  {
+    question: 'Can I use the preview as my website?',
     answer:
-      'You do. Export the HTML on any paid tier and host it wherever you like, with no attribution required.',
+      'Not directly. It is a preview of the direction. If you like one, we build the full site from it.',
+  },
+  {
+    question: 'What does the full site cost?',
+    answer: 'We give a fixed quote on the call, once we know what the site needs.',
+  },
+  {
+    question: 'What if the copy is wrong?',
+    answer:
+      'Tell us on the call. The first draft is a starting point written from your one-sentence description.',
   },
 ]

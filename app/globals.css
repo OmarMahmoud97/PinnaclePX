@@ -1,14 +1,14 @@
 @import 'tailwindcss';
 
-/* Dark mode is a class on <html>, set before first paint by ThemeScript and flipped by ThemeToggle. */
-@custom-variant dark (&:where(.dark, .dark *));
-
 /*
  * Semantic design tokens. Components consume only the utility classes generated from these
  * variables (bg-surface, text-on-surface, bg-brand, ...), never raw palette classes or hex.
- * Light values live on :root, dark overrides on .dark, and @theme inline maps each variable to a
- * utility so the same class resolves per theme. Generated brand tokens override these variables
- * per preview at runtime.
+ * Values live on :root and @theme inline maps each variable to a utility. Generated brand tokens
+ * override these variables per preview at runtime.
+ *
+ * Brand ramp: --brand is 2.77:1 on white, so it is for decoration only. Anything carrying text
+ * or a meaningful graphic uses --brand-deeper (5.93:1) or darker. The product promises WCAG AA,
+ * so the site that sells it has to pass too.
  */
 :root {
   --surface: #ffffff;
@@ -21,25 +21,14 @@
   --brand: #0ea5e9;
   --brand-deep: #0284c7;
   --brand-deeper: #0369a1;
+  --brand-deepest: #075985;
   --on-brand: #ffffff;
   --glow: #2cd5ff;
   --glow-secondary: #2c30ff;
+  --scrim: #020617;
   --danger: #ef4444;
   --warning: #eab308;
-  --success: #22c55e;
-}
-
-.dark {
-  --surface: #0a0a0a;
-  --surface-muted: #171717;
-  --surface-raised: #141414;
-  --on-surface: #fafafa;
-  --on-surface-muted: #a3a3a3;
-  --border: #262626;
-  --accent: #262626;
-  --danger: #f87171;
-  --warning: #facc15;
-  --success: #4ade80;
+  --success: #15803d;
 }
 
 @theme inline {
@@ -53,9 +42,11 @@
   --color-brand: var(--brand);
   --color-brand-deep: var(--brand-deep);
   --color-brand-deeper: var(--brand-deeper);
+  --color-brand-deepest: var(--brand-deepest);
   --color-on-brand: var(--on-brand);
   --color-glow: var(--glow);
   --color-glow-secondary: var(--glow-secondary);
+  --color-scrim: var(--scrim);
   --color-danger: var(--danger);
   --color-warning: var(--warning);
   --color-success: var(--success);
@@ -65,6 +56,48 @@
   --shadow-badge:
     0 0 0 1px rgb(0 0 0 / 0.06), 0 1px 2px rgb(0 0 0 / 0.06), 0 4px 12px rgb(0 0 0 / 0.04);
   --shadow-cta:
-    0 1px 2px rgb(0 0 0 / 0.09), 0 2px 4px rgb(0 0 0 / 0.02), inset 0 0 1.5px var(--brand-deep),
+    0 1px 2px rgb(0 0 0 / 0.09), 0 2px 4px rgb(0 0 0 / 0.02), inset 0 0 1.5px var(--brand-deepest),
     inset 0 2.5px 0 rgb(255 255 255 / 0.09), inset 0 0 2.5px rgb(255 255 255 / 0.03);
+  --shadow-dialog: 0 24px 64px -12px rgb(2 6 23 / 0.28), 0 0 0 1px rgb(2 6 23 / 0.04);
+}
+
+/* The fixed header is 4rem tall; keep every fragment jump and focus scroll clear of it. */
+html {
+  scroll-padding-top: 4rem;
+}
+
+/*
+ * The start page. A question slides in as the previous one leaves; a sketch element rises as it
+ * is painted. Both are keyed remounts, so a plain animation is enough.
+ */
+@keyframes question-in {
+  from {
+    opacity: 0;
+    translate: 0.5rem 0;
+  }
+}
+
+@keyframes sketch-in {
+  from {
+    opacity: 0;
+    translate: 0 0.25rem;
+  }
+}
+
+.question-in {
+  animation: question-in 200ms ease-out both;
+}
+
+.sketch-in {
+  animation: sketch-in 300ms ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after,
+  ::backdrop {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
 }

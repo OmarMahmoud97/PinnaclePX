@@ -1,27 +1,34 @@
+import { About } from '@/app/_components/about'
 import { ClosingCta } from '@/app/_components/closing-cta'
-import { DemoTabs } from '@/app/_components/demo-tabs'
 import { Faq } from '@/app/_components/faq'
 import { Hero } from '@/app/_components/hero'
-import { LogoCloud } from '@/app/_components/logo-cloud'
-import { Pricing } from '@/app/_components/pricing'
+import { HowItWorks } from '@/app/_components/how-it-works'
+import { JsonLd } from '@/app/_components/json-ld'
+import { SectionViews } from '@/app/_components/section-views'
 import { SiteFooter } from '@/app/_components/site-footer'
 import { SiteHeader } from '@/app/_components/site-header'
-import { Workflow } from '@/app/_components/workflow'
+import { StraightAnswers } from '@/app/_components/straight-answers'
+import { Taster } from '@/app/_components/taster'
+import { WhatYouGet } from '@/app/_components/what-you-get'
 
+// The examples gallery slots in between HowItWorks and Taster once the templates render.
 export default function HomePage() {
   return (
     <div className="mx-auto max-w-7xl border-x border-border">
+      <JsonLd />
       <SiteHeader />
-      <main className="flex flex-col divide-y divide-border pt-16">
+      <main id="main" className="flex flex-col divide-y divide-border pt-16">
         <Hero />
-        <DemoTabs />
-        <LogoCloud />
-        <Workflow />
-        <Pricing />
+        <WhatYouGet />
+        <HowItWorks />
+        <Taster />
+        <StraightAnswers />
+        <About />
         <Faq />
         <ClosingCta />
       </main>
       <SiteFooter />
+      <SectionViews />
     </div>
   )
 }

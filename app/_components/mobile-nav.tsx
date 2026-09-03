@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { useState } from 'react'
 import { CTA, NAV_LINKS } from '@/app/_components/nav-links'
 import { Button, buttonStyles } from '@/components/ui/button'
+import { TrackedLink } from '@/components/ui/tracked-link'
 import { cn } from '@/lib/cn'
 
 const PANEL_ID = 'mobile-nav'
@@ -18,13 +19,13 @@ export function MobileNav() {
     <div className="md:hidden">
       <Button
         variant="outline"
-        size="icon"
+        size="icon-lg"
         onClick={() => {
           setOpen((current) => !current)
         }}
         aria-expanded={open}
         aria-controls={PANEL_ID}
-        aria-label={open ? 'Close menu' : 'Open menu'}
+        aria-label="Menu"
       >
         <span aria-hidden="true" className="relative flex size-5 items-center justify-center">
           <span
@@ -61,9 +62,15 @@ export function MobileNav() {
             </li>
           ))}
           <li className="pt-2">
-            <Link href={CTA.href} onClick={close} className={buttonStyles({ className: 'w-full' })}>
+            <TrackedLink
+              href={CTA.href}
+              event="cta_click"
+              location="mobile-nav"
+              onClick={close}
+              className={buttonStyles({ className: 'w-full' })}
+            >
               {CTA.label}
-            </Link>
+            </TrackedLink>
           </li>
         </ul>
       </nav>

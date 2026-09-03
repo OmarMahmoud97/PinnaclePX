@@ -6,4 +6,13 @@ export const CONFIG = {
   logo: { luminanceCutoff: 0.5 },
   contrast: { minRatio: 4.5 }, // WCAG AA body text
   templates: { count: 10, conceptsShown: 3 },
+  form: {
+    minChars: 30, // one short sentence about the business
+    maxChars: 400,
+    maxUploadBytes: 6_000_000, // per file, logo or photo
+    maxPhotos: 6,
+  },
+  retention: { days: 30 }, // lead, submission and blobs are deleted after this unless a call was booked
+  polling: { designsMs: 10_000 }, // how often the done page asks whether the designs are ready
+  analytics: { sectionViewThreshold: 0.2 }, // share of a section on screen before it counts as viewed
 } as const

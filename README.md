@@ -37,12 +37,15 @@ Every environment variable is validated in `lib/env.ts` and the build fails fast
 ```
 app/          routes only (thin: validate, delegate, respond)
   _components/                 home page sections (private, not routable)
+  start/                       the five questions on their own page, beside a live sketch
+    _components/               flow, question pane, sketch, reducer, Server Action
 components/   shared UI primitives
-  ui/ brand/ logos/
+  ui/ brand/
 lib/          all application logic
   ai/ images/ db/ inngest/     IO modules
-  select/ tokens/ copy-slots/  pure modules
-  env.ts config.ts errors.ts log.ts cn.ts
+  brief/ select/ tokens/ copy-slots/  pure modules
+  analytics/                   client event names and the track() wrapper
+  env.ts config.ts site.ts errors.ts log.ts cn.ts
 templates/    the ten landing page templates and their registry
 db/           generated SQL migrations (committed)
 tests/        integration tests and fixtures

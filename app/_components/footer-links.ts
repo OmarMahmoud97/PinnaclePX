@@ -1,23 +1,23 @@
-import type { NavLink } from '@/app/_components/nav-links'
+import { BOOK_CALL, type NavLink } from '@/app/_components/nav-links'
 
 export type FooterGroup = Readonly<{ heading: string; links: readonly NavLink[] }>
 
-// Only destinations that exist. Add groups as pages land.
+// Only destinations that exist. The privacy notice joins the Studio group once it is written.
 export const FOOTER_GROUPS: readonly FooterGroup[] = [
   {
-    heading: 'Product',
+    heading: 'The five questions',
     links: [
-      { label: 'Demo', href: '/#demo' },
-      { label: 'How it works', href: '/#workflow' },
-      { label: 'Pricing', href: '/#pricing' },
+      { label: 'How it works', href: '/#how-it-works' },
+      { label: 'Straight answers', href: '/#straight-answers' },
+      { label: 'FAQ', href: '/#faq' },
     ],
   },
   {
-    heading: 'Resources',
+    heading: 'Studio',
     links: [
-      { label: 'FAQ', href: '/#faq' },
-      { label: 'Customers', href: '/#customers' },
-      { label: 'GitHub', href: 'https://github.com/OmarMahmoud97/PinnaclePX' },
+      { label: 'About', href: '/#about' },
+      { label: 'The taster', href: '/#taster' },
+      BOOK_CALL,
     ],
   },
 ]
