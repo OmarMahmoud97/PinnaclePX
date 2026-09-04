@@ -34,7 +34,6 @@ import { clearDraft, writeDraft } from '@/lib/brief/draft'
 import { readDraft } from '@/lib/brief/read-draft'
 import { QUESTION_IDS } from '@/lib/brief/question-ids'
 import type { Answers, DraftPhoto } from '@/lib/brief/schema'
-import { uploadPicture } from '@/lib/brief/upload-client'
 import { type UploadKind, UPLOAD_LIMIT_LABEL, withinUploadLimit } from '@/lib/brief/uploads'
 import { cn } from '@/lib/cn'
 import { CONFIG } from '@/lib/config'
@@ -170,17 +169,21 @@ function Flow({ initialAnswers }: { initialAnswers: Answers | null }) {
 
   // Starts a picture on its way to Blob and records the outcome against its id. A picture the
   // visitor has removed meanwhile is ignored by the reducer, so a late result changes nothing.
+  // The uploader, and the Blob SDK under it, is its own chunk, fetched the first time a file is
+  // picked, so a visitor who never uploads never downloads it (scripts/bundle-budget.mjs).
   function startUpload(kind: UploadKind, id: string, file: File) {
     const field = kind === 'logos' ? 'logo' : 'imagery'
     setPreviews((current) => ({ ...current, [id]: URL.createObjectURL(file) }))
-    void uploadPicture(kind, file).then((outcome) => {
-      if (outcome.ok) {
-        dispatch({ type: 'upload-done', id, url: outcome.url })
-        return
-      }
-      setFailed((current) => [...current, id])
-      dispatch({ type: 'reject-file', field, message: UPLOAD_MESSAGE[kind][outcome.reason] })
-    })
+    void import('@/lib/brief/upload-client')
+      .then(({ uploadPicture }) => uploadPicture(kind, file))
+      .then((outcome) => {
+        if (outcome.ok) {
+          dispatch({ type: 'upload-done', id, url: outcome.url })
+          return
+        }
+        setFailed((current) => [...current, id])
+        dispatch({ type: 'reject-file', field, message: UPLOAD_MESSAGE[kind][outcome.reason] })
+      })
   }
 
   function forget(id: string) {
