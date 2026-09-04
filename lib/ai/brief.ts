@@ -17,7 +17,8 @@ export async function writeBrief(answers: SubmissionAnswers, slug: string): Prom
       max_tokens: CONFIG.ai.maxTokens.brief,
       system: [{ type: 'text', text: SYSTEM_PROMPT, cache_control: { type: 'ephemeral' } }],
       messages: [{ role: 'user', content: briefPrompt(answers) }],
-      output_config: { format: zodOutputFormat(briefSchema), effort: CONFIG.ai.effort },
+      thinking: { type: 'disabled' },
+      output_config: { format: zodOutputFormat(briefSchema) },
     },
     { timeout: CONFIG.stageBudgetMs.brief },
   )

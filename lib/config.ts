@@ -87,11 +87,11 @@ export const CONFIG = {
   },
   templates: { count: 10, conceptsShown: 3 },
   // The model calls (lib/ai). The guide's models: Sonnet 5 writes, Haiku 4.5 ranks pictures.
-  // Effort is medium: the copy is judged by code afterwards, so the model need not deliberate.
+  // Thinking is off on every call: the answers are shapes judged by code afterwards, and
+  // thinking tokens are billed as output, which on the copy call was most of the bill.
   ai: {
     models: { brief: 'claude-sonnet-5', copy: 'claude-sonnet-5', rank: 'claude-haiku-4-5' },
     maxTokens: { brief: 4_000, copy: 8_000, rank: 1_000 },
-    effort: 'medium',
   },
   // Stock photographs (lib/images): how many candidates a search brings back for the ranking
   // model to judge, the one stored size (next/image serves every viewport from it), and the

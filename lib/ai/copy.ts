@@ -39,10 +39,8 @@ export async function writeCopy({
         max_tokens: CONFIG.ai.maxTokens.copy,
         system: [{ type: 'text', text: SYSTEM_PROMPT, cache_control: { type: 'ephemeral' } }],
         messages,
-        output_config: {
-          format: zodOutputFormat(contract.copySchema),
-          effort: CONFIG.ai.effort,
-        },
+        thinking: { type: 'disabled' },
+        output_config: { format: zodOutputFormat(contract.copySchema) },
       },
       { timeout: CONFIG.stageBudgetMs.copy },
     )
