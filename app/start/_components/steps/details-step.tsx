@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { useId } from 'react'
 import type { StepProps } from '@/app/start/_components/step-props'
 import { Field, fieldStyles } from '@/components/ui/field'
@@ -37,6 +38,13 @@ export function DetailsStep({ answers, errors, dispatch }: StepProps) {
           )}
         </Field>
       ))}
+      <p className="text-sm text-on-surface-muted">
+        Your answers go into your designs and nowhere else.{' '}
+        <Link href="/privacy" className="underline underline-offset-4" target="_blank">
+          How we use your details
+        </Link>
+        .
+      </p>
     </div>
   )
 }

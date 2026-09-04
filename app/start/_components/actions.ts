@@ -4,6 +4,7 @@ import { briefSchema } from '@/lib/brief/schema'
 import { submissionAnswersFrom } from '@/lib/brief/submission'
 import { CONFIG } from '@/lib/config'
 import { upsertLead } from '@/lib/db/leads'
+import { hitLimit } from '@/lib/db/rate-limit'
 import { createOrFindSubmission, markEventSent } from '@/lib/db/submissions'
 import { env } from '@/lib/env'
 import { err, ok, type Result } from '@/lib/errors'
@@ -13,28 +14,55 @@ import { newSlug } from '@/lib/identity/slug'
 import { inngest } from '@/lib/inngest/client'
 import { submissionCreated } from '@/lib/inngest/events'
 import { log } from '@/lib/log'
+import { callerAddress } from '@/lib/rate-limit/request'
 import { conceptCountFor } from '@/lib/select/select'
 import { READY_TEMPLATES } from '@/templates/registry'
 
 type Submitted = Readonly<{ slug: string; deadlineAt: string; conceptCount: number }>
 
+// What the form sends besides the answers: how long it has been open, and a field no person
+// sees. A bot fills the field, or finishes in no time.
+export type Submission = Readonly<{ answers: unknown; openedForMs: number; website: string }>
+
 const RETRY = 'Something went wrong on our side. Give it a moment and try again.'
+const REJECTED = 'Something in your answers did not look right. Go back and check them.'
+const TOO_MANY = 'That is a lot of designs for one day. Try again tomorrow, or book a call.'
 
 // The client validates each question so the visitor gets a quick answer; this validates the whole
 // brief again, because a browser is not a trust boundary. Then: the identity from the email, the
 // lead row, the submission row (or the one an identical submission already made), and the one
 // event that starts the pipeline. Validate, delegate, respond.
-export async function submitBrief(input: unknown): Promise<Result<Submitted>> {
-  const parsed = await briefSchema.safeParseAsync(input)
+export async function submitBrief(input: Submission): Promise<Result<Submitted>> {
+  if (input.website !== '' || input.openedForMs < CONFIG.form.minMs) {
+    log.warn('brief.honeypot', { openedForMs: input.openedForMs, filled: input.website !== '' })
+    return err(REJECTED)
+  }
+  const parsed = await briefSchema.safeParseAsync(input.answers)
   if (!parsed.success) {
     log.warn('brief.rejected', { issues: parsed.error.issues.length })
-    return err('Something in your answers did not look right. Go back and check them.')
+    return err(REJECTED)
   }
   const brief = parsed.data
   try {
     const answers = submissionAnswersFrom(brief)
     const identityHash = identityHashFrom(brief.email, env.HMAC_SECRET)
     const payloadHash = payloadHashFrom(identityHash, answers)
+    const [byIp, byIdentity] = await Promise.all([
+      hitLimit({
+        scope: 'submit-ip',
+        subject: await callerAddress(),
+        ...CONFIG.rateLimit.submissionsPerIp,
+      }),
+      hitLimit({
+        scope: 'submit-identity',
+        subject: identityHash,
+        ...CONFIG.rateLimit.submissionsPerIdentity,
+      }),
+    ])
+    if (!byIp || !byIdentity) {
+      log.warn('brief.rate_limited', { byIp: !byIp, byIdentity: !byIdentity })
+      return err(TOO_MANY)
+    }
     await upsertLead({ identityHash, email: brief.email, name: brief.name, company: brief.company })
     const found = await createOrFindSubmission({
       slug: newSlug(),

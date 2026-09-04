@@ -17,6 +17,8 @@ npx inngest-cli@latest dev -u http://localhost:3000/api/inngest   # the pipeline
 
 With `INNGEST_DEV=1` in `.env.local` (see `.env.example`), a submission's event goes to the local dev server at http://localhost:8288, where each run and its steps can be watched. The dev server must be running before a submission can start: without it the form says "Something went wrong on our side" and the server log shows `submission.failed` with `step: send`. The brief and copy stages call Anthropic with the key in `.env.local`, so every local submission costs a few cents.
 
+Submissions are limited per address and per email (`CONFIG.rateLimit`), a form finished in under three seconds is refused, and a nightly sweep deletes submissions after `CONFIG.retention.days`. To erase or reset one email address, send an `admin/identity.erase` event with `{ "email": "..." }` from the Inngest dashboard (or the dev server's UI at http://localhost:8288): every submission, picture, seen row and the lead for that address are removed.
+
 Every environment variable is validated in `lib/env.ts` and the build fails fast if one is missing.
 
 ## Scripts

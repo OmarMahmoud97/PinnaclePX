@@ -102,6 +102,12 @@ function Flow({ initialAnswers }: { initialAnswers: Answers | null }) {
   // file gets an object URL for showing it, keyed by the picture's id, and an upload that reports
   // back by the same id. A failed upload is remembered so the step can say so.
   const [previews, setPreviews] = useState<Readonly<Record<string, string>>>({})
+  // When the form was opened, so the server can tell a person's pace from a bot's. Read in an
+  // effect, because the clock is not for rendering.
+  const openedAt = useRef(0)
+  useEffect(() => {
+    openedAt.current = Date.now()
+  }, [])
   const [failed, setFailed] = useState<readonly string[]>([])
   const [preview, setPreview] = useState<Preview | null>(null)
 
@@ -142,7 +148,7 @@ function Flow({ initialAnswers }: { initialAnswers: Answers | null }) {
     [router],
   )
 
-  async function next() {
+  async function next(website: string) {
     if (busy) return
     if (Object.keys(validateQuestion(questionId, answers)).length > 0) {
       dispatch({ type: 'check', question: questionId })
@@ -155,7 +161,11 @@ function Flow({ initialAnswers }: { initialAnswers: Answers | null }) {
       return
     }
     dispatch({ type: 'submitting' })
-    const result = await submitBrief(answers)
+    const result = await submitBrief({
+      answers,
+      openedForMs: Date.now() - openedAt.current,
+      website,
+    })
     if (result.ok) {
       dispatch({ type: 'submitted', submitted: result.value })
       clearDraft()
@@ -334,8 +344,8 @@ function Flow({ initialAnswers }: { initialAnswers: Answers | null }) {
               onBack={() => {
                 go(current - 1)
               }}
-              onNext={() => {
-                void next()
+              onNext={(website) => {
+                void next(website)
               }}
             />
           )}

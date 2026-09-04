@@ -14,6 +14,18 @@ export type StageState = (typeof STAGE_STATES)[number]
 const stage = (name: string) =>
   text(name, { enum: STAGE_STATES }).notNull().default('pending').$type<StageState>()
 
+// Hits under a key within a fixed window (lib/db/rate-limit.ts). Rows for old windows are
+// removed by the retention sweep.
+export const rateLimit = pgTable(
+  'rate_limit',
+  {
+    key: text('key').notNull(),
+    window: text('window').notNull(),
+    count: integer('count').notNull(),
+  },
+  (table) => [primaryKey({ columns: [table.key, table.window] })],
+)
+
 // One row per email address. The identity is an HMAC of the email, so the exclusivity table
 // never holds an address.
 export const lead = pgTable('lead', {
