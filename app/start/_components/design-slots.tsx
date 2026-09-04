@@ -10,7 +10,10 @@ type Props = { status: SubmissionStatus; timeUp: boolean }
 // card that opens it. A slot takes its template's name as soon as the template is chosen. The
 // slots are the same shape as the sketch's, so the page keeps one language for "not yet".
 export function DesignSlots({ status, timeUp }: Props) {
-  const concepts = status.status === 'building' || status.status === 'ready' ? status.concepts : []
+  const concepts =
+    status.status === 'building' || status.status === 'ready' || status.status === 'partial'
+      ? status.concepts
+      : []
 
   return (
     <ol aria-label="Your designs" className="flex w-full flex-col gap-2">

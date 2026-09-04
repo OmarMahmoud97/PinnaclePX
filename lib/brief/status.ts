@@ -12,10 +12,12 @@ type ConceptStatus = Readonly<{
 export type SubmissionStatus =
   | Readonly<{ status: 'missing' }>
   | Readonly<{
-      // building: stages still open. ready: every concept can be opened. exhausted: this identity
-      // has seen every template, so there is nothing new to show and the call is the next step.
-      // failed: a stage with no fallback did not complete; the visitor is told plainly.
-      status: 'building' | 'ready' | 'exhausted' | 'failed'
+      // building: stages still open. ready: every stage finished and every concept can be
+      // opened. partial: the sweeper had to settle a stage with its fallback at the deadline, so
+      // the page can be opened but the email is withheld. exhausted: this identity has seen every
+      // template, so there is nothing new to show and the call is the next step. failed: a stage
+      // with no fallback did not complete; the visitor is told plainly.
+      status: 'building' | 'ready' | 'partial' | 'exhausted' | 'failed'
       slug: string
       deadlineAt: string
       conceptCount: number

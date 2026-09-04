@@ -136,9 +136,10 @@ test('all five questions lead to the confirmation', async ({ page }) => {
   ).toBeVisible()
   await expect(page.getByText(email)).toBeVisible()
   await expect(page.getByRole('timer')).toHaveText(/[45]:\d\d|Ready/)
-  // The pipeline names the design as soon as it has chosen the template, then links it.
+  // The pipeline names the design as soon as it has chosen the template, then links it: within
+  // seconds when the model answers, and at the deadline when a stage has to be swept.
   const design = page.getByRole('link', { name: 'Aurora' })
-  await expect(design).toBeVisible({ timeout: 90_000 })
+  await expect(design).toBeVisible({ timeout: 330_000 })
   await expect(design).toHaveAttribute('href', /\/preview\/[a-km-z2-9]{12}\/t01-aurora$/)
 })
 

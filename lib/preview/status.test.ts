@@ -35,18 +35,34 @@ describe('statusOf', () => {
     }
   })
 
-  it('is ready with a link when select, tokens, copy and imagery have settled, fallback included', () => {
+  it('is ready with a link only when select, tokens, copy and imagery all finished', () => {
     const status = statusOf({
       ...ROW,
       templateIds: ['t01-aurora'],
       stageSelect: 'done',
       stageTokens: 'done',
       stageBrief: 'running',
-      stageCopy: 'fallback',
-      stageImagery: 'fallback',
+      stageCopy: 'done',
+      stageImagery: 'done',
     })
     expect(status.status).toBe('ready')
     if (status.status === 'ready') {
+      expect(status.concepts[0]?.href).toBe('/preview/abcdefghjkmn/t01-aurora')
+    }
+  })
+
+  it('is partial, still with a link, when the sweeper settled a stage with the fallback', () => {
+    const status = statusOf({
+      ...ROW,
+      templateIds: ['t01-aurora'],
+      stageSelect: 'done',
+      stageTokens: 'done',
+      stageBrief: 'fallback',
+      stageCopy: 'fallback',
+      stageImagery: 'done',
+    })
+    expect(status.status).toBe('partial')
+    if (status.status === 'partial') {
       expect(status.concepts[0]?.href).toBe('/preview/abcdefghjkmn/t01-aurora')
     }
   })

@@ -12,11 +12,18 @@ export const CONFIG = {
   // Five minutes end to end. The sweeper wakes this long before the deadline and writes the
   // fallback into any stage still open, so the clock never reaches zero without a result.
   deadline: { totalMs: 300_000, sweeperLeadMs: 45_000 },
+  // A stage that fails is tried again this often, this many times: enough to outlast the
+  // deadline, so the sweeper, not the first failure, decides when the fallback is used.
+  pipeline: { retryAfterMs: 20_000, retries: 14 },
+  // The brief is only the raw material for the copy and the searches, so it is tried this many
+  // times within its step and then falls back, rather than holding the imagery stage until the
+  // deadline. The copy, which the visitor reads, is retried until the deadline.
+  brief: { attempts: 3 },
   // Fixed windows, counted in Postgres (lib/db/rate-limit.ts). Tune from real traffic.
   rateLimit: {
     submissionsPerIp: { windowSeconds: 3_600, max: 5 },
     submissionsPerIdentity: { windowSeconds: 86_400, max: 3 },
-    uploadsPerIp: { windowSeconds: 3_600, max: 40 },
+    uploadsPerIp: { windowSeconds: 3_600, max: 100 },
   },
   // How many times the reveal re-reads `seen` and tries again after another submission for the
   // same identity took a template first (lib/db/exclusivity.ts).
@@ -95,8 +102,10 @@ export const CONFIG = {
     quality: 80,
     styleQuery: { warm: 'natural light', minimal: 'minimal', bold: 'vivid colour', dark: 'moody' },
   },
-  // Copy that breaks a limit is sent back this many times with what went wrong, then falls back.
-  copy: { retries: 1 },
+  // Copy that breaks a limit is sent back this many times with what went wrong within one call;
+  // a call whose answer still breaks a limit is made again on this many attempts of the step,
+  // then the fallback is used, because the model is not going to do better.
+  copy: { retries: 1, attempts: 3 },
   // Resend's own sender, allowed only to the account owner's address, until a domain is verified.
   email: { testSender: 'PinnaclePX <onboarding@resend.dev>' },
   form: {
