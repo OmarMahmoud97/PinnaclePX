@@ -1,9 +1,11 @@
-import { z } from 'zod'
+import { z } from 'zod/v4'
 import { collapse } from '@/lib/copy-slots/fit'
 
 // What the brief stage produces from the visitor's sentence: the raw material every template's
 // copy is written from. The model paraphrases the sentence and proposes candidates; it invents
-// no facts. The fallback below builds the same shape from the sentence alone.
+// no facts. The fallback below builds the same shape from the sentence alone. Written with zod
+// v4, which the Anthropic SDK's structured output helper is typed against; the shape carries no
+// length limits, because the API's schema subset has none and the code checks them after.
 const item = z.object({ title: z.string(), body: z.string() })
 
 export const briefSchema = z.object({

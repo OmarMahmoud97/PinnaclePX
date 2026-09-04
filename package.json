@@ -24,6 +24,7 @@
     "budget": "node scripts/bundle-budget.mjs"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "0.123.0",
     "@neondatabase/serverless": "1.1.0",
     "@t3-oss/env-nextjs": "0.13.11",
     "@vercel/analytics": "2.0.1",

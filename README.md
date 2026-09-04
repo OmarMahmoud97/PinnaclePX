@@ -15,7 +15,7 @@ pnpm dev
 npx inngest-cli@latest dev -u http://localhost:3000/api/inngest   # the pipeline, in a second terminal
 ```
 
-With `INNGEST_DEV=1` in `.env.local` (see `.env.example`), a submission's event goes to the local dev server at http://localhost:8288, where each run and its steps can be watched.
+With `INNGEST_DEV=1` in `.env.local` (see `.env.example`), a submission's event goes to the local dev server at http://localhost:8288, where each run and its steps can be watched. The dev server must be running before a submission can start: without it the form says "Something went wrong on our side" and the server log shows `submission.failed` with `step: send`. The brief and copy stages call Anthropic with the key in `.env.local`, so every local submission costs a few cents.
 
 Every environment variable is validated in `lib/env.ts` and the build fails fast if one is missing.
 

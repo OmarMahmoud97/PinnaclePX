@@ -1,13 +1,16 @@
 import 'server-only'
-import { NonRetriableError } from 'inngest'
+import { type GetStepTools, NonRetriableError } from 'inngest'
+import { writeBrief } from '@/lib/ai/brief'
+import { writeCopy } from '@/lib/ai/copy'
 import { paletteFor } from '@/lib/brief/palettes'
 import { submissionAnswersSchema } from '@/lib/brief/submission'
-import { fallbackBrief } from '@/lib/copy-slots/brief'
+import { type BrandBrief, fallbackBrief } from '@/lib/copy-slots/brief'
 import { revealTemplates } from '@/lib/db/exclusivity'
 import { markStage, readSubmission } from '@/lib/db/submissions'
 import { inngest } from '@/lib/inngest/client'
 import { submissionCreated } from '@/lib/inngest/events'
 import { runStage } from '@/lib/inngest/stages'
+import { log } from '@/lib/log'
 import { analyseSubmissionLogo } from '@/lib/logo/stage'
 import { selectTemplates } from '@/lib/select/select'
 import { deriveTokens } from '@/lib/tokens/derive'
@@ -17,8 +20,9 @@ import { contractFor, READY_TEMPLATES } from '@/templates/registry'
 
 // The pipeline, as one durable function: every stage is a step, so a retry never repeats work
 // that finished, and the results land on the submission row as they come. The brief and the
-// copy are the deterministic fallbacks until the model stages land; the imagery stage settles
-// with no pictures until the imagery slice lands, and the templates draw light instead.
+// copy are written by the model and judged by code, each with its deterministic fallback; the
+// imagery stage settles with no pictures until the imagery slice lands, and the templates draw
+// light instead.
 export const buildConcepts = inngest.createFunction(
   {
     id: 'build-concepts',
@@ -88,18 +92,17 @@ export const buildConcepts = inngest.createFunction(
     )
 
     const brief = await step.run('brief', async () => {
-      const written = fallbackBrief(answers.company, answers.description)
-      await markStage(slug, 'brief', 'fallback', { brief: written })
-      return written
+      const outcome = await runStage(
+        slug,
+        'brief',
+        async () => ({ brief: await writeBrief(answers, slug) }),
+        () => Promise.resolve({ brief: fallbackBrief(answers.company, answers.description) }),
+      )
+      return outcome.patch.brief ?? fallbackBrief(answers.company, answers.description)
     })
 
     await Promise.all([
-      step.run('copy', async () => {
-        const copy = Object.fromEntries(
-          templateIds.map((id) => [id, contractFor(id).fallbackCopy(brief)]),
-        )
-        await markStage(slug, 'copy', 'fallback', { copy })
-      }),
+      copyStage(slug, templateIds, brief, answers.description, step),
       step.run('imagery', async () => {
         const imagery = Object.fromEntries(templateIds.map((id) => [id, {}]))
         await markStage(slug, 'imagery', 'done', { imagery })
@@ -109,3 +112,44 @@ export const buildConcepts = inngest.createFunction(
     return { slug, templateIds }
   },
 )
+
+type StepTools = GetStepTools<typeof inngest>
+
+type CopyResult = Readonly<{ id: string; copy: unknown; fallback: boolean }>
+
+// The copy stage: one model call per template, each judged, retried once and fallen back on
+// its own, then one write. The stage is marked fallback if any template fell back.
+async function copyStage(
+  slug: string,
+  templateIds: readonly string[],
+  brief: BrandBrief,
+  ownersWords: string,
+  step: StepTools,
+): Promise<void> {
+  const open = await step.run('copy-start', () => markStage(slug, 'copy', 'running'))
+  if (!open) return
+  const results = await Promise.all(
+    templateIds.map((id) =>
+      step.run(`copy-${id}`, async (): Promise<CopyResult> => {
+        const contract = contractFor(id)
+        try {
+          const written = await writeCopy({ brief, contract, ownersWords, slug })
+          if (written.ok) return { id, copy: written.value, fallback: false }
+          log.warn('copy.fallback', { slug, template: id, reason: 'violations' })
+        } catch (error) {
+          log.warn('copy.fallback', {
+            slug,
+            template: id,
+            reason: error instanceof Error ? error.message : 'unknown',
+          })
+        }
+        return { id, copy: contract.fallbackCopy(brief), fallback: true }
+      }),
+    ),
+  )
+  await step.run('copy-finish', async () => {
+    const copy = Object.fromEntries(results.map((result) => [result.id, result.copy]))
+    const state = results.some((result) => result.fallback) ? 'fallback' : 'done'
+    await markStage(slug, 'copy', state, { copy })
+  })
+}

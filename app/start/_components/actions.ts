@@ -44,9 +44,19 @@ export async function submitBrief(input: unknown): Promise<Result<Submitted>> {
       conceptCount: conceptCountFor(READY_TEMPLATES.length),
       deadlineAt: new Date(Date.now() + CONFIG.deadline.totalMs),
     })
-    // A resend is harmless: the function is idempotent on the slug for a day.
+    // A resend is harmless: the function is idempotent on the slug for a day. Locally this is
+    // where a missing Inngest dev server shows up, so the step is named in the log.
     if (found.eventSentAt === null) {
-      await inngest.send(submissionCreated.create({ slug: found.slug }))
+      try {
+        await inngest.send(submissionCreated.create({ slug: found.slug }))
+      } catch (error) {
+        log.error('submission.failed', {
+          step: 'send',
+          slug: found.slug,
+          reason: error instanceof Error ? error.message : 'unknown',
+        })
+        return err(RETRY)
+      }
       await markEventSent(found.slug)
     }
     // Shapes and counts only: never the visitor's name, email, company or their own words.
@@ -64,7 +74,10 @@ export async function submitBrief(input: unknown): Promise<Result<Submitted>> {
       conceptCount: found.conceptCount,
     })
   } catch (error) {
-    log.error('submission.failed', { reason: error instanceof Error ? error.message : 'unknown' })
+    log.error('submission.failed', {
+      step: 'store',
+      reason: error instanceof Error ? error.message : 'unknown',
+    })
     return err(RETRY)
   }
 }
