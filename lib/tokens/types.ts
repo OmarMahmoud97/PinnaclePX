@@ -25,10 +25,13 @@ export const TOKEN_NAMES = [
   'on-scrim',
 ] as const
 
-type TokenName = (typeof TOKEN_NAMES)[number]
+export type TokenName = (typeof TOKEN_NAMES)[number]
 
 // One value per token: the brand's derived set, written as CSS variables on the preview root.
 export type TokenSet = Readonly<Record<TokenName, string>>
+
+// Whether the page sits on a light surface with dark text, or the reverse.
+export type Scheme = 'light' | 'dark'
 
 // A text token painted on a background token. Every template declares the pairs it uses, so
 // the contrast solver knows which pairs it must bring to WCAG AA.
