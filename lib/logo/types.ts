@@ -3,7 +3,7 @@ import type { Artwork } from '@/lib/copy-slots/template-meta'
 // What the logo stage learns about the visitor's file. `mixed` artwork has no strong polarity
 // and sits on either surface; an opaque backdrop (a white box behind the mark) is reported so
 // the surface can be chosen to hide the box's edge.
-type LogoPolarity = Artwork | 'mixed'
+export type LogoPolarity = Artwork | 'mixed'
 
 export type LogoAnalysis = Readonly<{
   polarity: LogoPolarity

@@ -1,7 +1,11 @@
 import type { Metadata } from 'next'
 import { Bricolage_Grotesque, Instrument_Sans } from 'next/font/google'
 import type { CSSProperties } from 'react'
+import { tokenStyle } from '@/lib/tokens/css'
+import { deriveTokens } from '@/lib/tokens/derive'
+import type { Scheme } from '@/lib/tokens/types'
 import { Aurora } from '@/templates/t01-aurora'
+import { AURORA_CONTRAST_PAIRS } from '@/templates/t01-aurora/copy-slots'
 import { KESTREL } from '@/templates/t01-aurora/example/content'
 
 // The example brand's type: a display face with some character for the headlines and a plain
@@ -9,27 +13,17 @@ import { KESTREL } from '@/templates/t01-aurora/example/content'
 const display = Bricolage_Grotesque({ subsets: ['latin'], display: 'swap' })
 const body = Instrument_Sans({ subsets: ['latin'], display: 'swap' })
 
-// Kestrel's token set, written by hand the way the tokens stage will one day derive one: the
-// amber brand hue kept, surfaces tinted with it at low chroma, and every pair the template
-// declares (AURORA_CONTRAST_PAIRS) at WCAG AA or better. The two glow hues are the aurora.
-const TOKENS = {
-  '--surface': '#0b0f1a',
-  '--surface-muted': '#131a2b',
-  '--on-surface': '#f4f5f9',
-  '--on-surface-muted': '#a7adc0',
-  '--border': '#262e44',
-  '--accent': '#1a2238',
-  '--brand': '#ffb067',
-  '--brand-deeper': '#f59e4a',
-  '--brand-deepest': '#e68a2e',
-  '--on-brand': '#1b1005',
-  '--glow': '#ff7a59',
-  '--glow-secondary': '#7c5cff',
-  '--scrim': '#05070d',
-  '--on-scrim': '#ffffff',
-  '--template-font-display': display.style.fontFamily,
-  '--template-font-body': body.style.fontFamily,
-} as CSSProperties
+// Kestrel's token set, derived the way the tokens stage derives one: the amber brand hue kept,
+// surfaces tinted with it at low chroma, and every pair the template declares at WCAG AA or
+// better. The two glow hues are the aurora. The fonts join the tokens on the same root.
+// ?scheme=light shows the same brand on a light surface, for reviewing both polarities.
+function tokensFor(scheme: Scheme): CSSProperties {
+  return {
+    ...tokenStyle(deriveTokens('#f59e4a', scheme, AURORA_CONTRAST_PAIRS)),
+    '--template-font-display': display.style.fontFamily,
+    '--template-font-body': body.style.fontFamily,
+  } as CSSProperties
+}
 
 export const metadata: Metadata = {
   title: 'Aurora template, example',
@@ -38,9 +32,12 @@ export const metadata: Metadata = {
 
 // The Aurora template with example content, for design review. Not linked from the site and
 // not indexed; the examples gallery replaces it once the templates render from real briefs.
-export default function AuroraExamplePage() {
+type Props = { searchParams: Promise<Record<string, string | string[] | undefined>> }
+
+export default async function AuroraExamplePage({ searchParams }: Props) {
+  const { scheme } = await searchParams
   return (
-    <div style={TOKENS}>
+    <div style={tokensFor(scheme === 'light' ? 'light' : 'dark')}>
       <Aurora content={KESTREL} />
     </div>
   )
