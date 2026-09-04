@@ -17,6 +17,15 @@ export const env = createEnv({
     // The sender, "Name <address>", on a domain verified in Resend. Unset, Resend's test sender
     // is used, which reaches only the account owner's own address.
     RESEND_FROM: z.string().min(1).optional(),
+    // Development only: an address may be shown a template it has already seen, so one email can
+    // test the same template again and again (lib/db/exclusivity.ts). Refused on the production
+    // deployment, where the guide's rule stands.
+    ALLOW_REPEAT_TEMPLATES: z
+      .literal('1')
+      .optional()
+      .refine((value) => value === undefined || process.env.VERCEL_ENV !== 'production', {
+        message: 'ALLOW_REPEAT_TEMPLATES is for development only',
+      }),
   },
   client: {
     NEXT_PUBLIC_APP_URL: z.string().url(),

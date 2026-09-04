@@ -3,7 +3,9 @@ import { eq } from 'drizzle-orm'
 import { CONFIG } from '@/lib/config'
 import { db } from '@/lib/db/client'
 import { seen } from '@/lib/db/schema'
+import { env } from '@/lib/env'
 import { AppError } from '@/lib/errors'
+import { log } from '@/lib/log'
 
 // Postgres: unique_violation.
 const UNIQUE_VIOLATION = '23505'
@@ -22,12 +24,17 @@ function isUniqueViolation(error: unknown): boolean {
 // identity got there first the whole statement fails, `seen` is read again and the choice
 // remade. Rows already carrying this slug are ours from an earlier attempt of the same step,
 // so a retry returns them instead of choosing again. An empty choice means the identity has
-// exhausted the pool, and nothing is written.
+// exhausted the pool, and nothing is written. In development, with ALLOW_REPEAT_TEMPLATES set,
+// nothing is read or written: the choice is made as if the identity had seen nothing.
 export async function revealTemplates(
   identityHash: string,
   slug: string,
   choose: (alreadySeen: ReadonlySet<string>) => readonly string[],
 ): Promise<string[]> {
+  if (env.ALLOW_REPEAT_TEMPLATES === '1') {
+    log.info('seen.off', { slug })
+    return [...choose(new Set())]
+  }
   for (let attempt = 0; attempt < CONFIG.exclusivity.attempts; attempt += 1) {
     const rows = await db
       .select({ templateId: seen.templateId, slug: seen.slug })
