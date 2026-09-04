@@ -25,7 +25,7 @@ The visitor reads the home page, opens `/start`, answers one question at a time 
 ## Capabilities and Constraints
 
 - Built and working: the home page, the `/start` questionnaire with URL-per-question, session persistence, per-question validation, the live sketch, the done screen with countdown and design slots, analytics events, structured data, Open Graph image.
-- Not built yet: the design pipeline (submitting stores nothing, sends no email, produces no designs), the ten templates (placeholders only), the preview route, the examples gallery. No traffic may be sent to `/start` until the pipeline exists.
+- Not built yet: the design pipeline (submitting stores nothing, sends no email, produces no designs), nine of the ten templates (placeholders; `t01-aurora` is built and viewable at `/examples/aurora`, ADR 0008), the preview route, the examples gallery. No traffic may be sent to `/start` until the pipeline exists.
 - Stack: Next.js 16 App Router, React 19, Tailwind CSS 4, TypeScript strict, Vercel. Standards in `docs/standards.md`: semantic CSS-variable tokens only, server components by default with small client leaves, every tunable number in `lib/config.ts`, no new dependency without a reason.
 - Terminology: "the five questions", "three designs", "the live sketch", "the taster", "preview", "brief". Never "AI website builder", "generate", "instantly".
 - Undecided: the studio town and contact email, the real Cal.com link, the privacy notice, the follow-up policy for abandoned forms, fourth-visit behaviour once nine templates have been seen.
