@@ -3,7 +3,8 @@ import type { Answers } from '@/lib/brief/schema'
 // The brief the home page's sketch paints for itself: VetPres, one of the three example
 // businesses, chosen because a software company is the kind of business most visitors recognise.
 // It is labelled an example wherever it appears. The description is VetPres's own, the colour is
-// its teal typed as a custom hex, its one photo is the clinic picture in app/_components/photos.ts,
+// its teal typed as a custom hex, its one photo is the clinic picture in app/_components/photos.ts
+// (named here for the chip, never uploaded),
 // and the name and email are never shown and never sent.
 export const EXAMPLE_ANSWERS: Answers = {
   description:
@@ -12,7 +13,10 @@ export const EXAMPLE_ANSWERS: Answers = {
   company: 'VetPres',
   email: '',
   logo: { kind: 'wordmark' },
-  imagery: { style: 'minimal', fileNames: ['vetpres-clinic.webp'] },
+  imagery: {
+    style: 'minimal',
+    photos: [{ id: 'vetpres-clinic', fileName: 'vetpres-clinic.webp', url: null }],
+  },
   colours: { kind: 'custom', hex: '#2e8c9c' },
 }
 

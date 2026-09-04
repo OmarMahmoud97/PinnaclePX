@@ -28,7 +28,7 @@ export async function submitBrief(input: unknown): Promise<Result<{ briefId: str
     descriptionChars: parsed.data.description.length,
     logo: parsed.data.logo.kind,
     style: parsed.data.imagery.style,
-    photos: parsed.data.imagery.fileNames.length,
+    photos: parsed.data.imagery.photos.length,
     colours: parsed.data.colours.kind,
   })
 

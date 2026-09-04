@@ -18,7 +18,7 @@ const VALID_BRIEF = {
   company: 'Ashgrove Physio',
   email: 'sam@ashgrove.example',
   logo: { kind: 'wordmark' },
-  imagery: { style: 'minimal', fileNames: [] },
+  imagery: { style: 'minimal', photos: [] },
   colours: { kind: 'palette', paletteId: 'forest' },
 }
 
@@ -70,39 +70,63 @@ describe('detailsSchema', () => {
   })
 })
 
+const UPLOADED = {
+  kind: 'file',
+  id: 'l1',
+  fileName: 'logo.svg',
+  url: 'https://x.public.blob.vercel-storage.com/logos/abc.svg',
+}
+const PHOTO = {
+  id: 'p1',
+  fileName: 'shop.jpg',
+  url: 'https://x.public.blob.vercel-storage.com/photos/abc.jpg',
+}
+
 describe('logoSchema', () => {
   it('accepts the wordmark fallback', () => {
     expect(logoSchema.safeParse({ kind: 'wordmark' }).success).toBe(true)
   })
 
-  it('accepts an uploaded file name', () => {
-    expect(logoSchema.safeParse({ kind: 'file', fileName: 'logo.svg' }).success).toBe(true)
+  it('accepts an uploaded logo', () => {
+    expect(logoSchema.safeParse(UPLOADED).success).toBe(true)
+  })
+
+  it('rejects a logo that is still uploading, with a message that says so', () => {
+    const result = logoSchema.safeParse({ ...UPLOADED, url: null })
+    expect(result.success).toBe(false)
+    if (!result.success) expect(result.error.issues[0]?.message).toMatch(/not finished uploading/)
   })
 
   it('rejects a file choice with no file', () => {
-    expect(logoSchema.safeParse({ kind: 'file', fileName: '' }).success).toBe(false)
+    expect(logoSchema.safeParse({ ...UPLOADED, fileName: '' }).success).toBe(false)
   })
 })
 
 describe('imagerySchema', () => {
   it('accepts a style with no photos', () => {
-    expect(imagerySchema.safeParse({ style: 'warm', fileNames: [] }).success).toBe(true)
+    expect(imagerySchema.safeParse({ style: 'warm', photos: [] }).success).toBe(true)
   })
 
   it('accepts a style with photos alongside it', () => {
-    expect(imagerySchema.safeParse({ style: 'dark', fileNames: ['shop.jpg'] }).success).toBe(true)
+    expect(imagerySchema.safeParse({ style: 'dark', photos: [PHOTO] }).success).toBe(true)
+  })
+
+  it('rejects a photo that is still uploading', () => {
+    expect(
+      imagerySchema.safeParse({ style: 'dark', photos: [{ ...PHOTO, url: null }] }).success,
+    ).toBe(false)
   })
 
   it('rejects a style we do not offer', () => {
-    expect(imagerySchema.safeParse({ style: 'neon', fileNames: [] }).success).toBe(false)
+    expect(imagerySchema.safeParse({ style: 'neon', photos: [] }).success).toBe(false)
   })
 
   it('rejects more photos than the limit', () => {
-    const fileNames = Array.from(
-      { length: CONFIG.form.maxPhotos + 1 },
-      (_, i) => `photo-${String(i)}.jpg`,
-    )
-    expect(imagerySchema.safeParse({ style: 'warm', fileNames }).success).toBe(false)
+    const photos = Array.from({ length: CONFIG.form.maxPhotos + 1 }, (_, i) => ({
+      ...PHOTO,
+      id: `p${String(i)}`,
+    }))
+    expect(imagerySchema.safeParse({ style: 'warm', photos }).success).toBe(false)
   })
 })
 

@@ -17,7 +17,7 @@ type Props = {
 function labelsFor(answers: Answers): Readonly<Record<QuestionId, string>> {
   const { imagery, colours } = answers
   const company = answers.company.trim()
-  const photos = imagery.fileNames.length
+  const photos = imagery.photos.length
   const style = styleFor(imagery.style).label
   return {
     describe: 'Sentence',

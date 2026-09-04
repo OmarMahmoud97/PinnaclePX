@@ -1,22 +1,28 @@
 'use client'
 
 import { ImageUp, X } from 'lucide-react'
-import type { StepProps } from '@/app/start/_components/step-props'
+import type { LocalImage, StepProps } from '@/app/start/_components/step-props'
 import { Button } from '@/components/ui/button'
 import { FilePicker } from '@/components/ui/file-picker'
-import { UPLOAD_LIMIT_LABEL } from '@/lib/brief/uploads'
+import { acceptFor, UPLOAD_LIMIT_LABEL } from '@/lib/brief/uploads'
 
-const ACCEPT = 'image/png,image/jpeg,image/svg+xml,image/webp'
+const ACCEPT = acceptFor('logos')
+
+const STATUS_LINE = {
+  uploading: 'Uploading your logo.',
+  done: 'We check whether it is light or dark artwork and pick designs that suit it.',
+  failed: 'That logo did not upload. Remove it and try again.',
+} as const
 
 type Props = StepProps & {
-  preview: string | null
+  logo: LocalImage | null
   onFile: (file: File | null) => void
 }
 
 // The visitor may skip this. The default answer is a wordmark of their company name, so the
 // question is never a blocker.
-export function LogoStep({ answers, errors, preview, onFile }: Props) {
-  const chosen = answers.logo.kind === 'file' ? answers.logo.fileName : null
+export function LogoStep({ answers, errors, logo, onFile }: Props) {
+  const chosen = logo?.name ?? null
   const wordmark = answers.company.trim() === '' ? 'your company name' : answers.company.trim()
 
   return (
@@ -41,10 +47,13 @@ export function LogoStep({ answers, errors, preview, onFile }: Props) {
               memory, so there is nothing to optimise and nothing to lazy-load. */}
           <span
             aria-hidden="true"
-            style={preview === null ? undefined : { backgroundImage: `url(${preview})` }}
+            style={logo === null ? undefined : { backgroundImage: `url(${logo.url})` }}
             className="size-14 shrink-0 rounded-lg border border-border bg-surface-muted bg-contain bg-center bg-no-repeat"
           />
           <span className="min-w-0 flex-1 truncate text-sm font-medium">{chosen}</span>
+          {logo?.status === 'uploading' && (
+            <span className="font-mono text-[11px] text-on-surface-muted">uploading</span>
+          )}
           <Button
             variant="ghost"
             size="icon"
@@ -63,9 +72,9 @@ export function LogoStep({ answers, errors, preview, onFile }: Props) {
       )}
 
       <p className="text-sm text-on-surface-muted">
-        {chosen === null
+        {logo === null
           ? `No logo? Leave this and we will set ${wordmark} as a wordmark.`
-          : 'We check whether it is light or dark artwork and pick designs that suit it.'}
+          : STATUS_LINE[logo.status]}
       </p>
     </div>
   )
