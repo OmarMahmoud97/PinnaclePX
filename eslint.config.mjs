@@ -41,6 +41,17 @@ const LIB_NO_APP_OR_TEMPLATES = {
   regex: '^@/(app|templates)(/|$)',
   message: 'lib must not depend on app or templates.',
 }
+// The pipeline modules read the registry (metadata and contracts) and nothing else in templates.
+const LIB_NO_APP = { regex: '^@/app(/|$)', message: 'lib must not depend on app.' }
+const LIB_ONLY_REGISTRY = {
+  regex: '^@/templates/(?!registry$)',
+  message: 'lib may import only @/templates/registry from the template layer.',
+}
+// The registry and the contracts are read by the pipeline; components stay out of them.
+const NO_COMPONENTS_IN_CONTRACTS = {
+  regex: '^(react|react-dom|next)(/|$)|(^|/)(index|sections)(/|$)|^\.{1,2}/t\d\d-[a-z]+$',
+  message: 'The registry and contracts must not import components; use templates/render.tsx.',
+}
 const PURE_NO_IO = {
   regex: '^@/lib/(ai|images|db|inngest)(/|$)',
   message: 'Pure modules must not import IO modules.',
@@ -156,11 +167,47 @@ export default defineConfig([
 
   // BOUNDARY 3: pure modules must not import IO modules.
   {
-    files: ['lib/select/**/*.ts', 'lib/tokens/**/*.ts', 'lib/copy-slots/**/*.ts'],
+    files: ['lib/tokens/**/*.ts', 'lib/copy-slots/**/*.ts'],
     rules: {
       'no-restricted-imports': [
         'error',
         { patterns: [...EVERYWHERE, LIB_NO_APP_OR_TEMPLATES, PURE_NO_IO] },
+      ],
+    },
+  },
+  // The selector is pure and reads the registry (ADR 0009).
+  {
+    files: ['lib/select/**/*.ts'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        { patterns: [...EVERYWHERE, LIB_NO_APP, LIB_ONLY_REGISTRY, PURE_NO_IO] },
+      ],
+    },
+  },
+  // The pipeline and the preview read the registry too.
+  {
+    files: ['lib/inngest/**/*.ts', 'lib/preview/**/*.ts'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        { patterns: [...EVERYWHERE, LIB_NO_APP, LIB_ONLY_REGISTRY] },
+      ],
+    },
+  },
+  {
+    files: ['templates/registry.ts', 'templates/*/contract.ts'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            ...EVERYWHERE,
+            TEMPLATES_NO_APP,
+            TEMPLATES_ONLY_PURE,
+            NO_COMPONENTS_IN_CONTRACTS,
+          ],
+        },
       ],
     },
   },
@@ -182,7 +229,7 @@ export default defineConfig([
     rules: {
       'no-restricted-imports': [
         'error',
-        { patterns: [NO_BARREL, NO_PEXELS_SDK, LIB_NO_APP_OR_TEMPLATES] },
+        { patterns: [NO_BARREL, NO_PEXELS_SDK, NO_GSAP, LIB_NO_APP, LIB_ONLY_REGISTRY] },
       ],
       'no-restricted-syntax': 'off',
     },

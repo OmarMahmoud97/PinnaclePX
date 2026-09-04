@@ -8,6 +8,20 @@
       "when": 1788479184660,
       "tag": "0000_certain_vanisher",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1788484875691,
+      "tag": "0001_drop_briefs",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1788484876913,
+      "tag": "0002_pipeline_tables",
+      "breakpoints": true
     }
   ]
 }

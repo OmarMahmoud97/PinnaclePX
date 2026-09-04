@@ -4,6 +4,8 @@
   "entry": [
     "lib/db/client.ts",
     "lib/db/schema.ts",
+    // The answers schema is validated by the Server Action once the pipeline lands (slice 3).
+    "lib/brief/submission.ts",
     "drizzle.config.ts",
     // Template components are rendered by the preview page once it lands.
     "templates/*/index.tsx",
