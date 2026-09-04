@@ -27,6 +27,9 @@ export const TOKEN_NAMES = [
 
 type TokenName = (typeof TOKEN_NAMES)[number]
 
+// One value per token: the brand's derived set, written as CSS variables on the preview root.
+export type TokenSet = Readonly<Record<TokenName, string>>
+
 // A text token painted on a background token. Every template declares the pairs it uses, so
 // the contrast solver knows which pairs it must bring to WCAG AA.
 export type ContrastPair = Readonly<{ text: TokenName; background: TokenName }>

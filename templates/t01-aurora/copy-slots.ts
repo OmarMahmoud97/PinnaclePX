@@ -1,3 +1,4 @@
+import type { SlotImage, TemplateLogo } from '@/lib/copy-slots/assets'
 import { type CopySlot, type SlotViolation, slotViolation } from '@/lib/copy-slots/validate'
 import type { ContrastPair } from '@/lib/tokens/types'
 
@@ -7,26 +8,16 @@ import type { ContrastPair } from '@/lib/tokens/types'
 
 export type AuroraLink = Readonly<{ label: string; href: string }>
 
-// A re-hosted photograph with its size, so the layout never shifts, and its Pexels credit, which
-// the footer prints. Null where a slot is optional: the section then draws light instead.
-export type AuroraImage = Readonly<{
-  src: string
-  alt: string
-  width: number
-  height: number
-  credit: Readonly<{ photographer: string; url: string }> | null
-}>
-
-// The wordmark is the brand's name set in the display face; an image logo is used as supplied.
-type AuroraLogo =
-  | Readonly<{ kind: 'wordmark' }>
-  | Readonly<{ kind: 'image'; src: string; alt: string; width: number; height: number }>
+// The pictures are the shapes the pipeline hands every template (lib/copy-slots/assets.ts). An
+// image is null where a slot is optional: the section then draws light instead.
+export type AuroraImage = SlotImage
+type AuroraLogo = TemplateLogo
 
 type AuroraFeature = Readonly<{ title: string; body: string }>
 type AuroraStep = Readonly<{ title: string; body: string }>
 type AuroraLinkGroup = Readonly<{ heading: string; links: readonly AuroraLink[] }>
 
-type Three<T> = readonly [T, T, T]
+export type Three<T> = readonly [T, T, T]
 
 export type AuroraContent = Readonly<{
   brand: Readonly<{ name: string; legalName: string; tagline: string; logo: AuroraLogo }>
@@ -52,7 +43,7 @@ export type AuroraContent = Readonly<{
 
 // Character limits per text slot. The layout is designed for these ranges: a headline at the
 // maximum still fits three lines at the display size on a phone, a feature body four lines.
-const AURORA_SLOTS = {
+export const AURORA_SLOTS = {
   'brand.name': { min: 2, max: 24 },
   'brand.legalName': { min: 2, max: 60 },
   'brand.tagline': { min: 30, max: 120 },

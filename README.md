@@ -44,13 +44,13 @@ components/   shared UI primitives
   ui/ brand/
   sketch/                      the live sketch: model, parts, browser and phone frames, chips
 lib/          all application logic
-  ai/ images/ db/ inngest/     IO modules
-  brief/ select/ tokens/ copy-slots/  pure modules
+  ai/ images/ db/ inngest/ logo/  IO modules
+  brief/ select/ tokens/ copy-slots/  pure modules (copy-slots holds the template contract, ADR 0009)
   analytics/                   client event names and the track() wrapper
   motion/                      the lazy GSAP loader and the reduced-motion hook (ADR 0005)
   env.ts config.ts site.ts errors.ts log.ts cn.ts
 scripts/      bundle-budget.mjs, run after next build (pnpm budget)
-templates/    the ten landing page templates and their registry (t01-aurora built, ADR 0008)
+templates/    the ten landing page templates and their registry of metas and contracts (t01-aurora built, ADRs 0008 and 0009)
 db/           generated SQL migrations (committed)
 tests/        integration tests and fixtures
 e2e/          Playwright specs
