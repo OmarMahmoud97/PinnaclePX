@@ -42,7 +42,8 @@ type Props = {
   onRemovePhoto: (id: string) => void
   onPreview: (preview: Preview | null) => void
   onBack: () => void
-  onNext: () => void
+  // The value of the field no person sees, read from the form on submit.
+  onNext: (website: string) => void
 }
 
 // One question: heading, helper, its control, Back and Next. Mounted afresh for every question,
@@ -76,12 +77,22 @@ export function QuestionPane({
       aria-describedby={submitError === undefined ? undefined : errorId}
       onSubmit={(event) => {
         event.preventDefault()
-        onNext()
+        const website = new FormData(event.currentTarget).get('website')
+        onNext(typeof website === 'string' ? website : '')
       }}
       className="flex w-full max-w-lg animate-question-in flex-col gap-6"
     >
       <div className="sm:hidden">
         <ProgressSteps current={index + 1} total={QUESTION_IDS.length} />
+      </div>
+
+      {/* A field for bots. Out of the tab order and hidden from assistive technology; a person
+          never sees or fills it. */}
+      <div aria-hidden="true" className="absolute -left-[9999px] h-px w-px overflow-hidden">
+        <label>
+          Website
+          <input type="text" name="website" tabIndex={-1} autoComplete="off" defaultValue="" />
+        </label>
       </div>
 
       <div className="flex flex-col gap-3">

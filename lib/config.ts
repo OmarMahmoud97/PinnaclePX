@@ -12,7 +12,12 @@ export const CONFIG = {
   // Five minutes end to end. The sweeper wakes this long before the deadline and writes the
   // fallback into any stage still open, so the clock never reaches zero without a result.
   deadline: { totalMs: 300_000, sweeperLeadMs: 45_000 },
-  rateLimit: { windowSec: 60, max: 5 },
+  // Fixed windows, counted in Postgres (lib/db/rate-limit.ts). Tune from real traffic.
+  rateLimit: {
+    submissionsPerIp: { windowSeconds: 3_600, max: 5 },
+    submissionsPerIdentity: { windowSeconds: 86_400, max: 3 },
+    uploadsPerIp: { windowSeconds: 3_600, max: 40 },
+  },
   // How many times the reveal re-reads `seen` and tries again after another submission for the
   // same identity took a template first (lib/db/exclusivity.ts).
   exclusivity: { attempts: 3 },
@@ -99,9 +104,13 @@ export const CONFIG = {
     maxChars: 400,
     maxUploadBytes: 6_000_000, // per file, logo or photo
     maxPhotos: 6,
+    // A form finished faster than this from the moment it was opened is not a person's.
+    minMs: 3_000,
   },
   call: { minutes: 20 }, // the Cal.com event length is set by hand to match
-  retention: { days: 30 }, // lead, submission and blobs are deleted after this unless a call was booked
+  // A submission, its pictures and, once nothing of theirs is left, the lead are deleted this
+  // many days after it was sent, by a nightly sweep (lib/inngest/functions/retention-sweep.ts).
+  retention: { days: 30, cron: '0 3 * * *' },
   polling: { statusMs: 3_000 }, // how often the done page asks how the designs are coming along
   analytics: { sectionViewThreshold: 0.2 }, // share of a section on screen before it counts as viewed
   // The hero sketch typing an example brief and then building it into a page, on a loop: the

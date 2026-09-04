@@ -2,9 +2,11 @@ import { type HandleUploadBody, handleUpload } from '@vercel/blob/client'
 import { NextResponse } from 'next/server'
 import { contentTypesFor, uploadKindOf } from '@/lib/brief/uploads'
 import { CONFIG } from '@/lib/config'
+import { hitLimit } from '@/lib/db/rate-limit'
 import { env } from '@/lib/env'
 import { AppError } from '@/lib/errors'
 import { log } from '@/lib/log'
+import { callerAddress } from '@/lib/rate-limit/request'
 
 // Issues the short-lived token a browser needs to put one picture straight onto Blob. A token
 // is issued only for the content-addressed paths lib/brief/uploads.ts makes, for the media types
@@ -16,6 +18,15 @@ import { log } from '@/lib/log'
 // URL when its upload finishes.
 export async function POST(request: Request): Promise<NextResponse> {
   const body = (await request.json()) as HandleUploadBody
+  const within = await hitLimit({
+    scope: 'upload-ip',
+    subject: await callerAddress(),
+    ...CONFIG.rateLimit.uploadsPerIp,
+  })
+  if (!within) {
+    log.warn('upload.rate_limited')
+    return NextResponse.json({ error: 'Too many uploads. Try again later.' }, { status: 429 })
+  }
   try {
     const response = await handleUpload({
       body,

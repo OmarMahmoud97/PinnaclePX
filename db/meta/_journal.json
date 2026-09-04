@@ -29,6 +29,13 @@
       "when": 1788514918999,
       "tag": "0003_email_sent_at",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1788516087680,
+      "tag": "0004_rate_limit",
+      "breakpoints": true
     }
   ]
 }

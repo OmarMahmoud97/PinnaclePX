@@ -2,7 +2,7 @@ import { BOOK_CALL, type NavLink } from '@/app/_components/nav-links'
 
 type FooterGroup = Readonly<{ heading: string; links: readonly NavLink[] }>
 
-// Only destinations that exist. The privacy notice joins the Studio group once it is written.
+// Only destinations that exist.
 export const FOOTER_GROUPS: readonly FooterGroup[] = [
   {
     heading: 'The five questions',
@@ -17,6 +17,7 @@ export const FOOTER_GROUPS: readonly FooterGroup[] = [
     links: [
       { label: 'About', href: '/#about' },
       { label: 'What an hour does', href: '/#taster' },
+      { label: 'Privacy', href: '/privacy' },
       BOOK_CALL,
     ],
   },

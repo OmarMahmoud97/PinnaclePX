@@ -122,6 +122,8 @@ test('all five questions lead to the confirmation', async ({ page }) => {
   await expect(
     page.getByRole('heading', { level: 1, name: "Pick Ashgrove Physio's colours." }),
   ).toBeVisible()
+  // A form finished in under CONFIG.form.minMs is taken for a bot's.
+  await page.waitForTimeout(3_000)
   await page.getByRole('button', { name: 'Show me my three designs' }).click()
   await expect(page).toHaveURL(/q=done$/)
   // One design while only Aurora is ready; the sentence follows the count. The pipeline can

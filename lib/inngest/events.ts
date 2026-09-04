@@ -7,6 +7,11 @@ export const submissionCreated = eventType('pipeline/submission.created', {
   schema: z.object({ slug: z.string().min(1) }),
 })
 
+// Sent by the owner, from the Inngest dashboard or the dev server's UI, to erase one address.
+export const identityErase = eventType('admin/identity.erase', {
+  schema: z.object({ email: z.string().email() }),
+})
+
 // Every stage has settled, by the pipeline or by the sweeper: the link can go out.
 export const submissionReady = eventType('pipeline/submission.ready', {
   schema: z.object({ slug: z.string().min(1) }),
