@@ -7,9 +7,7 @@ import { displayHeading } from '@/app/_components/section-styles'
 import { Logo } from '@/components/brand/logo'
 import { buttonStyles } from '@/components/ui/button'
 import { TrackedLink } from '@/components/ui/tracked-link'
-import { submissionAnswersSchema } from '@/lib/brief/submission'
-import { slugSchema } from '@/lib/identity/slug'
-import { readSubmission } from '@/lib/db/submissions'
+import { readPreview } from '@/lib/preview/read'
 import { statusOf } from '@/lib/preview/status'
 import { SITE } from '@/lib/site'
 
@@ -18,10 +16,9 @@ type Params = Promise<{ slug: string }>
 // The shared link's title and description; the card image is opengraph-image.tsx beside this.
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { slug } = await params
-  const row = slugSchema.safeParse(slug).success ? await readSubmission(slug) : null
-  const company = row === null ? null : submissionAnswersSchema.parse(row.answers).company
+  const found = await readPreview(slug)
   return {
-    title: company === null ? 'Your designs' : `${company}, your homepage designs`,
+    title: found === null ? 'Your designs' : `${found.answers.company}, your homepage designs`,
     description: `Homepage designs built from five answers by ${SITE.name}.`,
     robots: { index: false, follow: false },
   }
@@ -31,10 +28,9 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
 // ready yet says so; an exhausted or failed submission says that instead of pretending.
 export default async function PreviewPage({ params }: { params: Params }) {
   const { slug } = await params
-  if (!slugSchema.safeParse(slug).success) notFound()
-  const row = await readSubmission(slug)
-  if (row === null) notFound()
-  const answers = submissionAnswersSchema.parse(row.answers)
+  const found = await readPreview(slug)
+  if (found === null) notFound()
+  const { row, answers } = found
   const status = statusOf(row)
   const concepts =
     status.status === 'building' || status.status === 'ready' || status.status === 'partial'

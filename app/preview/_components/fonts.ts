@@ -13,13 +13,16 @@ import type { VisualStyle } from '@/lib/brief/styles'
 // A brand's type is two families chosen by the style the visitor picked, never by a model. Each
 // pair is a display face with some character and a plain body face. next/font needs every call
 // at module scope with literal options, so the four pairs are declared here and picked below.
-const fraunces = Fraunces({ subsets: ['latin'], display: 'swap' })
-const instrumentSans = Instrument_Sans({ subsets: ['latin'], display: 'swap' })
-const manrope = Manrope({ subsets: ['latin'], display: 'swap' })
-const inter = Inter({ subsets: ['latin'], display: 'swap' })
-const bricolage = Bricolage_Grotesque({ subsets: ['latin'], display: 'swap' })
-const dmSans = DM_Sans({ subsets: ['latin'], display: 'swap' })
-const sora = Sora({ subsets: ['latin'], display: 'swap' })
+// None is preloaded: next/font would otherwise preload all seven on every preview, when a page
+// uses two (verified on a production build, 4 September 2026). The @font-face rules stay, and
+// the chosen pair loads on demand with a swap.
+const fraunces = Fraunces({ subsets: ['latin'], display: 'swap', preload: false })
+const instrumentSans = Instrument_Sans({ subsets: ['latin'], display: 'swap', preload: false })
+const manrope = Manrope({ subsets: ['latin'], display: 'swap', preload: false })
+const inter = Inter({ subsets: ['latin'], display: 'swap', preload: false })
+const bricolage = Bricolage_Grotesque({ subsets: ['latin'], display: 'swap', preload: false })
+const dmSans = DM_Sans({ subsets: ['latin'], display: 'swap', preload: false })
+const sora = Sora({ subsets: ['latin'], display: 'swap', preload: false })
 
 const PAIRS = {
   warm: { display: fraunces, body: instrumentSans },

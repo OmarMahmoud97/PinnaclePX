@@ -1,4 +1,4 @@
-import { z } from 'zod'
+import * as z from 'zod'
 import { PALETTE_IDS } from '@/lib/brief/palettes'
 import { STYLE_IDS } from '@/lib/brief/styles'
 import { CONFIG } from '@/lib/config'
@@ -19,7 +19,10 @@ export const describeSchema = z.object({
 export const detailsSchema = z.object({
   name: z.string().trim().min(1, 'Tell us your name.'),
   company: z.string().trim().min(1, 'Tell us your company name.'),
-  email: z.string().trim().email('That does not look like an email address.'),
+  email: z
+    .string()
+    .trim()
+    .pipe(z.email({ error: 'That does not look like an email address.' })),
 })
 
 // A picture the visitor picked: a client id to tell it apart, its name, and the URL it lives
@@ -29,7 +32,7 @@ const uploadedFile = (message: string) =>
   z.object({
     id: z.string().min(1),
     fileName: z.string().min(1),
-    url: z.string({ invalid_type_error: message }).url(message),
+    url: z.url({ error: message }),
   })
 const draftFile = z.object({
   id: z.string().min(1),

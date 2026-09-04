@@ -37,7 +37,7 @@ export async function writeCopy({
       {
         model: CONFIG.ai.models.copy,
         max_tokens: CONFIG.ai.maxTokens.copy,
-        system: [{ type: 'text', text: SYSTEM_PROMPT, cache_control: { type: 'ephemeral' } }],
+        system: SYSTEM_PROMPT,
         messages,
         thinking: { type: 'disabled' },
         output_config: { format: zodOutputFormat(contract.copySchema) },
@@ -52,7 +52,6 @@ export async function writeCopy({
       model: response.model,
       stop: response.stop_reason ?? 'none',
       input: response.usage.input_tokens,
-      cached: response.usage.cache_read_input_tokens ?? 0,
       output: response.usage.output_tokens,
     })
     const copy: unknown = response.parsed_output

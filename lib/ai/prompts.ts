@@ -6,7 +6,8 @@ import type { CopyViolation } from '@/lib/copy-slots/rules'
 // The words the model is given, built here so a test can read them and nothing personal is
 // ever added by accident: only the company name, the owner's own sentence and their style.
 
-// Stable, so it is cached across every call.
+// The same on every call, but too short for the prompt cache: Sonnet 5 caches nothing under
+// 1,024 tokens, and this is about 180. Add a cache marker only if it grows past that.
 export const SYSTEM_PROMPT = `You write homepage copy for a small UK business from the short brief its owner typed.
 
 Rules, all of them:
@@ -39,7 +40,7 @@ Write the brand brief:
 // Every limit a template's copy has, in the template's own words, for the copy call.
 export function copyPrompt(brief: BrandBrief, templateName: string, guide: string): string {
   return `Brief:
-${JSON.stringify(brief, null, 1)}
+${JSON.stringify(brief)}
 
 Write every slot of the "${templateName}" homepage template for ${brief.company}. Use the brief's own words and the owner's sentence; do not add facts. Each slot has a character range; stay inside it.
 
@@ -53,4 +54,13 @@ export function retryPrompt(violations: readonly CopyViolation[]): string {
 ${lines}
 
 Rewrite those slots to fit and return the whole JSON again, every slot filled.`
+}
+
+// The ranking call's rules: what a photograph on a small business's homepage must not be.
+export const RANK_SYSTEM_PROMPT = `You judge stock photographs for a small business's homepage. For each photograph, give a score from 0 to 10 for how well it would serve the stated purpose, and a reason to reject it if it has any of these: a watermark, visible text or a logo, a busy composition with no clear subject, a single identifiable person's face as the subject, or nothing to do with the purpose. Otherwise reject is null. Prefer real places and work being done, natural light, and room for words. Answer only with JSON in the schema.`
+
+// The ranking call's user turn: the purpose the pictures are judged for, which carries the
+// company name and the brief's positioning, and nothing else.
+export function rankPrompt(purpose: string): string {
+  return `Purpose: ${purpose}\nThe photographs, each preceded by its id:`
 }

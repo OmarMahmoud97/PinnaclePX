@@ -17,7 +17,9 @@ const BUDGETS = {
   // The stylesheet is shared by both routes; the hero's finished page took it past 12 KB
   // (12,044 B on 3 September 2026, ADR 0006), so the line is 14 KB.
   '/': { scripts: 210_000, stylesheets: 14_000, html: 25_000 },
-  '/start': { scripts: 230_000, stylesheets: 14_000, html: 25_000 },
+  // Raised from 230 KB on 4 September 2026 for zod 4, whose core is about 13 KB gzipped heavier
+  // on this page than zod 3 (ADR 0019); its locales are kept out by the namespace import form.
+  '/start': { scripts: 245_000, stylesheets: 14_000, html: 25_000 },
 }
 
 function gzipped(file) {

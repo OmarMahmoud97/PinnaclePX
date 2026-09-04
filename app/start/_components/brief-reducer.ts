@@ -1,4 +1,4 @@
-import type { z } from 'zod'
+import type * as z from 'zod'
 import { BLANK_ANSWERS } from '@/lib/brief/answers'
 import { type QuestionId, QUESTION_IDS } from '@/lib/brief/question-ids'
 import {
@@ -104,7 +104,7 @@ export function firstInvalidIndex(answers: Answers): number {
   return index === -1 ? QUESTION_IDS.length : index
 }
 
-type Parsed = z.SafeParseReturnType<unknown, unknown>
+type Parsed = z.ZodSafeParseResult<unknown>
 
 // Field-per-issue, for questions whose fields map one to one onto inputs.
 function collect(result: Parsed): Errors {

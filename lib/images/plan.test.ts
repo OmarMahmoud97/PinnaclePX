@@ -20,9 +20,13 @@ describe('planImagery', () => {
     const plan = planImagery(['hero', 'statement'], ANSWERS, BRIEF)
     expect(plan.hero).toMatchObject({
       kind: 'search',
-      query: 'physiotherapy treatment room natural light',
+      queries: ['physiotherapy treatment room natural light', 'clinic natural light'],
     })
-    expect(plan.statement).toMatchObject({ kind: 'search', query: 'exercise band natural light' })
+    // A blank query is dropped; the rest keep the brief's order.
+    expect(plan.statement).toMatchObject({
+      kind: 'search',
+      queries: ['exercise band natural light'],
+    })
     if (plan.hero?.kind === 'search') expect(plan.hero.purpose).toContain('Ashgrove Physio')
   })
 
@@ -46,7 +50,7 @@ describe('planImagery', () => {
   })
 
   it('leaves a slot empty when the brief has no query for it', () => {
-    const brief = { ...BRIEF, imageQueries: { hero: [], detail: [] } }
+    const brief = { ...BRIEF, imageQueries: { hero: [' '], detail: [] } }
     expect(planImagery(['hero'], ANSWERS, brief).hero).toEqual({ kind: 'none' })
   })
 })

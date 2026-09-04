@@ -1,4 +1,4 @@
-import { z } from 'zod'
+import * as z from 'zod'
 
 // A photograph Pexels offers for a query: enough to judge it, to fetch it, and to credit it.
 export type Candidate = Readonly<{
@@ -19,8 +19,8 @@ const photoSchema = z.object({
   height: z.number(),
   alt: z.string().nullable(),
   photographer: z.string(),
-  photographer_url: z.string().url(),
-  src: z.object({ medium: z.string().url(), large2x: z.string().url() }),
+  photographer_url: z.url(),
+  src: z.object({ medium: z.url(), large2x: z.url() }),
 })
 
 const responseSchema = z.object({ photos: z.array(photoSchema) })

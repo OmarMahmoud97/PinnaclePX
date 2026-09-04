@@ -3,11 +3,9 @@ import { notFound } from 'next/navigation'
 import { ConceptPending } from '@/app/preview/_components/concept-pending'
 import { typeStyle } from '@/app/preview/_components/fonts'
 import { StudioBar } from '@/app/preview/_components/studio-bar'
-import { submissionAnswersSchema } from '@/lib/brief/submission'
-import { slugSchema } from '@/lib/identity/slug'
 import type { TemplateAssets } from '@/lib/copy-slots/assets'
-import { readSubmission, type SubmissionRow } from '@/lib/db/submissions'
 import { AppError } from '@/lib/errors'
+import { type PreviewRow, readPreview } from '@/lib/preview/read'
 import { statusOf } from '@/lib/preview/status'
 import { tokenStyle } from '@/lib/tokens/css'
 import { TEMPLATES } from '@/templates/registry'
@@ -15,22 +13,23 @@ import { renderConcept } from '@/templates/render'
 
 type Params = Promise<{ slug: string; templateId: string }>
 
+type Loaded = PreviewRow & Readonly<{ index: number }>
+
 // The row this page renders from, or nothing. A slug that is not one of ours, a submission that
 // does not exist, or a template this submission did not choose are all the same: not found.
-async function load(params: Params): Promise<{ row: SubmissionRow; index: number } | null> {
+async function load(params: Params): Promise<Loaded | null> {
   const { slug, templateId } = await params
-  if (!slugSchema.safeParse(slug).success) return null
-  const row = await readSubmission(slug)
-  if (row === null) return null
-  const index = row.templateIds?.indexOf(templateId) ?? -1
-  if (row.templateIds !== null && index === -1) return null
-  return { row, index: Math.max(index, 0) }
+  const found = await readPreview(slug)
+  if (found === null) return null
+  const index = found.row.templateIds?.indexOf(templateId) ?? -1
+  if (found.row.templateIds !== null && index === -1) return null
+  return { ...found, index: Math.max(index, 0) }
 }
 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const found = await load(params)
   if (found === null) return { robots: { index: false, follow: false } }
-  const answers = submissionAnswersSchema.parse(found.row.answers)
+  const { answers } = found
   const count = found.row.conceptCount
   return {
     title:
@@ -47,8 +46,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
 export default async function ConceptPage({ params }: { params: Params }) {
   const found = await load(params)
   if (found === null) notFound()
-  const { row, index } = found
-  const answers = submissionAnswersSchema.parse(row.answers)
+  const { row, answers, index } = found
   const status = statusOf(row)
   const templateId = row.templateIds?.[index] ?? null
   const concept =
@@ -61,15 +59,14 @@ export default async function ConceptPage({ params }: { params: Params }) {
       {concept?.ready !== true || templateId === null ? (
         <ConceptPending slug={row.slug} initial={status} name={name} />
       ) : (
-        <ConceptBody row={row} templateId={templateId} />
+        <ConceptBody row={row} answers={answers} templateId={templateId} />
       )}
     </div>
   )
 }
 
-function ConceptBody({ row, templateId }: { row: SubmissionRow; templateId: string }) {
+function ConceptBody({ row, answers, templateId }: PreviewRow & { templateId: string }) {
   if (row.tokens === null) throw new AppError(`Submission ${row.slug} is ready without tokens`)
-  const answers = submissionAnswersSchema.parse(row.answers)
   const assets: TemplateAssets = {
     logo:
       row.logo?.image === undefined || row.logo.image === null

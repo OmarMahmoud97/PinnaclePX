@@ -9,6 +9,10 @@ export const CONFIG = {
     rank: 30_000, // one call inside the imagery budget
     tokens: 1_000,
   },
+  // Every other outbound call: a Pexels search, a download from Pexels or Blob, a store on Blob.
+  // Each gives up after this long, so one stalled socket cannot hold a stage past its budget
+  // and leave the sweeper to settle a page the stage would have finished.
+  timeoutMs: { search: 10_000, download: 30_000, store: 30_000 },
   // Five minutes end to end. The sweeper wakes this long before the deadline and writes the
   // fallback into any stage still open, so the clock never reaches zero without a result.
   deadline: { totalMs: 300_000, sweeperLeadMs: 45_000 },

@@ -1,8 +1,10 @@
 import 'server-only'
 import { and, eq, inArray, isNull } from 'drizzle-orm'
+import { blobUrlsIn } from '@/lib/blob/urls'
 import { db } from '@/lib/db/client'
-import { lead, type StageState, submission } from '@/lib/db/schema'
+import { blobRef, lead, type StageState, submission } from '@/lib/db/schema'
 import { AppError } from '@/lib/errors'
+import type { StageRow } from '@/lib/preview/status'
 
 export type SubmissionRow = typeof submission.$inferSelect
 type NewSubmission = typeof submission.$inferInsert
@@ -40,8 +42,20 @@ type Found = Readonly<{
   created: boolean
 }>
 
+// Records which files on Blob a submission points at (blob_ref in lib/db/schema.ts). Idempotent,
+// so a retried step recording the same again changes nothing.
+async function recordBlobRefs(slug: string, urls: readonly string[]): Promise<void> {
+  if (urls.length === 0) return
+  await db
+    .insert(blobRef)
+    .values(urls.map((url) => ({ url, slug })))
+    .onConflictDoNothing()
+}
+
 // Inserts the submission, or returns the one with the same payload hash. The unique index does
-// the deciding, so two identical submissions racing each other still end as one row.
+// the deciding, so two identical submissions racing each other still end as one row. The
+// uploads in the answers are recorded either way, so a submit that failed between the two
+// writes is made whole by the next.
 export async function createOrFindSubmission(input: NewSubmission): Promise<Found> {
   const inserted = await db
     .insert(submission)
@@ -53,8 +67,16 @@ export async function createOrFindSubmission(input: NewSubmission): Promise<Foun
       conceptCount: submission.conceptCount,
       eventSentAt: submission.eventSentAt,
     })
-  const row = inserted[0]
-  if (row !== undefined) return { ...row, created: true }
+  const found = await findRow(inserted[0], input.payloadHash)
+  await recordBlobRefs(found.slug, blobUrlsIn({ answers: input.answers }))
+  return found
+}
+
+async function findRow(
+  inserted: Omit<Found, 'created'> | undefined,
+  payloadHash: string,
+): Promise<Found> {
+  if (inserted !== undefined) return { ...inserted, created: true }
   const existing = await db
     .select({
       slug: submission.slug,
@@ -63,7 +85,7 @@ export async function createOrFindSubmission(input: NewSubmission): Promise<Foun
       eventSentAt: submission.eventSentAt,
     })
     .from(submission)
-    .where(eq(submission.payloadHash, input.payloadHash))
+    .where(eq(submission.payloadHash, payloadHash))
   const found = existing[0]
   if (found === undefined) throw new AppError('Submission neither inserted nor found')
   return { ...found, created: false }
@@ -71,6 +93,26 @@ export async function createOrFindSubmission(input: NewSubmission): Promise<Foun
 
 export async function readSubmission(slug: string): Promise<SubmissionRow | null> {
   const rows = await db.select().from(submission).where(eq(submission.slug, slug))
+  return rows[0] ?? null
+}
+
+// The stage columns and nothing else: what the status poll asks for every few seconds, without
+// the answers, brief, copy and imagery the row also carries.
+export async function readStageRow(slug: string): Promise<StageRow | null> {
+  const rows = await db
+    .select({
+      slug: submission.slug,
+      deadlineAt: submission.deadlineAt,
+      conceptCount: submission.conceptCount,
+      templateIds: submission.templateIds,
+      stageSelect: submission.stageSelect,
+      stageTokens: submission.stageTokens,
+      stageBrief: submission.stageBrief,
+      stageCopy: submission.stageCopy,
+      stageImagery: submission.stageImagery,
+    })
+    .from(submission)
+    .where(eq(submission.slug, slug))
   return rows[0] ?? null
 }
 
@@ -114,12 +156,15 @@ export type StagePatch = Partial<
 // Moves a stage on and writes its results, but only while the stage is still open. The
 // pipeline and the sweeper both write through this, so whichever lands first wins and the
 // page then renders the same on every visit. Returns false when the stage was already settled.
+// The files the results point at are recorded first: a reference to a file the row ends up not
+// showing costs nothing, while a file the row shows without a reference could be swept early.
 export async function markStage(
   slug: string,
   stage: Stage,
   to: Exclude<StageState, 'pending'>,
   patch: StagePatch = {},
 ): Promise<boolean> {
+  await recordBlobRefs(slug, blobUrlsIn({ logo: patch.logo, imagery: patch.imagery }))
   const rows = await db
     .update(submission)
     .set({ [PROPERTY[stage]]: to, ...patch })

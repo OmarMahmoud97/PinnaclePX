@@ -22,3 +22,8 @@ The build guide's brief and copy stages ask Sonnet 5 for structured output, say 
 - `lib/ai/client.ts`, `prompts.ts`, `brief.ts` and `copy.ts`; `lib/copy-slots/rules.ts`; the contract gains `guide`; `runStage` returns what it wrote so the copy stage can use the brief without reading the row again. Every model call logs its model, stop reason and token counts as `ai.call`, never its text.
 - Aurora's copy schema lost its `.length(3)`, `.min()` and `.max()` calls; the counts moved into its violations, reported before the slot lengths, because a list of the wrong length cannot be assembled.
 - Verified on 4 September 2026 with the model unreachable (the key in `.env.local` lacked its workspace id): the brief and copy stages fell back and the page completed as before. The first real model output is to be reviewed once the id is set.
+
+## Amendments
+
+- 4 September 2026 (PR #16): decision 5 is superseded. Thinking is disabled (`thinking: { type: 'disabled' }`) and no effort is set on the brief and copy calls, because the answers are shapes judged by code afterwards and thinking tokens, billed as output, were most of the copy call's bill. `lib/config.ts` carries the reason beside the model names.
+- 4 September 2026 (audit, `docs/audit-plan.md` 4.1): the "cached" in decision 4 never applied. Sonnet 5 caches no prefix under 1,024 tokens (Anthropic SDK reference, June 2026) and the system prompt is about 180, so the `cache_control` marker and the `cached` field of the `ai.call` log were removed. The comment in `lib/ai/prompts.ts` says when to bring the marker back.

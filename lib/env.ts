@@ -1,9 +1,9 @@
 import { createEnv } from '@t3-oss/env-nextjs'
-import { z } from 'zod'
+import * as z from 'zod'
 
 export const env = createEnv({
   server: {
-    DATABASE_URL: z.string().url(),
+    DATABASE_URL: z.url(),
     ANTHROPIC_API_KEY: z.string().min(1),
     // Required only for an identity-linked (personal or service account) key, which must name
     // the workspace on every request. A key created inside one workspace needs none.
@@ -24,11 +24,11 @@ export const env = createEnv({
       .literal('1')
       .optional()
       .refine((value) => value === undefined || process.env.VERCEL_ENV !== 'production', {
-        message: 'ALLOW_REPEAT_TEMPLATES is for development only',
+        error: 'ALLOW_REPEAT_TEMPLATES is for development only',
       }),
   },
   client: {
-    NEXT_PUBLIC_APP_URL: z.string().url(),
+    NEXT_PUBLIC_APP_URL: z.url(),
   },
   experimental__runtimeEnv: {
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,

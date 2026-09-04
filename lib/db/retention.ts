@@ -1,48 +1,40 @@
 import 'server-only'
-import { and, eq, lt, notExists, sql } from 'drizzle-orm'
+import { and, eq, lt, ne, notExists } from 'drizzle-orm'
 import { db } from '@/lib/db/client'
-import { lead, rateLimit, seen, submission } from '@/lib/db/schema'
-import type { SubmissionRow } from '@/lib/db/submissions'
+import { blobRef, lead, rateLimit, seen, submission } from '@/lib/db/schema'
 
 // What the retention sweep and erasure read and remove. `seen` is kept by retention, because
 // the exclusivity promise outlives the preview; erasure removes it too.
 
-export async function submissionsCreatedBefore(before: Date): Promise<SubmissionRow[]> {
-  return db.select().from(submission).where(lt(submission.createdAt, before))
-}
-
-export async function submissionsOf(identityHash: string): Promise<SubmissionRow[]> {
-  return db.select().from(submission).where(eq(submission.identityHash, identityHash))
-}
-
-// Every URL a submission's row points at on Blob: the raster, the pictures, the uploads.
-export function blobUrlsOf(row: SubmissionRow): string[] {
-  const urls: string[] = []
-  if (row.logo?.image) urls.push(row.logo.image.src)
-  for (const slots of Object.values(row.imagery)) {
-    for (const image of Object.values(slots)) if (image !== null) urls.push(image.src)
-  }
-  const answers = row.answers
-  if (answers.logo.kind === 'file') urls.push(answers.logo.url)
-  for (const photo of answers.imagery.photos) urls.push(photo.url)
-  return [...new Set(urls)]
-}
-
-// Whether another submission still points at a URL, so a shared upload is not removed early.
-export async function urlReferencedElsewhere(url: string, slug: string): Promise<boolean> {
+// The slugs to remove, and nothing else: each is read in full in its own step.
+export async function slugsCreatedBefore(before: Date): Promise<string[]> {
   const rows = await db
     .select({ slug: submission.slug })
     .from(submission)
-    .where(
-      and(
-        sql`${submission.slug} <> ${slug}`,
-        sql`(${submission.answers}::text like ${`%${url}%`} or ${submission.imagery}::text like ${`%${url}%`} or ${submission.logo}::text like ${`%${url}%`})`,
-      ),
-    )
+    .where(lt(submission.createdAt, before))
+  return rows.map((row) => row.slug)
+}
+
+export async function slugsOf(identityHash: string): Promise<string[]> {
+  const rows = await db
+    .select({ slug: submission.slug })
+    .from(submission)
+    .where(eq(submission.identityHash, identityHash))
+  return rows.map((row) => row.slug)
+}
+
+// Whether another submission still points at a URL, so a shared upload is not removed early.
+// One read on the blob_ref key.
+export async function urlReferencedElsewhere(url: string, slug: string): Promise<boolean> {
+  const rows = await db
+    .select({ slug: blobRef.slug })
+    .from(blobRef)
+    .where(and(eq(blobRef.url, url), ne(blobRef.slug, slug)))
     .limit(1)
   return rows.length > 0
 }
 
+// The row goes, and its blob_ref rows with it.
 export async function deleteSubmission(slug: string): Promise<void> {
   await db.delete(submission).where(eq(submission.slug, slug))
 }
