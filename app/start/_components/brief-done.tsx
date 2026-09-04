@@ -16,6 +16,7 @@ import { TrackedLink } from '@/components/ui/tracked-link'
 import { firstNameFrom } from '@/lib/brief/names'
 import type { SubmissionStatus } from '@/lib/brief/status'
 import { CONFIG } from '@/lib/config'
+import { env } from '@/lib/env'
 import { SITE } from '@/lib/site'
 
 type Props = { name: string; email: string; submitted: Submitted }
@@ -88,6 +89,19 @@ export function BriefDone({ name, email, submitted }: Props) {
             {count === 1 ? 'lands' : 'land'} at{' '}
             <span className="font-medium text-on-surface">{email}</span>.{' '}
             {count === 1 ? 'It stays' : 'They stay'} live for {CONFIG.retention.days} days.
+          </p>
+        )}
+        {status.status !== 'exhausted' && status.status !== 'failed' && (
+          <p className="text-sm text-on-surface-muted">
+            Your page:{' '}
+            <a
+              href={`/preview/${submitted.slug}`}
+              target="_blank"
+              rel="noreferrer"
+              className="font-medium break-all text-on-surface underline underline-offset-4"
+            >
+              {`${env.NEXT_PUBLIC_APP_URL}/preview/${submitted.slug}`}
+            </a>
           </p>
         )}
       </div>

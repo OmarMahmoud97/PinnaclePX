@@ -279,4 +279,5 @@ export const auroraContract = defineContract<AuroraCopy>({
   guide: AURORA_GUIDE,
   fallbackCopy: auroraFallbackCopy,
   copyViolations: auroraCopyViolations,
+  headlineOf: (copy) => copy.hero.headline,
 })

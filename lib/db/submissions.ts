@@ -1,7 +1,7 @@
 import 'server-only'
 import { and, eq, inArray, isNull } from 'drizzle-orm'
 import { db } from '@/lib/db/client'
-import { type StageState, submission } from '@/lib/db/schema'
+import { lead, type StageState, submission } from '@/lib/db/schema'
 import { AppError } from '@/lib/errors'
 
 export type SubmissionRow = typeof submission.$inferSelect
@@ -72,6 +72,28 @@ export async function createOrFindSubmission(input: NewSubmission): Promise<Foun
 export async function readSubmission(slug: string): Promise<SubmissionRow | null> {
   const rows = await db.select().from(submission).where(eq(submission.slug, slug))
   return rows[0] ?? null
+}
+
+// The row with the lead it belongs to, for the email.
+export async function readSubmissionWithLead(
+  slug: string,
+): Promise<{ submission: SubmissionRow; lead: typeof lead.$inferSelect } | null> {
+  const rows = await db
+    .select({ submission, lead })
+    .from(submission)
+    .innerJoin(lead, eq(lead.identityHash, submission.identityHash))
+    .where(eq(submission.slug, slug))
+  return rows[0] ?? null
+}
+
+// Records that the email with the link went out, once.
+export async function markEmailSent(slug: string): Promise<boolean> {
+  const rows = await db
+    .update(submission)
+    .set({ emailSentAt: new Date() })
+    .where(and(eq(submission.slug, slug), isNull(submission.emailSentAt)))
+    .returning({ slug: submission.slug })
+  return rows.length > 0
 }
 
 // Records that the pipeline event went out, once. Returns false when it was already recorded.

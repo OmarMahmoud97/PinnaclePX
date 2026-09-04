@@ -21,7 +21,9 @@ describe('template registry', () => {
     expect(contract.imageSlots.length).toBeGreaterThan(0)
     expect(contract.contrastPairs.length).toBeGreaterThan(0)
     const brief = fallbackBrief('Kestrel', 'Job scheduling for trades businesses.')
-    expect(contract.copyViolations(contract.fallbackCopy(brief))).toEqual([])
+    const copy = contract.fallbackCopy(brief)
+    expect(contract.copyViolations(copy)).toEqual([])
+    expect(contract.headlineOf(copy).length).toBeGreaterThan(0)
   })
 
   it('throws for a template without a contract', () => {

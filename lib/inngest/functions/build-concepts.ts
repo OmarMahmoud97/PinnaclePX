@@ -8,7 +8,7 @@ import { type BrandBrief, fallbackBrief } from '@/lib/copy-slots/brief'
 import { revealTemplates } from '@/lib/db/exclusivity'
 import { markStage, readSubmission } from '@/lib/db/submissions'
 import { inngest } from '@/lib/inngest/client'
-import { submissionCreated } from '@/lib/inngest/events'
+import { submissionCreated, submissionReady } from '@/lib/inngest/events'
 import { imageryFor, type TemplateImagery } from '@/lib/images/stage'
 import { runStage } from '@/lib/inngest/stages'
 import { log } from '@/lib/log'
@@ -123,6 +123,7 @@ export const buildConcepts = inngest.createFunction(
       ),
     ])
 
+    await step.sendEvent('ready', submissionReady.create({ slug }))
     return { slug, templateIds }
   },
 )

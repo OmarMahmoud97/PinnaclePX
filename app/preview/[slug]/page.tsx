@@ -15,7 +15,17 @@ import { SITE } from '@/lib/site'
 
 type Params = Promise<{ slug: string }>
 
-export const metadata: Metadata = { robots: { index: false, follow: false } }
+// The shared link's title and description; the card image is opengraph-image.tsx beside this.
+export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
+  const { slug } = await params
+  const row = slugSchema.safeParse(slug).success ? await readSubmission(slug) : null
+  const company = row === null ? null : submissionAnswersSchema.parse(row.answers).company
+  return {
+    title: company === null ? 'Your designs' : `${company}, your homepage designs`,
+    description: `Homepage designs built from five answers by ${SITE.name}.`,
+    robots: { index: false, follow: false },
+  }
+}
 
 // The shareable address: every design a submission built, and the call. A design that is not
 // ready yet says so; an exhausted or failed submission says that instead of pretending.

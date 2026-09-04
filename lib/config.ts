@@ -92,6 +92,8 @@ export const CONFIG = {
   },
   // Copy that breaks a limit is sent back this many times with what went wrong, then falls back.
   copy: { retries: 1 },
+  // Resend's own sender, allowed only to the account owner's address, until a domain is verified.
+  email: { testSender: 'PinnaclePX <onboarding@resend.dev>' },
   form: {
     minChars: 30, // one short sentence about the business
     maxChars: 400,

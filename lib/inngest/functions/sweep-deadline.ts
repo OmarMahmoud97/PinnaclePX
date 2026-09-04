@@ -5,7 +5,7 @@ import { fallbackBrief } from '@/lib/copy-slots/brief'
 import { CONFIG } from '@/lib/config'
 import { markStage, readSubmission, STAGES } from '@/lib/db/submissions'
 import { inngest } from '@/lib/inngest/client'
-import { submissionCreated } from '@/lib/inngest/events'
+import { submissionCreated, submissionReady } from '@/lib/inngest/events'
 import { log } from '@/lib/log'
 import { contractFor } from '@/templates/registry'
 
@@ -34,7 +34,7 @@ export const sweepDeadline = inngest.createFunction(
       new Date(new Date(deadline).getTime() - CONFIG.deadline.sweeperLeadMs),
     )
 
-    return step.run('sweep', async () => {
+    const swept = await step.run('sweep', async () => {
       const row = await readSubmission(slug)
       if (row === null) throw new NonRetriableError(`No submission ${slug}`)
       const open = STAGES.filter((stage) => {
@@ -47,7 +47,7 @@ export const sweepDeadline = inngest.createFunction(
         }[stage]
         return state === 'pending' || state === 'running'
       })
-      if (open.length === 0) return { slug, swept: [] }
+      if (open.length === 0) return []
 
       const answers = submissionAnswersSchema.parse(row.answers)
       const brief = row.brief ?? fallbackBrief(answers.company, answers.description)
@@ -81,7 +81,11 @@ export const sweepDeadline = inngest.createFunction(
           log.warn('stage.swept', { slug, stage })
         }
       }
-      return { slug, swept }
+      return swept
     })
+
+    // The link goes out once whatever settled the stages; the email function is idempotent.
+    await step.sendEvent('ready', submissionReady.create({ slug }))
+    return { slug, swept }
   },
 )
