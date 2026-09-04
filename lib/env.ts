@@ -14,6 +14,9 @@ export const env = createEnv({
     INNGEST_EVENT_KEY: z.string().min(1),
     INNGEST_SIGNING_KEY: z.string().min(1),
     RESEND_API_KEY: z.string().min(1),
+    // The sender, "Name <address>", on a domain verified in Resend. Unset, Resend's test sender
+    // is used, which reaches only the account owner's own address.
+    RESEND_FROM: z.string().min(1).optional(),
   },
   client: {
     NEXT_PUBLIC_APP_URL: z.string().url(),

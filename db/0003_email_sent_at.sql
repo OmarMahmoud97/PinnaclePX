@@ -1,0 +1,1 @@
+ALTER TABLE "submission" ADD COLUMN "email_sent_at" timestamp with time zone;

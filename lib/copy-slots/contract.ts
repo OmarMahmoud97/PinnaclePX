@@ -20,6 +20,8 @@ export type TypedContract<TCopy> = Readonly<{
   fallbackCopy: (brief: BrandBrief) => TCopy
   // Every slot and count outside its limits. Empty means the copy fits.
   copyViolations: (copy: TCopy) => readonly SlotViolation[]
+  // The one line that stands for the page, for the shared card.
+  headlineOf: (copy: TCopy) => string
 }>
 
 // The same contract with the copy type erased, so the registry can hold every template in one
@@ -33,6 +35,7 @@ export type TemplateContract = Readonly<{
   guide: string
   fallbackCopy: (brief: BrandBrief) => unknown
   copyViolations: (copy: unknown) => readonly SlotViolation[]
+  headlineOf: (copy: unknown) => string
 }>
 
 export function defineContract<TCopy>(contract: TypedContract<TCopy>): TemplateContract {
@@ -44,5 +47,6 @@ export function defineContract<TCopy>(contract: TypedContract<TCopy>): TemplateC
     guide: contract.guide,
     fallbackCopy: contract.fallbackCopy,
     copyViolations: (copy) => contract.copyViolations(contract.copySchema.parse(copy)),
+    headlineOf: (copy) => contract.headlineOf(contract.copySchema.parse(copy)),
   }
 }

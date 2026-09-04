@@ -6,3 +6,8 @@ import { z } from 'zod'
 export const submissionCreated = eventType('pipeline/submission.created', {
   schema: z.object({ slug: z.string().min(1) }),
 })
+
+// Every stage has settled, by the pipeline or by the sweeper: the link can go out.
+export const submissionReady = eventType('pipeline/submission.ready', {
+  schema: z.object({ slug: z.string().min(1) }),
+})

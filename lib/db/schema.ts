@@ -72,5 +72,7 @@ export const submission = pgTable('submission', {
   deadlineAt: timestamp('deadline_at', { withTimezone: true }).notNull(),
   // When the pipeline event was sent. Null means the send failed and the next submit resends.
   eventSentAt: timestamp('event_sent_at', { withTimezone: true }),
+  // When the email with the link went out. Null until then; never sent twice.
+  emailSentAt: timestamp('email_sent_at', { withTimezone: true }),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
 })
