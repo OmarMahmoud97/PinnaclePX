@@ -157,7 +157,7 @@ function Flow({ initialAnswers }: { initialAnswers: Answers | null }) {
     dispatch({ type: 'submitting' })
     const result = await submitBrief(answers)
     if (result.ok) {
-      dispatch({ type: 'submitted', briefId: result.value.briefId })
+      dispatch({ type: 'submitted', submitted: result.value })
       clearDraft()
       trackEvent('brief_complete', { step: current + 1 })
       go(DONE)
@@ -313,7 +313,7 @@ function Flow({ initialAnswers }: { initialAnswers: Answers | null }) {
           className="flex flex-col items-center px-4 py-8 sm:px-8 lg:items-start lg:justify-center lg:px-16 lg:py-16"
         >
           {showDone ? (
-            <BriefDone name={answers.name} email={answers.email} briefId={status.briefId} />
+            <BriefDone name={answers.name} email={answers.email} submitted={status} />
           ) : (
             <QuestionPane
               key={questionId}

@@ -7,14 +7,16 @@ const SENTENCE =
 const PIXEL =
   'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg=='
 
-async function answerFirstTwo(page: Page) {
+// The submit test passes a fresh address: an identity that has seen every ready template is
+// shown the book-a-call state instead of a design.
+async function answerFirstTwo(page: Page, email = 'sam@ashgrove.example') {
   await page.goto('/start')
   await page.getByLabel('What does your business do?').fill(SENTENCE)
   await page.getByRole('button', { name: 'Next', exact: true }).click()
   await expect(page).toHaveURL(/\/start\?q=2$/)
   await page.getByLabel('Your name').fill('Sam')
   await page.getByLabel('Company').fill('Ashgrove Physio')
-  await page.getByLabel('Email').fill('sam@ashgrove.example')
+  await page.getByLabel('Email').fill(email)
 }
 
 // Which question shows comes from the URL, so a click is only done once the URL has moved.
@@ -113,19 +115,29 @@ test('choosing a palette re-tints the sketch', async ({ page }) => {
 })
 
 test('all five questions lead to the confirmation', async ({ page }) => {
-  await answerFirstTwo(page)
+  test.skip(test.info().config.metadata.canSubmit !== true, 'needs a database and Inngest')
+  const email = `sam+${String(Date.now())}@ashgrove.example`
+  await answerFirstTwo(page, email)
   for (const question of [3, 4, 5]) await nextTo(page, question)
   await expect(
     page.getByRole('heading', { level: 1, name: "Pick Ashgrove Physio's colours." }),
   ).toBeVisible()
   await page.getByRole('button', { name: 'Show me my three designs' }).click()
   await expect(page).toHaveURL(/q=done$/)
+  // One design while only Aurora is ready; the sentence follows the count. The pipeline can
+  // finish inside the assertion's timeout, so the heading may already say ready.
   await expect(
-    page.getByRole('heading', { level: 1, name: 'Sam, your designs are on their way.' }),
+    page.getByRole('heading', {
+      level: 1,
+      name: /Sam, your designs? (is|are) (on (its|their) way|ready)\./,
+    }),
   ).toBeVisible()
-  await expect(page.getByText('sam@ashgrove.example')).toBeVisible()
-  await expect(page.getByRole('timer')).toHaveText(/[45]:\d\d/)
-  await expect(page.getByText('Design one')).toBeVisible()
+  await expect(page.getByText(email)).toBeVisible()
+  await expect(page.getByRole('timer')).toHaveText(/[45]:\d\d|Ready/)
+  // The pipeline names the design as soon as it has chosen the template, then links it.
+  const design = page.getByRole('link', { name: 'Aurora' })
+  await expect(design).toBeVisible({ timeout: 90_000 })
+  await expect(design).toHaveAttribute('href', /\/preview\/[a-km-z2-9]{12}\/t01-aurora$/)
 })
 
 test('a logo replaces the mark in both frames and can be removed', async ({ page }) => {

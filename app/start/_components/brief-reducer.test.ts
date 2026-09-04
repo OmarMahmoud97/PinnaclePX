@@ -165,8 +165,13 @@ describe('briefReducer', () => {
     expect(failed.answers).toEqual(COMPLETE)
   })
 
-  it('carries the brief id once submitted', () => {
-    const done = briefReducer(answered, { type: 'submitted', briefId: 'brief-1' })
-    expect(done.status).toEqual({ kind: 'done', briefId: 'brief-1' })
+  it('carries the submission once submitted', () => {
+    const submitted = {
+      slug: 'abcdefghjkmn',
+      deadlineAt: '2026-09-04T12:05:00.000Z',
+      conceptCount: 1,
+    }
+    const done = briefReducer(answered, { type: 'submitted', submitted })
+    expect(done.status).toEqual({ kind: 'done', ...submitted })
   })
 })

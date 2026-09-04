@@ -4,22 +4,25 @@ import { useEffect, useState } from 'react'
 
 const TICK_MS = 1000
 
-// Milliseconds left of a budget that starts when the component mounts. Measured from the clock,
-// not counted in ticks, so a slow tab still shows the right time.
-export function useCountdown(totalMs: number): number {
-  const [remaining, setRemaining] = useState(totalMs)
+// Milliseconds left until an instant the server set, so a refresh or a shared link shows the
+// true time. Measured from the clock, not counted in ticks, so a slow tab still shows the right
+// time.
+export function useCountdown(deadlineAt: string): number {
+  const deadline = new Date(deadlineAt).getTime()
+  const [remaining, setRemaining] = useState(() => Math.max(deadline - Date.now(), 0))
 
   useEffect(() => {
-    const startedAt = Date.now()
-    const id = setInterval(() => {
-      const left = Math.max(totalMs - (Date.now() - startedAt), 0)
+    const tick = () => {
+      const left = Math.max(deadline - Date.now(), 0)
       setRemaining(left)
       if (left === 0) clearInterval(id)
-    }, TICK_MS)
+    }
+    const id = setInterval(tick, TICK_MS)
+    tick()
     return () => {
       clearInterval(id)
     }
-  }, [totalMs])
+  }, [deadline])
 
   return remaining
 }

@@ -40,6 +40,12 @@ export function uploadPathname(
 }
 
 const UPLOAD_PATH = /^(logos|photos)\/[a-f0-9]{64}\.(png|jpg|webp|svg)$/
+const UPLOAD_URL = /\/(?:logos|photos)\/([a-f0-9]{64})\.(?:png|jpg|webp|svg)$/
+
+// The hash a stored picture was named by, read back from its URL, or null for any other URL.
+export function uploadShaOf(url: string): string | null {
+  return UPLOAD_URL.exec(url)?.[1] ?? null
+}
 
 // The kind a requested path belongs to, or null when it is not a path we issue tokens for.
 export function uploadKindOf(pathname: string): UploadKind | null {

@@ -20,10 +20,14 @@ type FieldName = TextField | FileField | 'colours'
 
 export type Errors = Readonly<Partial<Record<FieldName, string>>>
 
+// What the server returned for a submission: its address, the deadline the countdown runs to,
+// and how many designs it builds.
+export type Submitted = Readonly<{ slug: string; deadlineAt: string; conceptCount: number }>
+
 type BriefStatus =
   | Readonly<{ kind: 'editing' }>
   | Readonly<{ kind: 'submitting' }>
-  | Readonly<{ kind: 'done'; briefId: string }>
+  | Readonly<{ kind: 'done' } & Submitted>
 
 // Which question is showing lives in the URL, not here. This holds only what the visitor said.
 export type BriefState = Readonly<{
@@ -46,7 +50,7 @@ export type BriefAction =
   | { type: 'clear-errors' }
   | { type: 'hydrate'; answers: Answers }
   | { type: 'submitting' }
-  | { type: 'submitted'; briefId: string }
+  | { type: 'submitted'; submitted: Submitted }
   | { type: 'submit-failed'; message: string }
 
 export const INITIAL_STATE: BriefState = {
@@ -187,7 +191,7 @@ export function briefReducer(state: BriefState, action: BriefAction): BriefState
     case 'submitting':
       return { ...state, submitError: undefined, status: { kind: 'submitting' } }
     case 'submitted':
-      return { ...state, submitError: undefined, status: { kind: 'done', briefId: action.briefId } }
+      return { ...state, submitError: undefined, status: { kind: 'done', ...action.submitted } }
     case 'submit-failed':
       return { ...state, submitError: action.message, status: { kind: 'editing' } }
   }
