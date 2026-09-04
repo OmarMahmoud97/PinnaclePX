@@ -2,9 +2,27 @@
 // --motion-* variables in app/globals.css (ADR 0005).
 export const CONFIG = {
   stageBudgetMs: { brief: 15_000, select: 5_000, copy: 60_000, imagery: 45_000, tokens: 5_000 },
-  deadline: { totalMs: 300_000 }, // five minutes end to end
+  // Five minutes end to end. The sweeper wakes this long before the deadline and writes the
+  // fallback into any stage still open, so the clock never reaches zero without a result.
+  deadline: { totalMs: 300_000, sweeperLeadMs: 45_000 },
   rateLimit: { windowSec: 60, max: 5 },
-  logo: { luminanceCutoff: 0.5 },
+  // How many times the reveal re-reads `seen` and tries again after another submission for the
+  // same identity took a template first (lib/db/exclusivity.ts).
+  exclusivity: { attempts: 3 },
+  // Logo analysis (lib/logo/analyse.ts): the raster is sampled at samplePx; pixels under
+  // alphaFloor are ignored; mean perceptual lightness (CIE L*, 0 to 1) under darkBelow is dark
+  // artwork, over lightAbove is light; a border ring this wide that is backdropShare opaque is a
+  // box behind the mark. The normalised raster the templates show is at most maxPx on its
+  // longer side; an SVG is rasterised at the density that fills it.
+  logo: {
+    samplePx: 128,
+    alphaFloor: 16,
+    darkBelow: 0.35,
+    lightAbove: 0.65,
+    borderRingPx: 4,
+    backdropShare: 0.9,
+    maxPx: 512,
+  },
   // WCAG AA body text. The solver moves a text token's lightness by stepL until its pair passes,
   // and repeats over every pair until nothing moves, up to maxPasses (lib/tokens/contrast.ts).
   contrast: { minRatio: 4.5, stepL: 0.02, maxPasses: 8 },
@@ -57,7 +75,7 @@ export const CONFIG = {
   },
   call: { minutes: 20 }, // the Cal.com event length is set by hand to match
   retention: { days: 30 }, // lead, submission and blobs are deleted after this unless a call was booked
-  polling: { designsMs: 10_000 }, // how often the done page asks whether the designs are ready
+  polling: { statusMs: 3_000 }, // how often the done page asks how the designs are coming along
   analytics: { sectionViewThreshold: 0.2 }, // share of a section on screen before it counts as viewed
   // The hero sketch typing an example brief and then building it into a page, on a loop: the
   // 230-character VetPres brief takes about 4 s and the brief about 8 s, the build 2.4 s, the

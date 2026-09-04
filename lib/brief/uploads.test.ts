@@ -1,4 +1,10 @@
-import { acceptFor, contentTypesFor, uploadKindOf, uploadPathname } from '@/lib/brief/uploads'
+import {
+  acceptFor,
+  contentTypesFor,
+  uploadKindOf,
+  uploadPathname,
+  uploadShaOf,
+} from '@/lib/brief/uploads'
 
 const SHA = 'a'.repeat(64)
 
@@ -31,6 +37,13 @@ describe('uploadKindOf', () => {
     `logos/${SHA}.png/extra`,
   ])('refuses %s', (pathname) => {
     expect(uploadKindOf(pathname)).toBeNull()
+  })
+})
+
+describe('uploadShaOf', () => {
+  it('reads the hash back from a stored URL', () => {
+    expect(uploadShaOf(`https://x.public.blob.vercel-storage.com/logos/${SHA}.svg`)).toBe(SHA)
+    expect(uploadShaOf('https://example.com/other.png')).toBeNull()
   })
 })
 

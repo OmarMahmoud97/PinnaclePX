@@ -1,19 +1,12 @@
 {
   "$schema": "https://unpkg.com/knip@6/schema.json",
-  // Scaffold modules with no consumer yet. Remove each entry as soon as the pipeline imports it.
+  // drizzle.config.ts is read by drizzle-kit, never imported.
   "entry": [
-    "lib/db/client.ts",
-    "lib/db/schema.ts",
-    // The answers schema is validated by the Server Action once the pipeline lands (slice 3).
-    "lib/brief/submission.ts",
     "drizzle.config.ts",
-    // Template components are rendered by the preview page once it lands.
+    // The nine placeholder components are rendered by templates/render.tsx as each is built.
     "templates/*/index.tsx",
   ],
-  // drizzle.config.ts imports lib/env, which throws without a full .env.local, so Knip must not
-  // load it. The config and schema paths are listed under entry above instead.
+  // drizzle.config.ts loads .env.local itself and needs only DATABASE_URL, but Knip's Drizzle
+  // plugin would still load it; the path is listed under entry above instead.
   "drizzle": false,
-  // sharp is opted out of bundling in next.config.ts and is imported by lib/images once the
-  // imagery stage lands.
-  "ignoreDependencies": ["sharp"],
 }

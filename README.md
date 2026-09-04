@@ -12,7 +12,10 @@ Next.js 16 App Router, React 19, TypeScript 5.9 (strict), Tailwind v4, Drizzle o
 pnpm install
 cp .env.example .env.local   # or: vercel env pull .env.local
 pnpm dev
+npx inngest-cli@latest dev -u http://localhost:3000/api/inngest   # the pipeline, in a second terminal
 ```
+
+With `INNGEST_DEV=1` in `.env.local` (see `.env.example`), a submission's event goes to the local dev server at http://localhost:8288, where each run and its steps can be watched.
 
 Every environment variable is validated in `lib/env.ts` and the build fails fast if one is missing.
 
@@ -40,12 +43,15 @@ app/          routes only (thin: validate, delegate, respond)
   start/                       the five questions on their own page, beside a live sketch
     _components/               flow, question pane, sketch, reducer, Server Action
   examples/aurora/             the Aurora template with example content, for design review (noindex)
+  preview/[slug]/              the shareable page: every design a submission built, and the call
+  preview/[slug]/[templateId]/ one design, full page, rendered from the submission row (ADR 0009)
+  api/upload/ api/inngest/     the Blob token route and the Inngest serve handler
 components/   shared UI primitives
   ui/ brand/
   sketch/                      the live sketch: model, parts, browser and phone frames, chips
 lib/          all application logic
-  ai/ images/ db/ inngest/ logo/  IO modules
-  brief/ select/ tokens/ copy-slots/  pure modules (copy-slots holds the template contract, ADR 0009)
+  ai/ images/ db/ inngest/ logo/  IO modules (inngest/functions holds the pipeline, one function per file)
+  brief/ identity/ select/ tokens/ copy-slots/ preview/  pure modules (copy-slots holds the template contract, ADR 0009)
   analytics/                   client event names and the track() wrapper
   motion/                      the lazy GSAP loader and the reduced-motion hook (ADR 0005)
   env.ts config.ts site.ts errors.ts log.ts cn.ts

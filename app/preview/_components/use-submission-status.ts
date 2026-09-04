@@ -1,14 +1,15 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { getDesigns } from '@/app/start/_components/actions'
-import type { DesignsStatus } from '@/lib/brief/designs'
+import { getSubmissionStatus } from '@/app/preview/actions'
+import type { SubmissionStatus } from '@/lib/brief/status'
 import { CONFIG } from '@/lib/config'
 
-// Asks the server for the finished designs every few seconds until they are ready or the brief
-// turns out to be unknown. A hidden tab waits instead of asking. Cancelled when the page is left.
-export function useDesigns(briefId: string): DesignsStatus {
-  const [status, setStatus] = useState<DesignsStatus>({ status: 'building' })
+// Asks the server how the designs are coming along every few seconds until they are ready, or
+// the submission turns out to be exhausted, failed or unknown. A hidden tab waits instead of
+// asking. Cancelled when the page is left. Starts from what the caller already knows.
+export function useSubmissionStatus(slug: string, initial: SubmissionStatus): SubmissionStatus {
+  const [status, setStatus] = useState<SubmissionStatus>(initial)
 
   useEffect(() => {
     let cancelled = false
@@ -17,7 +18,7 @@ export function useDesigns(briefId: string): DesignsStatus {
     const later = () => {
       timer = setTimeout(() => {
         void poll()
-      }, CONFIG.polling.designsMs)
+      }, CONFIG.polling.statusMs)
     }
 
     async function poll() {
@@ -26,7 +27,7 @@ export function useDesigns(briefId: string): DesignsStatus {
         return
       }
       try {
-        const next = await getDesigns(briefId)
+        const next = await getSubmissionStatus(slug)
         if (cancelled) return
         setStatus(next)
         if (next.status === 'building') later()
@@ -36,12 +37,12 @@ export function useDesigns(briefId: string): DesignsStatus {
       }
     }
 
-    later()
+    if (initial.status === 'building') later()
     return () => {
       cancelled = true
       clearTimeout(timer)
     }
-  }, [briefId])
+  }, [slug, initial.status])
 
   return status
 }

@@ -7,8 +7,8 @@ export type LogoPolarity = Artwork | 'mixed'
 
 export type LogoAnalysis = Readonly<{
   polarity: LogoPolarity
-  // Alpha-weighted mean relative luminance of the artwork, 0 to 1.
-  luminance: number
+  // Alpha-weighted mean perceptual lightness (CIE L*, 0 to 1) of the visible artwork.
+  lightness: number
   opaqueBackdrop: boolean
   // The normalised raster on Blob, or null when the file could not be read and the template
   // shows the wordmark instead.
