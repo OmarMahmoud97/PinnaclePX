@@ -1,6 +1,7 @@
 import 'server-only'
 import { deleteBlobs } from '@/lib/blob/delete'
-import { blobUrlsOf, deleteSubmission, urlReferencedElsewhere } from '@/lib/db/retention'
+import { blobUrlsIn } from '@/lib/blob/urls'
+import { deleteSubmission, urlReferencedElsewhere } from '@/lib/db/retention'
 import { readSubmission } from '@/lib/db/submissions'
 
 // Removes one submission and the files on Blob that only it points at. Null when the row is
@@ -9,7 +10,7 @@ export async function removeSubmission(slug: string): Promise<number | null> {
   const row = await readSubmission(slug)
   if (row === null) return null
   const urls: string[] = []
-  for (const url of blobUrlsOf(row)) {
+  for (const url of blobUrlsIn(row)) {
     if (!(await urlReferencedElsewhere(url, slug))) urls.push(url)
   }
   await deleteBlobs(urls)

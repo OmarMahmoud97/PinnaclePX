@@ -1,6 +1,6 @@
 import 'client-only'
 import { upload } from '@vercel/blob/client'
-import { z } from 'zod'
+import * as z from 'zod'
 import { type UploadKind, uploadPathname } from '@/lib/brief/uploads'
 import { AppError } from '@/lib/errors'
 
@@ -18,7 +18,7 @@ function alreadyStored(error: unknown): boolean {
   return error instanceof Error && error.message.includes('already exists')
 }
 
-const storedSchema = z.object({ url: z.string().url() })
+const storedSchema = z.object({ url: z.url() })
 
 // The URL of the file already at this path, from the route that issues tokens.
 async function storedUrl(pathname: string): Promise<string> {

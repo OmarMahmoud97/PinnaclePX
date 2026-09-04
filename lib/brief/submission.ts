@@ -1,4 +1,4 @@
-import { z } from 'zod'
+import * as z from 'zod'
 import { toSixDigitHex } from '@/lib/brief/hex'
 import { PALETTE_IDS } from '@/lib/brief/palettes'
 import type { briefSchema } from '@/lib/brief/schema'
@@ -7,7 +7,7 @@ import { AppError } from '@/lib/errors'
 
 // A picture the visitor uploaded from the browser straight to Blob: its name for the record and
 // its public URL for the pipeline. The bytes never pass through a function.
-const uploadedFile = z.object({ fileName: z.string().min(1), url: z.string().url() })
+const uploadedFile = z.object({ fileName: z.string().min(1), url: z.url() })
 
 // The answers as the pipeline reads them from the submission row: what the visitor said, minus
 // the name and email, which live on the lead. Validated when stored and again when read.

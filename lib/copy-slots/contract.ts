@@ -1,4 +1,4 @@
-import type { z } from 'zod/v4'
+import type * as z from 'zod'
 import type { BrandBrief } from '@/lib/copy-slots/brief'
 import type { TemplateMeta } from '@/lib/copy-slots/template-meta'
 import type { SlotViolation } from '@/lib/copy-slots/validate'

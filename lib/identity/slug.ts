@@ -1,5 +1,5 @@
 import { randomBytes } from 'node:crypto'
-import { z } from 'zod'
+import * as z from 'zod'
 
 // Lowercase letters and digits that are never confused for each other in a URL read aloud.
 const ALPHABET = 'abcdefghijkmnpqrstuvwxyz23456789'

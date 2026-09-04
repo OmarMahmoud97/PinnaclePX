@@ -1,4 +1,4 @@
-import { integer, jsonb, pgTable, primaryKey, text, timestamp } from 'drizzle-orm/pg-core'
+import { index, integer, jsonb, pgTable, primaryKey, text, timestamp } from 'drizzle-orm/pg-core'
 import type { SubmissionAnswers } from '@/lib/brief/submission'
 import type { SlotImage } from '@/lib/copy-slots/assets'
 import type { BrandBrief } from '@/lib/copy-slots/brief'
@@ -88,3 +88,21 @@ export const submission = pgTable('submission', {
   emailSentAt: timestamp('email_sent_at', { withTimezone: true }),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
 })
+
+// A file on Blob a submission points at: an upload in its answers, its logo raster, a re-hosted
+// picture. Written beside the row and the stage results (lib/db/submissions.ts), so the
+// retention sweep can ask whether anything else points at a file with one indexed read rather
+// than a text scan of every row. Goes with the row.
+export const blobRef = pgTable(
+  'blob_ref',
+  {
+    url: text('url').notNull(),
+    slug: text('slug')
+      .notNull()
+      .references(() => submission.slug, { onDelete: 'cascade' }),
+  },
+  (table) => [
+    primaryKey({ columns: [table.url, table.slug] }),
+    index('blob_ref_slug_idx').on(table.slug),
+  ],
+)

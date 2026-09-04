@@ -1,4 +1,4 @@
-import { z } from 'zod/v4'
+import * as z from 'zod'
 import type { TemplateAssets } from '@/lib/copy-slots/assets'
 import type { BrandBrief } from '@/lib/copy-slots/brief'
 import { defineContract } from '@/lib/copy-slots/contract'

@@ -1,4 +1,4 @@
-import { z } from 'zod/v4'
+import * as z from 'zod'
 import { collapse } from '@/lib/copy-slots/fit'
 
 // What the brief stage produces from the visitor's sentence: the raw material every template's
