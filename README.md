@@ -39,6 +39,7 @@ app/          routes only (thin: validate, delegate, respond)
   _components/                 home page sections (private, not routable)
   start/                       the five questions on their own page, beside a live sketch
     _components/               flow, question pane, sketch, reducer, Server Action
+  examples/aurora/             the Aurora template with example content, for design review (noindex)
 components/   shared UI primitives
   ui/ brand/
   sketch/                      the live sketch: model, parts, browser and phone frames, chips
@@ -49,7 +50,7 @@ lib/          all application logic
   motion/                      the lazy GSAP loader and the reduced-motion hook (ADR 0005)
   env.ts config.ts site.ts errors.ts log.ts cn.ts
 scripts/      bundle-budget.mjs, run after next build (pnpm budget)
-templates/    the ten landing page templates and their registry
+templates/    the ten landing page templates and their registry (t01-aurora built, ADR 0008)
 db/           generated SQL migrations (committed)
 tests/        integration tests and fixtures
 e2e/          Playwright specs

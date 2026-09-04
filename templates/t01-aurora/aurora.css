@@ -1,0 +1,111 @@
+/*
+ * Aurora (t01). The motion Tailwind utilities cannot write, scoped to the template's root so
+ * nothing leaks into the site. Colours are the semantic tokens on :root, so a brand's token set
+ * recolours the light; durations are the site's --motion-* and --ease-* variables. Everything
+ * here is additive: with the stylesheet missing, JavaScript off, reduced motion, or a browser
+ * without scroll-driven animations, every element sits in its finished state.
+ */
+.aurora {
+  --aurora-stagger: 90ms; /* between the hero's parts as they rise */
+  --aurora-bloom: 1.4s; /* the light coming up behind them */
+}
+
+/* The one page-load moment: the hero's parts rise in turn while the light blooms behind them. */
+@keyframes aurora-rise {
+  from {
+    opacity: 0;
+    translate: 0 1rem;
+  }
+}
+
+@keyframes aurora-bloom {
+  from {
+    opacity: 0;
+    scale: 0.9;
+  }
+}
+
+@keyframes aurora-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+/*
+ * The rest answers the scroll: the light drifts as the page moves, the steps' line draws as the
+ * list arrives, the photograph settles as it passes, the header turns to glass.
+ */
+@keyframes aurora-drift {
+  to {
+    translate: var(--drift-x, 0) var(--drift-y, 0);
+  }
+}
+
+@keyframes aurora-draw {
+  from {
+    scale: 1 0;
+  }
+}
+
+@keyframes aurora-settle {
+  from {
+    scale: 1.08;
+  }
+}
+
+@keyframes aurora-glass {
+  from {
+    background-color: transparent;
+    border-color: transparent;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .aurora [data-rise] {
+    animation: aurora-rise var(--motion-settle) var(--ease-enter) both;
+    animation-delay: calc(var(--i, 0) * var(--aurora-stagger));
+  }
+
+  .aurora [data-bloom] {
+    animation: aurora-bloom var(--aurora-bloom) var(--ease-enter) both;
+  }
+
+  @supports (animation-timeline: scroll()) {
+    .aurora [data-drift] {
+      animation: aurora-drift linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0 100vh;
+    }
+
+    .aurora [data-draw] {
+      transform-origin: top;
+      animation: aurora-draw linear both;
+      animation-timeline: view();
+      animation-range: entry 10% cover 60%;
+    }
+
+    .aurora [data-settle] {
+      animation: aurora-settle linear both;
+      animation-timeline: view();
+      animation-range: entry 0% exit 100%;
+    }
+  }
+}
+
+/* Reduced motion: the hero still arrives, by opacity alone, and nothing follows the scroll. */
+@media (prefers-reduced-motion: reduce) {
+  .aurora [data-rise],
+  .aurora [data-bloom] {
+    animation: aurora-fade var(--motion-settle) var(--ease-enter) both;
+  }
+}
+
+/* Colour, not motion, so it runs under reduced motion too. Without support the header is glass
+ * from the start, which its own classes paint. */
+@supports (animation-timeline: scroll()) {
+  .aurora-header {
+    animation: aurora-glass linear both;
+    animation-timeline: scroll(root);
+    animation-range: 0 6rem;
+  }
+}
