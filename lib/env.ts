@@ -5,6 +5,9 @@ export const env = createEnv({
   server: {
     DATABASE_URL: z.string().url(),
     ANTHROPIC_API_KEY: z.string().min(1),
+    // Required only for an identity-linked (personal or service account) key, which must name
+    // the workspace on every request. A key created inside one workspace needs none.
+    ANTHROPIC_WORKSPACE_ID: z.string().min(1).optional(),
     PEXELS_API_KEY: z.string().min(1),
     HMAC_SECRET: z.string().min(32),
     BLOB_READ_WRITE_TOKEN: z.string().min(1),

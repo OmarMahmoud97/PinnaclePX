@@ -70,10 +70,18 @@ describe('auroraFallbackCopy', () => {
 })
 
 describe('auroraCopySchema', () => {
-  it('rejects a frame with two rows', () => {
+  it('accepts a frame with two rows, which the violations then report as a count', () => {
     const copy = auroraFallbackCopy(fallbackBrief('Kestrel', 'Job scheduling.'))
     const broken = { ...copy, hero: { ...copy.hero, frame: { title: 'x', rows: ['a', 'b'] } } }
-    expect(auroraCopySchema.safeParse(broken).success).toBe(false)
+    expect(auroraCopySchema.safeParse(broken).success).toBe(true)
+    expect(auroraContract.copyViolations(broken)).toEqual([
+      { slot: 'hero.frame.rows', length: 2, min: 3, max: 3 },
+    ])
+  })
+
+  it('has a guide that names every slot with its range', () => {
+    expect(auroraContract.guide).toContain('- hero.headline: 18 to 60 characters')
+    expect(auroraContract.guide.split('\n')).toHaveLength(27)
   })
 
   it('rejects a footer link with an unknown target', () => {

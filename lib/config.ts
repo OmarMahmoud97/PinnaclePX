@@ -67,6 +67,15 @@ export const CONFIG = {
     greyChroma: 0.02,
   },
   templates: { count: 10, conceptsShown: 3 },
+  // The model calls (lib/ai). The guide's models: Sonnet 5 writes, Haiku 4.5 ranks pictures.
+  // Effort is medium: the copy is judged by code afterwards, so the model need not deliberate.
+  ai: {
+    models: { brief: 'claude-sonnet-5', copy: 'claude-sonnet-5', rank: 'claude-haiku-4-5' },
+    maxTokens: { brief: 4_000, copy: 8_000 },
+    effort: 'medium',
+  },
+  // Copy that breaks a limit is sent back this many times with what went wrong, then falls back.
+  copy: { retries: 1 },
   form: {
     minChars: 30, // one short sentence about the business
     maxChars: 400,
