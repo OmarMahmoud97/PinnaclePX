@@ -15,7 +15,7 @@ export async function writeBrief(answers: SubmissionAnswers, slug: string): Prom
     {
       model: CONFIG.ai.models.brief,
       max_tokens: CONFIG.ai.maxTokens.brief,
-      system: [{ type: 'text', text: SYSTEM_PROMPT, cache_control: { type: 'ephemeral' } }],
+      system: SYSTEM_PROMPT,
       messages: [{ role: 'user', content: briefPrompt(answers) }],
       thinking: { type: 'disabled' },
       output_config: { format: zodOutputFormat(briefSchema) },
@@ -28,7 +28,6 @@ export async function writeBrief(answers: SubmissionAnswers, slug: string): Prom
     model: response.model,
     stop: response.stop_reason ?? 'none',
     input: response.usage.input_tokens,
-    cached: response.usage.cache_read_input_tokens ?? 0,
     output: response.usage.output_tokens,
   })
   if (response.parsed_output === null) {

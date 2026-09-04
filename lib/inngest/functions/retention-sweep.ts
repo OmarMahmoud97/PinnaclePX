@@ -1,16 +1,13 @@
 import 'server-only'
 import { cron } from 'inngest'
-import { deleteBlobs } from '@/lib/blob/delete'
 import { CONFIG } from '@/lib/config'
 import {
-  blobUrlsOf,
   deleteLeadsWithoutSubmissions,
   deleteRateLimitsBefore,
-  deleteSubmission,
-  submissionsCreatedBefore,
-  urlReferencedElsewhere,
+  slugsCreatedBefore,
 } from '@/lib/db/retention'
 import { inngest } from '@/lib/inngest/client'
+import { removeSubmission } from '@/lib/inngest/remove-submission'
 import { log } from '@/lib/log'
 
 const DAY_MS = 86_400_000
@@ -23,21 +20,11 @@ export const retentionSweep = inngest.createFunction(
   { id: 'retention-sweep', retries: 1, triggers: [cron(CONFIG.retention.cron)] },
   async ({ step }) => {
     const before = new Date(Date.now() - CONFIG.retention.days * DAY_MS)
-    const expired = await step.run('find-expired', async () =>
-      (await submissionsCreatedBefore(before)).map((row) => ({ slug: row.slug })),
-    )
-    for (const { slug } of expired) {
+    const expired = await step.run('find-expired', () => slugsCreatedBefore(before))
+    for (const slug of expired) {
       await step.run(`remove-${slug}`, async () => {
-        const rows = await submissionsCreatedBefore(before)
-        const row = rows.find((candidate) => candidate.slug === slug)
-        if (row === undefined) return
-        const urls: string[] = []
-        for (const url of blobUrlsOf(row)) {
-          if (!(await urlReferencedElsewhere(url, slug))) urls.push(url)
-        }
-        await deleteBlobs(urls)
-        await deleteSubmission(slug)
-        log.info('retention.removed', { slug, blobs: urls.length })
+        const blobs = await removeSubmission(slug)
+        if (blobs !== null) log.info('retention.removed', { slug, blobs })
       })
     }
     return step.run('tidy', async () => {

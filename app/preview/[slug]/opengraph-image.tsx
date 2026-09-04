@@ -1,7 +1,5 @@
 import { ImageResponse } from 'next/og'
-import { submissionAnswersSchema } from '@/lib/brief/submission'
-import { readSubmission } from '@/lib/db/submissions'
-import { slugSchema } from '@/lib/identity/slug'
+import { readPreview } from '@/lib/preview/read'
 import { statusOf } from '@/lib/preview/status'
 import { SITE } from '@/lib/site'
 import { contractFor } from '@/templates/registry'
@@ -17,17 +15,17 @@ type Params = Promise<{ slug: string }>
 // studio's own colours and no headline.
 export default async function Image({ params }: { params: Params }) {
   const { slug } = await params
-  const row = slugSchema.safeParse(slug).success ? await readSubmission(slug) : null
-  const status = row === null ? null : statusOf(row)
-  const company = row === null ? SITE.name : submissionAnswersSchema.parse(row.answers).company
-  const templateId = row?.templateIds?.[0] ?? null
+  const found = await readPreview(slug)
+  const status = found === null ? null : statusOf(found.row)
+  const company = found?.answers.company ?? SITE.name
+  const templateId = found?.row.templateIds?.[0] ?? null
   const headline =
-    row !== null &&
+    found !== null &&
     (status?.status === 'ready' || status?.status === 'partial') &&
     templateId !== null
-      ? contractFor(templateId).headlineOf(row.copy[templateId])
+      ? contractFor(templateId).headlineOf(found.row.copy[templateId])
       : null
-  const tokens = row?.tokens ?? null
+  const tokens = found?.row.tokens ?? null
   const surface = tokens?.surface ?? '#ffffff'
   const onSurface = tokens?.['on-surface'] ?? '#0f172a'
   const muted = tokens?.['on-surface-muted'] ?? '#475569'

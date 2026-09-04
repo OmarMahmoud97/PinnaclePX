@@ -9,9 +9,11 @@ import { AURORA_CONTRAST_PAIRS } from '@/templates/t01-aurora/copy-slots'
 import { KESTREL } from '@/templates/t01-aurora/example/content'
 
 // The example brand's type: a display face with some character for the headlines and a plain
-// one for everything else. A brand's own pair replaces them on the preview root.
-const display = Bricolage_Grotesque({ subsets: ['latin'], display: 'swap' })
-const body = Instrument_Sans({ subsets: ['latin'], display: 'swap' })
+// one for everything else. A brand's own pair replaces them on the preview root. Not preloaded:
+// through the Aurora chunk both faces were preloaded on every preview page as well, where one
+// of them is never used (verified on a production build, 4 September 2026).
+const display = Bricolage_Grotesque({ subsets: ['latin'], display: 'swap', preload: false })
+const body = Instrument_Sans({ subsets: ['latin'], display: 'swap', preload: false })
 
 // Kestrel's token set, derived the way the tokens stage derives one: the amber brand hue kept,
 // surfaces tinted with it at low chroma, and every pair the template declares at WCAG AA or

@@ -6,7 +6,8 @@ import type { CopyViolation } from '@/lib/copy-slots/rules'
 // The words the model is given, built here so a test can read them and nothing personal is
 // ever added by accident: only the company name, the owner's own sentence and their style.
 
-// Stable, so it is cached across every call.
+// The same on every call, but too short for the prompt cache: Sonnet 5 caches nothing under
+// 1,024 tokens, and this is about 180. Add a cache marker only if it grows past that.
 export const SYSTEM_PROMPT = `You write homepage copy for a small UK business from the short brief its owner typed.
 
 Rules, all of them:

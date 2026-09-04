@@ -3,6 +3,7 @@ import { and, eq, inArray, isNull } from 'drizzle-orm'
 import { db } from '@/lib/db/client'
 import { lead, type StageState, submission } from '@/lib/db/schema'
 import { AppError } from '@/lib/errors'
+import type { StageRow } from '@/lib/preview/status'
 
 export type SubmissionRow = typeof submission.$inferSelect
 type NewSubmission = typeof submission.$inferInsert
@@ -71,6 +72,26 @@ export async function createOrFindSubmission(input: NewSubmission): Promise<Foun
 
 export async function readSubmission(slug: string): Promise<SubmissionRow | null> {
   const rows = await db.select().from(submission).where(eq(submission.slug, slug))
+  return rows[0] ?? null
+}
+
+// The stage columns and nothing else: what the status poll asks for every few seconds, without
+// the answers, brief, copy and imagery the row also carries.
+export async function readStageRow(slug: string): Promise<StageRow | null> {
+  const rows = await db
+    .select({
+      slug: submission.slug,
+      deadlineAt: submission.deadlineAt,
+      conceptCount: submission.conceptCount,
+      templateIds: submission.templateIds,
+      stageSelect: submission.stageSelect,
+      stageTokens: submission.stageTokens,
+      stageBrief: submission.stageBrief,
+      stageCopy: submission.stageCopy,
+      stageImagery: submission.stageImagery,
+    })
+    .from(submission)
+    .where(eq(submission.slug, slug))
   return rows[0] ?? null
 }
 

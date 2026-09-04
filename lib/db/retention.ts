@@ -7,12 +7,21 @@ import type { SubmissionRow } from '@/lib/db/submissions'
 // What the retention sweep and erasure read and remove. `seen` is kept by retention, because
 // the exclusivity promise outlives the preview; erasure removes it too.
 
-export async function submissionsCreatedBefore(before: Date): Promise<SubmissionRow[]> {
-  return db.select().from(submission).where(lt(submission.createdAt, before))
+// The slugs to remove, and nothing else: each is read in full in its own step.
+export async function slugsCreatedBefore(before: Date): Promise<string[]> {
+  const rows = await db
+    .select({ slug: submission.slug })
+    .from(submission)
+    .where(lt(submission.createdAt, before))
+  return rows.map((row) => row.slug)
 }
 
-export async function submissionsOf(identityHash: string): Promise<SubmissionRow[]> {
-  return db.select().from(submission).where(eq(submission.identityHash, identityHash))
+export async function slugsOf(identityHash: string): Promise<string[]> {
+  const rows = await db
+    .select({ slug: submission.slug })
+    .from(submission)
+    .where(eq(submission.identityHash, identityHash))
+  return rows.map((row) => row.slug)
 }
 
 // Every URL a submission's row points at on Blob: the raster, the pictures, the uploads.

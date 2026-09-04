@@ -2,12 +2,13 @@ import type { SubmissionAnswers } from '@/lib/brief/submission'
 import { CONFIG } from '@/lib/config'
 import type { BrandBrief } from '@/lib/copy-slots/brief'
 
-// What to put in one image slot: the visitor's own photograph, or a search to run. The first
-// slot of a template is its hero and takes the brief's hero queries; the rest take the detail
-// queries. Own photographs go to the slots in the order the visitor added them.
+// What to put in one image slot: the visitor's own photograph, or searches to run in order
+// until one finds pictures. The first slot of a template is its hero and takes the brief's hero
+// queries; the rest take the detail queries. Own photographs go to the slots in the order the
+// visitor added them.
 export type SlotPlan =
   | Readonly<{ kind: 'own'; url: string; alt: string }>
-  | Readonly<{ kind: 'search'; query: string; purpose: string }>
+  | Readonly<{ kind: 'search'; queries: readonly string[]; purpose: string }>
   | Readonly<{ kind: 'none' }>
 
 // The photographs a template needs, by slot name. Pure, so a test can say what a brief gets.
@@ -25,14 +26,16 @@ export function planImagery(
         return [slot, { kind: 'own', url: photo.url, alt: `${answers.company}, photograph` }]
       }
       if (own.length > 0) return [slot, { kind: 'none' }]
-      const queries = index === 0 ? brief.imageQueries.hero : brief.imageQueries.detail
-      const query = queries.find((q) => q.trim() !== '')
-      if (query === undefined) return [slot, { kind: 'none' }]
+      const queries = (index === 0 ? brief.imageQueries.hero : brief.imageQueries.detail)
+        .map((q) => q.trim())
+        .filter((q) => q !== '')
+        .map((q) => `${q} ${modifier}`.trim())
+      if (queries.length === 0) return [slot, { kind: 'none' }]
       return [
         slot,
         {
           kind: 'search',
-          query: `${query.trim()} ${modifier}`.trim(),
+          queries,
           purpose:
             index === 0
               ? `the main picture on the homepage of ${answers.company}: ${brief.positioning}`
