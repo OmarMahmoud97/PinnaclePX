@@ -91,7 +91,9 @@ export function BriefDone({ name, email, submitted }: Props) {
             {count === 1 ? 'It stays' : 'They stay'} live for {CONFIG.retention.days} days.
           </p>
         )}
-        {status.status !== 'exhausted' && status.status !== 'failed' && (
+        {/* The address is shown only once the page opens to something: a link handed over
+            while the pipeline is still running would open a page of pending slots. */}
+        {ready && (
           <p className="text-sm text-on-surface-muted">
             Your page:{' '}
             <a
