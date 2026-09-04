@@ -17,12 +17,16 @@ export type StageRow = Readonly<{
 
 const settled = (state: StageState) => state === 'done' || state === 'fallback'
 
+// The stages the visitor's page is made of. The brief feeds only the copy.
+const PATH = ['stageSelect', 'stageTokens', 'stageCopy', 'stageImagery'] as const
+
 function previewHref(slug: string, templateId: string): string {
   return `/preview/${slug}/${templateId}`
 }
 
-// The status a row is in. The brief feeds only the copy, so the visitor's path is select,
-// tokens, copy and imagery: a concept is ready when those four have settled.
+// The status a row is in. A concept can be opened once select, tokens, copy and imagery have
+// settled; it is ready when they all finished, and partial when the sweeper finished any of
+// them with the fallback.
 export function statusOf(row: StageRow): SubmissionStatus {
   const base = {
     slug: row.slug,
@@ -35,16 +39,18 @@ export function statusOf(row: StageRow): SubmissionStatus {
   if (row.templateIds !== null && row.templateIds.length === 0) {
     return { ...base, status: 'exhausted', concepts: [] }
   }
-  const ready = [row.stageSelect, row.stageTokens, row.stageCopy, row.stageImagery].every(settled)
+  const states = PATH.map((column) => row[column])
+  const openable = states.every(settled)
+  const finished = states.every((state) => state === 'done')
   const ids = row.templateIds ?? []
   const concepts = Array.from({ length: row.conceptCount }, (_, index) => {
     const templateId = ids[index] ?? null
     return {
       templateId,
       name: TEMPLATES.find((t) => t.id === templateId)?.name ?? null,
-      ready: ready && templateId !== null,
-      href: ready && templateId !== null ? previewHref(row.slug, templateId) : null,
+      ready: openable && templateId !== null,
+      href: openable && templateId !== null ? previewHref(row.slug, templateId) : null,
     }
   })
-  return { ...base, status: ready ? 'ready' : 'building', concepts }
+  return { ...base, status: !openable ? 'building' : finished ? 'ready' : 'partial', concepts }
 }

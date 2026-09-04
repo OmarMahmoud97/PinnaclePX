@@ -45,7 +45,7 @@ export function BriefDone({ name, email, submitted }: Props) {
   const first = firstNameFrom(name)
   const remaining = useCountdown(submitted.deadlineAt)
   const status = useSubmissionStatus(submitted.slug, initialStatus(submitted))
-  const ready = status.status === 'ready'
+  const ready = status.status === 'ready' || status.status === 'partial'
   const settled = status.status !== 'building'
   const timeUp = remaining === 0 && !settled
   const count = submitted.conceptCount

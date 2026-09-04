@@ -51,7 +51,8 @@ export default async function ConceptPage({ params }: { params: Params }) {
   const answers = submissionAnswersSchema.parse(row.answers)
   const status = statusOf(row)
   const templateId = row.templateIds?.[index] ?? null
-  const concept = status.status === 'ready' ? status.concepts[index] : undefined
+  const concept =
+    status.status === 'ready' || status.status === 'partial' ? status.concepts[index] : undefined
   const name = TEMPLATES.find((t) => t.id === templateId)?.name ?? 'Your design'
 
   return (

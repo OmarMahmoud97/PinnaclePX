@@ -22,7 +22,9 @@ export default async function Image({ params }: { params: Params }) {
   const company = row === null ? SITE.name : submissionAnswersSchema.parse(row.answers).company
   const templateId = row?.templateIds?.[0] ?? null
   const headline =
-    row !== null && status?.status === 'ready' && templateId !== null
+    row !== null &&
+    (status?.status === 'ready' || status?.status === 'partial') &&
+    templateId !== null
       ? contractFor(templateId).headlineOf(row.copy[templateId])
       : null
   const tokens = row?.tokens ?? null

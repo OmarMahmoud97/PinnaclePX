@@ -13,8 +13,9 @@ import { SITE } from '@/lib/site'
 
 // The email with the link, once. The pipeline and the sweeper both say when a submission has
 // settled; the function is idempotent on the slug and the row remembers the send, so a second
-// signal changes nothing. Nothing is sent for an exhausted or failed submission: there is no
-// page to link to, and the done page has already said so.
+// signal changes nothing. Nothing is sent unless every stage finished: a page the sweeper had
+// to settle with a fallback is opened from the screen but not announced, and the log says so.
+// Nothing is sent for an exhausted or failed submission either: there is no page to link to.
 export const sendPreviewLink = inngest.createFunction(
   {
     id: 'send-preview-link',
@@ -28,7 +29,10 @@ export const sendPreviewLink = inngest.createFunction(
       const found = await readSubmissionWithLead(slug)
       if (found === null) throw new NonRetriableError(`No submission ${slug}`)
       const status = statusOf(found.submission)
-      if (status.status !== 'ready') return { slug, sent: false, reason: status.status }
+      if (status.status !== 'ready') {
+        log.warn('email.withheld', { slug, status: status.status })
+        return { slug, sent: false, reason: status.status }
+      }
       if (found.submission.emailSentAt !== null) return { slug, sent: false, reason: 'already' }
       const answers = submissionAnswersSchema.parse(found.submission.answers)
       const email = previewLinkEmail({

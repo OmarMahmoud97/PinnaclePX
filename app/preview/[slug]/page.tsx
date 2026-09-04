@@ -36,7 +36,10 @@ export default async function PreviewPage({ params }: { params: Params }) {
   if (row === null) notFound()
   const answers = submissionAnswersSchema.parse(row.answers)
   const status = statusOf(row)
-  const concepts = status.status === 'building' || status.status === 'ready' ? status.concepts : []
+  const concepts =
+    status.status === 'building' || status.status === 'ready' || status.status === 'partial'
+      ? status.concepts
+      : []
 
   return (
     <div className="flex min-h-dvh flex-col">

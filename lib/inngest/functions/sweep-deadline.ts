@@ -59,6 +59,8 @@ export const sweepDeadline = inngest.createFunction(
           case 'select':
           case 'tokens':
             written = await markStage(slug, stage, 'failed')
+            if (written)
+              log.error('stage.failed', { slug, stage, reason: 'still open at the deadline' })
             break
           case 'brief':
             written = await markStage(slug, 'brief', 'fallback', { brief })
@@ -71,9 +73,8 @@ export const sweepDeadline = inngest.createFunction(
             })
             break
           case 'imagery':
-            written = await markStage(slug, 'imagery', 'fallback', {
-              imagery: Object.fromEntries(templateIds.map((id) => [id, {}])),
-            })
+            // Whatever the imagery stage managed to fill is already on the row.
+            written = await markStage(slug, 'imagery', 'fallback')
             break
         }
         if (written) {
