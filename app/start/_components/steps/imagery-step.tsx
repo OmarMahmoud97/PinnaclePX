@@ -5,11 +5,12 @@ import type { LocalImage, StepProps } from '@/app/start/_components/step-props'
 import { Button } from '@/components/ui/button'
 import { ChoiceCard } from '@/components/ui/choice-card'
 import { FilePicker } from '@/components/ui/file-picker'
-import type { ImageryAnswer } from '@/lib/brief/schema'
+import type { DraftImagery } from '@/lib/brief/schema'
 import { STYLES, type VisualStyle } from '@/lib/brief/styles'
+import { acceptFor } from '@/lib/brief/uploads'
 import { CONFIG } from '@/lib/config'
 
-const ACCEPT = 'image/png,image/jpeg,image/webp'
+const ACCEPT = acceptFor('photos')
 
 // A swatch per style. Literal classes so Tailwind can see them.
 const SWATCH: Readonly<Record<VisualStyle, string>> = {
@@ -22,8 +23,8 @@ const SWATCH: Readonly<Record<VisualStyle, string>> = {
 type Props = StepProps & {
   photos: readonly LocalImage[]
   onFiles: (files: readonly File[]) => void
-  onRemovePhoto: (index: number) => void
-  onPreview: (value: ImageryAnswer | null) => void
+  onRemovePhoto: (id: string) => void
+  onPreview: (value: DraftImagery | null) => void
 }
 
 // A style is always chosen and photos are optional. The two sit side by side: the style is
@@ -86,9 +87,9 @@ export function ImageryStep({
 
       {photos.length > 0 && (
         <ul className="grid grid-cols-3 gap-2 sm:grid-cols-6">
-          {photos.map((photo, index) => (
+          {photos.map((photo) => (
             <li
-              key={photo.url}
+              key={photo.id}
               className="relative aspect-square overflow-hidden rounded-lg border border-border"
             >
               <span
@@ -97,12 +98,19 @@ export function ImageryStep({
                 style={{ backgroundImage: `url(${photo.url})` }}
                 className="absolute inset-0 bg-cover bg-center"
               />
+              {photo.status !== 'done' && (
+                <span
+                  className={`absolute inset-x-0 bottom-0 px-1.5 py-0.5 text-center font-mono text-[10px] ${photo.status === 'failed' ? 'bg-danger text-on-brand' : 'bg-surface/90 text-on-surface-muted'}`}
+                >
+                  {photo.status === 'failed' ? 'failed' : 'uploading'}
+                </span>
+              )}
               <Button
                 variant="ghost"
                 size="icon"
                 className="absolute top-1 right-1 size-6 bg-surface/90 shadow-badge"
                 onClick={() => {
-                  onRemovePhoto(index)
+                  onRemovePhoto(photo.id)
                 }}
                 aria-label={`Remove ${photo.name}`}
               >

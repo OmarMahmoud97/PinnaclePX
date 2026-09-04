@@ -7,8 +7,9 @@ import {
   coloursSchema,
   describeSchema,
   detailsSchema,
+  type DraftLogo,
+  type DraftPhoto,
   imagerySchema,
-  type LogoAnswer,
   logoSchema,
 } from '@/lib/brief/schema'
 import type { VisualStyle } from '@/lib/brief/styles'
@@ -34,9 +35,11 @@ export type BriefState = Readonly<{
 
 export type BriefAction =
   | { type: 'set-text'; field: TextField; value: string }
-  | { type: 'set-logo'; value: LogoAnswer }
+  | { type: 'set-logo'; value: DraftLogo }
   | { type: 'set-style'; value: VisualStyle }
-  | { type: 'set-photos'; fileNames: string[] }
+  | { type: 'set-photos'; photos: readonly DraftPhoto[] }
+  // A picture's upload finished: the logo or a photo, found by its id.
+  | { type: 'upload-done'; id: string; url: string }
   | { type: 'set-colours'; value: ColoursAnswer }
   | { type: 'reject-file'; field: FileField; message: string }
   | { type: 'check'; question: QuestionId }
@@ -141,11 +144,22 @@ export function briefReducer(state: BriefState, action: BriefAction): BriefState
           ...state,
           answers: {
             ...state.answers,
-            imagery: { ...state.answers.imagery, fileNames: action.fileNames },
+            imagery: { ...state.answers.imagery, photos: [...action.photos] },
           },
         },
         'imagery',
       )
+    case 'upload-done': {
+      const { logo, imagery } = state.answers
+      if (logo.kind === 'file' && logo.id === action.id) {
+        return { ...state, answers: { ...state.answers, logo: { ...logo, url: action.url } } }
+      }
+      if (!imagery.photos.some((photo) => photo.id === action.id)) return state
+      const photos = imagery.photos.map((photo) =>
+        photo.id === action.id ? { ...photo, url: action.url } : photo,
+      )
+      return { ...state, answers: { ...state.answers, imagery: { ...imagery, photos } } }
+    }
     case 'set-colours':
       return clearError(
         { ...state, answers: { ...state.answers, colours: action.value } },
@@ -157,17 +171,19 @@ export function briefReducer(state: BriefState, action: BriefAction): BriefState
       return { ...state, errors: validateQuestion(action.question, state.answers) }
     case 'clear-errors':
       return { ...state, errors: {}, submitError: undefined }
-    case 'hydrate':
-      // Stored files cannot be restored: the bytes were never kept. The logo falls back to the
-      // wordmark and the photos to none; the style stays.
+    case 'hydrate': {
+      // An uploaded picture lives on at its URL, so it comes back. One that was still uploading
+      // when the page was left is gone: the bytes were never kept.
+      const { logo, imagery } = action.answers
       return {
         ...state,
         answers: {
           ...action.answers,
-          logo: action.answers.logo.kind === 'file' ? { kind: 'wordmark' } : action.answers.logo,
-          imagery: { ...action.answers.imagery, fileNames: [] },
+          logo: logo.kind === 'file' && logo.url === null ? { kind: 'wordmark' } : logo,
+          imagery: { ...imagery, photos: imagery.photos.filter((photo) => photo.url !== null) },
         },
       }
+    }
     case 'submitting':
       return { ...state, submitError: undefined, status: { kind: 'submitting' } }
     case 'submitted':

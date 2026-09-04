@@ -20,7 +20,7 @@ const COMPLETE: Answers = {
   company: 'Ashgrove Physio',
   email: 'sam@ashgrove.example',
   logo: { kind: 'wordmark' },
-  imagery: { style: 'minimal', fileNames: [] },
+  imagery: { style: 'minimal', photos: [] },
   colours: { kind: 'palette', paletteId: 'forest' },
 }
 
@@ -107,7 +107,7 @@ describe('briefReducer', () => {
     expect(rejected.errors.logo).toBe('Too big.')
     const replaced = briefReducer(rejected, {
       type: 'set-logo',
-      value: { kind: 'file', fileName: 'logo.svg' },
+      value: { kind: 'file', id: 'l1', fileName: 'logo.svg', url: null },
     })
     expect(replaced.errors.logo).toBeUndefined()
   })
@@ -122,16 +122,38 @@ describe('briefReducer', () => {
     expect(cleared.submitError).toBeUndefined()
   })
 
-  it('restores stored answers but not the files that are gone', () => {
+  it('restores stored answers and the uploaded files, but not uploads that never finished', () => {
+    const uploaded = { id: 'p1', fileName: 'shop.jpg', url: 'https://blob.example/photos/a.jpg' }
     const stored: Answers = {
       ...COMPLETE,
-      logo: { kind: 'file', fileName: 'logo.svg' },
-      imagery: { style: 'dark', fileNames: ['shop.jpg'] },
+      logo: { kind: 'file', id: 'l1', fileName: 'logo.svg', url: null },
+      imagery: { style: 'dark', photos: [uploaded, { id: 'p2', fileName: 'van.jpg', url: null }] },
     }
     const next = briefReducer(INITIAL_STATE, { type: 'hydrate', answers: stored })
     expect(next.answers.company).toBe('Ashgrove Physio')
     expect(next.answers.logo).toEqual({ kind: 'wordmark' })
-    expect(next.answers.imagery).toEqual({ style: 'dark', fileNames: [] })
+    expect(next.answers.imagery).toEqual({ style: 'dark', photos: [uploaded] })
+  })
+
+  it('records a finished upload against its picture and ignores one that was removed', () => {
+    const picked = briefReducer(INITIAL_STATE, {
+      type: 'set-photos',
+      photos: [{ id: 'p1', fileName: 'shop.jpg', url: null }],
+    })
+    const done = briefReducer(picked, { type: 'upload-done', id: 'p1', url: 'https://b/x.jpg' })
+    expect(done.answers.imagery.photos[0]?.url).toBe('https://b/x.jpg')
+    expect(briefReducer(picked, { type: 'upload-done', id: 'gone', url: 'https://b/y.jpg' })).toBe(
+      picked,
+    )
+  })
+
+  it('does not let a picture still uploading count as an answer', () => {
+    const pending: Answers = {
+      ...COMPLETE,
+      logo: { kind: 'file', id: 'l1', fileName: 'logo.svg', url: null },
+    }
+    expect(validateQuestion('logo', pending).logo).toMatch(/not finished uploading/)
+    expect(firstInvalidIndex(pending)).toBe(2)
   })
 
   it('keeps the visitor on the form when submitting fails', () => {

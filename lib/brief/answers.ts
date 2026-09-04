@@ -7,6 +7,6 @@ export const BLANK_ANSWERS: Answers = {
   company: '',
   email: '',
   logo: { kind: 'wordmark' },
-  imagery: { style: 'minimal', fileNames: [] },
+  imagery: { style: 'minimal', photos: [] },
   colours: { kind: 'palette', paletteId: 'forest' },
 }

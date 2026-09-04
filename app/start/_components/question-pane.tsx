@@ -19,11 +19,11 @@ import { useFocusOnMount } from '@/app/start/_components/use-focus-on-mount'
 import { Button } from '@/components/ui/button'
 import { ProgressSteps } from '@/components/ui/progress-steps'
 import { type QuestionId, QUESTION_IDS } from '@/lib/brief/question-ids'
-import type { Answers, ColoursAnswer, ImageryAnswer } from '@/lib/brief/schema'
+import type { Answers, ColoursAnswer, DraftImagery } from '@/lib/brief/schema'
 import { SITE } from '@/lib/site'
 
 // An answer being hovered or focused but not yet chosen, drawn in the sketch over the real one.
-export type Preview = Readonly<{ imagery?: ImageryAnswer; colours?: ColoursAnswer }>
+export type Preview = Readonly<{ imagery?: DraftImagery; colours?: ColoursAnswer }>
 
 type Props = {
   index: number
@@ -32,12 +32,14 @@ type Props = {
   errors: Errors
   dispatch: Dispatch<BriefAction>
   busy: boolean
+  // A picture on this question is still on its way to Blob, so Next waits for it.
+  uploading: boolean
   submitError: string | undefined
-  logoPreview: string | null
+  logo: LocalImage | null
   onLogoFile: (file: File | null) => void
   photos: readonly LocalImage[]
   onPhotoFiles: (files: readonly File[]) => void
-  onRemovePhoto: (index: number) => void
+  onRemovePhoto: (id: string) => void
   onPreview: (preview: Preview | null) => void
   onBack: () => void
   onNext: () => void
@@ -52,8 +54,9 @@ export function QuestionPane({
   errors,
   dispatch,
   busy,
+  uploading,
   submitError,
-  logoPreview,
+  logo,
   onLogoFile,
   photos,
   onPhotoFiles,
@@ -99,7 +102,7 @@ export function QuestionPane({
           answers={answers}
           errors={errors}
           dispatch={dispatch}
-          preview={logoPreview}
+          logo={logo}
           onFile={onLogoFile}
         />
       )}
@@ -143,9 +146,11 @@ export function QuestionPane({
             <ArrowLeft aria-hidden="true" className="size-4" />
             Back
           </Button>
-          <Button type="submit" variant="cta" size="lg" disabled={busy}>
-            {busy && <LoaderCircle aria-hidden="true" className="size-4 animate-spin" />}
-            {last ? 'Show me my three designs' : 'Next'}
+          <Button type="submit" variant="cta" size="lg" disabled={busy || uploading}>
+            {(busy || uploading) && (
+              <LoaderCircle aria-hidden="true" className="size-4 animate-spin" />
+            )}
+            {uploading ? 'Uploading' : last ? 'Show me my three designs' : 'Next'}
           </Button>
         </div>
         <p className="text-center text-small text-on-surface-muted sm:text-right">

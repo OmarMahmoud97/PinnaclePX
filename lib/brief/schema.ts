@@ -22,16 +22,35 @@ export const detailsSchema = z.object({
   email: z.string().trim().email('That does not look like an email address.'),
 })
 
+// A picture the visitor picked: a client id to tell it apart, its name, and the URL it lives
+// at on Blob once the browser has uploaded it. Null until then, so a question with a picture
+// still uploading is not yet answered.
+const uploadedFile = (message: string) =>
+  z.object({
+    id: z.string().min(1),
+    fileName: z.string().min(1),
+    url: z.string({ invalid_type_error: message }).url(message),
+  })
+const draftFile = z.object({
+  id: z.string().min(1),
+  fileName: z.string().min(1),
+  url: z.string().nullable(),
+})
+
 export const logoSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('wordmark') }),
-  z.object({ kind: z.literal('file'), fileName: z.string().min(1) }),
+  uploadedFile('Your logo has not finished uploading. Give it a moment, or remove it.').extend({
+    kind: z.literal('file'),
+  }),
 ])
 
 // A style is always chosen; photos are optional and sit alongside it.
 export const imagerySchema = z.object({
   style: z.enum(STYLE_IDS),
-  fileNames: z
-    .array(z.string().min(1))
+  photos: z
+    .array(
+      uploadedFile('Your photos have not finished uploading. Give them a moment, or remove them.'),
+    )
     .max(CONFIG.form.maxPhotos, `Up to ${String(CONFIG.form.maxPhotos)} photos.`),
 })
 
@@ -50,8 +69,11 @@ export const draftSchema = z.object({
   name: z.string(),
   company: z.string(),
   email: z.string(),
-  logo: logoSchema,
-  imagery: imagerySchema,
+  logo: z.discriminatedUnion('kind', [
+    z.object({ kind: z.literal('wordmark') }),
+    draftFile.extend({ kind: z.literal('file') }),
+  ]),
+  imagery: z.object({ style: z.enum(STYLE_IDS), photos: z.array(draftFile) }),
   colours: z.discriminatedUnion('kind', [
     z.object({ kind: z.literal('palette'), paletteId: z.enum(PALETTE_IDS) }),
     z.object({ kind: z.literal('custom'), hex: z.string() }),
@@ -66,9 +88,11 @@ export const briefSchema = z.object({
   colours: coloursSchema,
 })
 
-export type LogoAnswer = z.infer<typeof logoSchema>
-export type ImageryAnswer = z.infer<typeof imagerySchema>
 export type ColoursAnswer = z.infer<typeof coloursSchema>
 
 // Every answer as the form holds it: the draft shape, since the form is a draft until it is sent.
 export type Answers = Readonly<z.infer<typeof draftSchema>>
+
+export type DraftLogo = Answers['logo']
+export type DraftImagery = Answers['imagery']
+export type DraftPhoto = Answers['imagery']['photos'][number]

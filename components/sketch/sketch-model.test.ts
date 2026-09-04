@@ -9,13 +9,13 @@ const BLANK: Answers = {
   company: '',
   email: '',
   logo: { kind: 'wordmark' },
-  imagery: { style: 'minimal', fileNames: [] },
+  imagery: { style: 'minimal', photos: [] },
   colours: { kind: 'palette', paletteId: 'forest' },
 }
 const ANSWERS: Answers = {
   ...BLANK,
   company: ' Ashgrove Physio ',
-  imagery: { style: 'dark', fileNames: ['shop.jpg'] },
+  imagery: { style: 'dark', photos: [{ id: 'p1', fileName: 'shop.jpg', url: null }] },
   colours: { kind: 'custom', hex: '#abc' },
 }
 
