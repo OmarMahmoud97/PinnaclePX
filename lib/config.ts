@@ -1,7 +1,14 @@
 // Every behaviour-tuning number lives here, nowhere else. Durations that CSS reads are the
 // --motion-* variables in app/globals.css (ADR 0005).
 export const CONFIG = {
-  stageBudgetMs: { brief: 15_000, select: 5_000, copy: 60_000, imagery: 45_000, tokens: 5_000 },
+  stageBudgetMs: {
+    brief: 20_000,
+    select: 5_000,
+    copy: 60_000,
+    imagery: 90_000,
+    rank: 30_000, // one call inside the imagery budget
+    tokens: 1_000,
+  },
   // Five minutes end to end. The sweeper wakes this long before the deadline and writes the
   // fallback into any stage still open, so the clock never reaches zero without a result.
   deadline: { totalMs: 300_000, sweeperLeadMs: 45_000 },
@@ -71,8 +78,17 @@ export const CONFIG = {
   // Effort is medium: the copy is judged by code afterwards, so the model need not deliberate.
   ai: {
     models: { brief: 'claude-sonnet-5', copy: 'claude-sonnet-5', rank: 'claude-haiku-4-5' },
-    maxTokens: { brief: 4_000, copy: 8_000 },
+    maxTokens: { brief: 4_000, copy: 8_000, rank: 1_000 },
     effort: 'medium',
+  },
+  // Stock photographs (lib/images): how many candidates a search brings back for the ranking
+  // model to judge, the one stored size (next/image serves every viewport from it), and the
+  // words added to every search for the look the visitor chose.
+  images: {
+    perPage: 12,
+    maxWidth: 1920,
+    quality: 80,
+    styleQuery: { warm: 'natural light', minimal: 'minimal', bold: 'vivid colour', dark: 'moody' },
   },
   // Copy that breaks a limit is sent back this many times with what went wrong, then falls back.
   copy: { retries: 1 },

@@ -9,6 +9,7 @@ import { revealTemplates } from '@/lib/db/exclusivity'
 import { markStage, readSubmission } from '@/lib/db/submissions'
 import { inngest } from '@/lib/inngest/client'
 import { submissionCreated } from '@/lib/inngest/events'
+import { imageryFor, type TemplateImagery } from '@/lib/images/stage'
 import { runStage } from '@/lib/inngest/stages'
 import { log } from '@/lib/log'
 import { analyseSubmissionLogo } from '@/lib/logo/stage'
@@ -21,8 +22,8 @@ import { contractFor, READY_TEMPLATES } from '@/templates/registry'
 // The pipeline, as one durable function: every stage is a step, so a retry never repeats work
 // that finished, and the results land on the submission row as they come. The brief and the
 // copy are written by the model and judged by code, each with its deterministic fallback; the
-// imagery stage settles with no pictures until the imagery slice lands, and the templates draw
-// light instead.
+// imagery stage searches, judges and re-hosts, and a slot it cannot fill stays empty, which the
+// templates draw around.
 export const buildConcepts = inngest.createFunction(
   {
     id: 'build-concepts',
@@ -103,10 +104,23 @@ export const buildConcepts = inngest.createFunction(
 
     await Promise.all([
       copyStage(slug, templateIds, brief, answers.description, step),
-      step.run('imagery', async () => {
-        const imagery = Object.fromEntries(templateIds.map((id) => [id, {}]))
-        await markStage(slug, 'imagery', 'done', { imagery })
-      }),
+      step.run('imagery', () =>
+        runStage(
+          slug,
+          'imagery',
+          async () => ({
+            imagery: Object.fromEntries(
+              await Promise.all(
+                templateIds.map(async (id): Promise<[string, TemplateImagery]> => [
+                  id,
+                  await imageryFor(contractFor(id), answers, brief, slug),
+                ]),
+              ),
+            ),
+          }),
+          () => Promise.resolve({ imagery: Object.fromEntries(templateIds.map((id) => [id, {}])) }),
+        ),
+      ),
     ])
 
     return { slug, templateIds }
