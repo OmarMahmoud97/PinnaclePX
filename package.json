@@ -21,7 +21,9 @@
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "prepare": "lefthook install",
-    "budget": "node scripts/bundle-budget.mjs"
+    "budget": "node scripts/bundle-budget.mjs",
+    "capture:work": "node scripts/capture-work.mjs",
+    "template:compare": "node scripts/template-compare.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "0.123.0",

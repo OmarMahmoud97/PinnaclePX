@@ -1,4 +1,5 @@
-import { titleHeading } from '@/app/_components/section-styles'
+import { ABOUT } from '@/app/_components/about-items'
+import { stickyColumn, titleHeading } from '@/app/_components/section-styles'
 import { LogoMark } from '@/components/brand/logo-mark'
 import { captionStyles } from '@/components/ui/caption'
 import { TrackedAnchor } from '@/components/ui/tracked-link'
@@ -43,27 +44,20 @@ function AddressCard() {
 }
 
 export function About() {
-  const place =
-    SITE.town === null ? 'a UK web design studio' : `a web design studio in ${SITE.town}, UK`
-
   return (
     <section id="about" className="scroll-mt-16">
       <div className="grid md:grid-cols-6 md:divide-x md:divide-border">
-        <div className="flex flex-col gap-6 p-column max-md:pb-3 md:col-span-2">
-          <h2 className={titleHeading}>About the studio</h2>
+        <div className={`flex flex-col gap-6 p-column max-md:pb-3 md:col-span-2 ${stickyColumn}`}>
+          <h2 className={titleHeading}>{ABOUT.heading}</h2>
           {(SITE.town !== null || SITE.contactEmail !== null) && <AddressCard />}
         </div>
         <div className="flex flex-col gap-5 p-column text-lead text-pretty text-on-surface-muted max-md:pt-6 md:col-span-4">
           <p className="max-w-prose">
-            <span className="font-medium text-on-surface">{SITE.legalName}</span> is {place}. Most
-            agencies ask you to commit before you have seen anything. A quote, a deposit, a six-week
-            wait, then a first draft you might not like.
+            <span className="font-medium text-on-surface">{SITE.legalName}</span>
+            {ABOUT.studio.slice(SITE.legalName.length)} {ABOUT.pattern}
           </p>
-          <p className="max-w-prose">
-            We would rather show you first, so the five questions and the three designs are free. If
-            you like one, you talk to the person who will design and build your site. Not a
-            salesperson.
-          </p>
+          <p className="max-w-prose">{ABOUT.first}</p>
+          <p className="max-w-prose">{ABOUT.built}</p>
         </div>
       </div>
     </section>

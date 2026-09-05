@@ -1,7 +1,10 @@
+import { CTA } from '@/app/_components/nav-links'
 import { optionRows, YOUR_OPTIONS } from '@/app/_components/option-items'
 import { revealDelay } from '@/app/_components/reveal'
 import { cardHeading, stickyColumn, titleHeading } from '@/app/_components/section-styles'
 import { captionStyles } from '@/components/ui/caption'
+import { textLinkStyles } from '@/components/ui/text-link'
+import { TrackedLink } from '@/components/ui/tracked-link'
 import { READY_TEMPLATES } from '@/templates/registry'
 
 // The rows are definition lists, not a table: a table cannot restack on a phone without display
@@ -57,6 +60,17 @@ export function YourOptions() {
           <div className="flex flex-col gap-2 p-5 text-small text-on-surface-muted md:p-cell">
             <p>{YOUR_OPTIONS.signpost}</p>
             <p>{YOUR_OPTIONS.generous}</p>
+            <p className="pt-2">
+              {YOUR_OPTIONS.ask}{' '}
+              <TrackedLink
+                href={CTA.href}
+                event="cta_click"
+                location="your-options"
+                className={`${textLinkStyles} inline-block py-1`}
+              >
+                {CTA.label}
+              </TrackedLink>
+            </p>
           </div>
         </div>
       </div>

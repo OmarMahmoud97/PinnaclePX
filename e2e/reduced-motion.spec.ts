@@ -10,13 +10,14 @@ test('the sketch is finished and nothing moves', async ({ page }) => {
   expect(await page.evaluate(() => matchMedia('(prefers-reduced-motion: reduce)').matches)).toBe(
     true,
   )
-  await expect(page.getByText('Example brief so far: Sentence, VetPres')).toBeAttached()
+  await expect(page.getByText("A client's brief so far: Sentence, VetPres")).toBeAttached()
   await expect(page.locator('#hero')).not.toHaveAttribute('data-built', '')
 
   for (const id of [
     'how-it-works',
     'outcomes',
     'taster',
+    'included',
     'real-build',
     'your-options',
     'straight-answers',

@@ -5,6 +5,7 @@ import { type ReactNode, useCallback, useEffect, useId, useRef, useState } from 
 import { buildLoop, EMPTY, FINISHED, type Frame, type Loop } from '@/app/_components/hero-loop'
 import { BOOK_CALL, CTA } from '@/app/_components/nav-links'
 import { EXAMPLE_FILES } from '@/app/_components/photos'
+import { HERO } from '@/app/_components/section-copy'
 import { setSentence } from '@/app/_components/sentence-store'
 import { BriefSketch } from '@/components/sketch/brief-sketch'
 import { SKETCH_CAPTION } from '@/components/sketch/captions'
@@ -41,7 +42,7 @@ const BuiltPage = dynamic(
 type Status = 'waiting' | 'playing' | 'unavailable'
 
 // The hero's stage: the headline and subhead (server-rendered children), the actions, and the
-// sketch painting the example brief and building it into a finished page, on a loop. The server
+// sketch painting a client's brief and building it into a finished page, on a loop. The server
 // renders the finished sketch; a client that allows motion rewinds it before paint and plays the
 // loop once the hero is on screen and the browser is idle, pausing it off screen. Reduced motion
 // and JavaScript off keep the finished sketch, and so does a visitor whose GSAP chunk never
@@ -176,11 +177,7 @@ export function HeroStage({ children }: { children: ReactNode }) {
               document.getElementById('hero-cta')?.click()
             }}
           >
-            <Field
-              id={fieldId}
-              label="What does your business do?"
-              hint="Yours fills the sketch as you type."
-            >
+            <Field id={fieldId} label={HERO.fieldLabel} hint={HERO.fieldHint}>
               {(attributes) => (
                 <input
                   {...attributes}
@@ -210,7 +207,7 @@ export function HeroStage({ children }: { children: ReactNode }) {
             <p className="text-small text-on-surface-muted">{SITE.reassurance}</p>
           </div>
           <p className="text-small text-on-surface-muted">
-            Rather talk first?{' '}
+            {HERO.talkFirst}{' '}
             <TrackedLink
               href={BOOK_CALL.href}
               event="call_click"
@@ -256,7 +253,7 @@ export function HeroStage({ children }: { children: ReactNode }) {
           <SketchChips
             answers={answers}
             answered={own === null ? answeredAt(shown.stage) : 0}
-            prefix={own === null ? 'Example brief so far' : 'Your brief so far'}
+            prefix={own === null ? "A client's brief so far" : 'Your brief so far'}
             chipsClassName="hidden justify-center md:flex lg:justify-start"
           />
         </div>

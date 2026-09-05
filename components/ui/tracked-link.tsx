@@ -25,17 +25,18 @@ export function TrackedLink({ event, location, data, onClick, ...rest }: Props) 
 }
 
 type AnchorProps = ComponentProps<'a'> & {
-  event: Extract<AnalyticsEvent, 'contact_click'>
+  event: Extract<AnalyticsEvent, 'contact_click' | 'client_site_open'>
   location: string
+  data?: EventData | undefined
 }
 
-// The same for a plain anchor, which a mailto: address has to be.
-export function TrackedAnchor({ event, location, onClick, ...rest }: AnchorProps) {
+// The same for a plain anchor, which a mailto: address or a link to another site has to be.
+export function TrackedAnchor({ event, location, data, onClick, ...rest }: AnchorProps) {
   return (
     <a
       {...rest}
       onClick={(e) => {
-        trackEvent(event, { location })
+        trackEvent(event, { location, ...data })
         onClick?.(e)
       }}
     />

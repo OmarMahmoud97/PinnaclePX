@@ -7,6 +7,7 @@ export type NavLink = Readonly<{ label: string; href: Route }>
 // One list feeds the desktop nav and the mobile panel.
 export const NAV_LINKS: readonly NavLink[] = [
   { label: 'How it works', href: '/#how-it-works' },
+  { label: 'Our work', href: '/#work' },
   { label: 'About', href: '/#about' },
   { label: 'FAQ', href: '/#faq' },
 ]

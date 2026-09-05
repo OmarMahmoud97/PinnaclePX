@@ -37,7 +37,7 @@ export const FAQ_ITEMS: readonly FaqItem[] = [
   {
     question: 'Can I use one of the designs as my website?',
     answer:
-      "No. It's a first look made in five minutes, to show you our design in your brand. If you like one, we design your real site from scratch, around what you liked.",
+      "No. It's a first look, made in five minutes, to show you how we design in your brand. If you like one, that tells us your taste. Your real site is then designed from scratch.",
   },
   {
     question: 'What if the wording is wrong?',
@@ -63,12 +63,12 @@ export const FAQ_ITEMS: readonly FaqItem[] = [
       'We agree a timeline on the call. We ask for your photos and prices early, so nothing waits on them.',
   },
   {
-    question: 'Who looks after it after launch?',
+    question: 'Who looks after the site once it is live?',
     answer: 'We agree on the call who hosts it and who keeps it up to date.',
   },
   {
     question: 'Will people find it on Google?',
     answer:
-      'We build every page so Google and the chat assistants people now ask can read it. Being found also takes work after launch, and we say what on the call.',
+      'Every page is built so Google can read it, and so can the chat assistants people now ask. Being found also takes work after launch. We say what that involves on the call.',
   },
 ]

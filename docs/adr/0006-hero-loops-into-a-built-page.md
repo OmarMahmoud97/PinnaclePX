@@ -2,6 +2,7 @@
 
 - Status: accepted
 - Date: 3 September 2026
+- Note, 5 September 2026: the caption quoted in item 6 was replaced. The brief is a real client's (VetPres), so the captions in `components/sketch/captions.ts` now say "a client's brief" and name the client only with their recorded consent (`docs/home-page-content-plan.md`, section 3.2 and decision 41). The record below is unchanged.
 - Amends: 0005 (item 6, autoplay loops)
 
 ## Context

@@ -37,19 +37,19 @@ test('the header takes the primary action once the hero button has scrolled away
   await expect(headerCta).toBeHidden()
 })
 
-// The sections added for the burned buyer and the forwarded partner may not cost more than seven
-// phone screens between them (docs/home-page-content-plan.md, section 2.3). A soft assertion:
+// The five sections added for the burned buyer and the forwarded partner may not cost more than
+// ten phone screens between them (docs/home-page-content-plan.md, decision 52). A soft assertion:
 // the run reports it and carries on, so the cut order in the plan is applied on purpose, not by
 // a red build.
-test('the added sections stay within seven phone screens together', async ({ page }) => {
+test('the added sections stay within ten phone screens together', async ({ page }) => {
   await page.goto('/')
   const total = await page.evaluate(() =>
-    ['examples', 'outcomes', 'real-build', 'your-options'].reduce(
+    ['examples', 'outcomes', 'work', 'included', 'real-build', 'your-options'].reduce(
       (sum, id) => sum + (document.getElementById(id)?.offsetHeight ?? 0),
       0,
     ),
   )
-  expect.soft(total).toBeLessThanOrEqual(7 * 844)
+  expect.soft(total).toBeLessThanOrEqual(10 * 844)
 })
 
 test('every list and answer is readable without any interaction', async ({ page }) => {
@@ -57,6 +57,7 @@ test('every list and answer is readable without any interaction', async ({ page 
   for (const id of [
     'what-you-get',
     'outcomes',
+    'included',
     'real-build',
     'your-options',
     'straight-answers',

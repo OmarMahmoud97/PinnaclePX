@@ -98,7 +98,7 @@ describe('assembleAurora', () => {
   const copy = auroraFallbackCopy(fallbackBrief('Kestrel', 'Job scheduling for trades.'))
 
   it('gives a wordmark and no pictures when there are no assets', () => {
-    const content = assembleAurora(copy, { logo: { kind: 'wordmark' }, images: {} })
+    const content = assembleAurora(copy, { logo: { kind: 'wordmark' }, images: {}, email: null })
     expect(content.brand.logo).toEqual({ kind: 'wordmark' })
     expect(content.hero.image).toBeNull()
     expect(content.statement.image).toBeNull()
@@ -108,6 +108,7 @@ describe('assembleAurora', () => {
     const assets: TemplateAssets = {
       logo: KESTREL.brand.logo,
       images: { hero: KESTREL.hero.image, statement: KESTREL.statement.image },
+      email: null,
     }
     const content = assembleAurora(copy, assets)
     expect(content.hero.image).toBe(KESTREL.hero.image)

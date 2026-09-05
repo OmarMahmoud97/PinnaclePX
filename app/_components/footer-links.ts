@@ -17,6 +17,7 @@ export const FOOTER_GROUPS: readonly FooterGroup[] = [
     heading: 'Studio',
     links: [
       { label: 'About', href: '/#about' },
+      { label: 'Our work', href: '/#work' },
       { label: 'The real build', href: '/#real-build' },
       { label: 'Builder or studio?', href: '/#your-options' },
       { label: 'Privacy', href: '/privacy' },

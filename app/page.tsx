@@ -3,6 +3,7 @@ import { ClosingCta } from '@/app/_components/closing-cta'
 import { Faq } from '@/app/_components/faq'
 import { Hero } from '@/app/_components/hero'
 import { HowItWorks } from '@/app/_components/how-it-works'
+import { Included } from '@/app/_components/included'
 import { JsonLd } from '@/app/_components/json-ld'
 import { Outcomes } from '@/app/_components/outcomes'
 import { PageMotion } from '@/app/_components/page-motion'
@@ -12,6 +13,7 @@ import { SiteHeader } from '@/app/_components/site-header'
 import { StraightAnswers } from '@/app/_components/straight-answers'
 import { Taster } from '@/app/_components/taster'
 import { WhatYouGet } from '@/app/_components/what-you-get'
+import { Work } from '@/app/_components/work'
 import { YourOptions } from '@/app/_components/your-options'
 import { CONFIG } from '@/lib/config'
 import { env } from '@/lib/env'
@@ -28,8 +30,9 @@ if (env.LAUNCH_GATE === '1' && !readyForTraffic(READY_TEMPLATES.length)) {
   )
 }
 
-// The order is the persuasion arc in docs/home-page-content-plan.md section 2: mechanism, proof,
-// value, the ask, the deal, the alternatives, the objections. Every section is a direct child of
+// The order is the persuasion arc in docs/home-page-content-plan.md section 2, with the value
+// band from docs/copy-review.md: mechanism, proof, what the build includes, the ask, the deal,
+// the alternatives, the objections. Every section is a direct child of
 // <main> so divide-y draws the hairline between them. The examples band slots in between
 // HowItWorks and Outcomes once a real render exists.
 export default function HomePage() {
@@ -43,6 +46,8 @@ export default function HomePage() {
         <HowItWorks />
         <Outcomes />
         <Taster />
+        <Work />
+        <Included />
         <RealBuild />
         <YourOptions />
         <StraightAnswers />

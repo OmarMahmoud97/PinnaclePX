@@ -23,7 +23,7 @@ test('how it works never lists the questions', async ({ page }) => {
   await expect(section.getByText(/Question \d of 5/)).toHaveCount(1)
 })
 
-test('the walkthrough paints the example brief as its beats scroll into view', async ({ page }) => {
+test("the walkthrough paints a client's brief as its beats scroll into view", async ({ page }) => {
   await page.goto('/')
   const section = page.locator('#how-it-works')
   await section.locator('[data-beat="5"]').scrollIntoViewIfNeeded()
@@ -33,16 +33,14 @@ test('the walkthrough paints the example brief as its beats scroll into view', a
 
 // Two passes, because the second is the one that breaks: it must build from a clean sketch
 // rather than from whatever the first pass left behind.
-test('the hero sketch builds the example brief into a page, twice over', async ({ page }) => {
+test("the hero sketch builds a client's brief into a page, twice over", async ({ page }) => {
   test.setTimeout(60_000)
   await page.goto('/')
   const hero = page.locator('#hero')
   const sketching = hero.getByText(
-    'Sketch of an example brief. A first look, not one of the designs.',
+    "Sketch of a client's brief. A first look, not one of the designs.",
   )
-  const built = hero.getByText(
-    'The same example brief, built as an illustration. Not a client, and not one of the designs.',
-  )
+  const built = hero.getByText('The same sentence, drawn as a page. Not one of the designs.')
 
   await expect(sketching).toBeVisible({ timeout: 15_000 })
   await expect(hero).toHaveAttribute('data-built', '', { timeout: 20_000 })
@@ -91,7 +89,9 @@ test('a sentence typed in the hero reaches question one on the start page', asyn
 test('the taster section carries the call to action', async ({ page }) => {
   await page.goto('/')
   const taster = page.locator('#taster')
-  await expect(taster.getByRole('heading', { name: /Imagine what an hour does/ })).toBeVisible()
+  await expect(
+    taster.getByRole('heading', { name: /A conversation starts your real site/ }),
+  ).toBeVisible()
   await expect(taster.getByRole('link', { name: 'Book a 20-minute call' })).toHaveAttribute(
     'href',
     /cal\.com/,
@@ -117,6 +117,39 @@ test('the comparison names no builder and labels both columns', async ({ page })
   await expect(options.getByText(/Wix|Squarespace/)).toHaveCount(0)
   await expect(options.getByText('You build it with a builder')).toBeVisible()
   await expect(options.getByText('We build it with you')).toBeVisible()
+})
+
+test('the work band shows six dated captures, each linking to the live site', async ({ page }) => {
+  await page.goto('/')
+  const work = page.locator('#work')
+  await expect(
+    work.getByRole('heading', { name: 'Six sites we designed and built.' }),
+  ).toBeVisible()
+  const cards = work.getByRole('listitem')
+  await expect(cards).toHaveCount(6)
+  const links = work.getByRole('link', { name: /^Visit the .* site$/ })
+  await expect(links).toHaveCount(6)
+  for (const href of await links.evaluateAll((all) => all.map((a) => a.getAttribute('href')))) {
+    expect(href).toMatch(/^https:\/\//)
+  }
+  await expect(work.getByRole('img')).toHaveCount(6)
+  await expect(work.getByText(/, \d{1,2} [A-Z][a-z]+ \d{4}$/)).toHaveCount(6)
+  await expect(work.getByText(/Shown with each client's permission/)).toBeVisible()
+  // Each card switches to the desktop capture, and back, without a script of its own.
+  const first = cards.first()
+  await first.getByText('Desktop', { exact: true }).click()
+  await expect(first.getByRole('radio', { name: 'Desktop' })).toBeChecked()
+  await expect(first.locator('[data-frame="browser"]')).toBeVisible()
+  await expect(first.locator('[data-frame="phone"]')).toBeHidden()
+  await first.getByText('Phone', { exact: true }).click()
+  await expect(first.locator('[data-frame="phone"]')).toBeVisible()
+})
+
+test('about makes no claim about agencies and counts the sites built', async ({ page }) => {
+  await page.goto('/')
+  const about = page.locator('#about')
+  await expect(about.getByText(/Most agencies/)).toHaveCount(0)
+  await expect(about.getByText(/more than thirty websites since 2022/)).toBeVisible()
 })
 
 test('the not-ready visitor can send the page on without giving anything', async ({ page }) => {

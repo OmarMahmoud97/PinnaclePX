@@ -1,4 +1,3 @@
-import { Check, Circle } from 'lucide-react'
 import { HowItWorksTrack } from '@/app/_components/how-it-works-track'
 import { CTA } from '@/app/_components/nav-links'
 import { HOW_IT_WORKS } from '@/app/_components/section-copy'
@@ -28,22 +27,7 @@ export function HowItWorks() {
               <p className="text-body text-pretty text-on-surface-muted">{second.text}</p>
             </li>
             <li data-beat={third.stage}>
-              <div className="flex flex-col gap-4">
-                <p className="text-body text-pretty text-on-surface-muted">{third.text}</p>
-                <ul className="flex flex-col gap-2 text-small">
-                  {HOW_IT_WORKS.legend.map(({ label, state, done }) => (
-                    <li key={label} className="flex items-center gap-3">
-                      {done ? (
-                        <Check aria-hidden="true" className="size-4 text-success" />
-                      ) : (
-                        <Circle aria-hidden="true" className="size-4 text-on-surface-muted" />
-                      )}
-                      <span className="font-medium">{label}</span>
-                      <span className="text-on-surface-muted">{state}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              <p className="text-body text-pretty text-on-surface-muted">{third.text}</p>
             </li>
           </ol>
         }

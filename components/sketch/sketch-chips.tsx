@@ -8,7 +8,7 @@ import { cn } from '@/lib/cn'
 type Props = {
   answers: Answers
   answered: number
-  // Whose brief the screen reader hears about: "Your brief so far" or "Example brief so far".
+  // Whose brief the screen reader hears about: "Your brief so far" or "A client's brief so far".
   prefix?: string | undefined
   chipsClassName?: string | undefined
 }

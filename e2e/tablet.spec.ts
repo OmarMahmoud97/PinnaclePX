@@ -18,15 +18,13 @@ test('the primary action sits inside the first screen and the page never scrolls
   expect(scrollX).toBe(0)
 })
 
-test('the hero builds the example brief in the browser frame', async ({ page }) => {
+test("the hero builds a client's brief in the browser frame", async ({ page }) => {
   await page.goto('/')
   const hero = page.locator('#hero')
   await expect(hero.locator('[data-frame="browser"]')).toBeVisible()
   await expect(hero).toHaveAttribute('data-built', '', { timeout: 25_000 })
   await expect(
-    hero.getByText(
-      'The same example brief, built as an illustration. Not a client, and not one of the designs.',
-    ),
+    hero.getByText('The same sentence, drawn as a page. Not one of the designs.'),
   ).toBeVisible()
 })
 

@@ -1,6 +1,6 @@
 import { revealDelay } from '@/app/_components/reveal'
 import { STRAIGHT_ANSWERS } from '@/app/_components/section-copy'
-import { cardHeading, titleHeading } from '@/app/_components/section-styles'
+import { cardHeading, stickyColumn, titleHeading } from '@/app/_components/section-styles'
 import { straightAnswerItems } from '@/app/_components/straight-answer-items'
 import { READY_TEMPLATES } from '@/templates/registry'
 
@@ -10,7 +10,7 @@ export function StraightAnswers() {
   return (
     <section id="straight-answers" className="scroll-mt-16">
       <div className="grid md:grid-cols-6 md:divide-x md:divide-border">
-        <div className="flex flex-col gap-3 p-column max-md:pb-3 md:col-span-2">
+        <div className={`flex flex-col gap-3 p-column max-md:pb-3 md:col-span-2 ${stickyColumn}`}>
           <h2 className={titleHeading}>{STRAIGHT_ANSWERS.heading}</h2>
           <p className="text-lead text-pretty text-on-surface-muted">{STRAIGHT_ANSWERS.lead}</p>
         </div>

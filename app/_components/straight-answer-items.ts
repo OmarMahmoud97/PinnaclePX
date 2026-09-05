@@ -33,7 +33,7 @@ export function straightAnswerItems(readyCount: number): readonly StraightAnswer
     {
       question: 'Is this AI?',
       answer:
-        "Partly, and we'll say where. AI drafts your wording from your own sentence and helps choose stock photos. A person designs every layout, and a person builds your real site. It never sees your logo, your colours or your photos.",
+        "Partly, and we'll say where. AI drafts your wording from your own sentence and helps choose stock photos. It never sees your logo, your colours or your photos. A person designs every layout, and a person builds your real site.",
       Icon: Bot,
     },
     {

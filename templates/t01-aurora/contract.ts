@@ -125,7 +125,7 @@ const AURORA_GUIDE = Object.entries(AURORA_SLOTS)
 export type AuroraCopy = z.infer<typeof auroraCopySchema>
 
 // Validation needs only words, so the copy is assembled around a wordmark and no pictures.
-const NO_ASSETS: TemplateAssets = { logo: { kind: 'wordmark' }, images: {} }
+const NO_ASSETS: TemplateAssets = { logo: { kind: 'wordmark' }, images: {}, email: null }
 
 // The schema has already checked the length; this narrows the type for the content object.
 function triple<T>(items: readonly T[]): Three<T> {

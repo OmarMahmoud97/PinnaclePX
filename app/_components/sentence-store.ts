@@ -1,7 +1,7 @@
 import 'client-only'
 
 // The sentence a visitor types into the hero, kept for the length of the visit so the closing
-// section can show their own words in its frame. Empty means "show the example brief".
+// section can show their own words in its frame. Empty means "show the client's brief".
 let sentence = ''
 const listeners = new Set<() => void>()
 

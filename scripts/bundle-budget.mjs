@@ -17,8 +17,12 @@ const BUDGETS = {
   // The stylesheet is shared by both routes; the hero's finished page took it past 12 KB
   // (12,044 B on 3 September 2026, ADR 0006), so the line is 14 KB.
   // HTML raised from 25 KB on 5 September 2026 for the three content sections and the longer FAQ
-  // (26,794 B measured, ADR 0022); the room above that is for the examples band.
-  '/': { scripts: 210_000, stylesheets: 14_000, html: 30_000 },
+  // (26,971 B measured), then to 36 KB the same day for the work band's six cards, each with a
+  // phone and a desktop capture in two formats at two widths and a view toggle (34,941 B
+  // measured, ADR 0022), then to 38 KB the same evening for the eight-cell "Everything built in"
+  // band and the asks that end the work, real-build and options bands (36,576 B measured, ADR
+  // 0022 amendment). Re-measured when the journey band ships.
+  '/': { scripts: 210_000, stylesheets: 14_000, html: 38_000 },
   // Raised from 230 KB on 4 September 2026 for zod 4, whose core is about 13 KB gzipped heavier
   // on this page than zod 3 (ADR 0019); its locales are kept out by the namespace import form.
   '/start': { scripts: 245_000, stylesheets: 14_000, html: 25_000 },

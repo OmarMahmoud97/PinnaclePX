@@ -9,7 +9,10 @@ type TasterStep = Readonly<{ title: string; body: string; agenda?: true; buildLi
 const MINUTES = String(CONFIG.call.minutes)
 
 export const TASTER = {
-  heading: 'Five answers get you three designs. Imagine what an hour does.',
+  // Not "Imagine what an hour does.": the sites a conversation produced sit one hairline down
+  // once the work band ships, and "an hour" beside a finished site reads as the price of the work
+  // (docs/home-page-content-plan.md, decision 51).
+  heading: 'Five answers get you three designs. A conversation starts your real site.',
   lead: `Your three designs are a first look, made in five minutes from almost nothing. Give us ${MINUTES} minutes on a call. Then we spend our hours, not yours, building the real thing properly.`,
   doNothing: 'You can also keep the link and do nothing. The designs are free either way.',
   notStarted: 'Not started yet? Answer the five questions first.',
@@ -28,7 +31,7 @@ export const TASTER_STEPS: readonly TasterStep[] = [
   },
   {
     title: 'We build the site',
-    body: 'You get a fixed quote and a timeline on the call. Then we design and build your real site around what you liked.',
+    body: 'With the quote agreed, we design and build your real site. It is shaped by which design you liked, and why.',
     buildLink: true,
   },
 ]
