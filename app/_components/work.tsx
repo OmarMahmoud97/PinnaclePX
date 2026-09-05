@@ -29,7 +29,8 @@ function Picture({ picture, sizes }: { picture: WorkPicture; sizes: string }) {
   const w3 = `${String(webp3x.width)}w`
   return (
     <picture className="block">
-      <source type="image/avif" srcSet={`${avif2x.src} ${w2}, ${avif3x.src} ${w3}`} sizes={sizes} />
+      {/* Served from public/work/ as it is; see work-images.ts for why it is not imported. */}
+      <source type="image/avif" srcSet={`${avif2x} ${w2}, ${avif3x} ${w3}`} sizes={sizes} />
       {/* A committed file at two known sizes, so no optimiser and no client script. */}
       <img
         src={webp2x.src}

@@ -1,3 +1,4 @@
+import '../tailwind.css'
 import './meridian.css'
 import type { MeridianContent } from './copy-slots'
 import { MeridianBenefits } from './sections/benefits'

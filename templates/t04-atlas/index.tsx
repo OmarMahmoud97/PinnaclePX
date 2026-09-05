@@ -1,3 +1,4 @@
+import '../tailwind.css'
 import './atlas.css'
 import type { AtlasContent } from './copy-slots'
 import { AtlasFaq } from './sections/faq'

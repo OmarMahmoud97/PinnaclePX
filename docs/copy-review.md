@@ -182,5 +182,5 @@ Copy that is written and waiting on a decision or evidence, and work the review 
 3. **The gated contract lines** from the content plan (decisions 6 to 10, 13, 15, 27, 32, 33, 35): payment in stages, ownership, a timeline in weeks, the check before launch, the change round, the care plan, the page set. Each is written in the plan and joins the real build, the comparison and the FAQ once its decision is recorded.
 4. **Evidence to file** for the three measured results (TrvlWell, Mvmnt, URUNN): the analytics exports and the dated search screenshot the register rows name.
 5. **The journey band** (`#examples`: VetPres's sentence re-run through the five questions, beside their real site) waits on a real render and VetPres's consent row.
-6. **Before launch**, unchanged: the real Cal.com link, the verified sending domain, the studio's contact email and town, the Vercel environment.
+6. **Before launch**, unchanged: the verified sending domain, the studio's contact email and town, the Vercel environment. The Cal.com link is confirmed: the owner gave `https://cal.com/pinnaclepx/quick-chat` on 5 September 2026, the address `SITE.bookingUrl` already held.
 7. **Nothing is committed.** The whole of today's work sits uncommitted on `main`, alongside the template work from outside this session; branch off main before committing.

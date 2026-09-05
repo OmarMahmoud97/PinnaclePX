@@ -15,7 +15,9 @@ const NEXT = join(ROOT, '.next')
 const BUDGETS = {
   // The React and Next floor is about 155 KB of this; the page's own code stays under 50 KB.
   // The stylesheet is shared by both routes; the hero's finished page took it past 12 KB
-  // (12,044 B on 3 September 2026, ADR 0006), so the line is 14 KB.
+  // (12,044 B on 3 September 2026, ADR 0006), so the line is 14 KB. The templates are not in it:
+  // they carry their own sheet on the preview and example routes, which is what keeps this line
+  // still (13,103 B measured on 5 September 2026 with four templates ready, ADR 0024).
   // HTML raised from 25 KB on 5 September 2026 for the three content sections and the longer FAQ
   // (26,971 B measured), then to 36 KB the same day for the work band's six cards, each with a
   // phone and a desktop capture in two formats at two widths and a view toggle (34,941 B

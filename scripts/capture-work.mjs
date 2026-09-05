@@ -3,15 +3,18 @@
 // client here has given the studio permission to show their site (owner, 5 September 2026;
 // docs/claims-register.md). The capture is an iPhone 13 viewport at 2x, cropped to the phone
 // frame's 9:19, resized to the two widths the page shows (2x and 3x of 216 px) and encoded as AVIF
-// and WebP into app/_images/work/. Cookie banners, chat widgets and autoplaying video are hidden
-// or paused, and the hiding is recorded, so a capture is the page as a visitor sees it once they
-// have dismissed the furniture. Re-run when a client's site changes; the caption carries the date.
+// (into public/work/, served as it is: Turbopack cannot decode AVIF imports) and WebP (into
+// app/_images/work/, imported for its size). Cookie banners, chat widgets and autoplaying video
+// are hidden or paused, and the hiding is recorded, so a capture is the page as a visitor sees it
+// once they have dismissed the furniture. Re-run when a client's site changes; the caption carries
+// the date.
 import { mkdirSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { chromium, devices } from '@playwright/test'
 import sharp from 'sharp'
 
 const OUT = join(process.cwd(), 'app', '_images', 'work')
+const AVIF_OUT = join(process.cwd(), 'public', 'work')
 // Phone: an iPhone 13's full 390 by 844 screen at its native 3x (Playwright's preset viewport is
 // 390 by 664, the screen minus the browser chrome, which would capture too short a page), cropped
 // to the frame's 9:19 and written at 2x and 3x of the 216 px frame. Desktop: a 1440 by 900 first
@@ -51,6 +54,7 @@ const HIDE_CSS = `
 `
 
 mkdirSync(OUT, { recursive: true })
+mkdirSync(AVIF_OUT, { recursive: true })
 const browser = await chromium.launch()
 const manifest = { capturedAt: new Date().toISOString().slice(0, 10), clients: [] }
 
@@ -82,7 +86,7 @@ for (const client of CLIENTS) {
       const resized = cropped.clone().resize({ width: w })
       const avif = await resized.clone().avif({ quality: 55 }).toBuffer()
       const webp = await resized.clone().webp({ quality: 80 }).toBuffer()
-      writeFileSync(join(OUT, `${base}.avif`), avif)
+      writeFileSync(join(AVIF_OUT, `${base}.avif`), avif)
       writeFileSync(join(OUT, `${base}.webp`), webp)
       files.push({ view: view.name, width: w, avifBytes: avif.length, webpBytes: webp.length })
     }

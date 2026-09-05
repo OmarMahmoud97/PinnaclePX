@@ -18,7 +18,8 @@ export const SITE = {
   // until then.
   town: null as string | null,
   contactEmail: null as string | null,
-  // Replace with the real Cal.com booking link before launch.
+  // The studio's real booking page, confirmed by the owner on 5 September 2026. The event's length
+  // is set by hand on Cal.com to match CONFIG.call.minutes.
   bookingUrl: 'https://cal.com/pinnaclepx/quick-chat',
 } as const
 

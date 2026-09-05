@@ -1,3 +1,4 @@
+import '../tailwind.css'
 import './monolith.css'
 import type { MonolithContent } from './copy-slots'
 import { MonolithAbout } from './sections/about'

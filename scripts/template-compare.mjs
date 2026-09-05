@@ -35,7 +35,6 @@ if (sourceUrl === undefined || portUrl === undefined) {
   )
   process.exit(1)
 }
-mkdirSync(options.out, { recursive: true })
 
 // A section argument to the selector each page uses for it.
 function selectorsOf(section) {
@@ -67,6 +66,16 @@ function boxTree(selector) {
   return out
 }
 
+// Whether the selector matches on the page, waiting for a page that is still compiling or
+// hydrating rather than reporting it missing.
+async function present(page, selector) {
+  const el = page.locator(selector).first()
+  return el
+    .waitFor({ state: 'attached', timeout: 15_000 })
+    .then(() => true)
+    .catch(() => false)
+}
+
 const browser = await chromium.launch()
 const pages = {}
 for (const [side, url] of [
@@ -88,9 +97,11 @@ for (const [side, url] of [
 if (options.measure !== null) {
   for (const side of ['source', 'port']) {
     console.log(`== ${side}`)
+    await present(pages[side], options.measure)
     console.log((await pages[side].evaluate(boxTree, options.measure)).join('\n'))
   }
 } else {
+  mkdirSync(options.out, { recursive: true })
   for (const side of ['source', 'port']) {
     await pages[side].screenshot({ path: join(options.out, `${side}-top.png`) })
   }
@@ -98,11 +109,11 @@ if (options.measure !== null) {
     const { name, ...selectors } = selectorsOf(section)
     const sizes = {}
     for (const side of ['source', 'port']) {
-      const el = pages[side].locator(selectors[side]).first()
-      if ((await el.count()) === 0) {
+      if (!(await present(pages[side], selectors[side]))) {
         sizes[side] = null
         continue
       }
+      const el = pages[side].locator(selectors[side]).first()
       await el.scrollIntoViewIfNeeded()
       await pages[side].waitForTimeout(400)
       await el.screenshot({ path: join(options.out, `${side}-${name}.png`) })

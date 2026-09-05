@@ -26,10 +26,25 @@ describe('the work band and its captures', () => {
   })
 
   it('keeps every committed picture in the manifest and under its byte line', () => {
-    const files = readdirSync(join(process.cwd(), 'app', '_images', 'work')).filter((file) =>
-      /\.(avif|webp)$/.test(file),
+    // WebP is imported from app/_images/work/; AVIF is served as it is from public/work/.
+    const webps = readdirSync(join(process.cwd(), 'app', '_images', 'work')).filter((file) =>
+      file.endsWith('.webp'),
     )
-    expect(files).toHaveLength(slugs.length * 8)
+    const avifs = readdirSync(join(process.cwd(), 'public', 'work')).filter((file) =>
+      file.endsWith('.avif'),
+    )
+    expect(webps).toHaveLength(slugs.length * 4)
+    expect(avifs).toHaveLength(slugs.length * 4)
+    // Every AVIF address the band writes names a file that exists, at the manifest's version.
+    for (const image of Object.values(WORK_IMAGES)) {
+      for (const picture of [image.phone, image.desktop]) {
+        for (const url of picture.avif) {
+          const [path, version] = url.split('?v=')
+          expect(version).toBe(manifest.capturedAt)
+          expect(avifs).toContain(path?.replace('/work/', ''))
+        }
+      }
+    }
     for (const client of manifest.clients) {
       for (const file of client.files) {
         // A phone capture of a lit first screen: comfortably under a 60 KB line at 2x.

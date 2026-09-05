@@ -117,7 +117,7 @@ Nothing is done on the strength of a full-page screenshot. Run the source and th
 
 ```
 pnpm template:compare http://localhost:5173/ http://localhost:3000/examples/<name> \
-  hero about 'steps=#howItWorks::#how-it-works' 'services=section:has(img[alt="About services"])::#services' faq footer
+  'hero=section:first-of-type' about 'steps=#howItWorks::#how-it-works' 'services=section:has(img[alt="About services"])::#services' faq footer
 ```
 
 - Every section's rendered height must match the source's at the comparison width (1535px, the owner's laptop) to the pixel. A difference of any size is a class that was not translated: find it with `--measure '<selector>'` on the element and read the box tree side by side (a `lh=28px` against `lh=18px` is the `leading-none` trap; a `pb=` that differs is a padding override that did not win).
@@ -143,4 +143,4 @@ Kept here so they are not made twice.
 - Dropping sections with awkward content instead of making them optional and filling them on the example.
 - Trusting class order (`${cardTitle} text-lg`) in Tailwind 4, and trusting `space-y` to mean what it meant in Tailwind 3.
 - Comparing whole pages by eye at one width instead of measuring each section against the running source.
-- Writing long files through a shell heredoc on Windows: anything past a few thousand characters fails silently. Use the Write tool for files.
+- Writing files through the shell on Windows: a heredoc past a few thousand characters fails with "unexpected EOF", and the shell collapses doubled backslashes and expands backticks inside a command. Write files with the Write tool and edit them with the Edit tool.

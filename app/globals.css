@@ -1,4 +1,12 @@
 @import 'tailwindcss';
+@import './tokens.css';
+
+/*
+ * templates/ is scanned by templates/tailwind.css, not by this sheet. This one loads on every
+ * page of the site, and the templates render only on the preview and example routes, so their
+ * classes would otherwise be downloaded by everyone who never sees a template.
+ */
+@source not '../templates';
 
 /*
  * Semantic design tokens. Components consume only the utility classes generated from these
@@ -36,78 +44,6 @@
   --motion-enter: 200ms;
   --motion-settle: 300ms;
   --motion-stagger: 40ms;
-}
-
-@theme inline {
-  --color-surface: var(--surface);
-  --color-surface-muted: var(--surface-muted);
-  --color-on-surface: var(--on-surface);
-  --color-on-surface-muted: var(--on-surface-muted);
-  --color-border: var(--border);
-  --color-accent: var(--accent);
-  --color-brand: var(--brand);
-  --color-brand-deeper: var(--brand-deeper);
-  --color-brand-deepest: var(--brand-deepest);
-  --color-on-brand: var(--on-brand);
-  --color-glow: var(--glow);
-  --color-glow-secondary: var(--glow-secondary);
-  --color-scrim: var(--scrim);
-  --color-on-scrim: var(--on-scrim);
-  --color-danger: var(--danger);
-  --color-warning: var(--warning);
-  --color-success: var(--success);
-
-  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
-  /*
-   * Template type. A preview sets the two families on its root (--template-font-display and
-   * --template-font-body); the site's own pages never do, so both fall back to Geist.
-   */
-  --font-display:
-    var(--template-font-display, var(--font-geist-sans)), ui-sans-serif, system-ui, sans-serif;
-  --font-body:
-    var(--template-font-body, var(--font-geist-sans)), ui-sans-serif, system-ui, sans-serif;
-
-  --ease-enter: cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
-  --animate-question-in: question-in var(--motion-enter) var(--ease-enter) both;
-  --animate-sketch-in: sketch-in var(--motion-settle) var(--ease-enter) both;
-
-  --shadow-badge:
-    0 0 0 1px rgb(0 0 0 / 0.06), 0 1px 2px rgb(0 0 0 / 0.06), 0 4px 12px rgb(0 0 0 / 0.04);
-  --shadow-cta:
-    0 1px 2px rgb(0 0 0 / 0.09), 0 2px 4px rgb(0 0 0 / 0.02), inset 0 0 1.5px var(--brand-deepest),
-    inset 0 2.5px 0 rgb(255 255 255 / 0.09), inset 0 0 2.5px rgb(255 255 255 / 0.03);
-  --shadow-dialog: 0 24px 64px -12px rgb(2 6 23 / 0.28), 0 0 0 1px rgb(2 6 23 / 0.04);
-}
-
-/*
- * The type and spacing scale. Every size is fluid with a rem term so text still grows at 200%
- * zoom (WCAG 1.4.4). Two heading recipes consume the top two steps (app/_components/section-styles.ts).
- */
-@theme {
-  --text-display: clamp(2.25rem, 1.25rem + 3.3vw, 3.75rem);
-  --text-display--line-height: 1.04;
-  --text-display--letter-spacing: -0.04em;
-  --text-title: clamp(1.75rem, 1rem + 2.2vw, 2.75rem);
-  --text-title--line-height: 1.1;
-  --text-title--letter-spacing: -0.03em;
-  --text-heading: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
-  --text-heading--line-height: 1.35;
-  --text-heading--letter-spacing: -0.01em;
-  --text-lead: clamp(1.0625rem, 1rem + 0.35vw, 1.25rem);
-  --text-lead--line-height: 1.5;
-  --text-body: 1rem;
-  --text-body--line-height: 1.6;
-  --text-small: 0.875rem;
-  --text-small--line-height: 1.5;
-  --text-label: 0.75rem;
-  --text-label--line-height: 1.4;
-  --text-label--letter-spacing: 0.04em;
-
-  --spacing-section: clamp(3.5rem, 2rem + 5vw, 6rem);
-  --spacing-column: clamp(1.5rem, 0.75rem + 3vw, 3.5rem);
-  --spacing-cell: clamp(1.25rem, 1rem + 1vw, 2rem);
 }
 
 /* The fixed header is 4rem tall; keep every fragment jump and focus scroll clear of it. */
