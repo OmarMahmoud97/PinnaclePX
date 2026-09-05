@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { PhoneFrame } from '@/components/sketch/phone-frame'
 import type { SketchModel } from '@/components/sketch/sketch-model'
 import {
   Bar,
@@ -8,7 +9,6 @@ import {
   Paragraph,
   Wordmark,
 } from '@/components/sketch/sketch-parts'
-import { cn } from '@/lib/cn'
 
 // Read once at load, outside render, so the footer line never differs between two renders.
 const YEAR = new Date().getFullYear()
@@ -31,17 +31,7 @@ export function PhoneSketch({ model, zoom = 1, className, built }: Props) {
   const { company } = model
 
   return (
-    <div
-      data-frame="phone"
-      style={zoom === 1 ? undefined : { zoom }}
-      className={cn(
-        'flex aspect-[9/19] w-36 flex-col overflow-hidden rounded-[1.25rem] border border-(--sketch-line) bg-(--sketch-bg) text-[8px] text-(--sketch-fg) shadow-dialog ring-4 ring-scrim/5 transition-colors duration-500',
-        className,
-      )}
-    >
-      <div className="flex justify-center pt-2 pb-1">
-        <Bar className="h-1 w-8" />
-      </div>
+    <PhoneFrame zoom={zoom} className={className}>
       <div className="relative isolate flex flex-1 flex-col">
         {built}
         <div
@@ -86,6 +76,6 @@ export function PhoneSketch({ model, zoom = 1, className, built }: Props) {
           </div>
         </div>
       </div>
-    </div>
+    </PhoneFrame>
   )
 }

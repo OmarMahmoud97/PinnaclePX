@@ -8,11 +8,7 @@ export function Hero() {
   return (
     <HeroStage>
       <h1 className={displayHeading}>{SITE.tagline}</h1>
-      <p className="max-w-2xl text-lead text-pretty text-on-surface-muted">
-        Answer a few short questions and about five minutes later, you&apos;ll see three homepage
-        designs in your logo and colours. A free taste of how we work. Then decide whether to talk
-        to us.
-      </p>
+      <p className="max-w-2xl text-lead text-pretty text-on-surface-muted">{SITE.subhead}</p>
     </HeroStage>
   )
 }

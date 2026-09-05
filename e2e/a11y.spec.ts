@@ -41,7 +41,14 @@ test('the open menu and the open FAQ have no accessibility violations', async ({
   await built(page)
   const menu = page.getByRole('button', { name: 'Menu' })
   if (await menu.isVisible()) await menu.click()
-  for (const summary of await page.locator('#faq summary').all()) await summary.click()
+  // Opened directly: twelve clicks, each waiting for the height animation and the smooth scroll to
+  // settle, outran the test's budget on a tablet. That a click opens an entry is home.spec's test;
+  // this one scans the open state.
+  await page.evaluate(() => {
+    for (const entry of document.querySelectorAll<HTMLDetailsElement>('#faq details')) {
+      entry.open = true
+    }
+  })
   await settled(page)
   const results = await new AxeBuilder({ page }).withTags(TAGS).analyze()
   expect(results.violations).toEqual([])

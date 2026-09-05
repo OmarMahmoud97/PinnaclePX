@@ -1,7 +1,7 @@
 import { CONFIG } from '@/lib/config'
 import type { TemplateMeta } from '@/lib/copy-slots/template-meta'
 import { mulberry32, seedFrom, shuffle } from '@/lib/select/prng'
-import { conceptCountFor, selectTemplates } from '@/lib/select/select'
+import { conceptCountFor, readyForTraffic, selectTemplates } from '@/lib/select/select'
 
 function template(id: string, tones: string[], polarity: TemplateMeta['polarity'] = 'either') {
   return { id, name: id, description: '', ready: true, polarity, tones } satisfies TemplateMeta
@@ -27,6 +27,13 @@ describe('conceptCountFor', () => {
     expect(conceptCountFor(10)).toBe(CONFIG.templates.conceptsShown)
     expect(conceptCountFor(1)).toBe(1)
     expect(conceptCountFor(0)).toBe(0)
+  })
+
+  it('lets the page take traffic only once the promised number of templates are ready', () => {
+    expect(readyForTraffic(CONFIG.templates.conceptsShown)).toBe(true)
+    expect(readyForTraffic(10)).toBe(true)
+    expect(readyForTraffic(CONFIG.templates.conceptsShown - 1)).toBe(false)
+    expect(readyForTraffic(0)).toBe(false)
   })
 })
 

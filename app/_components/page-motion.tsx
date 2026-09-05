@@ -8,7 +8,10 @@ import { CONFIG } from '@/lib/config'
 const SECTION_IDS = [
   'what-you-get',
   'how-it-works',
+  'outcomes',
   'taster',
+  'real-build',
+  'your-options',
   'straight-answers',
   'about',
   'faq',

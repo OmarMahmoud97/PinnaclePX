@@ -20,6 +20,10 @@ export const env = createEnv({
     // Where the notice of every build goes: the links, the client's answers and the tokens the
     // model calls cost (lib/email/owner-notice.ts).
     OWNER_EMAIL: z.email(),
+    // Set on the production deployment once the page takes traffic. The home page promises three
+    // designs, so under this flag its build fails while fewer templates are ready than it promises
+    // (app/page.tsx; docs/home-page-content-plan.md, decision 19). Unset, nothing changes.
+    LAUNCH_GATE: z.literal('1').optional(),
     // Development only: an address may be shown a template it has already seen, so one email can
     // test the same template again and again (lib/db/exclusivity.ts). Refused on the production
     // deployment, where the guide's rule stands.

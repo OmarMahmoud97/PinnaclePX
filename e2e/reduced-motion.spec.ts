@@ -13,7 +13,16 @@ test('the sketch is finished and nothing moves', async ({ page }) => {
   await expect(page.getByText('Example brief so far: Sentence, VetPres')).toBeAttached()
   await expect(page.locator('#hero')).not.toHaveAttribute('data-built', '')
 
-  for (const id of ['how-it-works', 'taster', 'straight-answers', 'faq', 'cta']) {
+  for (const id of [
+    'how-it-works',
+    'outcomes',
+    'taster',
+    'real-build',
+    'your-options',
+    'straight-answers',
+    'faq',
+    'cta',
+  ]) {
     await page.locator(`#${id}`).scrollIntoViewIfNeeded()
   }
   await expect(page.locator('#how-it-works').getByText('Question 5 of 5')).toHaveCount(1)

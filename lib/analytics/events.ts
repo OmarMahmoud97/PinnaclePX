@@ -7,6 +7,7 @@ export type AnalyticsEvent =
   | 'cta_click'
   | 'call_click'
   | 'contact_click'
+  | 'share_click'
   | 'faq_open'
   | 'section_view'
   | 'brief_focus'
@@ -15,7 +16,7 @@ export type AnalyticsEvent =
   | 'brief_complete'
 
 // Vercel accepts only flat string, number, boolean or null values.
-type EventData = Readonly<Record<string, string | number | boolean | null>>
+export type EventData = Readonly<Record<string, string | number | boolean | null>>
 
 export function trackEvent(event: AnalyticsEvent, data: EventData): void {
   track(event, data)
