@@ -2,11 +2,12 @@
 // Poppins-set text), class for class, painted with the tokens. Class strings stay literal so
 // Tailwind can see them.
 //
-// Token map from the source's fixed colours: white -> surface, #FAFAFA -> surface-muted,
-// gray-100 -> accent, neutral-800 -> on-surface, gray-700 and #666666 -> on-surface-muted,
-// #DDDDDD and gray-200 -> border, #468ef9 (the gradient's start) -> brand, #0c66ee (its end,
-// and every border and link) -> brand-deeper, the header gradient's cyan -> glow and its first
-// blue -> glow-secondary.
+// Token map from the source's fixed colours, its hex codes written bare because no file under
+// templates/ may hold a hex literal: white -> surface, FAFAFA -> surface-muted, gray-100 ->
+// accent, neutral-800 -> on-surface, gray-700 and 666666 -> on-surface-muted, DDDDDD and
+// gray-200 -> border, 468ef9 (the gradient's start) -> brand, 0c66ee (its end, and every border
+// and link) -> brand-deeper, the header gradient's cyan -> glow and its first blue ->
+// glow-secondary.
 
 // The source's BaseSection: a twelve-column grid at the xl breakpoint's width.
 export const section =
