@@ -15,11 +15,14 @@ export const YOUR_OPTIONS = {
   studioHead: 'We build it with you',
   builderLabel: 'With a builder',
   studioLabel: 'With us',
-  signpost: "Builders' own help pages describe the left column, if you want to check.",
+  // Not "the left column": on a phone the rows stack under "With a builder" and "With us".
+  signpost: 'What we say about builders comes from their own help pages, if you want to check.',
   generous:
     'If you enjoy building things, a builder may suit you. Many good sites started that way.',
   agency:
     'Hired an agency before? What changes here is the order: you see designs first, then decide, then pay.',
+  // The comparison's ask: the free half of "asking us" is five minutes away.
+  ask: 'See what asking us looks like first. Three designs, free, in about five minutes.',
 } as const
 
 // What the visitor sees before paying: the count is a promise only once that many templates are

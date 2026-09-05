@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { COPY } from '@/app/_components/copy-corpus'
 import { OUTCOME_ITEMS } from '@/app/_components/outcome-items'
 import { SECOND_VISIT, straightAnswerItems } from '@/app/_components/straight-answer-items'
+import { MEASURED_RESULTS } from '@/app/_components/work-items'
 import { CALL_AGENDA } from '@/lib/site'
 
 const MAX_WORDS = 20
@@ -37,8 +38,16 @@ describe('visitor-facing copy', () => {
     expect(COPY.filter((text) => /\bcopy\b/i.test(text))).toEqual([])
   })
 
+  // The only figures on the page are the clients' measured results, each with the studio's
+  // records behind it in docs/claims-register.md; the exemption is by exact string.
   it('never uses a banned word, a figure in per cent or an exclamation mark', () => {
-    expect(COPY.filter((text) => BANNED.test(text))).toEqual([])
+    const allowed = new Set<string>(MEASURED_RESULTS)
+    expect(COPY.filter((text) => !allowed.has(text) && BANNED.test(text))).toEqual([])
+  })
+
+  it('exempts only results that carry a figure', () => {
+    for (const result of MEASURED_RESULTS) expect(result).toMatch(/\d|page one/)
+    expect(MEASURED_RESULTS.some((result) => result.includes('!'))).toBe(false)
   })
 
   // Outcomes sets up "before they book" and the call agenda pays it off, so the phrase is held

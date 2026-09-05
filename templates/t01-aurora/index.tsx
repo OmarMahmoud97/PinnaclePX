@@ -1,3 +1,4 @@
+import '../tailwind.css'
 import './aurora.css'
 import type { AuroraContent } from './copy-slots'
 import { AuroraCta } from './sections/cta'

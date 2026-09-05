@@ -1,8 +1,19 @@
 // Headings and leads that used to sit as JSX prose in their sections. They live here so
 // copy.test.ts guards every visitor sentence, not only the list items. Rendering is unchanged.
+
+// The hero's field and its second path. The label asks the first question in the visitor's words.
+export const HERO = {
+  fieldLabel: 'What does your business do?',
+  fieldHint: 'Your answer fills the sketch as you type.',
+  talkFirst: 'Rather talk first?',
+} as const
+
+// The section sells how little the form asks and how soon it pays off, nothing about the
+// machinery: the pipeline starts on the fifth answer (app/start/_components/actions.ts), and a
+// visitor deciding whether to type gains nothing from knowing when.
 export const HOW_IT_WORKS = {
   heading: 'One question at a time.',
-  lead: "You see one question, answer it, and the next one appears. While you answer, we're already working.",
+  lead: 'You see one question, answer it, and the next one appears. Nothing to prepare, and nothing to upload unless you want to.',
   // Three beats of copy beside the phone frame; each paints one more answer into it.
   beats: [
     {
@@ -12,15 +23,8 @@ export const HOW_IT_WORKS = {
     { stage: 3, text: "No phone number. No budget question. Skip anything you don't have." },
     {
       stage: 5,
-      text: "By your fourth answer, we've already started on your wording. When your designs are ready, the link appears on screen and lands in your inbox.",
+      text: 'Five answers, then about five minutes. Your three designs appear on screen, and the link lands in your inbox.',
     },
-  ],
-  // What has already happened by the fourth answer. The ticks match when each stage of the build
-  // starts; the third line stays a plain circle until the pipeline runs.
-  legend: [
-    { label: 'Your sentence', state: 'received', done: true },
-    { label: 'Three designs', state: 'picked for you', done: true },
-    { label: 'Your wording', state: 'started by your fourth answer', done: false },
   ],
 } as const
 

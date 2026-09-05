@@ -1,0 +1,209 @@
+{
+  "capturedAt": "2026-09-05",
+  "clients": [
+    {
+      "slug": "go-wild",
+      "name": "Go Wild",
+      "url": "https://gowilddogwalking.co.uk/",
+      "finalUrl": "https://gowilddogwalking.co.uk/",
+      "capturedAt": "2026-09-05",
+      "hidden": "consent banners and chat launchers; video paused",
+      "files": [
+        {
+          "view": "phone",
+          "width": 432,
+          "avifBytes": 31760,
+          "webpBytes": 48782
+        },
+        {
+          "view": "phone",
+          "width": 648,
+          "avifBytes": 53361,
+          "webpBytes": 80278
+        },
+        {
+          "view": "desktop",
+          "width": 448,
+          "avifBytes": 12439,
+          "webpBytes": 17884
+        },
+        {
+          "view": "desktop",
+          "width": 672,
+          "avifBytes": 22782,
+          "webpBytes": 35262
+        }
+      ]
+    },
+    {
+      "slug": "vetpres",
+      "name": "VetPres",
+      "url": "https://vetpres.com/",
+      "finalUrl": "https://vetpres.com/",
+      "capturedAt": "2026-09-05",
+      "hidden": "consent banners and chat launchers; video paused",
+      "files": [
+        {
+          "view": "phone",
+          "width": 432,
+          "avifBytes": 31019,
+          "webpBytes": 50668
+        },
+        {
+          "view": "phone",
+          "width": 648,
+          "avifBytes": 49601,
+          "webpBytes": 79632
+        },
+        {
+          "view": "desktop",
+          "width": 448,
+          "avifBytes": 11989,
+          "webpBytes": 18482
+        },
+        {
+          "view": "desktop",
+          "width": 672,
+          "avifBytes": 21418,
+          "webpBytes": 33248
+        }
+      ]
+    },
+    {
+      "slug": "trvlwell",
+      "name": "TrvlWell",
+      "url": "https://trvlwell.co/",
+      "finalUrl": "https://trvlwell.co/",
+      "capturedAt": "2026-09-05",
+      "hidden": "consent banners and chat launchers; video paused",
+      "files": [
+        {
+          "view": "phone",
+          "width": 432,
+          "avifBytes": 14248,
+          "webpBytes": 19830
+        },
+        {
+          "view": "phone",
+          "width": 648,
+          "avifBytes": 22397,
+          "webpBytes": 32084
+        },
+        {
+          "view": "desktop",
+          "width": 448,
+          "avifBytes": 7254,
+          "webpBytes": 10234
+        },
+        {
+          "view": "desktop",
+          "width": 672,
+          "avifBytes": 13041,
+          "webpBytes": 18284
+        }
+      ]
+    },
+    {
+      "slug": "withu",
+      "name": "WithU",
+      "url": "https://www.withuapp.com/",
+      "finalUrl": "https://www.withuapp.com/",
+      "capturedAt": "2026-09-05",
+      "hidden": "consent banners and chat launchers; video paused",
+      "files": [
+        {
+          "view": "phone",
+          "width": 432,
+          "avifBytes": 19415,
+          "webpBytes": 28820
+        },
+        {
+          "view": "phone",
+          "width": 648,
+          "avifBytes": 31273,
+          "webpBytes": 49486
+        },
+        {
+          "view": "desktop",
+          "width": 448,
+          "avifBytes": 9579,
+          "webpBytes": 14824
+        },
+        {
+          "view": "desktop",
+          "width": 672,
+          "avifBytes": 17802,
+          "webpBytes": 25988
+        }
+      ]
+    },
+    {
+      "slug": "mvmnt",
+      "name": "Mvmnt",
+      "url": "https://www.mvmnt.com/",
+      "finalUrl": "https://www.mvmnt.com/",
+      "capturedAt": "2026-09-05",
+      "hidden": "consent banners and chat launchers; video paused",
+      "files": [
+        {
+          "view": "phone",
+          "width": 432,
+          "avifBytes": 10684,
+          "webpBytes": 14390
+        },
+        {
+          "view": "phone",
+          "width": 648,
+          "avifBytes": 16265,
+          "webpBytes": 22498
+        },
+        {
+          "view": "desktop",
+          "width": 448,
+          "avifBytes": 8660,
+          "webpBytes": 11816
+        },
+        {
+          "view": "desktop",
+          "width": 672,
+          "avifBytes": 15190,
+          "webpBytes": 19222
+        }
+      ]
+    },
+    {
+      "slug": "urunn",
+      "name": "URUNN",
+      "url": "https://www.urunn.com/",
+      "finalUrl": "https://www.urunn.com/",
+      "capturedAt": "2026-09-05",
+      "hidden": "consent banners and chat launchers; video paused",
+      "files": [
+        {
+          "view": "phone",
+          "width": 432,
+          "avifBytes": 20625,
+          "webpBytes": 30242
+        },
+        {
+          "view": "phone",
+          "width": 648,
+          "avifBytes": 33108,
+          "webpBytes": 48566
+        },
+        {
+          "view": "desktop",
+          "width": 448,
+          "avifBytes": 12641,
+          "webpBytes": 20584
+        },
+        {
+          "view": "desktop",
+          "width": 672,
+          "avifBytes": 21268,
+          "webpBytes": 33784
+        }
+      ]
+    }
+  ]
+}

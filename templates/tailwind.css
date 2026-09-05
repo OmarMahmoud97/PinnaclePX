@@ -1,0 +1,21 @@
+/*
+ * The Tailwind utilities for the classes used under templates/, kept out of the app's own
+ * stylesheet.
+ *
+ * app/globals.css loads on every page of the site, and it used to generate the utilities for
+ * this directory too, because Tailwind scans the whole project by default. That put the
+ * templates' classes into the stylesheet of pages that never render a template: the shared sheet
+ * measured 17,732 B gzipped against a 14,000 B budget once t02 to t04 landed, and would have
+ * grown again with every template after them. globals.css now excludes this directory
+ * (`@source not '../templates'`) and each template's index imports this file instead, so these
+ * utilities load only on the preview and example routes.
+ *
+ * Both themes come in by reference, so nothing here is emitted twice: the default theme, and the
+ * site's own tokens from app/tokens.css, which globals.css emits on every page. A utility
+ * generated here therefore resolves to the same variables as the same utility on the site, and a
+ * brand's generated set still recolours a preview at runtime.
+ */
+@import 'tailwindcss/theme.css' theme(reference);
+@import '../app/tokens.css' theme(reference);
+
+@import 'tailwindcss/utilities.css' source('.');

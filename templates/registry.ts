@@ -2,8 +2,11 @@ import type { TemplateContract } from '@/lib/copy-slots/contract'
 import type { TemplateMeta, TemplateTuple } from '@/lib/copy-slots/template-meta'
 import { auroraContract } from './t01-aurora/contract'
 import { meta as t01 } from './t01-aurora/meta'
+import { monolithContract } from './t02-monolith/contract'
 import { meta as t02 } from './t02-monolith/meta'
+import { meridianContract } from './t03-meridian/contract'
 import { meta as t03 } from './t03-meridian/meta'
+import { atlasContract } from './t04-atlas/contract'
 import { meta as t04 } from './t04-atlas/meta'
 import { meta as t05 } from './t05-ember/meta'
 import { meta as t06 } from './t06-harbor/meta'
@@ -36,6 +39,9 @@ export const READY_TEMPLATES: readonly TemplateMeta[] = TEMPLATES.filter((t) => 
 // One contract per ready template.
 const CONTRACTS: ReadonlyMap<string, TemplateContract> = new Map([
   [auroraContract.meta.id, auroraContract],
+  [monolithContract.meta.id, monolithContract],
+  [meridianContract.meta.id, meridianContract],
+  [atlasContract.meta.id, atlasContract],
 ])
 
 // Checked at module load: fail fast.

@@ -5,9 +5,12 @@ import {
   REAL_BUILD,
   timelineLine,
 } from '@/app/_components/build-items'
+import { BOOK_CALL } from '@/app/_components/nav-links'
 import { revealDelay } from '@/app/_components/reveal'
 import { cardHeading, stickyColumn, titleHeading } from '@/app/_components/section-styles'
 import { captionStyles } from '@/components/ui/caption'
+import { textLinkStyles } from '@/components/ui/text-link'
+import { TrackedLink } from '@/components/ui/tracked-link'
 import { CONFIG } from '@/lib/config'
 
 // The Taster's third step, opened out: who does what, what the studio needs, and where it ends.
@@ -26,7 +29,7 @@ export function RealBuild() {
         <div className="md:col-span-4">
           {/* The section's own bottom hairline comes from <main>'s divide-y, so none here. */}
           <ol data-reveal className="divide-y divide-border border-t border-border md:border-t-0">
-            {BUILD_STEPS.map(({ title, body, more }, index) => (
+            {BUILD_STEPS.map(({ title, body }, index) => (
               <li key={title} style={revealDelay(index)} className="flex gap-5 p-5 md:p-cell">
                 <span
                   className={`${captionStyles} w-[2ch] shrink-0 pt-1 text-brand-deeper tabular-nums`}
@@ -36,9 +39,6 @@ export function RealBuild() {
                 <div className="flex flex-col gap-2">
                   <h3 className={cardHeading}>{title}</h3>
                   <p className="text-body text-pretty text-on-surface-muted">{body}</p>
-                  {more !== undefined && (
-                    <p className="text-body text-pretty text-on-surface-muted">{more}</p>
-                  )}
                 </div>
               </li>
             ))}
@@ -57,6 +57,19 @@ export function RealBuild() {
               )}
             </div>
           )}
+
+          {/* The process, then the ask: a visitor who read to the end has a question to bring. */}
+          <p className="border-t border-border p-5 text-small text-on-surface-muted md:p-cell">
+            {REAL_BUILD.ask}{' '}
+            <TrackedLink
+              href={BOOK_CALL.href}
+              event="call_click"
+              location="real-build"
+              className={`${textLinkStyles} inline-block py-1`}
+            >
+              {BOOK_CALL.label}
+            </TrackedLink>
+          </p>
         </div>
       </div>
     </section>

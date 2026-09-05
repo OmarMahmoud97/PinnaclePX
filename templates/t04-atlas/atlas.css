@@ -1,0 +1,188 @@
+/*
+ * Atlas (t04). The source's own stylesheet rules (its layout and page styles), scoped to the
+ * template's root and painted with the tokens: the cover wash behind the top of the page, the
+ * two text gradients, the blue gradient fill, and the band backgrounds it drew with pictures.
+ * The source also slid every block in with a scroll-animation library; those are scroll-driven
+ * animations here, with no script, and off under reduced motion.
+ */
+
+/* The source's .cover-gradient (4%) and .cover-gradient-2 (10%, on phones). */
+.atlas-cover {
+  background: linear-gradient(
+    169.4deg,
+    color-mix(in srgb, var(--glow-secondary) 4%, transparent) -6.01%,
+    color-mix(in srgb, var(--glow) 4%, transparent) 36.87%,
+    color-mix(in srgb, var(--brand) 4%, transparent) 78.04%,
+    color-mix(in srgb, var(--brand-deeper) 4%, transparent) 103.77%
+  );
+}
+
+@media (max-width: 639px) {
+  .atlas-cover {
+    background: linear-gradient(
+      169.4deg,
+      color-mix(in srgb, var(--glow-secondary) 10%, transparent) -6.01%,
+      color-mix(in srgb, var(--glow) 10%, transparent) 36.87%,
+      color-mix(in srgb, var(--brand) 10%, transparent) 78.04%,
+      color-mix(in srgb, var(--brand-deeper) 10%, transparent) 103.77%
+    );
+  }
+}
+
+/* The source's .bg-blue-gradient and .text-gradient. */
+.atlas-blue-gradient,
+.atlas-text-gradient {
+  background: linear-gradient(136.91deg, var(--brand) -12.5%, var(--brand-deeper) 107.5%);
+}
+
+.atlas-text-gradient {
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* The source's .text-header-gradient. */
+.atlas-header-gradient {
+  background: linear-gradient(
+    169.4deg,
+    var(--glow-secondary) -6.01%,
+    var(--glow) 36.87%,
+    var(--brand) 78.04%,
+    var(--brand-deeper) 103.77%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/*
+ * The source's .bg-partner and .bg-trading-tools were photographs of a white ground with a
+ * faint grey haze over the lower third; the same haze, from the surface to the muted surface.
+ */
+.atlas-band {
+  background: linear-gradient(
+    to bottom,
+    var(--surface) 0%,
+    var(--surface) 55%,
+    var(--surface-muted) 100%
+  );
+}
+
+/* The source's number inputs hid their spinners. */
+.atlas input::-webkit-outer-spin-button,
+.atlas input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.atlas input[type='number'] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+/* The accordion's answer slides open at the source's 300ms. */
+.atlas details > div {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.3s ease-in;
+}
+
+.atlas details[open] > div {
+  grid-template-rows: 1fr;
+}
+
+.atlas details > div > div {
+  overflow: hidden;
+}
+
+/*
+ * The source's entrances (AOS): fade-right for a left column, fade-left for a right one,
+ * fade-up, fade-down and flip-down for headings, with delays down a section. The hero's parts
+ * are on screen at load and rise on a timer; everything below answers the scroll.
+ */
+.atlas {
+  --atlas-slide: 100px;
+}
+
+@keyframes atlas-fade-up {
+  from {
+    opacity: 0;
+    translate: 0 var(--atlas-slide);
+  }
+}
+
+@keyframes atlas-fade-down {
+  from {
+    opacity: 0;
+    translate: 0 calc(-1 * var(--atlas-slide));
+  }
+}
+
+@keyframes atlas-fade-right {
+  from {
+    opacity: 0;
+    translate: calc(-1 * var(--atlas-slide)) 0;
+  }
+}
+
+@keyframes atlas-fade-left {
+  from {
+    opacity: 0;
+    translate: var(--atlas-slide) 0;
+  }
+}
+
+@keyframes atlas-flip-down {
+  from {
+    opacity: 0;
+    transform: perspective(2500px) rotateX(-100deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .atlas [data-rise] {
+    animation: atlas-fade-right 0.4s ease both;
+    animation-delay: var(--delay, 0ms);
+  }
+
+  .atlas [data-rise='down'] {
+    animation-name: atlas-fade-down;
+  }
+
+  .atlas [data-rise='up'] {
+    animation-name: atlas-fade-up;
+  }
+
+  @supports (animation-timeline: scroll()) {
+    .atlas [data-fade] {
+      animation: atlas-fade-up ease both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 35%;
+    }
+
+    .atlas [data-fade='down'] {
+      animation-name: atlas-fade-down;
+    }
+
+    .atlas [data-fade='right'] {
+      animation-name: atlas-fade-right;
+    }
+
+    .atlas [data-fade='left'] {
+      animation-name: atlas-fade-left;
+    }
+
+    .atlas [data-fade='flip'] {
+      transform-origin: top;
+      animation-name: atlas-flip-down;
+    }
+
+    .atlas [data-delay='1'] {
+      animation-range: entry 12% entry 47%;
+    }
+
+    .atlas [data-delay='2'] {
+      animation-range: entry 24% entry 59%;
+    }
+  }
+}

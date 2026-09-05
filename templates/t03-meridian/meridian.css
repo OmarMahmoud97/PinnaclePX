@@ -1,0 +1,105 @@
+/*
+ * Meridian (t03). What Tailwind utilities cannot write, scoped to the template's root. Colours
+ * are the semantic tokens on :root, so a brand's set recolours everything; nothing here is
+ * needed for the page to be complete.
+ */
+
+/*
+ * The sponsors' marquee, as the source's @devnomic/marquee draws it: two copies of the row
+ * slide left forever, the edges fade, and it pauses under the pointer. Under reduced motion
+ * the first copy stands still and the second is hidden.
+ */
+.meridian-marquee {
+  --gap: 3rem;
+  --duration: 40s;
+  position: relative;
+  display: flex;
+  gap: var(--gap);
+  overflow: hidden;
+  user-select: none;
+  mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
+}
+
+.meridian-marquee-inner {
+  display: flex;
+  min-width: 100%;
+  flex-shrink: 0;
+  justify-content: space-around;
+  gap: var(--gap);
+  animation: meridian-scroll var(--duration) linear infinite;
+}
+
+.meridian-marquee:hover .meridian-marquee-inner {
+  animation-play-state: paused;
+}
+
+@keyframes meridian-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(calc(-100% - var(--gap)));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .meridian-marquee-inner {
+    animation: none;
+  }
+
+  .meridian-marquee-inner[aria-hidden='true'] {
+    display: none;
+  }
+}
+
+/*
+ * The header's Features menu: the source's Radix menu opens on hover through a script; here it
+ * opens on hover and on keyboard focus within, with the source's zoom-in from ninety percent.
+ */
+.meridian-menu {
+  opacity: 0;
+  scale: 0.9;
+  visibility: hidden;
+  transform-origin: top center;
+  transition:
+    opacity 0.15s ease-out,
+    scale 0.15s ease-out,
+    visibility 0s linear 0.15s;
+}
+
+.meridian-menu-root:hover .meridian-menu,
+.meridian-menu-root:focus-within .meridian-menu {
+  opacity: 1;
+  scale: 1;
+  visibility: visible;
+  transition-delay: 0s;
+}
+
+.meridian-menu-root:hover .meridian-menu-chevron,
+.meridian-menu-root:focus-within .meridian-menu-chevron {
+  rotate: 180deg;
+}
+
+/* The carousel's track scrolls without a visible bar. */
+.meridian-track {
+  scrollbar-width: none;
+}
+
+.meridian-track::-webkit-scrollbar {
+  display: none;
+}
+
+/* The accordion's answer opens and closes at the source's 0.2s ease-out. */
+.meridian details > div {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.2s ease-out;
+}
+
+.meridian details[open] > div {
+  grid-template-rows: 1fr;
+}
+
+.meridian details > div > div {
+  overflow: hidden;
+}

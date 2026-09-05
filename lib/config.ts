@@ -137,7 +137,7 @@ export const CONFIG = {
   retention: { days: 30, cron: '0 3 * * *' },
   polling: { statusMs: 3_000 }, // how often the done page asks how the designs are coming along
   analytics: { sectionViewThreshold: 0.2 }, // share of a section on screen before it counts as viewed
-  // The hero sketch typing an example brief and then building it into a page, on a loop: the
+  // The hero sketch typing a client's brief and then building it into a page, on a loop: the
   // 230-character VetPres brief takes about 4 s and the brief about 8 s, the build 2.4 s, the
   // finished page holds 3.5 s, the reset takes 0.9 s, and the next loop starts 0.4 s later.
   demo: {

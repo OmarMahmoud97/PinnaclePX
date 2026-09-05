@@ -5,6 +5,7 @@ import { typeStyle } from '@/app/preview/_components/fonts'
 import { StudioBar } from '@/app/preview/_components/studio-bar'
 import type { TemplateAssets } from '@/lib/copy-slots/assets'
 import { AppError } from '@/lib/errors'
+import { readSubmissionWithLead } from '@/lib/db/submissions'
 import { type PreviewRow, readPreview } from '@/lib/preview/read'
 import { statusOf } from '@/lib/preview/status'
 import { tokenStyle } from '@/lib/tokens/css'
@@ -65,9 +66,12 @@ export default async function ConceptPage({ params }: { params: Params }) {
   )
 }
 
-function ConceptBody({ row, answers, templateId }: PreviewRow & { templateId: string }) {
+async function ConceptBody({ row, answers, templateId }: PreviewRow & { templateId: string }) {
   if (row.tokens === null) throw new AppError(`Submission ${row.slug} is ready without tokens`)
+  // The owner's email, for a template whose forms open a mail message to them.
+  const found = await readSubmissionWithLead(row.slug)
   const assets: TemplateAssets = {
+    email: found?.lead.email ?? null,
     logo:
       row.logo?.image === undefined || row.logo.image === null
         ? { kind: 'wordmark' }

@@ -1,0 +1,141 @@
+/*
+ * Monolith (t02). What Tailwind utilities cannot write, scoped to the template's root. Colours
+ * are the semantic tokens on :root, so a brand's set recolours everything; nothing here is
+ * needed for the page to be complete.
+ */
+
+/*
+ * The source's hero glow (its `.shadow`): a rotated, blurred slab in the primary colour that
+ * slides back and forth behind the cards, forever. Absolutely positioned against the template's
+ * root, which is isolated so a negative z-index sits above the root's own background. The
+ * source's values at each width are kept; under reduced motion the slab rests at its midpoint.
+ */
+.monolith-glow {
+  position: absolute;
+  z-index: -1;
+  top: 200px;
+  right: 310px;
+  width: 260px;
+  height: 400px;
+  rotate: 35deg;
+  border-radius: 24px;
+  background: color-mix(in srgb, var(--brand-deeper) 50%, transparent);
+  filter: blur(150px);
+  will-change: transform;
+}
+
+@keyframes monolith-glow-slide {
+  from {
+    right: 460px;
+    background: color-mix(in srgb, var(--brand-deeper) 20%, transparent);
+  }
+  to {
+    right: 160px;
+    background: color-mix(in srgb, var(--brand-deeper) 80%, transparent);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .monolith-glow {
+    animation: monolith-glow-slide 4s linear infinite alternate;
+  }
+}
+
+@media (max-width: 1024px) {
+  .monolith-glow {
+    top: 70px;
+  }
+
+  @keyframes monolith-glow-slide {
+    from {
+      right: 460px;
+      background: color-mix(in srgb, var(--brand-deeper) 20%, transparent);
+    }
+    to {
+      right: 160px;
+      background: color-mix(in srgb, var(--brand-deeper) 50%, transparent);
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .monolith-glow {
+    top: 70px;
+    width: 100px;
+    height: 350px;
+    filter: blur(60px);
+  }
+
+  @keyframes monolith-glow-slide {
+    from {
+      right: 280px;
+      background: color-mix(in srgb, var(--brand-deeper) 20%, transparent);
+    }
+    to {
+      right: 100px;
+      background: color-mix(in srgb, var(--brand-deeper) 30%, transparent);
+    }
+  }
+}
+
+/*
+ * The headline's two lit phrases. The source sets the first in a pink gradient (a light tint to
+ * the full colour) and the second in a cyan one (a light tint through the colour to a shade).
+ * Here the two colours are the glow tokens, tinted and shaded the same way, so a brand's set
+ * chooses them.
+ */
+.monolith-lit-a {
+  background-image: linear-gradient(
+    to right,
+    color-mix(in srgb, var(--glow) 60%, white),
+    var(--glow)
+  );
+}
+
+.monolith-lit-b {
+  background-image: linear-gradient(
+    to right,
+    color-mix(in srgb, var(--glow-secondary) 60%, white),
+    var(--glow-secondary),
+    color-mix(in srgb, var(--glow-secondary) 85%, black)
+  );
+}
+
+/*
+ * The back-to-top button appears once the page has scrolled 400px, as the source's did with a
+ * scroll listener. Opacity, so it runs under reduced motion; without scroll-driven animations
+ * it is simply there.
+ */
+@keyframes monolith-appear {
+  from {
+    opacity: 0;
+    visibility: hidden;
+  }
+  to {
+    opacity: 0.9;
+    visibility: visible;
+  }
+}
+
+@supports (animation-timeline: scroll()) {
+  .monolith-top {
+    animation: monolith-appear linear both;
+    animation-timeline: scroll(root);
+    animation-range: 380px 420px;
+  }
+}
+
+/* The accordion's answer opens and closes at the source's 0.2s ease-out. */
+.monolith details > div {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.2s ease-out;
+}
+
+.monolith details[open] > div {
+  grid-template-rows: 1fr;
+}
+
+.monolith details > div > div {
+  overflow: hidden;
+}

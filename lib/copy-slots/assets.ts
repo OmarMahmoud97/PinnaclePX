@@ -19,9 +19,12 @@ export type TemplateLogo =
   | Readonly<{ kind: 'wordmark' }>
   | Readonly<{ kind: 'image'; src: string; alt: string; width: number; height: number }>
 
-// Everything a template needs besides copy: the logo and one image per named slot. A slot the
-// imagery stage could not fill is null, and the template draws without it.
+// Everything a template needs besides copy: the logo, one image per named slot, and the owner's
+// email for a template whose contact or newsletter form opens a mail message. A slot the
+// imagery stage could not fill is null, and the template draws without it; with no email a
+// form's button is a plain link to the page's ask.
 export type TemplateAssets = Readonly<{
   logo: TemplateLogo
   images: Readonly<Record<string, SlotImage | null>>
+  email: string | null
 }>

@@ -25,14 +25,14 @@ import { AppError } from '@/lib/errors'
 // Read once at load, outside render, so the footer line never differs between two renders.
 const YEAR = new Date().getFullYear()
 
-// The finished page only ever shows the example brief complete, whatever the sketch above it is
+// The finished page only ever shows the client's brief complete, whatever the sketch above it is
 // drawing at the time, so its words and colours are fixed at load.
 const FINISHED = sketchModelFrom(EXAMPLE_ANSWERS, FINAL_STAGE, EXAMPLE_FILES)
 
-// The example brief is checked once at load; a missing colour or photo is a programmer error.
+// The client's brief is checked once at load; a missing colour or photo is a programmer error.
 function required<T>(value: T | null | undefined, what: string): T {
   if (value === null || value === undefined) {
-    throw new AppError(`The example brief needs ${what} to build a page.`)
+    throw new AppError(`The client's brief needs ${what} to build a page.`)
   }
   return value
 }
@@ -143,7 +143,9 @@ function Photo({ size }: { size: (typeof SIZE)[keyof typeof SIZE] }) {
   )
 }
 
-// The finished page the hero builds from the example brief: what the wireframe becomes. Laid
+// The finished page the hero builds from the client's brief: an illustration drawn from their one
+// sentence (its photograph is stock and its feature titles are the studio's, so it is never called
+// their site). Laid
 // under the sketch inside a frame and hidden until the build reveals it part by part. Each part
 // carries the data-part name of its counterpart in the sketch; the parts with no counterpart
 // (the third link, the arrows and the phone's kicker) rise in on their own. The phone page is

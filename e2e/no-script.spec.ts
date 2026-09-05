@@ -8,6 +8,8 @@ test('the whole page reads and works without JavaScript', async ({ page }) => {
   for (const name of [
     'One question at a time.',
     'Four things your site has to do.',
+    'Six sites we designed and built.',
+    'Everything your real site needs, built in.',
     'If you like one, here is what happens next.',
     'Doing it yourself, or asking us.',
     'Straight answers.',
@@ -23,7 +25,7 @@ test('the whole page reads and works without JavaScript', async ({ page }) => {
     'href',
     /^mailto:\?subject=/,
   )
-  await expect(page.getByText('Example brief so far: Sentence, VetPres')).toBeAttached()
+  await expect(page.getByText("A client's brief so far: Sentence, VetPres")).toBeAttached()
 
   const entry = page.locator('#faq details').first()
   await entry.locator('summary').click()
@@ -32,4 +34,5 @@ test('the whole page reads and works without JavaScript', async ({ page }) => {
 
   await expect(page.locator('#straight-answers').getByRole('heading', { level: 3 })).toHaveCount(4)
   await expect(page.locator('#what-you-get').getByRole('heading', { level: 3 })).toHaveCount(4)
+  await expect(page.locator('#included').getByRole('heading', { level: 3 })).toHaveCount(8)
 })

@@ -11,6 +11,17 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [{ protocol: 'https', hostname: '*.public.blob.vercel-storage.com' }],
   },
+  // The work band's AVIF captures are served from public/work/ rather than imported (Turbopack
+  // cannot decode AVIF), so they miss the hashed-asset cache header. Their address carries the
+  // manifest's capture date as a version, so they can be cached as long as the hashed files are.
+  headers() {
+    return Promise.resolve([
+      {
+        source: '/work/:path*',
+        headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }],
+      },
+    ])
+  },
 }
 
 export default nextConfig

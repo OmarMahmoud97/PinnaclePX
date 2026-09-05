@@ -10,6 +10,8 @@ const SECTION_IDS = [
   'how-it-works',
   'outcomes',
   'taster',
+  'work',
+  'included',
   'real-build',
   'your-options',
   'straight-answers',

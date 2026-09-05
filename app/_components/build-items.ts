@@ -7,11 +7,14 @@ import { CONFIG } from '@/lib/config'
 // plan join once each decision is recorded (docs/home-page-content-plan.md, section 3.8), and
 // the counter renumbers itself. Numbers render from CONFIG.build and CONFIG.care, which are
 // null until the studio has measured them.
-type BuildStep = Readonly<{ title: string; body: string; more?: string }>
+type BuildStep = Readonly<{ title: string; body: string }>
 
 export const REAL_BUILD = {
   heading: 'If you like one, here is what happens next.',
   lead: 'Each step says who does what, and what we need from you. The quote is fixed before the build starts. It is a whole site, designed from scratch, not one of the three designs made bigger.',
+  // The section's ask. What the site comes with is the band above (included-items.ts), so the
+  // steps stay about who does what.
+  ask: 'Anything you want to ask about a step, ask it on the call.',
 } as const
 
 export const BUILD_STEPS: readonly BuildStep[] = [
@@ -30,11 +33,11 @@ export const BUILD_STEPS: readonly BuildStep[] = [
   {
     title: 'We design and build your site',
     body: 'Designed for you from scratch, around what you liked in your three designs. Built for a phone first, then a bigger screen.',
-    more: 'Built so Google and the chat assistants people now ask can read every page. Your bookings, payments or forms connected. You can see how many people visit.',
   },
   {
     title: 'Launch at your web address',
-    body: 'It goes up at your web address.',
+    // Replacing the old site is FAQ 7's promise, said again where the launch happens.
+    body: 'It goes live at your web address, in place of your old site if you have one.',
   },
 ]
 
