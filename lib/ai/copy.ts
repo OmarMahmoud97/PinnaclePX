@@ -3,6 +3,7 @@ import type { MessageParam } from '@anthropic-ai/sdk/resources/messages'
 import { zodOutputFormat } from '@anthropic-ai/sdk/helpers/zod'
 import { anthropic } from '@/lib/ai/client'
 import { copyPrompt, retryPrompt, SYSTEM_PROMPT } from '@/lib/ai/prompts'
+import { noteModelCall } from '@/lib/ai/usage'
 import { CONFIG } from '@/lib/config'
 import type { BrandBrief } from '@/lib/copy-slots/brief'
 import type { TemplateContract } from '@/lib/copy-slots/contract'
@@ -44,16 +45,7 @@ export async function writeCopy({
       },
       { timeout: CONFIG.stageBudgetMs.copy },
     )
-    log.info('ai.call', {
-      slug,
-      stage: 'copy',
-      template: contract.meta.id,
-      attempt,
-      model: response.model,
-      stop: response.stop_reason ?? 'none',
-      input: response.usage.input_tokens,
-      output: response.usage.output_tokens,
-    })
+    await noteModelCall(response, { slug, stage: 'copy', template: contract.meta.id, attempt })
     const copy: unknown = response.parsed_output
     if (copy === null) {
       return err([

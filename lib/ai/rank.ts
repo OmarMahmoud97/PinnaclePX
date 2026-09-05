@@ -4,9 +4,9 @@ import type { ContentBlockParam } from '@anthropic-ai/sdk/resources/messages'
 import * as z from 'zod'
 import { anthropic } from '@/lib/ai/client'
 import { RANK_SYSTEM_PROMPT, rankPrompt } from '@/lib/ai/prompts'
+import { noteModelCall } from '@/lib/ai/usage'
 import { CONFIG } from '@/lib/config'
 import { AppError } from '@/lib/errors'
-import { log } from '@/lib/log'
 
 export type Judged = Readonly<{ id: number; score: number; reject: string | null }>
 
@@ -48,14 +48,7 @@ export async function rankPhotos(
     },
     { timeout: CONFIG.stageBudgetMs.rank },
   )
-  log.info('ai.call', {
-    slug,
-    stage: 'rank',
-    model: response.model,
-    stop: response.stop_reason ?? 'none',
-    input: response.usage.input_tokens,
-    output: response.usage.output_tokens,
-  })
+  await noteModelCall(response, { slug, stage: 'rank' })
   if (response.parsed_output === null) throw new AppError('The ranking call returned no verdict')
   return response.parsed_output.photos
 }

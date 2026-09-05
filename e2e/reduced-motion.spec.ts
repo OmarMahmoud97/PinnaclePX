@@ -31,4 +31,6 @@ test('the sketch is finished and nothing moves', async ({ page }) => {
       .filter((property) => property === 'transform' || property === 'translate'),
   )
   expect(moving).toEqual([])
+  // Lenis was never loaded: scrolling is the browser's own (ADR 0021).
+  await expect(page.locator('html')).not.toHaveClass(/lenis/)
 })

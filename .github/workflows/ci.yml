@@ -17,6 +17,7 @@ env:
   INNGEST_EVENT_KEY: ci-placeholder
   INNGEST_SIGNING_KEY: ci-placeholder
   RESEND_API_KEY: ci-placeholder
+  OWNER_EMAIL: owner@example.com
   NEXT_PUBLIC_APP_URL: http://localhost:3000
 
 jobs:

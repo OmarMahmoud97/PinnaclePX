@@ -125,3 +125,15 @@ test('metadata and structured data are present', async ({ page }) => {
   const jsonLd = await page.locator('script[type="application/ld+json"]').innerHTML()
   expect(jsonLd).toContain('"@type":"Organization"')
 })
+
+// Lenis arrives as a lazy chunk once the page is idle and marks <html>; a link to a section of
+// this page then glides there under the fixed header instead of jumping.
+test('the page scrolls smoothly and a section link glides into view', async ({ page }) => {
+  await page.goto('/')
+  await expect(page.locator('html')).toHaveClass(/(^|\s)lenis(\s|$)/)
+  await page.getByRole('navigation', { name: 'Main' }).getByRole('link', { name: 'FAQ' }).click()
+  await expect(page).toHaveURL(/#faq$/)
+  await expect(page.locator('#faq')).toBeInViewport()
+  const top = await page.locator('#faq').evaluate((section) => section.getBoundingClientRect().top)
+  expect(top).toBeGreaterThanOrEqual(64)
+})

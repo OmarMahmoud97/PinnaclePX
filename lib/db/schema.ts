@@ -86,8 +86,32 @@ export const submission = pgTable('submission', {
   eventSentAt: timestamp('event_sent_at', { withTimezone: true }),
   // When the email with the link went out. Null until then; never sent twice.
   emailSentAt: timestamp('email_sent_at', { withTimezone: true }),
+  // When the owner was told of the build (lib/email/owner-notice.ts). Null until then; once.
+  ownerNotifiedAt: timestamp('owner_notified_at', { withTimezone: true }),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
 })
+
+// One call to the model and what it cost, appended as each call returns (lib/ai/usage.ts). The
+// owner's notice sums a submission's rows; nothing else reads them. Goes with the row.
+export const modelCall = pgTable(
+  'model_call',
+  {
+    id: integer('id').primaryKey().generatedAlwaysAsIdentity(),
+    slug: text('slug')
+      .notNull()
+      .references(() => submission.slug, { onDelete: 'cascade' }),
+    // brief, copy or rank; the template for a copy call, null for the rest.
+    stage: text('stage').notNull(),
+    templateId: text('template_id'),
+    model: text('model').notNull(),
+    inputTokens: integer('input_tokens').notNull(),
+    outputTokens: integer('output_tokens').notNull(),
+    cacheReadTokens: integer('cache_read_tokens').notNull().default(0),
+    cacheWriteTokens: integer('cache_write_tokens').notNull().default(0),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [index('model_call_slug_idx').on(table.slug)],
+)
 
 // A file on Blob a submission points at: an upload in its answers, its logo raster, a re-hosted
 // picture. Written beside the row and the stage results (lib/db/submissions.ts), so the

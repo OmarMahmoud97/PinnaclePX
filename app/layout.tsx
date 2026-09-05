@@ -3,6 +3,7 @@ import { SpeedInsights } from '@vercel/speed-insights/next'
 import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import type { ReactNode } from 'react'
+import { SmoothScroll } from '@/app/_components/smooth-scroll'
 import { env } from '@/lib/env'
 import { SITE } from '@/lib/site'
 import './globals.css'
@@ -43,11 +44,13 @@ export default function RootLayout({ children }: Props) {
       <body className="bg-surface text-on-surface antialiased">
         <a
           href="#main"
+          data-lenis-ignore
           className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-100 focus:rounded-md focus:bg-surface focus:px-3 focus:py-2 focus:ring-2 focus:ring-brand-deeper"
         >
           Skip to content
         </a>
         {children}
+        <SmoothScroll />
         <Analytics />
         <SpeedInsights />
       </body>

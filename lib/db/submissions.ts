@@ -138,6 +138,16 @@ export async function markEmailSent(slug: string): Promise<boolean> {
   return rows.length > 0
 }
 
+// Records that the owner was told of the build, once.
+export async function markOwnerNotified(slug: string): Promise<boolean> {
+  const rows = await db
+    .update(submission)
+    .set({ ownerNotifiedAt: new Date() })
+    .where(and(eq(submission.slug, slug), isNull(submission.ownerNotifiedAt)))
+    .returning({ slug: submission.slug })
+  return rows.length > 0
+}
+
 // Records that the pipeline event went out, once. Returns false when it was already recorded.
 export async function markEventSent(slug: string): Promise<boolean> {
   const rows = await db

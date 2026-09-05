@@ -1,5 +1,6 @@
 import { firstNameFrom } from '@/lib/brief/names'
 import { CONFIG } from '@/lib/config'
+import { type EmailMessage, escapeHtml } from '@/lib/email/message'
 import { SITE } from '@/lib/site'
 
 type Input = Readonly<{
@@ -11,15 +12,9 @@ type Input = Readonly<{
   conceptCount: number
 }>
 
-export type PreviewEmail = Readonly<{ subject: string; text: string; html: string }>
-
-function escapeHtml(text: string): string {
-  return text.replace(/[&<>"']/g, (c) => `&#${String(c.charCodeAt(0))};`)
-}
-
 // The one email the product sends: the link, how long it lasts, and the call. Plain words, no
 // images, no tracking, a text part for every client. Nothing in it the visitor did not give us.
-export function previewLinkEmail(input: Input): PreviewEmail {
+export function previewLinkEmail(input: Input): EmailMessage {
   const first = firstNameFrom(input.name)
   const greeting = first === '' ? 'Hello' : `Hello ${first}`
   const noun = input.conceptCount === 1 ? 'design' : 'designs'
