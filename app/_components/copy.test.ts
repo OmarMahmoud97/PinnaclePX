@@ -1,9 +1,8 @@
 import { describe, expect, it } from 'vitest'
-import { FAQ_ITEMS } from '@/app/_components/faq-items'
-import { STRAIGHT_ANSWER_ITEMS } from '@/app/_components/straight-answer-items'
-import { WHAT_YOU_GET_ITEMS } from '@/app/_components/what-you-get-items'
-import { SKETCH_CAPTION } from '@/components/sketch/captions'
-import { CALL_AGENDA, SITE } from '@/lib/site'
+import { COPY } from '@/app/_components/copy-corpus'
+import { OUTCOME_ITEMS } from '@/app/_components/outcome-items'
+import { SECOND_VISIT, straightAnswerItems } from '@/app/_components/straight-answer-items'
+import { CALL_AGENDA } from '@/lib/site'
 
 const MAX_WORDS = 20
 
@@ -15,18 +14,10 @@ function longSentences(text: string): string[] {
     .filter((sentence) => sentence.split(/\s+/).length > MAX_WORDS)
 }
 
-const COPY: readonly string[] = [
-  SITE.tagline,
-  SITE.description,
-  SITE.reassurance,
-  SITE.callPromise,
-  SITE.colourPromise,
-  ...Object.values(SKETCH_CAPTION),
-  ...CALL_AGENDA.map((item) => item.what),
-  ...WHAT_YOU_GET_ITEMS.flatMap((item) => [item.title, item.detail]),
-  ...STRAIGHT_ANSWER_ITEMS.flatMap((item) => [item.question, item.answer]),
-  ...FAQ_ITEMS.flatMap((item) => [item.question, item.answer]),
-]
+// Words the page never uses: marketese, statutory rights dressed as an offer, a claim about the
+// designs the pipeline cannot keep, a competitor's name, a figure, an exclamation.
+const BANNED =
+  /\b(guarantee[ds]?|risk-free|unlimited|24\/7|instantly|generated?|AI website builder|per cent|Wix|Squarespace|Durable|Mixo)\b|[%!]/i
 
 describe('visitor-facing copy', () => {
   it('keeps every sentence under the word limit', () => {
@@ -44,5 +35,30 @@ describe('visitor-facing copy', () => {
 
   it('never calls the wording "copy" where a visitor reads it', () => {
     expect(COPY.filter((text) => /\bcopy\b/i.test(text))).toEqual([])
+  })
+
+  it('never uses a banned word, a figure in per cent or an exclamation mark', () => {
+    expect(COPY.filter((text) => BANNED.test(text))).toEqual([])
+  })
+
+  // Outcomes sets up "before they book" and the call agenda pays it off, so the phrase is held
+  // identical in both, and the Taster renders the agenda.
+  it('shares the booking phrase between the outcomes and the call agenda', () => {
+    const phrase = 'before they book'
+    expect(OUTCOME_ITEMS.some((item) => item.body.includes(phrase))).toBe(true)
+    expect(CALL_AGENDA.some((item) => item.what.includes(phrase))).toBe(true)
+  })
+
+  // The second-visit answer promises unseen templates only once enough are ready.
+  it('promises a second visit only from six ready templates, and nine only from nine', () => {
+    const answerAt = (ready: number) =>
+      straightAnswerItems(ready).find((item) => item.question.startsWith('What if I'))?.answer
+    expect(answerAt(1)).toBe(SECOND_VISIT.untilSix)
+    expect(answerAt(5)).toBe(SECOND_VISIT.untilSix)
+    expect(answerAt(6)).toBe(SECOND_VISIT.fromSix)
+    expect(answerAt(8)).toBe(SECOND_VISIT.fromSix)
+    expect(answerAt(9)).toBe(SECOND_VISIT.fromNine)
+    expect(SECOND_VISIT.untilSix).not.toContain('nine')
+    expect(SECOND_VISIT.fromSix).not.toContain('nine')
   })
 })

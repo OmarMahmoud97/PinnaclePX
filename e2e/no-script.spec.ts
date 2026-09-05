@@ -7,6 +7,9 @@ test('the whole page reads and works without JavaScript', async ({ page }) => {
   await page.goto('/')
   for (const name of [
     'One question at a time.',
+    'Four things your site has to do.',
+    'If you like one, here is what happens next.',
+    'Doing it yourself, or asking us.',
     'Straight answers.',
     'About the studio',
     'Frequently asked questions',
@@ -15,6 +18,11 @@ test('the whole page reads and works without JavaScript', async ({ page }) => {
     await expect(page.getByRole('heading', { name })).toBeVisible()
   }
   await expect(page.getByRole('link', { name: 'Show me my three designs' }).first()).toBeVisible()
+  // The not-ready path degrades to a mail link with the page address and no recipient.
+  await expect(page.locator('#cta').getByRole('link', { name: 'Send this page' })).toHaveAttribute(
+    'href',
+    /^mailto:\?subject=/,
+  )
   await expect(page.getByText('Example brief so far: Sentence, VetPres')).toBeAttached()
 
   const entry = page.locator('#faq details').first()

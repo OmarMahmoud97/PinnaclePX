@@ -9,6 +9,12 @@ export function conceptCountFor(readyCount: number): number {
   return Math.min(CONFIG.templates.conceptsShown, readyCount)
 }
 
+// Whether the page may take traffic: it promises the configured number of designs in fourteen
+// places, so every one of them is true only once that many templates are ready.
+export function readyForTraffic(readyCount: number): boolean {
+  return readyCount >= CONFIG.templates.conceptsShown
+}
+
 type Input = Readonly<{
   candidates: readonly TemplateMeta[]
   // Template ids this identity has already been shown.

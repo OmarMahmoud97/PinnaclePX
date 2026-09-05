@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { FOOTER_GROUPS } from '@/app/_components/footer-links'
+import { FOOTER } from '@/app/_components/section-copy'
 import { Logo } from '@/components/brand/logo'
 import { TrackedAnchor } from '@/components/ui/tracked-link'
 import { SITE } from '@/lib/site'
@@ -29,9 +30,7 @@ export function SiteFooter() {
         ))}
         <div className="col-span-2 flex flex-col gap-4 border-t border-border p-6 md:col-span-1 md:border-t-0 md:p-column">
           <Logo />
-          <p className="text-small text-on-surface-muted">
-            A UK web design studio. See three homepage designs in your own brand before you decide.
-          </p>
+          <p className="text-small text-on-surface-muted">{FOOTER.blurb}</p>
           {(SITE.town !== null || SITE.contactEmail !== null) && (
             <p className="text-small text-on-surface-muted">
               {SITE.town !== null && `${SITE.legalName}, ${SITE.town}, UK. `}

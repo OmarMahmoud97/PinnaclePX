@@ -19,7 +19,8 @@ export const WHAT_YOU_GET_ITEMS: readonly WhatYouGetItem[] = [
   },
   {
     title: 'Wording written for you',
-    detail: 'From your own answers: your services, your area, your words.',
+    // Not "your area": nothing in the brief stage extracts a place (lib/ai/prompts.ts).
+    detail: 'From your own sentence: your services and your words.',
     glyph: 'wording',
   },
   {

@@ -121,6 +121,17 @@ export const CONFIG = {
     minMs: 3_000,
   },
   call: { minutes: 20 }, // the Cal.com event length is set by hand to match
+  // The real build, as the home page describes it (app/_components/build-items.ts). Every value
+  // here is a commitment the studio has measured or confirmed against its contract, so each is
+  // null until then and the page renders its minimum line instead (docs/home-page-content-plan.md,
+  // decisions 8 and 10). Typed the way SITE.town is, because a bare null would narrow to `null`.
+  build: { weeks: null as { min: number; max: number } | null },
+  care: null as {
+    checkMinutes: number
+    replyWorkingDays: number
+    backupsPerDay: number
+    changesPerMonth: number
+  } | null,
   // A submission, its pictures and, once nothing of theirs is left, the lead are deleted this
   // many days after it was sent, by a nightly sweep (lib/inngest/functions/retention-sweep.ts).
   retention: { days: 30, cron: '0 3 * * *' },

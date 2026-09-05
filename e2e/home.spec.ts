@@ -98,6 +98,34 @@ test('the taster section carries the call to action', async ({ page }) => {
   )
 })
 
+test('the taster opens into the build section, and the build says who does what', async ({
+  page,
+}) => {
+  await page.goto('/')
+  await page.locator('#taster').getByRole('link', { name: 'What the build includes' }).click()
+  await expect(page).toHaveURL(/#real-build$/)
+  const build = page.locator('#real-build')
+  await expect(build).toBeInViewport()
+  await expect(build.getByRole('heading', { level: 3 })).toHaveCount(5)
+  await expect(build.getByText('We agree a timeline on the call.')).toBeVisible()
+})
+
+test('the comparison names no builder and labels both columns', async ({ page }) => {
+  await page.goto('/')
+  const options = page.locator('#your-options')
+  await expect(options.getByRole('heading', { level: 3 })).toHaveCount(6)
+  await expect(options.getByText(/Wix|Squarespace/)).toHaveCount(0)
+  await expect(options.getByText('You build it with a builder')).toBeVisible()
+  await expect(options.getByText('We build it with you')).toBeVisible()
+})
+
+test('the not-ready visitor can send the page on without giving anything', async ({ page }) => {
+  await page.goto('/')
+  const closing = page.locator('#cta')
+  await expect(closing.getByRole('button', { name: 'Send this page' })).toBeVisible()
+  await expect(closing.getByRole('textbox')).toHaveCount(0)
+})
+
 test('FAQ entries expand', async ({ page }) => {
   await page.goto('/')
   const entry = page.locator('#faq details').first()

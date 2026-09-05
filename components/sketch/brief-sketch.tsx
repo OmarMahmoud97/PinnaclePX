@@ -1,5 +1,5 @@
-import { Lock } from 'lucide-react'
 import type { ReactNode } from 'react'
+import { BrowserFrame } from '@/components/sketch/browser-frame'
 import { PhoneSketch } from '@/components/sketch/phone-sketch'
 import type { SketchModel } from '@/components/sketch/sketch-model'
 import {
@@ -12,7 +12,6 @@ import {
   Wordmark,
 } from '@/components/sketch/sketch-parts'
 import { CornerTicks } from '@/components/ui/corner-ticks'
-import { tabLabelFrom } from '@/lib/brief/sketch'
 import { cn } from '@/lib/cn'
 
 // Read once at load, outside render, so the footer line never differs between two renders.
@@ -57,28 +56,7 @@ export function BriefSketch({ model, phoneFrom = 'lg', ticks = true, built, phon
     >
       <div className="relative">
         {ticks && <CornerTicks edges={['top', 'bottom']} />}
-        <div
-          data-frame="browser"
-          className="overflow-hidden rounded-xl border border-(--sketch-line) bg-(--sketch-bg) text-[11px] text-(--sketch-fg) shadow-dialog transition-colors duration-500 sm:text-xs"
-        >
-          <div className="grid grid-cols-[1fr_auto_1fr] items-center border-b border-(--sketch-line) bg-(--sketch-bg-muted) px-3 py-2 transition-colors duration-500">
-            <span className="flex gap-1.5">
-              <span className="size-2 rounded-full bg-(--sketch-line)" />
-              <span className="size-2 rounded-full bg-(--sketch-line)" />
-              <span className="size-2 rounded-full bg-(--sketch-line)" />
-            </span>
-            <span
-              key={company}
-              className="flex animate-sketch-in items-center gap-1.5 rounded-md border border-(--sketch-line) bg-(--sketch-bg) px-3 py-0.5 font-mono text-[9px] text-(--sketch-muted)"
-            >
-              {model.coloured && (
-                <span className="size-1.5 animate-sketch-in rounded-full bg-(--sketch-strong)" />
-              )}
-              <Lock className="size-2.5" />
-              {tabLabelFrom(company)}
-            </span>
-          </div>
-
+        <BrowserFrame company={company} coloured={model.coloured}>
           <div className="relative isolate">
             {built}
             <div data-layer="sketch" className="relative z-10">
@@ -152,7 +130,7 @@ export function BriefSketch({ model, phoneFrom = 'lg', ticks = true, built, phon
               </div>
             </div>
           </div>
-        </div>
+        </BrowserFrame>
       </div>
 
       <PhoneSketch
