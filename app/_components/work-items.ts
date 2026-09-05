@@ -20,7 +20,6 @@ export const WORK = {
   heading: 'Six sites we designed and built.',
   lead: 'Real businesses, live today, from a dog walker to a fitness app. Open any of them on your phone.',
   group: 'Four of the six are brands of one group, whose rebrand we led.',
-  footnote: "Shown with each client's permission. Each picture is dated.",
   // The band's ask: proof, then the first step, in one line.
   ask: 'Yours starts the same way: five questions, three designs, then a conversation.',
   visit: (name: string) => `Visit the ${name} site`,
