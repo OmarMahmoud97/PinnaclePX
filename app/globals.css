@@ -121,6 +121,20 @@ body {
 }
 
 /*
+ * Lenis (ADR 0021) marks <html> while it runs, and `lenis-smooth` while it is moving the page.
+ * Its own frames are instant scrolls, but any other scroll landing mid-glide must not be eased
+ * by the browser as well; and a wrapper with a set height would trap the page, so none is set.
+ */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+html.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+/*
  * Entrances. A question slides in as the previous one leaves; a sketch element rises as it is
  * painted. Both are keyed remounts, so a plain animation is enough. Under reduced motion the
  * same keyframes fade only.

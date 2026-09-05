@@ -25,9 +25,10 @@ const NO_PEXELS_SDK = {
   regex: '^pexels(/|$)',
   message: 'Only lib/images may talk to Pexels.',
 }
-const NO_GSAP = {
-  regex: '^gsap(/|$)',
-  message: 'Only lib/motion may import gsap; use loadGsap so it stays a lazy chunk (ADR 0005).',
+const NO_MOTION_LIBRARIES = {
+  regex: '^(gsap|lenis)(/|$)',
+  message:
+    'Only lib/motion may import gsap or lenis; use loadGsap or loadLenis so each stays a lazy chunk (ADRs 0005 and 0021).',
 }
 const TEMPLATES_NO_APP = {
   regex: '^@/app(/|$)',
@@ -57,7 +58,7 @@ const PURE_NO_IO = {
   message: 'Pure modules must not import IO modules.',
 }
 
-const EVERYWHERE = [NO_BARREL, NO_ANTHROPIC_SDK, NO_PEXELS_SDK, NO_GSAP]
+const EVERYWHERE = [NO_BARREL, NO_ANTHROPIC_SDK, NO_PEXELS_SDK, NO_MOTION_LIBRARIES]
 
 const NO_THIRD_PARTY_HOSTS = [
   {
@@ -212,7 +213,7 @@ export default defineConfig([
     },
   },
 
-  // The motion loader is the one place gsap may be imported.
+  // The motion loaders are the one place gsap and lenis may be imported.
   {
     files: ['lib/motion/**/*.ts'],
     rules: {
@@ -229,7 +230,9 @@ export default defineConfig([
     rules: {
       'no-restricted-imports': [
         'error',
-        { patterns: [NO_BARREL, NO_PEXELS_SDK, NO_GSAP, LIB_NO_APP, LIB_ONLY_REGISTRY] },
+        {
+          patterns: [NO_BARREL, NO_PEXELS_SDK, NO_MOTION_LIBRARIES, LIB_NO_APP, LIB_ONLY_REGISTRY],
+        },
       ],
       'no-restricted-syntax': 'off',
     },

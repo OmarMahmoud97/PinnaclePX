@@ -184,5 +184,8 @@ export const CONFIG = {
     staggerMax: 4, // items that wait their turn in a list reveal; the rest arrive with the fourth
     headerScrolledAtPx: 24, // scroll depth at which the header takes its scrolled state
     walkthroughThreshold: 0.6, // share of a How it works beat on screen before it paints its stage
+    // Lenis (ADR 0021): the share of the distance still to go that each frame covers, on the wheel
+    // and on a link to a section. Lower drifts further after the wheel stops; 0.1 is its default.
+    scroll: { lerp: 0.1 },
   },
 } as const

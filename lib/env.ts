@@ -17,6 +17,9 @@ export const env = createEnv({
     // The sender, "Name <address>", on a domain verified in Resend. Unset, Resend's test sender
     // is used, which reaches only the account owner's own address.
     RESEND_FROM: z.string().min(1).optional(),
+    // Where the notice of every build goes: the links, the client's answers and the tokens the
+    // model calls cost (lib/email/owner-notice.ts).
+    OWNER_EMAIL: z.email(),
     // Development only: an address may be shown a template it has already seen, so one email can
     // test the same template again and again (lib/db/exclusivity.ts). Refused on the production
     // deployment, where the guide's rule stands.

@@ -21,3 +21,8 @@ The home page had no motion beyond hover colours, and the owner asked for it to 
 - The GSAP chunk (about 28 KB gzipped for the core) is never referenced from the initial script tags of `/`; `scripts/bundle-budget.mjs` fails the build if it is.
 - Reduced-motion visitors never download GSAP; the Playwright `reduced-motion` project asserts it.
 - Adding a scrubbed or pinned effect later means extending `loadGsap` to register the plugin and re-reading this record's "never" list.
+
+## Amendments
+
+- 3 September 2026 (ADR 0006): item 6, autoplay loops. The hero sketch loops.
+- 5 September 2026 (ADR 0021): item 6, scroll smoothing. The owner asked for Lenis; it joins GSAP behind the same kind of lazy loader, and the rest of the list stands.

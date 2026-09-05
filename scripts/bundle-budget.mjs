@@ -62,16 +62,24 @@ for (const [route, budget] of Object.entries(BUDGETS)) {
       `${ok ? 'ok  ' : 'OVER'} ${route.padEnd(7)} ${kind.padEnd(12)} ${String(actual).padStart(8)} B gzipped (budget ${limit})`,
     )
   }
+  // GSAP (ADR 0005) and Lenis (ADR 0021) are lazy chunks on every route; the home page stands
+  // for all of them.
   if (route === '/') {
-    const gsapInInitial = scripts.filter((url) => {
-      const source = readFileSync(assetPath(url), 'utf8')
-      return /gsap\.version|_gsap|GreenSock/.test(source) && statSync(assetPath(url)).size > 20_000
-    })
-    if (gsapInInitial.length > 0) {
-      failed = true
-      console.log(`OVER /       gsap in the initial script tags: ${gsapInInitial.join(', ')}`)
-    } else {
-      console.log('ok   /       gsap stays a lazy chunk')
+    const lazy = {
+      gsap: { pattern: /gsap\.version|_gsap|GreenSock/, minBytes: 20_000 },
+      lenis: { pattern: /lenis-smooth|lenisVersion/, minBytes: 5_000 },
+    }
+    for (const [name, { pattern, minBytes }] of Object.entries(lazy)) {
+      const inInitial = scripts.filter((url) => {
+        const source = readFileSync(assetPath(url), 'utf8')
+        return pattern.test(source) && statSync(assetPath(url)).size > minBytes
+      })
+      if (inInitial.length > 0) {
+        failed = true
+        console.log(`OVER /       ${name} in the initial script tags: ${inInitial.join(', ')}`)
+      } else {
+        console.log(`ok   /       ${name} stays a lazy chunk`)
+      }
     }
   }
 }
