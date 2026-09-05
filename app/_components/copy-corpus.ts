@@ -61,7 +61,6 @@ export const COPY: readonly string[] = [
   WORK.heading,
   WORK.lead,
   WORK.group,
-  WORK.footnote,
   WORK.ask,
   ...CLIENT_ITEMS.flatMap((client) => [
     client.name,

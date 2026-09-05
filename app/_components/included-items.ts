@@ -36,11 +36,11 @@ export function includedItems(care: typeof CONFIG.care): readonly IncludedItem[]
       body: 'Your own content system. Change words, prices and photos yourself, whenever you like.',
     },
     {
-      title: 'Found, and quoted',
+      title: 'SEO and AI visibility',
       body: 'Built so Google can show every page, and so the chat assistants people now ask can quote it.',
     },
     {
-      title: 'Phone first',
+      title: 'Responsive design',
       body: 'Most of your customers will arrive on a phone. Every page is designed there first.',
     },
     {

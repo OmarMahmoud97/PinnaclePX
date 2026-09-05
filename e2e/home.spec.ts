@@ -134,7 +134,6 @@ test('the work band shows six dated captures, each linking to the live site', as
   }
   await expect(work.getByRole('img')).toHaveCount(6)
   await expect(work.getByText(/, \d{1,2} [A-Z][a-z]+ \d{4}$/)).toHaveCount(6)
-  await expect(work.getByText(/Shown with each client's permission/)).toBeVisible()
   // Each card switches to the desktop capture, and back, without a script of its own.
   const first = cards.first()
   await first.getByText('Desktop', { exact: true }).click()

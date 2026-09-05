@@ -29,9 +29,9 @@ describe('visitor-facing copy', () => {
     expect(COPY.filter((text) => text.includes('—'))).toEqual([])
   })
 
-  it('says "AI" once outside the question that asks about it', () => {
+  it('says "AI" twice outside the question that asks about it', () => {
     const mentions = COPY.flatMap((text) => text.match(/\bAI\b/g) ?? [])
-    expect(mentions).toHaveLength(2)
+    expect(mentions).toHaveLength(3)
   })
 
   it('never calls the wording "copy" where a visitor reads it', () => {

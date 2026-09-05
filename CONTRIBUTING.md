@@ -11,6 +11,9 @@ Simple beats complex. One way to do a thing. Fail fast at boundaries. Trust the 
 3. Open a PR to `main`. CI must pass: typecheck, lint, format check, template hex and palette grep, knip, unit tests.
 4. Squash or rebase; `main` requires linear history.
 
+`docs/shipping-a-change.md` has the commands for all four steps, the checks CI runs that the hooks
+do not, and the traps worth knowing before you hit them.
+
 ## Rules enforced mechanically
 
 - No `any`, no non-null assertions, no empty catch blocks.

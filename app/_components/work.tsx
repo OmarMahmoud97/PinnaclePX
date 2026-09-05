@@ -136,7 +136,6 @@ export function Work() {
 
       <div className="flex flex-col gap-1 p-column pt-5 md:pt-6">
         <p className={captionStyles}>{WORK.group}</p>
-        <p className={captionStyles}>{WORK.footnote}</p>
         {/* Proof, then the ask: the band never ends with nothing to do. */}
         <p className="pt-3 text-small text-on-surface-muted">
           {WORK.ask}{' '}
