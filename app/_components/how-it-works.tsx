@@ -1,7 +1,7 @@
 import { HowItWorksTrack } from '@/app/_components/how-it-works-track'
 import { CTA } from '@/app/_components/nav-links'
 import { HOW_IT_WORKS } from '@/app/_components/section-copy'
-import { cardHeading, titleHeading } from '@/app/_components/section-styles'
+import { cardBody, cardHeading, sectionLead, titleHeading } from '@/app/_components/section-styles'
 import { buttonStyles } from '@/components/ui/button'
 import { TrackedLink } from '@/components/ui/tracked-link'
 import { cn } from '@/lib/cn'
@@ -25,7 +25,7 @@ export function HowItWorks() {
         heading={
           <div className="flex flex-col gap-3">
             <h2 className={titleHeading}>{HOW_IT_WORKS.heading}</h2>
-            <p className="text-lead text-pretty text-on-surface-muted">{HOW_IT_WORKS.lead}</p>
+            <p className={sectionLead}>{HOW_IT_WORKS.lead}</p>
           </div>
         }
         steps={
@@ -37,7 +37,7 @@ export function HowItWorks() {
                 className={cn('flex flex-col gap-2', ROOM[step.stages.length])}
               >
                 <h3 className={cardHeading}>{step.title}</h3>
-                <p className="text-body text-pretty text-on-surface-muted">{step.body}</p>
+                <p className={cardBody}>{step.body}</p>
               </li>
             ))}
           </ol>

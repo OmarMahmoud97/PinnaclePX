@@ -1,5 +1,5 @@
 import { ABOUT } from '@/app/_components/about-items'
-import { stickyColumn, titleHeading } from '@/app/_components/section-styles'
+import { sectionGrid, stickyColumn, titleHeading } from '@/app/_components/section-styles'
 import { LogoMark } from '@/components/brand/logo-mark'
 import { captionStyles } from '@/components/ui/caption'
 import { TrackedAnchor } from '@/components/ui/tracked-link'
@@ -46,7 +46,7 @@ function AddressCard() {
 export function About() {
   return (
     <section id="about" className="scroll-mt-16">
-      <div className="grid md:grid-cols-6 md:divide-x md:divide-border">
+      <div className={sectionGrid}>
         <div className={`flex flex-col gap-6 p-column max-md:pb-3 md:col-span-2 ${stickyColumn}`}>
           <h2 className={titleHeading}>{ABOUT.heading}</h2>
           {(SITE.town !== null || SITE.contactEmail !== null) && <AddressCard />}

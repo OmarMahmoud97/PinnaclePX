@@ -1,5 +1,5 @@
 import { revealDelay } from '@/app/_components/reveal'
-import { cardHeading } from '@/app/_components/section-styles'
+import { cardBody, cardHeading, cellGrid, hairlineCell } from '@/app/_components/section-styles'
 import { WhatYouGetGlyph } from '@/app/_components/what-you-get-glyphs'
 import { WHAT_YOU_GET_ITEMS } from '@/app/_components/what-you-get-items'
 
@@ -8,17 +8,12 @@ export function WhatYouGet() {
   return (
     <section id="what-you-get">
       <h2 className="sr-only">What you get</h2>
-      {/* gap-px over a border-coloured background draws the hairlines between cells. */}
-      <ul data-reveal className="grid grid-cols-2 gap-px bg-border lg:grid-cols-4">
+      <ul data-reveal className={`${cellGrid} lg:grid-cols-4`}>
         {WHAT_YOU_GET_ITEMS.map(({ title, detail, glyph }, index) => (
-          <li
-            key={title}
-            style={revealDelay(index)}
-            className="flex flex-col gap-3 bg-surface p-4 sm:p-cell"
-          >
+          <li key={title} style={revealDelay(index)} className={hairlineCell}>
             <WhatYouGetGlyph name={glyph} />
             <h3 className={cardHeading}>{title}</h3>
-            <p className="text-body text-pretty text-on-surface-muted">{detail}</p>
+            <p className={cardBody}>{detail}</p>
           </li>
         ))}
       </ul>

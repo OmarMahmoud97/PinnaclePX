@@ -1,11 +1,18 @@
 import Link from 'next/link'
 import { BOOK_CALL, CTA } from '@/app/_components/nav-links'
 import { revealDelay } from '@/app/_components/reveal'
-import { cardHeading, titleHeading } from '@/app/_components/section-styles'
+import {
+  cardBody,
+  cardHeading,
+  sectionLead,
+  stepNumber,
+  stepRow,
+  titleHeading,
+} from '@/app/_components/section-styles'
 import { TASTER, TASTER_STEPS } from '@/app/_components/taster-items'
 import { buttonStyles } from '@/components/ui/button'
 import { captionStyles } from '@/components/ui/caption'
-import { textLinkStyles } from '@/components/ui/text-link'
+import { tapLinkStyles } from '@/components/ui/text-link'
 import { TrackedLink } from '@/components/ui/tracked-link'
 import { CALL_AGENDA, SITE } from '@/lib/site'
 
@@ -43,7 +50,7 @@ export function Taster() {
       <div className="grid md:grid-cols-6 md:grid-rows-[auto_1fr]">
         <div className="flex flex-col gap-3 p-column max-md:pb-3 md:col-span-3 md:col-start-4">
           <h2 className={titleHeading}>{TASTER.heading}</h2>
-          <p className="text-lead text-pretty text-on-surface-muted">{TASTER.lead}</p>
+          <p className={sectionLead}>{TASTER.lead}</p>
         </div>
 
         <ol
@@ -51,19 +58,15 @@ export function Taster() {
           className="divide-y divide-border border-y border-border md:col-span-3 md:col-start-1 md:row-span-2 md:row-start-1 md:border-y-0 md:border-r"
         >
           {TASTER_STEPS.map((step, index) => (
-            <li key={step.title} style={revealDelay(index)} className="flex gap-5 p-5 md:p-cell">
-              <span
-                className={`${captionStyles} w-[2ch] shrink-0 pt-1 text-brand-deeper tabular-nums`}
-              >
-                {String(index + 1).padStart(2, '0')}
-              </span>
+            <li key={step.title} style={revealDelay(index)} className={stepRow}>
+              <span className={stepNumber}>{String(index + 1).padStart(2, '0')}</span>
               <div className="flex flex-col gap-2">
                 <h3 className={cardHeading}>{step.title}</h3>
-                <p className="text-body text-pretty text-on-surface-muted">{step.body}</p>
+                <p className={cardBody}>{step.body}</p>
                 {step.agenda === true && <CallAgenda />}
                 {step.buildLink === true && (
                   <p className="text-small">
-                    <Link href="/#real-build" className={`${textLinkStyles} inline-block py-1`}>
+                    <Link href="/#real-build" className={tapLinkStyles}>
                       {TASTER.buildLink}
                     </Link>
                   </p>
@@ -73,7 +76,7 @@ export function Taster() {
           ))}
         </ol>
 
-        <div className="flex flex-col gap-4 p-column max-md:pt-6 md:col-span-3 md:col-start-4">
+        <div className="flex flex-col gap-4 p-column max-md:pt-6 md:col-span-3 md:col-start-4 md:pt-0">
           <div className="flex flex-col gap-2">
             <TrackedLink
               href={BOOK_CALL.href}
@@ -90,12 +93,11 @@ export function Taster() {
             <p className="text-small text-on-surface-muted">{SITE.callPromise}</p>
           </div>
           <p className="text-small text-on-surface-muted">
-            {TASTER.doNothing}{' '}
             <TrackedLink
               href={CTA.href}
               event="cta_click"
               location="taster"
-              className={`${textLinkStyles} inline-block py-1`}
+              className={tapLinkStyles}
             >
               {TASTER.notStarted}
             </TrackedLink>
