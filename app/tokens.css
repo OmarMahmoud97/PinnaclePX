@@ -39,6 +39,7 @@
   --ease-standard: cubic-bezier(0.2, 0, 0, 1);
   --animate-question-in: question-in var(--motion-enter) var(--ease-enter) both;
   --animate-sketch-in: sketch-in var(--motion-settle) var(--ease-enter) both;
+  --animate-logo-marquee: logo-marquee 20s linear infinite;
 
   --shadow-badge:
     0 0 0 1px rgb(0 0 0 / 0.06), 0 1px 2px rgb(0 0 0 / 0.06), 0 4px 12px rgb(0 0 0 / 0.04);

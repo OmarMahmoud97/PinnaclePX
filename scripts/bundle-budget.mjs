@@ -27,8 +27,10 @@ const BUDGETS = {
   // phone and a desktop capture in two formats at two widths and a view toggle (34,941 B
   // measured, ADR 0022), then to 38 KB the same evening for the eight-cell "Everything built in"
   // band and the asks that end the work, real-build and options bands (36,576 B measured, ADR
-  // 0022 amendment). Re-measured when the journey band ships.
-  '/': { scripts: 215_000, stylesheets: 14_000, html: 38_000 },
+  // 0022 amendment), then to 39 KB on 6 September 2026 for the hero's logo strip, whose row is
+  // drawn twice so the slide has no seam, each mark carrying its own size and mask (38,245 B
+  // measured). Re-measured when the journey band ships.
+  '/': { scripts: 215_000, stylesheets: 14_000, html: 39_000 },
   // Raised from 230 KB on 4 September 2026 for zod 4, whose core is about 13 KB gzipped heavier
   // on this page than zod 3 (ADR 0019); its locales are kept out by the namespace import form.
   '/start': { scripts: 245_000, stylesheets: 14_000, html: 25_000 },

@@ -11,6 +11,9 @@ type Props = {
   // Whose brief the screen reader hears about: "Your brief so far" or "A client's brief so far".
   prefix?: string | undefined
   chipsClassName?: string | undefined
+  // False draws the sentence alone. The hero puts the clients' logos under the sketch where the
+  // chips would go, and a screen reader still needs the brief in words.
+  chips?: boolean
 }
 
 // One short label per question: the answer itself where it is short enough to show.
@@ -39,6 +42,7 @@ export function SketchChips({
   answered,
   prefix = 'Your brief so far',
   chipsClassName,
+  chips = true,
 }: Props) {
   const labels = labelsFor(answers)
   const given = QUESTION_IDS.slice(0, answered).map((id) => labels[id])
@@ -48,28 +52,30 @@ export function SketchChips({
       <p className="sr-only">
         {given.length === 0 ? `${prefix} is empty.` : `${prefix}: ${given.join(', ')}.`}
       </p>
-      <ul
-        aria-hidden="true"
-        className={cn('flex flex-wrap justify-center gap-1.5', chipsClassName)}
-      >
-        {QUESTION_IDS.map((id, index) => {
-          const done = index < answered
-          return (
-            <li
-              key={id}
-              className={cn(
-                'flex items-center gap-1 rounded-full border bg-surface px-2.5 py-0.5 text-[11px] transition-colors duration-(--motion-enter)',
-                done
-                  ? 'border-border text-on-surface'
-                  : 'border-dashed border-border text-on-surface-muted',
-              )}
-            >
-              {done && <Check className="size-3 text-success" />}
-              {labels[id]}
-            </li>
-          )
-        })}
-      </ul>
+      {chips && (
+        <ul
+          aria-hidden="true"
+          className={cn('flex flex-wrap justify-center gap-1.5', chipsClassName)}
+        >
+          {QUESTION_IDS.map((id, index) => {
+            const done = index < answered
+            return (
+              <li
+                key={id}
+                className={cn(
+                  'flex items-center gap-1 rounded-full border bg-surface px-2.5 py-0.5 text-[11px] transition-colors duration-(--motion-enter)',
+                  done
+                    ? 'border-border text-on-surface'
+                    : 'border-dashed border-border text-on-surface-muted',
+                )}
+              >
+                {done && <Check className="size-3 text-success" />}
+                {labels[id]}
+              </li>
+            )
+          })}
+        </ul>
+      )}
     </>
   )
 }

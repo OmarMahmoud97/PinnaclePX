@@ -95,6 +95,16 @@ html.lenis.lenis-smooth {
   }
 
   /*
+   * The logo strip. The track holds two identical rows with the row gap between them, so sliding
+   * one row plus half that gap lands the second row exactly where the first began.
+   */
+  @keyframes logo-marquee {
+    to {
+      translate: calc(-50% - var(--logo-gap) / 2) 0;
+    }
+  }
+
+  /*
    * Lists rise in once. The hidden state exists only after JavaScript has armed motion on <html>,
    * so the page is complete without it, and each item waits its turn through --i.
    */
