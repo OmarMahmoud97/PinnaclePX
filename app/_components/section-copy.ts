@@ -14,15 +14,18 @@ export const HERO = {
 export const HOW_IT_WORKS = {
   heading: 'One question at a time.',
   lead: 'You see one question, answer it, and the next one appears. Nothing to prepare, and nothing to upload unless you want to.',
-  // Three beats of copy beside the phone frame; each paints one more answer into it.
+  // Three beats of copy beside the phone frame. Each paints the stages it names as the visitor
+  // scrolls it past the frame, spread evenly down its height (walkthrough-stops.ts): the sentence
+  // and the name with the first, the logo with the one about skipping, the look and the colour
+  // with the payoff. The finished page follows on the button (how-it-works.tsx).
   beats: [
     {
-      stage: 2,
+      stages: [1, 2],
       text: 'Five short questions. The first is a sentence or two about your business. The rest appear one at a time.',
     },
-    { stage: 3, text: "No phone number. No budget question. Skip anything you don't have." },
+    { stages: [3], text: "No phone number. No budget question. Skip anything you don't have." },
     {
-      stage: 5,
+      stages: [4, 5],
       text: 'Five answers, then about five minutes. Your three designs appear on screen, and the link lands in your inbox.',
     },
   ],

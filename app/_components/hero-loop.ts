@@ -1,8 +1,16 @@
 import 'client-only'
+import {
+  addBuild,
+  clearBuild,
+  type Layers,
+  layersIn,
+  seconds,
+  type Timeline,
+  WRITTEN,
+} from '@/app/_components/sketch-build'
 import { DEMO_STAGES, EXAMPLE_ANSWERS, FINAL_STAGE } from '@/lib/brief/example-brief'
 import { typingOffsets } from '@/lib/brief/typing'
 import { CONFIG } from '@/lib/config'
-import { type Box, flipDelta } from '@/lib/motion/flip'
 import type { Gsap } from '@/lib/motion/gsap'
 
 export type Frame = Readonly<{ stage: number; chars: number }>
@@ -11,8 +19,6 @@ const FULL = EXAMPLE_ANSWERS.description.length
 
 export const FINISHED: Frame = { stage: FINAL_STAGE, chars: FULL }
 export const EMPTY: Frame = { stage: 1, chars: 0 }
-
-type Timeline = ReturnType<Gsap['timeline']>
 
 type Hooks = Readonly<{
   setFrame: (frame: Frame) => void
@@ -23,250 +29,6 @@ type Hooks = Readonly<{
 export type Loop = Readonly<{ pause: () => void; play: () => void; revert: () => void }>
 
 const { demo } = CONFIG
-// power3.inOut peaks at three times the average speed; expo.inOut peaks at seven and snaps
-// through the middle of a travel.
-const TRAVEL = 'power3.inOut'
-const FADE = 'power2.inOut'
-const CROSS = demo.build.cross
-// Everything the build and the reset write inline. Cleared by name, never with `clearProps:
-// 'all'`, which wipes an element's whole inline style, including what React put there.
-const WRITTEN = 'transform,transformOrigin,opacity,visibility,filter'
-
-type Beat = Readonly<{ at: number; for: number; step?: number }>
-
-// Every named part on both frames, the beat it moves on, and its place in a beat that steps its
-// members. A part with several elements (links, cards, arrows) steps through them in order.
-const PARTS: readonly Readonly<{ part: string; beat: Beat; index?: number }>[] = [
-  { part: 'wordmark', beat: demo.build.nav },
-  { part: 'nav-link', beat: demo.build.nav },
-  { part: 'nav-cta', beat: demo.build.nav },
-  { part: 'menu', beat: demo.build.nav },
-  { part: 'image', beat: demo.build.photo },
-  { part: 'eyebrow', beat: demo.build.text, index: 0 },
-  { part: 'headline', beat: demo.build.text, index: 1 },
-  { part: 'paragraph', beat: demo.build.text, index: 2 },
-  { part: 'cta', beat: demo.build.text, index: 3 },
-  { part: 'card', beat: demo.build.cards },
-  { part: 'footer', beat: demo.build.footer },
-  { part: 'arrow', beat: demo.build.arrows },
-]
-
-// Sketch parts that are bars or boxes, so they scale into their counterpart's box; text only
-// travels, because scaled type smears.
-const SCALED_FROM = new Set(['nav-link', 'nav-cta', 'eyebrow', 'cta', 'card', 'footer', 'menu'])
-// Finished parts that are boxes and arrive scaling up out of the sketch's box.
-const SCALED_TO = new Set(['nav-cta', 'cta', 'card', 'footer', 'menu'])
-
-const seconds = (ms: number) => ms / 1000
-
-function partsIn(layer: Element, part: string): HTMLElement[] {
-  return [...layer.querySelectorAll<HTMLElement>(`[data-part="${part}"]`)]
-}
-
-function boxOf(element: HTMLElement): Box {
-  const rect = element.getBoundingClientRect()
-  return { left: rect.left, top: rect.top, width: rect.width, height: rect.height }
-}
-
-// Visual pixels per layout pixel, so a frame under CSS zoom (the phone strip) moves by the
-// right amount.
-function zoomOf(element: HTMLElement): number {
-  const width = element.offsetWidth
-  return width === 0 ? 1 : element.getBoundingClientRect().width / width
-}
-
-type Layers = Readonly<{ root: HTMLElement; sketch: HTMLElement; built: HTMLElement }>
-
-// A frame's two layers, or null for a frame with no finished page under it.
-function layersOf(root: HTMLElement): Layers | null {
-  const sketch = root.querySelector<HTMLElement>('[data-layer="sketch"]')
-  const built = root.querySelector<HTMLElement>('[data-layer="built"]')
-  return sketch === null || built === null ? null : { root, sketch, built }
-}
-
-function layersIn(roots: readonly HTMLElement[]): Layers[] {
-  return roots.map(layersOf).filter((layers): layers is Layers => layers !== null)
-}
-
-type Move = Readonly<{
-  part: string
-  from: HTMLElement | undefined
-  to: HTMLElement | undefined
-  fromBox: Box | undefined
-  toBox: Box | undefined
-  at: number
-  duration: number
-}>
-
-// Pairs every sketch part with its counterpart on the finished page and measures both, all reads
-// before any write so layout is computed once.
-function movesIn(sketch: Element, built: Element): Move[] {
-  const moves: Move[] = []
-  for (const { part, beat, index } of PARTS) {
-    const froms = partsIn(sketch, part)
-    const tos = partsIn(built, part)
-    const count = Math.max(froms.length, tos.length)
-    for (let i = 0; i < count; i += 1) {
-      const from = froms[i]
-      const to = tos[i]
-      moves.push({
-        part,
-        from,
-        to,
-        fromBox: from === undefined ? undefined : boxOf(from),
-        toBox: to === undefined ? undefined : boxOf(to),
-        at: seconds(beat.at + (index ?? i) * (beat.step ?? 0)),
-        duration: seconds(beat.for),
-      })
-    }
-  }
-  return moves
-}
-
-// The build inside one frame: the sketch's parts travel to their places on the finished page and
-// the finished parts arrive from the sketch's, crossing in flight. The photograph is one
-// element that swaps for the sketch's copy of the same picture and then travels. Parts with no
-// counterpart rise in or pop.
-function addBuild(tl: Timeline, { root, sketch, built }: Layers): void {
-  // A frame that is not displayed at this size has nothing to measure.
-  if (root.offsetWidth === 0) return
-  const zoom = zoomOf(root)
-  const moves = movesIn(sketch, built)
-  const labels = partsIn(sketch, 'image-label')
-  const background = partsIn(built, 'bg')
-
-  if (labels.length > 0) {
-    tl.to(
-      labels,
-      { autoAlpha: 0, duration: seconds(demo.build.label.for) },
-      seconds(demo.build.label.at),
-    )
-  }
-  tl.to(
-    background,
-    { autoAlpha: 1, duration: seconds(demo.build.bg.for), ease: FADE },
-    seconds(demo.build.bg.at),
-  )
-
-  for (const { part, from, to, fromBox, toBox, at, duration } of moves) {
-    if (from !== undefined && to !== undefined && fromBox !== undefined && toBox !== undefined) {
-      const delta = flipDelta(fromBox, toBox, zoom)
-      const inverse = flipDelta(toBox, fromBox, zoom)
-      if (part === 'image') {
-        tl.set(from, { autoAlpha: 0 }, at)
-        tl.set(to, { ...delta, transformOrigin: '0 0', autoAlpha: 1, filter: 'saturate(0.75)' }, at)
-        tl.to(
-          to,
-          { x: 0, y: 0, scaleX: 1, scaleY: 1, filter: 'saturate(1)', duration, ease: TRAVEL },
-          at,
-        )
-        continue
-      }
-      const scaleTo = SCALED_TO.has(part)
-      const scaleFrom = SCALED_FROM.has(part)
-      const fadeAt = at + duration * (1 - CROSS)
-      const fadeFor = duration * CROSS
-      // A part that barely travels rises into place instead, so it still arrives.
-      const lift = Math.hypot(delta.x, delta.y) < demo.build.rise.underPx ? demo.build.rise.byPx : 0
-      tl.fromTo(
-        to,
-        {
-          x: delta.x,
-          y: delta.y + lift,
-          scaleX: scaleTo ? delta.scaleX : 1,
-          scaleY: scaleTo ? delta.scaleY : 1,
-          transformOrigin: '0 0',
-        },
-        { x: 0, y: 0, scaleX: 1, scaleY: 1, duration, ease: TRAVEL, immediateRender: false },
-        at,
-      )
-      const words = [...to.querySelectorAll<HTMLElement>('[data-word]')]
-      if (words.length > 0) {
-        // The block shows at once and its words carry the fade, one after another.
-        tl.set(to, { autoAlpha: 1 }, fadeAt)
-        tl.fromTo(
-          words,
-          { autoAlpha: 0, y: demo.build.words.risePx },
-          {
-            autoAlpha: 1,
-            y: 0,
-            duration: fadeFor,
-            ease: 'power3.out',
-            stagger: seconds(demo.build.words.step),
-            immediateRender: false,
-          },
-          fadeAt,
-        )
-      } else {
-        tl.fromTo(
-          to,
-          { autoAlpha: 0 },
-          { autoAlpha: 1, duration: fadeFor, ease: FADE, immediateRender: false },
-          fadeAt,
-        )
-      }
-      const label = to.querySelector<HTMLElement>('[data-label]')
-      if (label !== null) {
-        // The label waits until the pill has its shape; scaled type would smear.
-        tl.set(label, { autoAlpha: 0 }, at)
-        tl.to(
-          label,
-          { autoAlpha: 1, duration: duration * demo.build.labelShare, ease: FADE },
-          at + duration * (1 - demo.build.labelShare),
-        )
-      }
-      const icon = to.querySelector<HTMLElement>('[data-icon]')
-      const title = to.querySelector<HTMLElement>('[data-title]')
-      if (icon !== null && title !== null) {
-        // A card's icon and title resolve a beat after the card itself shows.
-        const innerAt = fadeAt + seconds(demo.build.card.after)
-        const innerFor = seconds(demo.build.card.for)
-        tl.set(icon, { scale: 0.7, autoAlpha: 0, transformOrigin: '50% 50%' }, at)
-        tl.set(title, { y: demo.build.card.risePx, autoAlpha: 0 }, at)
-        tl.to(icon, { scale: 1, autoAlpha: 1, duration: innerFor, ease: 'power3.out' }, innerAt)
-        tl.to(title, { y: 0, autoAlpha: 1, duration: innerFor, ease: 'power3.out' }, innerAt)
-      }
-      tl.to(
-        from,
-        {
-          x: inverse.x,
-          y: inverse.y,
-          scaleX: scaleFrom ? inverse.scaleX : 1,
-          scaleY: scaleFrom ? inverse.scaleY : 1,
-          transformOrigin: '0 0',
-          duration,
-          ease: TRAVEL,
-        },
-        at,
-      )
-      tl.to(from, { autoAlpha: 0, duration: fadeFor, ease: FADE }, at)
-    } else if (to !== undefined) {
-      if (part === 'arrow') {
-        tl.fromTo(
-          to,
-          { autoAlpha: 0, scale: 0.6 },
-          { autoAlpha: 1, scale: 1, duration, ease: 'back.out(1.7)', immediateRender: false },
-          at,
-        )
-      } else {
-        tl.fromTo(
-          to,
-          { autoAlpha: 0, y: 6 },
-          {
-            autoAlpha: 1,
-            y: 0,
-            duration: duration * CROSS,
-            ease: 'power2.out',
-            immediateRender: false,
-          },
-          at + duration * (1 - CROSS),
-        )
-      }
-    } else if (from !== undefined) {
-      tl.to(from, { autoAlpha: 0, duration: duration * CROSS, ease: FADE }, at)
-    }
-  }
-}
 
 // Act one, the brief, driven through React: the sentence types, the company lands, the style
 // fills, the colour sweeps, each beat waiting its hold.
@@ -324,7 +86,8 @@ function briefAct(
   return tl
 }
 
-// Act two, the build and the hold, measured afresh from the frames as they are now.
+// Act two, the build and the hold, measured afresh from the frames as they are now
+// (sketch-build.ts).
 function buildAct(
   gsap: Gsap,
   layers: readonly Layers[],
@@ -332,7 +95,7 @@ function buildAct(
   onDone: () => void,
 ): Timeline {
   const tl = gsap.timeline({ onComplete: onDone })
-  for (const frame of layers) addBuild(tl, frame)
+  for (const frame of layers) addBuild(tl, frame, demo.build)
   tl.call(
     () => {
       hooks.setBuilt(true)
@@ -408,19 +171,6 @@ function resetAct(
   return tl
 }
 
-// Removes everything the acts may have written, whatever state they were in.
-function clearWritten(gsap: Gsap, layers: readonly Layers[]): void {
-  for (const { sketch, built } of layers) {
-    const parts = [
-      ...sketch.querySelectorAll('[data-part]'),
-      ...built.querySelectorAll('[data-part], [data-part] *'),
-    ]
-    gsap.set(parts, { clearProps: WRITTEN })
-    gsap.set(built, { clearProps: 'transform,transformOrigin' })
-    gsap.set(sketch, { clearProps: 'opacity,visibility' })
-  }
-}
-
 // The whole loop: the brief, the build with its hold, the reset, then the brief again. Each act
 // is one timeline that plays forward once and hands over when it completes. Nothing is ever
 // rewound: a repeating timeline would render every tween back to its recorded start values and
@@ -479,7 +229,7 @@ export function buildLoop(
       stopped = true
       current?.kill()
       ctx.revert()
-      clearWritten(gsap, layers)
+      clearBuild(gsap, layers)
     },
   }
 }

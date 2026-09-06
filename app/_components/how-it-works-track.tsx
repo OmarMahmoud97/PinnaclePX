@@ -1,112 +1,222 @@
 'use client'
 
-import { type ReactNode, useEffect, useRef, useState } from 'react'
-import { EXAMPLE_FILES } from '@/app/_components/photos'
+import dynamic from 'next/dynamic'
+import { type ReactNode, useCallback, useEffect, useRef, useState } from 'react'
+import { BUILT_STAGE, EMPTY_STAGE, WALKTHROUGH_ANSWERS } from '@/app/_components/walkthrough-brand'
+import { HIDDEN_WHEN_EMPTY, WalkthroughFrame } from '@/app/_components/walkthrough-frame'
+import { WALKTHROUGH_FILES } from '@/app/_components/walkthrough-photos'
+import { stageAt, stagesFrom } from '@/app/_components/walkthrough-stops'
+import type { Walkthrough } from '@/app/_components/walkthrough-timeline'
 import { SKETCH_CAPTION } from '@/components/sketch/captions'
-import { PhoneSketch } from '@/components/sketch/phone-sketch'
+import { SketchChips } from '@/components/sketch/sketch-chips'
 import { sketchModelFrom } from '@/components/sketch/sketch-model'
 import { captionStyles } from '@/components/ui/caption'
 import { CornerTicks } from '@/components/ui/corner-ticks'
 import { ProgressSteps } from '@/components/ui/progress-steps'
-import { answersAt, EXAMPLE_ANSWERS, FINAL_STAGE } from '@/lib/brief/example-brief'
+import { answeredAt, FINAL_STAGE } from '@/lib/brief/example-brief'
 import { QUESTION_IDS } from '@/lib/brief/question-ids'
+import { cn } from '@/lib/cn'
 import { CONFIG } from '@/lib/config'
+import { loadGsap } from '@/lib/motion/gsap'
+import { whenIdle } from '@/lib/motion/idle'
 import { useMotionAllowed } from '@/lib/motion/use-motion-allowed'
 
-// The last beat paints the style, then the colour a moment later.
-const COLOUR_AFTER_MS = 900
+// The finished page the sketch builds into. Never server-rendered: only a client that allows
+// motion ever shows it, and the chunk, its font and its photographs load with it.
+const WalkthroughBuilt = dynamic(
+  () => import('@/app/_components/walkthrough-built').then((module) => module.WalkthroughBuilt),
+  { ssr: false },
+)
+
+// The frame is drawn with every answer in and its colour set, and the timeline hides whatever a
+// stop has not reached, so its variables never change.
+const MODEL = sketchModelFrom(WALKTHROUGH_ANSWERS, FINAL_STAGE, WALKTHROUGH_FILES)
+const { walkthrough } = CONFIG
+
+type Status = 'waiting' | 'playing' | 'unavailable'
 
 type Props = { heading: ReactNode; beats: ReactNode; actions: ReactNode }
 
-// The walkthrough: three beats of copy scroll past a phone frame that paints one more answer
-// as each beat comes into view, so "one question at a time" is something the visitor does with
-// their own scrolling. Each beat carries data-beat with the stage it paints; the third paints
-// stage 4 and then 5. Scrolling back unpaints. Reduced motion and JavaScript off show the
-// finished frame; on a phone the frame sits under the header and the beats scroll beneath it.
+// The walkthrough: three beats of copy scroll past a sticky phone frame that paints an example
+// brand's answers one question at a time, then builds them into a finished page, so "one
+// question at a time" is something the visitor does with their own scrolling. Each beat carries
+// data-stages, the stops it paints spread down its height (walkthrough-stops.ts); the scroll
+// picks the stop and a GSAP timeline glides to it, forwards or back (walkthrough-timeline.ts).
+// The server renders the finished sketch; a client that allows motion rewinds it to empty in
+// its first render and plays from there once GSAP and the finished page have loaded, which
+// starts when the section is a viewport away. Reduced motion, JavaScript off and a GSAP chunk
+// that never arrives all keep the finished sketch.
 export function HowItWorksTrack({ heading, beats, actions }: Props) {
   const motionAllowed = useMotionAllowed()
-  const [liveStage, setLiveStage] = useState(1)
+  const [stage, setStage] = useState(EMPTY_STAGE)
+  const [status, setStatus] = useState<Status>('waiting')
+  const [builtReady, setBuiltReady] = useState(false)
+  const stageRef = useRef<HTMLDivElement>(null)
   const beatsRef = useRef<HTMLDivElement>(null)
+  const walkthroughRef = useRef<Walkthrough | null>(null)
+  const targetRef = useRef(EMPTY_STAGE)
 
+  const markBuiltReady = useCallback(() => {
+    setBuiltReady(true)
+  }, [])
+
+  // The scroll picks the stop: the furthest stage whose line has passed the reading line under
+  // the frame. One read per frame, on a passive listener; Lenis scrolls the window, so its
+  // glides arrive here as ordinary scroll events.
   useEffect(() => {
-    const root = beatsRef.current
-    if (!motionAllowed || root === null) return
-    const beats = [...root.querySelectorAll<HTMLElement>('[data-beat]')]
-    const onScreen = new Set<Element>()
-    let current = 1
-    let colourTimer: ReturnType<typeof setTimeout> | undefined
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) onScreen.add(entry.target)
-          else onScreen.delete(entry.target)
-        }
-        // The stage is the last beat on screen in reading order. With none on screen the frame
-        // is finished once the beats have been scrolled past, and blank before they arrive.
-        const last = [...beats].reverse().find((beat) => onScreen.has(beat))
-        const first = beats[0]
-        const next =
-          last !== undefined
-            ? Number(last.dataset.beat)
-            : first !== undefined && first.getBoundingClientRect().top < 0
-              ? FINAL_STAGE
-              : 1
-        clearTimeout(colourTimer)
-        if (next === FINAL_STAGE && current < FINAL_STAGE) {
-          setLiveStage(FINAL_STAGE - 1)
-          colourTimer = setTimeout(() => {
-            setLiveStage(FINAL_STAGE)
-          }, COLOUR_AFTER_MS)
-        } else {
-          setLiveStage(next)
-        }
-        current = next
-      },
-      { threshold: CONFIG.motion.walkthroughThreshold },
-    )
-    for (const beat of beats) observer.observe(beat)
+    const stageElement = stageRef.current
+    const column = beatsRef.current
+    if (!motionAllowed || stageElement === null || column === null) return
+    const beatElements = [...column.querySelectorAll<HTMLElement>('[data-stages]')]
+    let frame: number | undefined
+    const measure = () => {
+      frame = undefined
+      const anchor = Math.min(
+        stageElement.getBoundingClientRect().bottom + walkthrough.anchorGapPx,
+        window.innerHeight * walkthrough.anchorShare,
+      )
+      const next = stageAt(
+        anchor,
+        beatElements.map((beat) => {
+          const box = beat.getBoundingClientRect()
+          return { top: box.top, height: box.height, stages: stagesFrom(beat.dataset.stages) }
+        }),
+      )
+      if (next === targetRef.current) return
+      targetRef.current = next
+      setStage(next)
+      walkthroughRef.current?.goTo(next)
+    }
+    const schedule = () => {
+      frame ??= requestAnimationFrame(measure)
+    }
+    measure()
+    window.addEventListener('scroll', schedule, { passive: true })
+    window.addEventListener('resize', schedule)
     return () => {
-      clearTimeout(colourTimer)
-      observer.disconnect()
+      if (frame !== undefined) cancelAnimationFrame(frame)
+      window.removeEventListener('scroll', schedule)
+      window.removeEventListener('resize', schedule)
     }
   }, [motionAllowed])
 
-  const stage = motionAllowed ? liveStage : FINAL_STAGE
-  // Nothing is painted before the first beat; from then on the whole sentence is in.
-  const model = sketchModelFrom(
-    answersAt(stage, stage >= 2 ? EXAMPLE_ANSWERS.description.length : 0),
-    stage,
-    EXAMPLE_FILES,
-  )
+  // The timeline, built once the finished page is in the DOM, the section is a viewport away, the
+  // browser is idle, and GSAP, the timeline's own module and the fonts have arrived; then it
+  // glides to wherever the scroll already is. The module rides with the GSAP chunk rather than
+  // the page's, since only a motion client ever runs it. A resize measures the frame afresh once
+  // the window has settled.
+  useEffect(() => {
+    const stageElement = stageRef.current
+    if (!motionAllowed || !builtReady || stageElement === null) return
+    let cancelled = false
+    let cancelIdle: (() => void) | undefined
+    let settle: number | undefined
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry?.isIntersecting !== true) return
+        observer.disconnect()
+        cancelIdle = whenIdle(() => {
+          Promise.all([
+            loadGsap(),
+            import('@/app/_components/walkthrough-timeline'),
+            document.fonts.ready,
+          ])
+            .then(([gsap, { buildWalkthrough }]) => {
+              if (cancelled) return
+              const built = buildWalkthrough(gsap, stageElement)
+              walkthroughRef.current = built
+              setStatus('playing')
+              built.goTo(targetRef.current)
+            })
+            .catch(() => {
+              if (!cancelled) setStatus('unavailable')
+            })
+        })
+      },
+      { rootMargin: `${String(walkthrough.loadAheadViewports * 100)}% 0px` },
+    )
+    observer.observe(stageElement)
+    const onResize = () => {
+      window.clearTimeout(settle)
+      settle = window.setTimeout(() => {
+        walkthroughRef.current?.rebuild(targetRef.current)
+      }, walkthrough.resizeSettleMs)
+    }
+    window.addEventListener('resize', onResize)
+    return () => {
+      cancelled = true
+      observer.disconnect()
+      cancelIdle?.()
+      window.clearTimeout(settle)
+      window.removeEventListener('resize', onResize)
+      walkthroughRef.current?.revert()
+      walkthroughRef.current = null
+    }
+  }, [motionAllowed, builtReady])
+
+  // What is shown: the stop the scroll has reached, or the finished sketch for a visitor whose
+  // frame never moves.
+  const shown = !motionAllowed || status === 'unavailable' ? FINAL_STAGE : stage
+  const captionKey = shown === BUILT_STAGE ? 'walkthroughBuilt' : 'walkthrough'
+  const phase = motionAllowed && status === 'waiting' ? 'empty' : undefined
 
   return (
     <div className="grid md:grid-cols-6 md:grid-rows-[auto_1fr]">
       <div className="p-column max-md:pb-3 md:col-span-3">{heading}</div>
 
-      <div className="sticky top-16 z-10 md:top-24 md:col-span-3 md:col-start-4 md:row-span-2 md:self-start md:border-l md:border-border">
-        <div
-          style={model.vars}
-          className="relative flex flex-col items-center gap-3 overflow-hidden border-y border-border bg-surface-muted px-6 pt-5 pb-4 md:min-h-[60vh] md:justify-center md:border-y-0 md:py-12"
-        >
+      <div
+        ref={stageRef}
+        data-phase={phase}
+        style={MODEL.vars}
+        className="sticky top-16 z-10 md:top-24 md:col-span-3 md:col-start-4 md:row-span-2 md:self-start md:border-l md:border-border"
+      >
+        {/* Isolated, so the dots and the glow (-z-1) paint over this block's own background
+            rather than under it. */}
+        <div className="relative isolate flex flex-col items-center gap-3 overflow-hidden border-y border-border bg-surface-muted px-6 pt-4 pb-3 md:min-h-[60vh] md:justify-center md:border-y-0 md:py-12">
           <div
             aria-hidden="true"
             className="absolute inset-0 -z-1 bg-[radial-gradient(var(--border)_1px,transparent_1px)] mask-[radial-gradient(ellipse_at_center,black_30%,transparent_72%)] bg-[size:22px_22px]"
           />
+          {/* The brand's glow, in from the colour stage. */}
           <div
             aria-hidden="true"
-            className="absolute inset-0 -z-1 bg-radial-[at_50%_80%] from-(--sketch-glow) to-transparent to-65% transition-colors duration-700"
+            data-wire="glow"
+            className={cn(
+              HIDDEN_WHEN_EMPTY,
+              'absolute inset-0 -z-1 bg-radial-[at_50%_72%] from-(--sketch-glow) to-transparent to-78%',
+            )}
           />
           <div className="w-full max-w-64">
-            <ProgressSteps current={stage} total={QUESTION_IDS.length} />
+            <ProgressSteps
+              current={Math.min(Math.max(shown, 1), FINAL_STAGE)}
+              total={QUESTION_IDS.length}
+            />
           </div>
-          <div
-            aria-hidden="true"
-            className="relative max-h-40 overflow-hidden mask-[linear-gradient(to_bottom,black_75%,transparent)] md:max-h-none md:overflow-visible md:mask-none"
-          >
+          <div aria-hidden="true" className="relative">
             <CornerTicks edges={['top', 'bottom']} />
-            <PhoneSketch model={model} zoom={1.5} />
+            <WalkthroughFrame
+              className="[zoom:1.1] md:[zoom:1.5]"
+              built={motionAllowed ? <WalkthroughBuilt onReady={markBuiltReady} /> : undefined}
+            />
           </div>
-          <p className={`${captionStyles} text-center`}>{SKETCH_CAPTION.walkthrough}</p>
+          {/* Tall enough for the longer caption, so the swap never moves what is below. */}
+          <p
+            key={captionKey}
+            className={cn(
+              captionStyles,
+              'min-h-9 max-w-80 text-center',
+              status === 'playing' && 'animate-sketch-in',
+            )}
+          >
+            {SKETCH_CAPTION[captionKey]}
+          </p>
+          {/* The brief in words for a screen reader, in place of the drawing. */}
+          <SketchChips
+            answers={WALKTHROUGH_ANSWERS}
+            answered={answeredAt(shown)}
+            prefix="An example brief so far"
+            chips={false}
+          />
         </div>
       </div>
 
