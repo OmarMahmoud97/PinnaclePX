@@ -11,10 +11,11 @@ import {
   ShieldCheck,
   Stethoscope,
 } from 'lucide-react'
-import { type CSSProperties, Fragment, memo, useEffect } from 'react'
+import { type CSSProperties, memo, useEffect } from 'react'
 import { BUILT_COPY, type FeatureIcon } from '@/app/_components/built-copy'
 import { builtSans, builtScript } from '@/app/_components/built-fonts'
 import { EXAMPLE_FILES } from '@/app/_components/photos'
+import { Words } from '@/app/_components/words'
 import { sketchModelFrom } from '@/components/sketch/sketch-model'
 import { PhotoFill } from '@/components/sketch/sketch-parts'
 import { EXAMPLE_ANSWERS, FINAL_STAGE } from '@/lib/brief/example-brief'
@@ -114,19 +115,6 @@ type Props = {
   frame: 'browser' | 'phone'
   // Called once the page is in the DOM, so the loop can measure it.
   onReady?: (() => void) | undefined
-}
-
-// Each word in its own box, so the loop can raise them one after another; the spaces between
-// stay real text, so the line still wraps and balances as it would unsplit.
-function Words({ text }: { text: string }) {
-  return text.split(' ').map((word, index) => (
-    <Fragment key={`${String(index)}-${word}`}>
-      {index > 0 ? ' ' : null}
-      <span data-word="" className="inline-block">
-        {word}
-      </span>
-    </Fragment>
-  ))
 }
 
 function Photo({ size }: { size: (typeof SIZE)[keyof typeof SIZE] }) {

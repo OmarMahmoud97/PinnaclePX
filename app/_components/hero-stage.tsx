@@ -5,6 +5,7 @@ import { type ReactNode, useCallback, useEffect, useId, useRef, useState } from 
 import { buildLoop, EMPTY, FINISHED, type Frame, type Loop } from '@/app/_components/hero-loop'
 import { BOOK_CALL, CTA } from '@/app/_components/nav-links'
 import { EXAMPLE_FILES } from '@/app/_components/photos'
+import { LogoMarquee } from '@/app/_components/logo-marquee'
 import { HERO } from '@/app/_components/section-copy'
 import { setSentence } from '@/app/_components/sentence-store'
 import { BriefSketch } from '@/components/sketch/brief-sketch'
@@ -162,7 +163,7 @@ export function HeroStage({ children }: { children: ReactNode }) {
       data-live={status === 'waiting' ? undefined : ''}
       data-built={built ? '' : undefined}
       style={model.vars}
-      className="group relative isolate px-6 py-section"
+      className="group relative isolate px-6 py-16"
     >
       <CornerTicks />
       <GlowBackdrop tinted />
@@ -219,7 +220,7 @@ export function HeroStage({ children }: { children: ReactNode }) {
           </p>
         </div>
 
-        <div ref={stageRef} className="flex flex-col gap-3 lg:col-span-7">
+        <div ref={stageRef} className="flex min-w-0 flex-col gap-3 lg:col-span-7">
           {/* From md the browser frame with the phone over its corner, narrower than on desktop
               so the sketch's photograph, painted in the first screen at stage 5, stays smaller
               than the subhead and never becomes the largest contentful paint. Below md the phone
@@ -250,12 +251,14 @@ export function HeroStage({ children }: { children: ReactNode }) {
           >
             {SKETCH_CAPTION[captionKey]}
           </p>
+          {/* The brief in words for a screen reader; the logos take the space the chips had. */}
           <SketchChips
             answers={answers}
             answered={own === null ? answeredAt(shown.stage) : 0}
             prefix={own === null ? "A client's brief so far" : 'Your brief so far'}
-            chipsClassName="hidden justify-center md:flex lg:justify-start"
+            chips={false}
           />
+          <LogoMarquee className="hidden md:block" />
         </div>
       </div>
     </section>

@@ -14,16 +14,36 @@ export const HERO = {
 export const HOW_IT_WORKS = {
   heading: 'One question at a time.',
   lead: 'You see one question, answer it, and the next one appears. Nothing to prepare, and nothing to upload unless you want to.',
-  // Three beats of copy beside the phone frame; each paints one more answer into it.
-  beats: [
+  // Five steps beside the phone frame, one per answer, each saying what that answer does to the
+  // design. A step paints the stages it names as the visitor scrolls it past the frame, spread
+  // evenly down its height (walkthrough-stops.ts); the last paints the colour, then the finished
+  // page, so the build lands while the frame is still whole on screen. None is headed
+  // "Question N": the frame's progress line already counts.
+  steps: [
     {
-      stage: 2,
-      text: 'Five short questions. The first is a sentence or two about your business. The rest appear one at a time.',
+      stages: [1],
+      title: 'Start with a sentence.',
+      body: 'Say what your business does. Your words go straight into the sketch, as the first line of your site.',
     },
-    { stage: 3, text: "No phone number. No budget question. Skip anything you don't have." },
     {
-      stage: 5,
-      text: 'Five answers, then about five minutes. Your three designs appear on screen, and the link lands in your inbox.',
+      stages: [2],
+      title: 'Put your name on it.',
+      body: 'Your company name becomes the headline and the wordmark, and tells us where to send your link. No phone number, no budget question.',
+    },
+    {
+      stages: [3],
+      title: 'Add your logo, or skip it.',
+      body: 'Your mark takes its place beside the name. Without one, your initials stand in until you send it.',
+    },
+    {
+      stages: [4],
+      title: 'Pick a look.',
+      body: "Warm, clean, bold or dark. Your photos go in if you have them; ours stand in if you don't.",
+    },
+    {
+      stages: [5, 6],
+      title: 'Choose your colour, then watch it build.',
+      body: 'Your colour runs through every button and heading. Five answers, then about five minutes: three designs on screen, and the link in your inbox.',
     },
   ],
 } as const

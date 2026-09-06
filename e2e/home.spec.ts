@@ -23,12 +23,33 @@ test('how it works never lists the questions', async ({ page }) => {
   await expect(section.getByText(/Question \d of 5/)).toHaveCount(1)
 })
 
-test("the walkthrough paints a client's brief as its beats scroll into view", async ({ page }) => {
+// The frame starts empty, builds the example brand into a finished page by the button, and
+// unpaints on the way back up. The stop is read from the scroll, so the assertions on the
+// progress line hold before GSAP arrives and the ones on the frame hold once it has.
+test('the walkthrough paints the example brand stop by stop, and unpaints on the way back', async ({
+  page,
+}) => {
+  test.setTimeout(60_000)
   await page.goto('/')
+  await expect(page.locator('html')).toHaveAttribute('data-motion', '')
   const section = page.locator('#how-it-works')
-  await section.locator('[data-beat="5"]').scrollIntoViewIfNeeded()
+  const slot = section.locator('[data-wire="headline-slot"]')
+  const headline = section.getByText('Gardens that grow with you.')
+  await expect(section.getByText('Question 1 of 5')).toBeVisible()
+  await expect(slot).toBeVisible()
+
+  await page.locator('#outcomes').scrollIntoViewIfNeeded()
   await expect(section.getByText('Question 5 of 5')).toBeVisible()
-  await expect(section.getByText('VetPres').first()).toBeVisible()
+  await expect(
+    section.getByText('Built as an illustration. Not a client, not one of the designs.'),
+  ).toBeVisible()
+  await expect(headline).toBeVisible({ timeout: 15_000 })
+  await expect(slot).toBeHidden()
+
+  await page.locator('#what-you-get').scrollIntoViewIfNeeded()
+  await expect(section.getByText('Question 1 of 5')).toBeVisible()
+  await expect(slot).toBeVisible({ timeout: 15_000 })
+  await expect(headline).toBeHidden()
 })
 
 // Two passes, because the second is the one that breaks: it must build from a clean sketch

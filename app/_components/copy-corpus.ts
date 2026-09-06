@@ -1,5 +1,6 @@
 import { ABOUT } from '@/app/_components/about-items'
 import { BUILD_STEPS, careLines, REAL_BUILD, timelineLine } from '@/app/_components/build-items'
+import { LOGOS } from '@/app/_components/client-logos'
 import { FAQ_ITEMS } from '@/app/_components/faq-items'
 import { FOOTER_GROUPS } from '@/app/_components/footer-links'
 import { INCLUDED, includedItems, STAYS_UP } from '@/app/_components/included-items'
@@ -48,12 +49,13 @@ export const COPY: readonly string[] = [
   ...NAV_LINKS.map((link) => link.label),
   ...FOOTER_GROUPS.flatMap((group) => [group.heading, ...group.links.map((link) => link.label)]),
   ...Object.values(HERO),
+  LOGOS.label,
   ...Object.values(SKETCH_CAPTION),
   ...CALL_AGENDA.map((item) => item.what),
   ...WHAT_YOU_GET_ITEMS.flatMap((item) => [item.title, item.detail]),
   HOW_IT_WORKS.heading,
   HOW_IT_WORKS.lead,
-  ...HOW_IT_WORKS.beats.map((beat) => beat.text),
+  ...HOW_IT_WORKS.steps.flatMap((step) => [step.title, step.body]),
   ...Object.values(OUTCOMES),
   ...OUTCOME_ITEMS.flatMap((item) => [item.label, item.body]),
   ...Object.values(TASTER),

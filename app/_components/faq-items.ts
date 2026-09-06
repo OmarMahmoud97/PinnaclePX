@@ -13,11 +13,6 @@ type FaqItem = Readonly<{ question: string; answer: string; link?: FaqLink }>
 // decision (docs/home-page-content-plan.md, section 3.12).
 export const FAQ_ITEMS: readonly FaqItem[] = [
   {
-    question: 'What will you ask me?',
-    answer:
-      'What your business does, then where to send your link: your name, company and email. Then your logo, your photos and your colours, one at a time. No phone number and no budget.',
-  },
-  {
     question: 'How long does it take, and do I have to wait?',
     answer:
       'Answering takes a couple of minutes. Your designs are ready within about five minutes of your last answer. Watch them appear, or close the tab and use the emailed link.',
@@ -37,16 +32,17 @@ export const FAQ_ITEMS: readonly FaqItem[] = [
   {
     question: 'Can I use one of the designs as my website?',
     answer:
-      "No. It's a first look, made in five minutes, to show you how we design in your brand. If you like one, that tells us your taste. Your real site is then designed from scratch.",
+      "No. It's a first look, made in five minutes from a few minutes of your time. Imagine what a proper conversation would give you. If you like one, that tells us your taste. Your real site is then designed from scratch.",
   },
   {
     question: 'What if the wording is wrong?',
     answer:
-      "Tell us on the call. It's a first draft, written from one sentence about your business. The real site's wording comes from the conversation.",
+      "The wording on the three designs is a placeholder, because we do not know your business yet. It's a first draft, written from one sentence about you. The real site's wording comes from the conversation.",
   },
   {
     question: 'I already have a website. Can you replace it?',
-    answer: 'Yes. Your three designs start from your sentence, not your old site.',
+    answer:
+      'Yes. A full redesign or a rebrand, with everything you need brought across: tools, integrations, posts.',
   },
   {
     question: 'Do I have to book a call?',
@@ -60,11 +56,11 @@ export const FAQ_ITEMS: readonly FaqItem[] = [
   {
     question: 'How long does the real site take?',
     answer:
-      'We agree a timeline on the call. We ask for your photos and prices early, so nothing waits on them.',
+      'We agree a timeline on the call. We ask for your photos and details early, so nothing waits on them.',
   },
   {
     question: 'Who looks after the site once it is live?',
-    answer: 'We agree on the call who hosts it and who keeps it up to date.',
+    answer: 'We can provide a post launch update and maintenance package.',
   },
   {
     question: 'Will people find it on Google?',

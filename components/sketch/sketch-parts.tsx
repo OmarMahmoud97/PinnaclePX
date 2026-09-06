@@ -18,8 +18,9 @@ const IMAGE_STYLE: Readonly<Record<VisualStyle, string>> = {
   dark: 'bg-linear-to-br from-on-surface-muted/70 to-scrim',
 }
 
-// The same styles as a treatment on the visitor's own photo.
-const PHOTO_STYLE: Readonly<Record<VisualStyle, string>> = {
+// The same styles as a treatment on the visitor's own photo. Exported for the walkthrough's
+// frame, which draws its photographs itself (app/_components/walkthrough-frame.tsx).
+export const PHOTO_STYLE: Readonly<Record<VisualStyle, string>> = {
   warm: 'sepia-30 saturate-125',
   minimal: 'saturate-75',
   bold: 'saturate-150 contrast-125',
@@ -27,8 +28,12 @@ const PHOTO_STYLE: Readonly<Record<VisualStyle, string>> = {
 }
 
 // A wireframer's hatch for an image nobody has chosen yet.
-const HATCH =
+export const HATCH =
   'bg-(--sketch-bg-muted) bg-[repeating-linear-gradient(135deg,var(--sketch-line)_0_1px,transparent_1px_9px)]'
+
+// A dashed slot's look, shared with the walkthrough's frame.
+export const SLOT_STYLES =
+  'flex items-center rounded-md border border-dashed border-(--sketch-dash) px-2 font-mono text-[9px] tracking-wide text-(--sketch-muted)'
 
 type BarProps = { className: string; part?: string | undefined }
 
@@ -44,13 +49,7 @@ type SlotProps = { label: string; className: string; part: string }
 // A dashed slot, labelled the way a wireframe labels what goes there: an answer not given yet.
 function Slot({ label, className, part }: SlotProps) {
   return (
-    <span
-      data-part={part}
-      className={cn(
-        'flex items-center rounded-md border border-dashed border-(--sketch-dash) px-2 font-mono text-[9px] tracking-wide text-(--sketch-muted)',
-        className,
-      )}
-    >
+    <span data-part={part} className={cn(SLOT_STYLES, className)}>
       {label}
     </span>
   )

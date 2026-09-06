@@ -177,6 +177,8 @@ export const CONFIG = {
       footer: { at: 900, for: 500 },
       arrows: { at: 1650, for: 350, step: 80 },
       doneAt: 2200,
+      // The photograph arrives with the sketch's treatment and returns to itself on the way.
+      photoFilter: { from: 'saturate(0.75)', to: 'saturate(1)' },
       // A finished part that barely travels (under `underPx`) rises `byPx` into place instead.
       rise: { underPx: 8, byPx: 4 },
       // The headline's words arrive one after another, each rising, inside its crossfade.
@@ -191,10 +193,60 @@ export const CONFIG = {
     // swaps to empty; at dissolveShare the blank sketch starts fading in, so the two cross.
     reset: { fadeShare: 0.65, swapShare: 0.45, dissolveShare: 0.7, liftPx: 6 },
   },
+  // The How it works walkthrough (docs/walkthrough-plan.md, ADR 0025): one phone frame that paints
+  // an example brand's five answers as the visitor scrolls, then builds them into a finished page.
+  // The scroll picks a stop; the timeline glides to it at the speeds below.
+  walkthrough: {
+    // The reading line a beat's stage triggers on: this far below the sticky frame's bottom edge,
+    // but never lower than this share of the viewport, since on a wide screen the frame sits
+    // beside the beats and is only stuck once the section has scrolled up to it.
+    anchorGapPx: 16,
+    anchorShare: 0.75,
+    // GSAP and the finished page are fetched once the section is this many viewports away.
+    loadAheadViewports: 1,
+    // A window resize rebuilds the timeline once it has been still for this long.
+    resizeSettleMs: 150,
+    // The transitions, in ms. Nothing here is a hard cap: a stop the visitor reaches on its own
+    // plays at these speeds; a jump over several plays faster (catchUp).
+    beats: {
+      // The sentence types at CONFIG.demo.typing's rhythm, so its length follows the brief; this
+      // is the wait before the first character and the rest after the last.
+      sentence: { lead: 200, tail: 500 },
+      // The name lands: each part arrives this long after the one before, and the sentence,
+      // which carried the page alone in full ink, steps back to this opacity.
+      name: { for: 900, step: 70, arrive: 450, mutedOpacity: 0.72 },
+      logo: { for: 700, arrive: 500 },
+      // The look: the photograph settles in, the style's chip rises, the cards take theirs.
+      look: { for: 1100, photo: 800, chipAt: 500, cardsAt: 350, step: 70, arrive: 450 },
+      // The colour pours through its parts top to bottom, and the glow breathes in.
+      colour: { for: 900, each: 450, step: 70, glow: 900 },
+      // The build, on the same beats as the hero's phone (demo.build), scaled to one frame.
+      build: {
+        cross: 0.4,
+        label: { at: 0, for: 250 },
+        bg: { at: 250, for: 1100 },
+        nav: { at: 100, for: 600, step: 50 },
+        photo: { at: 250, for: 1100 },
+        text: { at: 500, for: 800, step: 60 },
+        cards: { at: 900, for: 600, step: 60 },
+        footer: { at: 900, for: 500 },
+        arrows: { at: 1650, for: 350, step: 80 },
+        doneAt: 2200,
+        photoFilter: { from: 'sepia(0.3) saturate(1.25)', to: 'sepia(0) saturate(1)' },
+        rise: { underPx: 8, byPx: 4 },
+        words: { step: 40, risePx: 6 },
+        labelShare: 0.25,
+        card: { after: 80, for: 350, risePx: 4 },
+      },
+    },
+    // A glide to the next stop plays at the beats' own speed. A jump over several stops is
+    // capped: this long for the first, plus this much for each further stop, up to the maximum,
+    // so a flick to the bottom watches the page assemble in one pass rather than nine seconds.
+    catchUp: { firstMs: 1600, perStageMs: 400, maxMs: 2600 },
+  },
   motion: {
     staggerMax: 4, // items that wait their turn in a list reveal; the rest arrive with the fourth
     headerScrolledAtPx: 24, // scroll depth at which the header takes its scrolled state
-    walkthroughThreshold: 0.6, // share of a How it works beat on screen before it paints its stage
     // Lenis (ADR 0021): the share of the distance still to go that each frame covers, on the wheel
     // and on a link to a section. Lower drifts further after the wheel stops; 0.1 is its default.
     scroll: { lerp: 0.1 },

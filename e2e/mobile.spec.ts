@@ -52,6 +52,20 @@ test('the added sections stay within ten phone screens together', async ({ page 
   expect.soft(total).toBeLessThanOrEqual(10 * 844)
 })
 
+// The walkthrough's phone used to be masked to its top strip on a phone; now the whole frame
+// stays in view under the header while the beats scroll beneath it.
+test('the walkthrough shows the whole phone frame under the header', async ({ page }) => {
+  await page.goto('/')
+  await expect(page.locator('html')).toHaveAttribute('data-motion', '')
+  const section = page.locator('#how-it-works')
+  await section.locator('[data-stages="3"]').scrollIntoViewIfNeeded()
+  const frame = await section.locator('[data-frame="phone"]').boundingBox()
+  expect(frame).not.toBeNull()
+  expect(frame?.y ?? 0).toBeGreaterThanOrEqual(64)
+  expect((frame?.y ?? 0) + (frame?.height ?? 0)).toBeLessThanOrEqual(844)
+  expect(frame?.height ?? 0).toBeGreaterThan(300)
+})
+
 test('every list and answer is readable without any interaction', async ({ page }) => {
   await page.goto('/')
   for (const id of [
