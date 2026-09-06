@@ -1,13 +1,19 @@
 import { CTA } from '@/app/_components/nav-links'
 import { revealDelay } from '@/app/_components/reveal'
-import { cardHeading, titleHeading } from '@/app/_components/section-styles'
+import {
+  cardHeading,
+  cellGrid,
+  hairlineCell,
+  sectionLead,
+  titleHeading,
+} from '@/app/_components/section-styles'
 import { WORK_IMAGES, type WorkPicture } from '@/app/_components/work-images'
 import { captureFor, CLIENT_ITEMS, hostOf, longDate, WORK } from '@/app/_components/work-items'
 import { BrowserFrame } from '@/components/sketch/browser-frame'
 import { PhoneFrame } from '@/components/sketch/phone-frame'
 import { sketchModelFrom } from '@/components/sketch/sketch-model'
 import { captionStyles } from '@/components/ui/caption'
-import { textLinkStyles } from '@/components/ui/text-link'
+import { tapLinkStyles } from '@/components/ui/text-link'
 import { TrackedAnchor, TrackedLink } from '@/components/ui/tracked-link'
 import { BLANK_ANSWERS } from '@/lib/brief/answers'
 
@@ -57,14 +63,10 @@ export function Work() {
     <section id="work" className="scroll-mt-16" style={NEUTRAL.vars}>
       <div className="flex flex-col gap-3 p-column max-md:pb-3 md:max-w-3xl">
         <h2 className={titleHeading}>{WORK.heading}</h2>
-        <p className="text-lead text-pretty text-on-surface-muted">{WORK.lead}</p>
+        <p className={sectionLead}>{WORK.lead}</p>
       </div>
 
-      {/* gap-px over a border-coloured background draws the hairlines between cells. */}
-      <ul
-        data-reveal
-        className="grid grid-cols-2 gap-px border-y border-border bg-border lg:grid-cols-3"
-      >
+      <ul data-reveal className={`${cellGrid} border-y border-border lg:grid-cols-3`}>
         {CLIENT_ITEMS.map((client, index) => {
           const image = WORK_IMAGES[client.slug]
           if (image === undefined) throw new Error(`No picture for ${client.slug}`)
@@ -74,7 +76,7 @@ export function Work() {
             <li
               key={client.slug}
               style={revealDelay(index)}
-              className="group/card flex flex-col gap-3 bg-surface p-4 sm:p-cell"
+              className={`group/card ${hairlineCell}`}
             >
               <fieldset className="flex justify-center gap-1.5">
                 <legend className="sr-only">{WORK.viewLegend(client.name)}</legend>
@@ -124,7 +126,7 @@ export function Work() {
                   event="client_site_open"
                   location="work"
                   data={{ client: client.slug }}
-                  className={`${textLinkStyles} inline-block py-1`}
+                  className={tapLinkStyles}
                 >
                   {WORK.visit(client.name)}
                 </TrackedAnchor>
@@ -139,12 +141,7 @@ export function Work() {
         {/* Proof, then the ask: the band never ends with nothing to do. */}
         <p className="pt-3 text-small text-on-surface-muted">
           {WORK.ask}{' '}
-          <TrackedLink
-            href={CTA.href}
-            event="cta_click"
-            location="work"
-            className={`${textLinkStyles} inline-block py-1`}
-          >
+          <TrackedLink href={CTA.href} event="cta_click" location="work" className={tapLinkStyles}>
             {CTA.label}
           </TrackedLink>
         </p>

@@ -13,18 +13,18 @@ export const OUTCOMES = {
 export const OUTCOME_ITEMS: readonly OutcomeItem[] = [
   {
     label: 'Found',
-    body: 'Most people will look you up on a phone. Your site has to work there first.',
+    body: 'Built for local SEO from the start: proper page titles, structured data, a matching Google Business Profile. Pages target the searches people near you actually type. Fast loading too, since speed feeds into where you rank.',
   },
   {
     label: 'Trusted',
-    body: 'People decide whether you look real before they read a word.',
+    body: 'Real photos, clear pricing, reviews and credentials placed where they land first. Consistent type, spacing and colour throughout, so nothing looks improvised.',
   },
   {
-    label: 'Answers',
-    body: 'It answers the questions people ask before they book.',
+    label: 'Answered',
+    body: 'Services, areas covered, prices, hours and turnaround times: the questions people ask before they book, answered on the page. Fewer dead-end enquiries, more people who arrive ready.',
   },
   {
-    label: 'Easy to reach',
-    body: 'Getting in touch should be one tap, not a hunt for a phone number.',
+    label: 'Reachable',
+    body: 'One clear next step on every page: call, WhatsApp, or a booking form that works. Contact details stay within reach as people scroll, on a phone as well as a laptop.',
   },
 ]

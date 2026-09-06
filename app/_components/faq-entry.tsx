@@ -28,6 +28,8 @@ export function FaqEntry({ index, question, answer, link }: Props) {
           className="size-4 shrink-0 translate-y-0.5 text-on-surface-muted transition-transform duration-(--motion-enter) ease-standard group-open:rotate-180"
         />
       </summary>
+      {/* cardBody's classes, written out: this is a client component, and importing
+          section-styles would pull the whole recipe module into the browser bundle. */}
       <p className="pt-3 text-body text-pretty text-on-surface-muted opacity-0 transition-opacity duration-(--motion-enter) ease-standard group-open:opacity-100">
         {answer}
         {link !== undefined && (

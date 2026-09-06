@@ -1,6 +1,13 @@
 import { revealDelay } from '@/app/_components/reveal'
 import { STRAIGHT_ANSWERS } from '@/app/_components/section-copy'
-import { cardHeading, stickyColumn, titleHeading } from '@/app/_components/section-styles'
+import {
+  cardBody,
+  cardHeading,
+  headingColumn,
+  sectionGrid,
+  sectionLead,
+  titleHeading,
+} from '@/app/_components/section-styles'
 import { straightAnswerItems } from '@/app/_components/straight-answer-items'
 import { READY_TEMPLATES } from '@/templates/registry'
 
@@ -9,10 +16,10 @@ export function StraightAnswers() {
   const items = straightAnswerItems(READY_TEMPLATES.length)
   return (
     <section id="straight-answers" className="scroll-mt-16">
-      <div className="grid md:grid-cols-6 md:divide-x md:divide-border">
-        <div className={`flex flex-col gap-3 p-column max-md:pb-3 md:col-span-2 ${stickyColumn}`}>
+      <div className={sectionGrid}>
+        <div className={headingColumn}>
           <h2 className={titleHeading}>{STRAIGHT_ANSWERS.heading}</h2>
-          <p className="text-lead text-pretty text-on-surface-muted">{STRAIGHT_ANSWERS.lead}</p>
+          <p className={sectionLead}>{STRAIGHT_ANSWERS.lead}</p>
         </div>
 
         {/* gap-px over a border-coloured background draws the hairlines between cells. */}
@@ -27,7 +34,7 @@ export function StraightAnswers() {
                 <Icon aria-hidden="true" className="size-5 shrink-0 text-brand-deeper" />
                 {question}
               </h3>
-              <p className="text-body text-pretty text-on-surface-muted">{answer}</p>
+              <p className={cardBody}>{answer}</p>
             </li>
           ))}
         </ul>

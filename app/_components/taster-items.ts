@@ -14,7 +14,6 @@ export const TASTER = {
   // (docs/home-page-content-plan.md, decision 51).
   heading: 'Five answers get you three designs. A conversation starts your real site.',
   lead: `Your three designs are a first look, made in five minutes from almost nothing. Give us ${MINUTES} minutes on a call. Then we spend our hours, not yours, building the real thing properly.`,
-  doNothing: 'You can also keep the link and do nothing. The designs are free either way.',
   notStarted: 'Not started yet? Answer the five questions first.',
   buildLink: 'What the build includes',
 } as const

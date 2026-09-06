@@ -1,5 +1,5 @@
 import { HeroStage } from '@/app/_components/hero-stage'
-import { displayHeading } from '@/app/_components/section-styles'
+import { displayHeading, sectionLead } from '@/app/_components/section-styles'
 import { SITE } from '@/lib/site'
 
 // The headline and the subhead are server-rendered and handed to the stage as children, so the
@@ -8,7 +8,7 @@ export function Hero() {
   return (
     <HeroStage>
       <h1 className={displayHeading}>{SITE.tagline}</h1>
-      <p className="max-w-2xl text-lead text-pretty text-on-surface-muted">{SITE.subhead}</p>
+      <p className={`max-w-2xl ${sectionLead}`}>{SITE.subhead}</p>
     </HeroStage>
   )
 }

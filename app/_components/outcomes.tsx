@@ -1,9 +1,15 @@
 import { CTA } from '@/app/_components/nav-links'
 import { OUTCOME_ITEMS, OUTCOMES } from '@/app/_components/outcome-items'
 import { revealDelay } from '@/app/_components/reveal'
-import { stickyColumn, titleHeading } from '@/app/_components/section-styles'
+import {
+  headingColumn,
+  sectionGrid,
+  sectionLead,
+  titleHeading,
+  trailingNote,
+} from '@/app/_components/section-styles'
 import { captionStyles } from '@/components/ui/caption'
-import { textLinkStyles } from '@/components/ui/text-link'
+import { tapLinkStyles } from '@/components/ui/text-link'
 import { TrackedLink } from '@/components/ui/tracked-link'
 
 // What a real site does for the owner, told in four rows so the reader recognises their own
@@ -12,10 +18,10 @@ import { TrackedLink } from '@/components/ui/tracked-link'
 export function Outcomes() {
   return (
     <section id="outcomes" className="scroll-mt-16">
-      <div className="grid md:grid-cols-6 md:divide-x md:divide-border">
-        <div className={`flex flex-col gap-3 p-column max-md:pb-3 md:col-span-2 ${stickyColumn}`}>
+      <div className={sectionGrid}>
+        <div className={headingColumn}>
           <h2 className={titleHeading}>{OUTCOMES.heading}</h2>
-          <p className="text-lead text-pretty text-on-surface-muted">{OUTCOMES.lead}</p>
+          <p className={sectionLead}>{OUTCOMES.lead}</p>
         </div>
 
         <div className="md:col-span-4">
@@ -30,14 +36,14 @@ export function Outcomes() {
               </li>
             ))}
           </ol>
-          <div className="flex flex-col gap-2 p-5 text-small text-on-surface-muted md:p-cell">
+          <div className={trailingNote}>
             <p>{OUTCOMES.bridge}</p>
             <p>
               <TrackedLink
                 href={CTA.href}
                 event="cta_click"
                 location="outcomes"
-                className={`${textLinkStyles} inline-block py-1`}
+                className={tapLinkStyles}
               >
                 {CTA.label}
               </TrackedLink>

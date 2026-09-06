@@ -1,9 +1,17 @@
 import { CTA } from '@/app/_components/nav-links'
 import { optionRows, YOUR_OPTIONS } from '@/app/_components/option-items'
 import { revealDelay } from '@/app/_components/reveal'
-import { cardHeading, stickyColumn, titleHeading } from '@/app/_components/section-styles'
+import {
+  cardBody,
+  cardHeading,
+  headingColumn,
+  sectionGrid,
+  sectionLead,
+  titleHeading,
+  trailingNote,
+} from '@/app/_components/section-styles'
 import { captionStyles } from '@/components/ui/caption'
-import { textLinkStyles } from '@/components/ui/text-link'
+import { tapLinkStyles } from '@/components/ui/text-link'
 import { TrackedLink } from '@/components/ui/tracked-link'
 import { READY_TEMPLATES } from '@/templates/registry'
 
@@ -18,11 +26,11 @@ export function YourOptions() {
   const rows = optionRows(READY_TEMPLATES.length)
   return (
     <section id="your-options" className="scroll-mt-16">
-      <div className="grid md:grid-cols-6 md:divide-x md:divide-border">
-        <div className={`flex flex-col gap-3 p-column max-md:pb-3 md:col-span-2 ${stickyColumn}`}>
+      <div className={sectionGrid}>
+        <div className={headingColumn}>
           <h2 className={titleHeading}>{YOUR_OPTIONS.heading}</h2>
-          <p className="text-lead text-pretty text-on-surface-muted">{YOUR_OPTIONS.lead}</p>
-          <p className="pt-3 text-body text-pretty text-on-surface-muted">{YOUR_OPTIONS.agency}</p>
+          <p className={sectionLead}>{YOUR_OPTIONS.lead}</p>
+          <p className={`pt-3 ${cardBody}`}>{YOUR_OPTIONS.agency}</p>
         </div>
 
         <div className="md:col-span-4">
@@ -46,7 +54,7 @@ export function YourOptions() {
                 <dl className={`grid gap-3 ${PAIR_GRID}`}>
                   <div className="flex flex-col gap-1">
                     <dt className={`${captionStyles} md:sr-only`}>{YOUR_OPTIONS.builderLabel}</dt>
-                    <dd className="text-body text-pretty text-on-surface-muted">{builder}</dd>
+                    <dd className={cardBody}>{builder}</dd>
                   </div>
                   <div className="flex flex-col gap-1">
                     <dt className={`${captionStyles} md:sr-only`}>{YOUR_OPTIONS.studioLabel}</dt>
@@ -57,7 +65,7 @@ export function YourOptions() {
             ))}
           </div>
 
-          <div className="flex flex-col gap-2 p-5 text-small text-on-surface-muted md:p-cell">
+          <div className={trailingNote}>
             <p>{YOUR_OPTIONS.signpost}</p>
             <p>{YOUR_OPTIONS.generous}</p>
             <p className="pt-2">
@@ -66,7 +74,7 @@ export function YourOptions() {
                 href={CTA.href}
                 event="cta_click"
                 location="your-options"
-                className={`${textLinkStyles} inline-block py-1`}
+                className={tapLinkStyles}
               >
                 {CTA.label}
               </TrackedLink>
