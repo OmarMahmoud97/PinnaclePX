@@ -11,7 +11,8 @@ export const SITE = {
   description:
     'Answer five questions and get three homepage designs with your logo, your colours and wording written for you. Free, in about five minutes.',
   reassurance: 'Free. No sign-up. Nobody calls you unless you book.',
-  callPromise: 'No pitch. We look at your designs together.',
+  callPromise:
+    'No pitch. We look at your designs together. If you are ready, we take your site further.',
   // One promise about colour, shared by the home page and question five.
   colourPromise: 'Your colour stays. We only adjust it if text would be hard to read on it.',
   // The studio's place and inbox. Null until the owner supplies them, and nothing names a place
