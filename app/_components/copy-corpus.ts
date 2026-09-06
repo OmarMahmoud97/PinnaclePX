@@ -53,7 +53,7 @@ export const COPY: readonly string[] = [
   ...WHAT_YOU_GET_ITEMS.flatMap((item) => [item.title, item.detail]),
   HOW_IT_WORKS.heading,
   HOW_IT_WORKS.lead,
-  ...HOW_IT_WORKS.beats.map((beat) => beat.text),
+  ...HOW_IT_WORKS.steps.flatMap((step) => [step.title, step.body]),
   ...Object.values(OUTCOMES),
   ...OUTCOME_ITEMS.flatMap((item) => [item.label, item.body]),
   ...Object.values(TASTER),

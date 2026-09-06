@@ -27,9 +27,11 @@ good website. The plan is `docs/walkthrough-plan.md`.
    authored speed; a jump over several stops is capped (`CONFIG.walkthrough.catchUp`) so a flick
    to the bottom watches the page assemble in one pass. GSAP core only; no ScrollTrigger, so
    `loadGsap` is untouched and this is the second leaf on the one lazy chunk.
-2. **The scroll drives the stop, not the playhead.** Each beat carries `data-stages`, the stops
-   it paints spread evenly down its height, and the button carries the last (the finished page
-   arrives with the ask). A pure function, `stageAt`, gives the stop from the beats' boxes and a
+2. **The scroll drives the stop, not the playhead.** The copy is five steps, one per answer,
+   each saying what the answer does to the design; each carries `data-stages`, the stops it
+   paints spread evenly down its height, and the last paints the colour and then the finished
+   page, so the build lands while the frame is still whole on screen (the owner's note on the
+   first cut, where the button carried it and the frame was leaving as it finished). A pure function, `stageAt`, gives the stop from the beats' boxes and a
    reading line: the sticky frame's bottom edge plus a gap, clamped to a share of the viewport,
    because on a wide screen the frame sits beside the beats and is not yet stuck when the first
    beat arrives. One passive scroll listener, one read per frame; Lenis scrolls the window, so

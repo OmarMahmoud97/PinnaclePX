@@ -35,24 +35,24 @@ const { walkthrough } = CONFIG
 
 type Status = 'waiting' | 'playing' | 'unavailable'
 
-type Props = { heading: ReactNode; beats: ReactNode; actions: ReactNode }
+type Props = { heading: ReactNode; steps: ReactNode; actions: ReactNode }
 
-// The walkthrough: three beats of copy scroll past a sticky phone frame that paints an example
+// The walkthrough: five steps of copy scroll past a sticky phone frame that paints an example
 // brand's answers one question at a time, then builds them into a finished page, so "one
-// question at a time" is something the visitor does with their own scrolling. Each beat carries
+// question at a time" is something the visitor does with their own scrolling. Each step carries
 // data-stages, the stops it paints spread down its height (walkthrough-stops.ts); the scroll
 // picks the stop and a GSAP timeline glides to it, forwards or back (walkthrough-timeline.ts).
 // The server renders the finished sketch; a client that allows motion rewinds it to empty in
 // its first render and plays from there once GSAP and the finished page have loaded, which
 // starts when the section is a viewport away. Reduced motion, JavaScript off and a GSAP chunk
 // that never arrives all keep the finished sketch.
-export function HowItWorksTrack({ heading, beats, actions }: Props) {
+export function HowItWorksTrack({ heading, steps, actions }: Props) {
   const motionAllowed = useMotionAllowed()
   const [stage, setStage] = useState(EMPTY_STAGE)
   const [status, setStatus] = useState<Status>('waiting')
   const [builtReady, setBuiltReady] = useState(false)
   const stageRef = useRef<HTMLDivElement>(null)
-  const beatsRef = useRef<HTMLDivElement>(null)
+  const stepsRef = useRef<HTMLDivElement>(null)
   const walkthroughRef = useRef<Walkthrough | null>(null)
   const targetRef = useRef(EMPTY_STAGE)
 
@@ -65,9 +65,9 @@ export function HowItWorksTrack({ heading, beats, actions }: Props) {
   // glides arrive here as ordinary scroll events.
   useEffect(() => {
     const stageElement = stageRef.current
-    const column = beatsRef.current
+    const column = stepsRef.current
     if (!motionAllowed || stageElement === null || column === null) return
-    const beatElements = [...column.querySelectorAll<HTMLElement>('[data-stages]')]
+    const stepElements = [...column.querySelectorAll<HTMLElement>('[data-stages]')]
     let frame: number | undefined
     const measure = () => {
       frame = undefined
@@ -77,9 +77,9 @@ export function HowItWorksTrack({ heading, beats, actions }: Props) {
       )
       const next = stageAt(
         anchor,
-        beatElements.map((beat) => {
-          const box = beat.getBoundingClientRect()
-          return { top: box.top, height: box.height, stages: stagesFrom(beat.dataset.stages) }
+        stepElements.map((step) => {
+          const box = step.getBoundingClientRect()
+          return { top: box.top, height: box.height, stages: stagesFrom(step.dataset.stages) }
         }),
       )
       if (next === targetRef.current) return
@@ -218,10 +218,10 @@ export function HowItWorksTrack({ heading, beats, actions }: Props) {
       </div>
 
       <div
-        ref={beatsRef}
+        ref={stepsRef}
         className="flex flex-col gap-8 p-column max-md:pt-6 md:col-span-3 md:col-start-1"
       >
-        {beats}
+        {steps}
         {actions}
       </div>
     </div>
