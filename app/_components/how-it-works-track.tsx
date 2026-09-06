@@ -6,7 +6,7 @@ import { BUILT_STAGE, EMPTY_STAGE, WALKTHROUGH_ANSWERS } from '@/app/_components
 import { HIDDEN_WHEN_EMPTY, WalkthroughFrame } from '@/app/_components/walkthrough-frame'
 import { WALKTHROUGH_FILES } from '@/app/_components/walkthrough-photos'
 import { stageAt, stagesFrom } from '@/app/_components/walkthrough-stops'
-import type { Walkthrough } from '@/app/_components/walkthrough-timeline'
+import { buildWalkthrough, type Walkthrough } from '@/app/_components/walkthrough-timeline'
 import { SKETCH_CAPTION } from '@/components/sketch/captions'
 import { SketchChips } from '@/components/sketch/sketch-chips'
 import { sketchModelFrom } from '@/components/sketch/sketch-model'
@@ -101,10 +101,10 @@ export function HowItWorksTrack({ heading, beats, actions }: Props) {
   }, [motionAllowed])
 
   // The timeline, built once the finished page is in the DOM, the section is a viewport away, the
-  // browser is idle, and GSAP, the timeline's own module and the fonts have arrived; then it
-  // glides to wherever the scroll already is. The module rides with the GSAP chunk rather than
-  // the page's, since only a motion client ever runs it. A resize measures the frame afresh once
-  // the window has settled.
+  // browser is idle and GSAP and the fonts have arrived; then it glides to wherever the scroll
+  // already is. The timeline's module is imported statically: as a dynamic import Turbopack
+  // folded it back into the page's shared chunk (measured 6 September 2026, ADR 0025), so the
+  // split bought nothing. A resize measures the frame afresh once the window has settled.
   useEffect(() => {
     const stageElement = stageRef.current
     if (!motionAllowed || !builtReady || stageElement === null) return
@@ -116,12 +116,8 @@ export function HowItWorksTrack({ heading, beats, actions }: Props) {
         if (entry?.isIntersecting !== true) return
         observer.disconnect()
         cancelIdle = whenIdle(() => {
-          Promise.all([
-            loadGsap(),
-            import('@/app/_components/walkthrough-timeline'),
-            document.fonts.ready,
-          ])
-            .then(([gsap, { buildWalkthrough }]) => {
+          Promise.all([loadGsap(), document.fonts.ready])
+            .then(([gsap]) => {
               if (cancelled) return
               const built = buildWalkthrough(gsap, stageElement)
               walkthroughRef.current = built

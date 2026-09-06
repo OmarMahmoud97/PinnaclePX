@@ -2,6 +2,21 @@
 
 Prepared 6 September 2026. The owner's brief: replace the How it works animation. It should be as animated and as smooth as the hero, move through every stage from question 1 to question 5 rather than only from 4 to 5, use a made-up brand instead of VetPres, and by stage 5 look like a real, good website. Everything below was checked against the code, the motion ADRs (0005, 0006, 0021) and screenshots of the section at 1440 and 390 taken today. Nothing is built yet; this is the plan for approval.
 
+## Built on 6 September 2026
+
+Approved and built the same day (ADR 0025). Where the build departs from the text below, this is why:
+
+- **The finished page arrives with the button, not with beat 3.** Beat 3 paints the look and the colour; the button carries stage 6, so the site assembles as the ask comes into view. The beats take a quarter of a screen per stage at `md` and up and less on a phone (`how-it-works.tsx`), rather than the third the plan gave them, which left too much empty column.
+- **The reading line is clamped to three quarters of the viewport.** On a wide screen the sticky frame sits beside the beats and is not yet stuck when the first beat arrives, so a line tied to the frame's bottom alone fired stages 1 and 2 together the moment the section entered. `CONFIG.walkthrough.anchorShare` holds it.
+- **The timeline module is not lazy.** It was tried as a dynamic import beside GSAP, and Turbopack folded it back into the page's shared chunk, so the split bought nothing and the import is static. The finished page, its font and its photographs are the lazy part, as planned.
+- **The wordmark keeps the sketch's type at stage 3.** The serif would have put its font file in the server-rendered frame for every visitor; the type changes with the build, as the hero's does.
+- **The caret is solid, not blinking.** A blinking tween would have had to end exactly where the hide begins; an editor shows a solid caret while typing anyway.
+- **The dots and the glow now show.** Both are `-z-1` layers of a block with its own background, which painted over them; the block is `isolate` now. The hero's stage never had the problem because its section is isolated.
+- **The chips prop.** The track hides the chips with `chipsClassName="hidden"`, the prop on main; a `chips={false}` from another session's uncommitted change was used first and a clean checkout failed to type check, which the worktree build in section 9 caught.
+- **Captions** fit two lines at every size: "An example brief. A sketch, not one of the designs." and "Built as an illustration. Not a client, not one of the designs."; the kicker became "Garden design studio" to hold one line of the phone.
+
+Checks: typecheck, lint, knip and Prettier clean; the unit suite passes apart from one failure in another session's uncommitted FAQ wording; the Playwright suite passes apart from the four accessibility scans on desktop and tablet, which wait for a still page and are held open by that session's logo marquee (the only running animation on the page, probed), not by anything here; the contact sheet at 1440 and 390 is in the pull request. Bytes are in ADR 0025.
+
 ## 1. What is wrong today, precisely
 
 - **The stage never walks.** `how-it-works-track.tsx` sets the stage to "the last beat on screen". At 1440 by 900 the heading, all three beats and the button fit in one screen (screenshot, today), so the moment the section arrives every beat is on screen and the stage is 5. The only thing that ever animates is the 900 ms timer between stage 4 and stage 5. On a phone the beats do scroll past one at a time, but the sticky strip is masked to 160 px, so the visitor sees only the top of the frame.

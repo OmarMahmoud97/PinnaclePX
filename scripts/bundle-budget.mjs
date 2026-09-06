@@ -13,7 +13,11 @@ const NEXT = join(ROOT, '.next')
 
 // Gzipped bytes.
 const BUDGETS = {
-  // The React and Next floor is about 155 KB of this; the page's own code stays under 50 KB.
+  // The React and Next floor is about 155 KB of this; the page's own code stays under 55 KB.
+  // Scripts raised from 210 KB on 6 September 2026 for the walkthrough (ADR 0025): main measured
+  // 208,824 B, and the walkthrough's frame, track, stop function and brand are 3,721 B more,
+  // about a third of that the four photographs' blur placeholders (212,545 B measured); its
+  // timeline and finished page ride the lazy chunks.
   // The stylesheet is shared by both routes; the hero's finished page took it past 12 KB
   // (12,044 B on 3 September 2026, ADR 0006), so the line is 14 KB. The templates are not in it:
   // they carry their own sheet on the preview and example routes, which is what keeps this line
@@ -24,7 +28,7 @@ const BUDGETS = {
   // measured, ADR 0022), then to 38 KB the same evening for the eight-cell "Everything built in"
   // band and the asks that end the work, real-build and options bands (36,576 B measured, ADR
   // 0022 amendment). Re-measured when the journey band ships.
-  '/': { scripts: 210_000, stylesheets: 14_000, html: 38_000 },
+  '/': { scripts: 215_000, stylesheets: 14_000, html: 38_000 },
   // Raised from 230 KB on 4 September 2026 for zod 4, whose core is about 13 KB gzipped heavier
   // on this page than zod 3 (ADR 0019); its locales are kept out by the namespace import form.
   '/start': { scripts: 245_000, stylesheets: 14_000, html: 25_000 },

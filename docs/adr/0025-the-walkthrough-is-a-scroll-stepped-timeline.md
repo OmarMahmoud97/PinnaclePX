@@ -60,7 +60,17 @@ good website. The plan is `docs/walkthrough-plan.md`.
 6. **The section is taller, and the phone shows whole.** Beats take about a quarter of a screen
    per stage at `md` and up and less on a phone, so each stop has its own stretch of scrolling.
    Below `md` the sticky block is the whole frame at zoom 1.1, no longer a masked strip.
-7. **Numbers.** Measured after `next build` on 6 September 2026: see the Consequences.
+7. **Numbers.** Measured after `next build` on 6 September 2026, on a clean checkout of the
+   branch and of `main`, gzipped: initial scripts on `/` 212,545 B against 208,824 on `main`, so
+   the walkthrough's page code (the frame, the track, the stop function, the brand and the
+   timeline, which Turbopack folds into the page's shared chunk even as a dynamic import) is
+   3,721 B, about a third of that the four photographs' blur placeholders that a static image
+   import carries. `main` had 1,176 B of headroom under the 210,000 B line, so the line in
+   `scripts/bundle-budget.mjs` moves to 215,000 B. Stylesheet 13,430 B (13,103 before; line
+   14,000). HTML 37,369 B (36,576 before; line 38,000, unchanged). Lazy, for motion clients
+   only, fetched a viewport before the section: the finished page's chunk 2,543 B, the serif's
+   one file 8,492 B, and the photographs, 114 KB for the hero image and about 3 KB for each
+   card square. GSAP and Lenis stay lazy chunks; the budget script still checks both.
 
 ## Consequences
 
