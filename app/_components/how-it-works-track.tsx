@@ -210,12 +210,13 @@ export function HowItWorksTrack({ heading, beats, actions }: Props) {
           >
             {SKETCH_CAPTION[captionKey]}
           </p>
-          {/* The brief in words for a screen reader, in place of the drawing. */}
+          {/* The brief in words for a screen reader, in place of the drawing; the chips
+              themselves stay out, since the progress line already counts. */}
           <SketchChips
             answers={WALKTHROUGH_ANSWERS}
             answered={answeredAt(shown)}
             prefix="An example brief so far"
-            chips={false}
+            chipsClassName="hidden"
           />
         </div>
       </div>
