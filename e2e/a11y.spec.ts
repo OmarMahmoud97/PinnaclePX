@@ -23,8 +23,14 @@ async function settled(page: Page) {
       list.setAttribute('data-inview', '')
     }
   })
+  // Only animations that end are waited for. The logo strip's marquee (app/tokens.css) runs
+  // `infinite`, so waiting on every animation would never resolve once the strip is on screen —
+  // and axe is the only automated check that reads colour, so it has to be able to run.
   await page.waitForFunction(() =>
-    document.getAnimations().every((animation) => animation.playState !== 'running'),
+    document.getAnimations().every((animation) => {
+      const { endTime } = animation.effect?.getComputedTiming() ?? {}
+      return !Number.isFinite(endTime) || animation.playState !== 'running'
+    }),
   )
 }
 
