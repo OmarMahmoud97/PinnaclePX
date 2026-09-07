@@ -58,8 +58,15 @@ export const FAQ = {
   lead: 'Anything else, ask on the call.',
 } as const
 
+// The last heading is stored in two parts because the ask at the end of it carries the page's
+// only coloured display phrase. `displayHeading` appears exactly twice and the other one is the
+// H1, which is the LCP element and may never be touched, so this is the one place a coloured
+// display phrase can go — which makes it a signature rather than a tic. --brand-deepest is
+// 7.56:1 on white and 5.33:1 over the closing wash; --brand-deeper would fail there. The two
+// parts are joined for the copy corpus, so every voice test still reads one sentence.
 export const CLOSING = {
-  heading: 'Your three designs are five questions away.',
+  opening: 'Your three designs are',
+  ask: 'five questions away.',
 } as const
 
 export const FOOTER = {

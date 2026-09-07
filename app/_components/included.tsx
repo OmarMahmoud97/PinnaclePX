@@ -2,9 +2,11 @@ import { INCLUDED, includedItems } from '@/app/_components/included-items'
 import { BOOK_CALL, CTA } from '@/app/_components/nav-links'
 import { revealDelay } from '@/app/_components/reveal'
 import {
+  bandEdge,
   cardBody,
   cardHeading,
   cellGrid,
+  commercialBand,
   hairlineCell,
   sectionLead,
   titleHeading,
@@ -20,7 +22,9 @@ import { CONFIG } from '@/lib/config'
 export function Included() {
   const items = includedItems(CONFIG.care)
   return (
-    <section id="included" className="scroll-mt-16">
+    <section id="included" className={`scroll-mt-16 ${commercialBand}`}>
+      {/* Opens the tinted stretch that runs to the end of Your options. */}
+      <div aria-hidden="true" className={bandEdge} />
       <div className="flex flex-col gap-3 p-column max-md:pb-3 md:max-w-3xl">
         <h2 className={titleHeading}>{INCLUDED.heading}</h2>
         <p className={sectionLead}>{INCLUDED.lead}</p>

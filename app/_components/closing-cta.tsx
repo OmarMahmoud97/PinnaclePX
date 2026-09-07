@@ -28,7 +28,9 @@ export function ClosingCta() {
       <GlowBackdrop />
       <div className="mx-auto grid max-w-5xl items-center gap-10 md:grid-cols-[1fr_auto] md:gap-16">
         <div className="flex flex-col items-center gap-6 text-center md:items-start md:text-left">
-          <h2 className={displayHeading}>{CLOSING.heading}</h2>
+          <h2 className={displayHeading}>
+            {CLOSING.opening} <span className="text-brand-deepest">{CLOSING.ask}</span>
+          </h2>
           <div className="flex flex-col items-center gap-3 md:items-start">
             <TrackedLink
               href={CTA.href}

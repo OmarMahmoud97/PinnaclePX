@@ -1,6 +1,7 @@
 import { revealDelay } from '@/app/_components/reveal'
 import { STRAIGHT_ANSWERS } from '@/app/_components/section-copy'
 import {
+  bandEdge,
   cardBody,
   cardHeading,
   headingColumn,
@@ -16,6 +17,9 @@ export function StraightAnswers() {
   const items = straightAnswerItems(READY_TEMPLATES.length)
   return (
     <section id="straight-answers" className="scroll-mt-16">
+      {/* Closes the tinted stretch that Included opened: the rule belongs to the boundary, and
+          the boundary is this section's own top edge. */}
+      <div aria-hidden="true" className={bandEdge} />
       <div className={sectionGrid}>
         <div className={headingColumn}>
           <h2 className={titleHeading}>{STRAIGHT_ANSWERS.heading}</h2>

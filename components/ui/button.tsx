@@ -5,12 +5,17 @@ import { cn } from '@/lib/cn'
 // Hover changes colour only; a press scales the button down a touch (never under reduced
 // motion), which is the feedback a slow tap on 4G needs so the visitor does not tap twice.
 const BASE =
-  'inline-flex cursor-pointer items-center justify-center gap-2 rounded-full font-medium whitespace-nowrap transition-[color,background-color,border-color,transform] duration-(--motion-tap) ease-standard outline-none focus-visible:ring-2 focus-visible:ring-brand-deeper focus-visible:ring-offset-2 focus-visible:ring-offset-surface motion-safe:active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60'
+  'inline-flex cursor-pointer items-center justify-center gap-2 rounded-full font-medium whitespace-nowrap transition-[color,background-color,border-color,transform,--tw-gradient-from,--tw-gradient-to] duration-(--motion-tap) ease-standard outline-none focus-visible:ring-2 focus-visible:ring-brand-deeper focus-visible:ring-offset-2 focus-visible:ring-offset-surface motion-safe:active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60'
 
 // Fills that carry white text start at --brand-deeper (5.93:1). --brand is decoration only.
 const VARIANTS = {
   primary: 'bg-brand-deeper text-on-brand hover:bg-brand-deepest',
-  cta: 'bg-linear-to-b from-brand-deeper to-brand-deepest text-on-brand shadow-cta ring-2 ring-brand-deepest hover:from-brand-deepest hover:to-brand-deepest',
+  // The ask keeps a gradient on hover instead of collapsing to a flat fill: the light source
+  // flips, the button deepens, and both ends still carry white text (5.93:1 and 7.56:1). Tailwind
+  // registers the gradient stops with `syntax: '<color>'`, so naming them in BASE's transition
+  // list interpolates them with no keyframes; under reduced motion the allowlist in globals.css
+  // leaves them out and the change is instant, which is the right answer for a hover.
+  cta: 'bg-linear-to-b from-brand-deeper to-brand-deepest text-on-brand shadow-cta ring-2 ring-brand-deepest hover:from-brand-deepest hover:to-brand-deeper',
   contrast: 'bg-on-surface text-surface hover:bg-on-surface/80',
   outline: 'border border-border bg-surface hover:bg-accent',
   ghost: 'border border-transparent hover:border-border hover:bg-accent',

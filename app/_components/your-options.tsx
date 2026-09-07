@@ -4,6 +4,7 @@ import { revealDelay } from '@/app/_components/reveal'
 import {
   cardBody,
   cardHeading,
+  commercialBand,
   headingColumn,
   sectionGrid,
   sectionLead,
@@ -25,7 +26,7 @@ const PAIR_GRID = 'md:grid-cols-2 md:gap-x-6'
 export function YourOptions() {
   const rows = optionRows(READY_TEMPLATES.length)
   return (
-    <section id="your-options" className="scroll-mt-16">
+    <section id="your-options" className={`scroll-mt-16 ${commercialBand}`}>
       <div className={sectionGrid}>
         <div className={headingColumn}>
           <h2 className={titleHeading}>{YOUR_OPTIONS.heading}</h2>

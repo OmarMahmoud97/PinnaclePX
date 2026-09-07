@@ -25,6 +25,7 @@ import { BLANK_ANSWERS } from '@/lib/brief/answers'
 import { writeDraft } from '@/lib/brief/draft'
 import { answeredAt, answersAt, FINAL_STAGE } from '@/lib/brief/example-brief'
 import { isSentenceComplete } from '@/lib/brief/sentence'
+import { cn } from '@/lib/cn'
 import { CONFIG } from '@/lib/config'
 import { loadGsap } from '@/lib/motion/gsap'
 import { whenIdle } from '@/lib/motion/idle'
@@ -189,7 +190,14 @@ export function HeroStage({ children }: { children: ReactNode }) {
                   onChange={(event) => {
                     takeOver(event.target.value)
                   }}
-                  className={fieldStyles}
+                  // The copy under this field promises that an answer fills the sketch as it is
+                  // typed, and the field gave no sign it was live: border-border is 1.23:1 on
+                  // white, a boundary a visitor has to look for. Brand at 70% is 3.27:1, which
+                  // is what WCAG 1.4.11 asks of a control's boundary, and the caret says the
+                  // same thing in the one pixel the visitor is already watching. At the call
+                  // site, never in fieldStyles: every /start question shares that string, and
+                  // there the quiet boundary is right.
+                  className={cn(fieldStyles, 'border-brand-deeper/70 caret-brand-deeper')}
                 />
               )}
             </Field>

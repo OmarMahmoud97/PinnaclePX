@@ -10,6 +10,7 @@ import { revealDelay } from '@/app/_components/reveal'
 import {
   cardBody,
   cardHeading,
+  commercialBand,
   headingColumn,
   sectionGrid,
   sectionLead,
@@ -27,7 +28,7 @@ import { CONFIG } from '@/lib/config'
 // section must read whole. Steps use the Taster's own row recipe so the two read as one system.
 export function RealBuild() {
   return (
-    <section id="real-build" className="scroll-mt-16">
+    <section id="real-build" className={`scroll-mt-16 ${commercialBand}`}>
       <div className={sectionGrid}>
         <div className={headingColumn}>
           <h2 className={titleHeading}>{REAL_BUILD.heading}</h2>
@@ -50,7 +51,7 @@ export function RealBuild() {
           </ol>
 
           {AFTER_LAUNCH !== null && (
-            <div className="flex flex-col gap-3 border-t border-border bg-surface-muted p-5 md:p-cell">
+            <div className="flex flex-col gap-3 border-t border-border bg-surface p-5 md:p-cell">
               <h3 className={cardHeading}>{AFTER_LAUNCH.heading}</h3>
               <p className={cardBody}>{AFTER_LAUNCH.body}</p>
               {CONFIG.care !== null && (

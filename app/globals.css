@@ -9,6 +9,17 @@
 @source not '../templates';
 
 /*
+ * Site-only utilities. This block is deliberately NOT in app/tokens.css: that file is imported
+ * by reference into templates/tailwind.css (ADR 0024), so a mapping there would let a template
+ * write `bg-surface-tint` and get the marketing site's ground on a client's preview, where
+ * --surface-tint is not one of the fourteen tokens a brand derives (lib/tokens/scheme.test.ts).
+ * Declared here, the utility exists for the site and cannot be generated under templates/.
+ */
+@theme inline {
+  --color-surface-tint: var(--surface-tint);
+}
+
+/*
  * Semantic design tokens. Components consume only the utility classes generated from these
  * variables (bg-surface, text-on-surface, bg-brand, ...), never raw palette classes or hex.
  * Values live on :root and @theme inline maps each variable to a utility. Generated brand tokens
@@ -16,7 +27,20 @@
  *
  * Brand ramp: --brand is 2.77:1 on white, so it is for decoration only. Anything carrying text
  * or a meaningful graphic uses --brand-deeper (5.93:1) or darker. The product promises WCAG AA,
- * so the site that sells it has to pass too.
+ * so the site that sells it has to pass too. Over the hero and closing wash the ground is no
+ * longer white: --brand-deeper measures 4.19:1 there and fails, so coloured text over a glow is
+ * --brand-deepest (5.33:1) or it stays --on-surface-muted.
+ *
+ * The colour grammar, which decides the next fifty of these as well as this one:
+ *   blue is the product   — the counters, the progress, the icons, the links and the ask;
+ *   the glows are light   — they tint a ground, they never carry ink;
+ *   everything else       — stays greyscale.
+ * A new element that does not fall into one of those three sentences does not get a colour.
+ *
+ * --surface-tint is white with 6% brand mixed in (oklab). It grounds the three bands where the
+ * page turns from proof to price, and nowhere else: the scarcity is the whole value, because a
+ * fourth tinted band makes the set a stripe pattern. --on-surface-muted holds 7.20:1 on it and
+ * --brand-deeper 5.64:1, so every recipe that works on --surface works here unchanged.
  *
  * Motion durations live here because CSS cannot read lib/config.ts; the timings JavaScript uses
  * live in CONFIG.demo and CONFIG.motion (ADR 0005).
@@ -24,6 +48,7 @@
 :root {
   --surface: #ffffff;
   --surface-muted: #f1f5f9;
+  --surface-tint: #f4fafe;
   --on-surface: #0f172a;
   --on-surface-muted: #475569;
   --border: #e2e8f0;
@@ -33,7 +58,14 @@
   --brand-deepest: #075985;
   --on-brand: #ffffff;
   --glow: #2cd5ff;
-  --glow-secondary: #2c30ff;
+  /*
+   * The second glow, at the lightness the studio's own engine gives a light-mode second glow
+   * (CONFIG.colour.light.glowSecondary, l 0.72 minC 0.14). It shipped at l 0.491, dark enough
+   * that behind the wash it read as dirt rather than as a second colour. The hue is kept at
+   * 268.6 rather than taken from glowHueShift, which would land a yellow-green under a hero
+   * already showing a client's teal. 2.54:1 on white: light, never ink.
+   */
+  --glow-secondary: #809ffc;
   --scrim: #020617;
   --on-scrim: #ffffff;
   --danger: #ef4444;
@@ -150,6 +182,26 @@ html.lenis.lenis-smooth {
   ::details-content {
     transition-property: color, background-color, border-color, opacity !important;
   }
+}
+
+/*
+ * The walkthrough's active step. The driver marks one step data-current as the scroll picks the
+ * stop it paints (app/_components/how-it-works-track.tsx); its title takes the colour, the body
+ * keeps its own, and the inactive steps are never dimmed, so the only thing that changes is the
+ * line the visitor is being answered on. Colour survives reduced motion, which is why this is a
+ * colour change and not a movement.
+ *
+ * It lives here rather than as utilities on each step because the five steps are serialised into
+ * HowItWorksTrack's props as a client component's children: repeating the classes there grew
+ * that tree enough to surface a React key-validation warning in development, and the rule is the
+ * same on every step anyway, so this costs nothing in the payload or the HTML budget.
+ */
+[data-stages] > h3 {
+  transition: color var(--motion-settle) var(--ease-standard);
+}
+
+[data-stages][data-current] > h3 {
+  color: var(--brand-deeper);
 }
 
 /* The FAQ opens by height, where the browser can animate it, and snaps where it cannot. */

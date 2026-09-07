@@ -84,6 +84,12 @@ export function HowItWorksTrack({ heading, steps, actions }: Props) {
       )
       if (next === targetRef.current) return
       targetRef.current = next
+      // The step the frame is currently painting says so, in colour, on its title alone. The
+      // inactive ones are never dimmed (opacity-60 on --on-surface-muted is 2.6:1) and no rule
+      // grows, so the only thing that changes is the one line the visitor is being answered on.
+      for (const step of stepElements) {
+        step.toggleAttribute('data-current', stagesFrom(step.dataset.stages).includes(next))
+      }
       setStage(next)
       walkthroughRef.current?.goTo(next)
     }

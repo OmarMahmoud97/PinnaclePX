@@ -21,11 +21,11 @@ export function FaqEntry({ index, question, answer, link }: Props) {
         }
       }}
     >
-      <summary className="flex cursor-pointer list-none items-start justify-between gap-4 rounded-md font-medium outline-none focus-visible:ring-2 focus-visible:ring-brand-deeper focus-visible:ring-offset-2 focus-visible:ring-offset-surface [&::-webkit-details-marker]:hidden">
+      <summary className="flex cursor-pointer list-none items-start justify-between gap-4 rounded-md font-medium transition-colors duration-(--motion-enter) ease-standard outline-none group-open:text-brand-deeper focus-visible:ring-2 focus-visible:ring-brand-deeper focus-visible:ring-offset-2 focus-visible:ring-offset-surface [&::-webkit-details-marker]:hidden">
         {question}
         <ChevronDown
           aria-hidden="true"
-          className="size-4 shrink-0 translate-y-0.5 text-on-surface-muted transition-transform duration-(--motion-enter) ease-standard group-open:rotate-180"
+          className="size-4 shrink-0 translate-y-0.5 text-on-surface-muted transition-[transform,color] duration-(--motion-enter) ease-standard group-open:rotate-180 group-open:text-brand-deeper"
         />
       </summary>
       {/* cardBody's classes, written out: this is a client component, and importing

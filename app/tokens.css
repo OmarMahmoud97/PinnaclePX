@@ -51,7 +51,7 @@
 
 /*
  * The type and spacing scale. Every size is fluid with a rem term so text still grows at 200%
- * zoom (WCAG 1.4.4). Two heading recipes consume the top two steps (app/_components/section-styles.ts).
+ * zoom (WCAG 1.4.4). The heading recipes consume the top four steps (app/_components/section-styles.ts).
  */
 @theme {
   --text-display: clamp(2.25rem, 1.25rem + 3.3vw, 3.75rem);
@@ -60,6 +60,9 @@
   --text-title: clamp(1.75rem, 1rem + 2.2vw, 2.75rem);
   --text-title--line-height: 1.1;
   --text-title--letter-spacing: -0.03em;
+  --text-subtitle: clamp(1.25rem, 1.03rem + 0.9vw, 1.75rem);
+  --text-subtitle--line-height: 1.25;
+  --text-subtitle--letter-spacing: -0.02em;
   --text-heading: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
   --text-heading--line-height: 1.35;
   --text-heading--letter-spacing: -0.01em;

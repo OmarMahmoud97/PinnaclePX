@@ -76,7 +76,7 @@ export function Work() {
             <li
               key={client.slug}
               style={revealDelay(index)}
-              className={`group/card ${hairlineCell}`}
+              className={`group/card ${hairlineCell} transition-colors duration-(--motion-tap) focus-within:bg-surface-tint hover:bg-surface-tint`}
             >
               <fieldset className="flex justify-center gap-1.5">
                 <legend className="sr-only">{WORK.viewLegend(client.name)}</legend>
@@ -115,7 +115,9 @@ export function Work() {
               </div>
               <p className="text-small text-pretty text-on-surface-muted">{client.did}</p>
               {client.result !== undefined && (
-                <p className="text-small font-medium text-pretty">{client.result}</p>
+                <p className="text-small font-medium text-pretty text-brand-deeper">
+                  {client.result}
+                </p>
               )}
               <p className={`${captionStyles} mt-auto`}>
                 {hostOf(capture.url)}, {longDate(capture.capturedAt)}

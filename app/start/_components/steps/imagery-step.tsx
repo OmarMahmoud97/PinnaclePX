@@ -16,7 +16,7 @@ const ACCEPT = acceptFor('photos')
 const SWATCH: Readonly<Record<VisualStyle, string>> = {
   warm: 'bg-linear-to-br from-warning/70 to-danger/50',
   minimal: 'bg-linear-to-br from-surface-muted to-border',
-  bold: 'bg-linear-to-br from-brand to-glow-secondary/70',
+  bold: 'bg-linear-to-br from-brand to-glow-secondary',
   dark: 'bg-linear-to-br from-on-surface-muted to-scrim',
 }
 
