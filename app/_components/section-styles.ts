@@ -10,11 +10,28 @@ export const displayHeading = 'text-display font-semibold text-balance'
 // Every section H2.
 export const titleHeading = 'text-title font-medium text-balance'
 
-// Card and step titles.
+// The walkthrough's step titles. They are beats in a scrolling story rather than cards in a
+// grid — one to a screenful, alone in a wide column beside the frame — so they take the step
+// under the section H2 and carry the reading on their own.
+export const stepHeading = 'text-subtitle font-medium text-balance'
+
+// Card titles.
 export const cardHeading = 'text-heading font-medium'
 
 // A left column pins only when its neighbour is taller than a viewport, at one offset.
 export const stickyColumn = 'md:sticky md:top-24 md:self-start'
+
+// The ground the page stands on where it turns from proof to price: Included, Real build and
+// Your options, and no fourth band ever — three tinted sections read as one stretch, four read
+// as a stripe. Every recipe below works on it unchanged (see the ratios in app/globals.css).
+export const commercialBand = 'bg-surface-tint'
+
+// The rule that opens and closes that stretch. It is a child, not a border, so `-mt-px` lets it
+// sit exactly on <main>'s own divide-y hairline and paint over it — descendants paint above a
+// parent's border — and the boundary is marked once rather than twice. Used exactly twice: at
+// the top of Included and at the top of the section after Your options.
+export const bandEdge =
+  '-mt-px h-px bg-linear-to-r from-transparent via-brand-deeper/45 to-transparent'
 
 // The line under a section H2: one step up from the body, quieter than it, wrapped kindly.
 export const sectionLead = 'text-lead text-pretty text-on-surface-muted'

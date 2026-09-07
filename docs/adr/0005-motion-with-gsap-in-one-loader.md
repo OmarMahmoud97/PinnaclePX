@@ -26,3 +26,4 @@ The home page had no motion beyond hover colours, and the owner asked for it to 
 
 - 3 September 2026 (ADR 0006): item 6, autoplay loops. The hero sketch loops.
 - 5 September 2026 (ADR 0021): item 6, scroll smoothing. The owner asked for Lenis; it joins GSAP behind the same kind of lazy loader, and the rest of the list stands.
+- 6 September 2026 (ADR 0026): item 6, motion on the glow's layers. The second wash layer steps back while the hero holds a client's colour, so the page's one authored payoff changes the ground; opacity only, on the existing data-tinted contract. The rest of the list stands.

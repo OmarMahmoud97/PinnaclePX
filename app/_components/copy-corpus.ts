@@ -101,7 +101,7 @@ export const COPY: readonly string[] = [
     item.answer,
     ...(item.link === undefined ? [] : [item.link.label]),
   ]),
-  CLOSING.heading,
+  `${CLOSING.opening} ${CLOSING.ask}`,
   NOT_READY_SENTENCE,
   SHARE.subject,
   SHARE.body,
