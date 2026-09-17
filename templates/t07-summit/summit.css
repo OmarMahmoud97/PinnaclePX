@@ -1,0 +1,206 @@
+/*
+ * Summit (t07). What Tailwind utilities cannot write, scoped to the template's root. Colours
+ * are the semantic tokens on :root, so a brand's set recolours everything; nothing here is
+ * needed for the page to be complete.
+ *
+ * The source animated every block with a motion library: each played its entrance once, the
+ * first time any part of it came into view, from 50px below by default (or 80, 100 or 150px
+ * below, or 20px above), on one of three springs, after a wait down each list; the hero and
+ * the closing band brightened from two fifths over half a second. The hero's parts are on
+ * screen at load and play on a timer; every block below is marked shown by an observer
+ * (reveal.tsx) the first time it comes into view and plays its entrance from here. All of it
+ * is off under reduced motion. The header's glass is the source's own scroll listener
+ * (nav.tsx), the FAQ's rows open by state (faq.tsx), and every hover is a Tailwind transition.
+ */
+.summit {
+  /* The springs, run to rest the way their library ran them, each the spring itself sampled
+   * where linear() is understood and the closest cubic bezier where it is not. The usual one
+   * (stiffness 320, damping 70, mass 1: over critical damping) rests in 1.18s for the longest
+   * travel; the headings' softer one (240, 70, 1) in 1.48s; the articles' quick one (300, 30,
+   * 1: under critical damping) in 0.36s, overshooting by a fraction. */
+  --summit-settle: 1.18s;
+  --summit-spring: cubic-bezier(0.16, 0.52, 0.08, 1);
+  --summit-settle-soft: 1.48s;
+  --summit-spring-soft: cubic-bezier(0.16, 0.52, 0.12, 1);
+  --summit-settle-quick: 0.36s;
+  --summit-spring-quick: cubic-bezier(0.22, 0.1, 0.2, 1.1);
+}
+
+@supports (animation-timing-function: linear(0, 1)) {
+  .summit {
+    --summit-spring: linear(
+      0,
+      0.0542 2%,
+      0.1456 4%,
+      0.2364 6%,
+      0.3193 8%,
+      0.3936 10%,
+      0.4599 12%,
+      0.5189 14%,
+      0.5956 17%,
+      0.66 20%,
+      0.7303 24%,
+      0.786 28%,
+      0.8398 33%,
+      0.88 38%,
+      0.9152 44%,
+      0.9401 50%,
+      0.9623 58%,
+      0.9763 66%,
+      0.9867 76%,
+      0.9934 88%,
+      1
+    );
+    --summit-spring-soft: linear(
+      0,
+      0.0579 2%,
+      0.1475 4%,
+      0.2333 6%,
+      0.3111 8%,
+      0.3811 10%,
+      0.444 12%,
+      0.5005 14%,
+      0.5746 17%,
+      0.6378 20%,
+      0.7077 24%,
+      0.7641 28%,
+      0.8195 33%,
+      0.8619 38%,
+      0.8999 44%,
+      0.9274 50%,
+      0.9527 58%,
+      0.9692 66%,
+      0.982 76%,
+      0.9905 88%,
+      1
+    );
+    --summit-spring-quick: linear(
+      0,
+      0.0404 5%,
+      0.1351 10%,
+      0.2545 15%,
+      0.3795 20%,
+      0.4984 25%,
+      0.605 30%,
+      0.6965 35%,
+      0.7724 40%,
+      0.8336 45%,
+      0.8816 50%,
+      0.9184 55%,
+      0.946 60%,
+      0.9661 65%,
+      0.9803 70%,
+      0.9901 75%,
+      0.9965 80%,
+      1.0005 85%,
+      1.0028 90%,
+      1.004 95%,
+      1
+    );
+  }
+}
+
+@keyframes summit-fade-up {
+  from {
+    opacity: 0;
+    translate: 0 var(--summit-y, 50px);
+  }
+}
+
+@keyframes summit-fade-down {
+  from {
+    opacity: 0;
+    translate: 0 -20px;
+  }
+}
+
+/* The hero and the closing band brighten from two fifths, on the library's plain tween. */
+@keyframes summit-brighten {
+  from {
+    opacity: 0.4;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* On load: the hero brightens, its parts rise and its pill drops, at the source's waits. */
+  .summit [data-rise] {
+    animation: summit-fade-up var(--summit-settle) var(--summit-spring) both;
+    animation-delay: calc(var(--delay, 0) * 1s);
+  }
+
+  .summit [data-rise='down'] {
+    animation-name: summit-fade-down;
+  }
+
+  .summit [data-rise='brighten'] {
+    animation: summit-brighten 0.5s ease-out both;
+  }
+
+  .summit [data-rise][data-spring='soft'] {
+    animation-duration: var(--summit-settle-soft);
+    animation-timing-function: var(--summit-spring-soft);
+  }
+
+  /* Below the hero, once in view: a block is hidden until the observer marks it shown, and only
+   * where a script can do the marking, so a page without one is complete; then it plays its
+   * entrance once, from its own travel and on its own spring, and is left alone after, so a
+   * later hover is not pinned by the animation. The travel is set on the block itself so a
+   * block inside another does not inherit the outer one's. */
+  @media (scripting: enabled) {
+    .summit [data-fade]:not([data-shown]) {
+      opacity: 0;
+    }
+
+    .summit [data-fade][data-shown] {
+      --summit-y: 50px;
+      animation: summit-fade-up var(--summit-settle) var(--summit-spring) backwards;
+      animation-delay: calc(var(--delay, 0) * 1s);
+    }
+
+    .summit [data-fade='80'][data-shown] {
+      --summit-y: 80px;
+    }
+
+    .summit [data-fade='100'][data-shown] {
+      --summit-y: 100px;
+    }
+
+    .summit [data-fade='150'][data-shown] {
+      --summit-y: 150px;
+    }
+
+    .summit [data-fade='brighten']:not([data-shown]) {
+      opacity: 0.4;
+    }
+
+    .summit [data-fade='brighten'][data-shown] {
+      animation: summit-brighten 0.5s ease-out backwards;
+    }
+
+    .summit [data-fade][data-spring='soft'][data-shown] {
+      animation-duration: var(--summit-settle-soft);
+      animation-timing-function: var(--summit-spring-soft);
+    }
+
+    .summit [data-fade][data-spring='quick'][data-shown] {
+      animation-duration: var(--summit-settle-quick);
+      animation-timing-function: var(--summit-spring-quick);
+    }
+  }
+}
+
+/* The date field's calendar mark, as the source's own rule drew it: 14px, a pointer, and
+ * dimmed to a grey by inverting the browser's black. */
+.summit input[type='date']::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  filter: invert(0.6);
+  width: 14px;
+  height: 14px;
+}
+
+/* The footer's watermark: the name drawn as a hairline outline in the source's slate-100, the
+ * border at half strength here, with nothing inside it. */
+.summit-watermark {
+  -webkit-text-stroke: 1px color-mix(in srgb, var(--border) 50%, transparent);
+  color: transparent;
+}

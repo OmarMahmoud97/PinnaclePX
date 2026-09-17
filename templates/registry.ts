@@ -8,8 +8,11 @@ import { meridianContract } from './t03-meridian/contract'
 import { meta as t03 } from './t03-meridian/meta'
 import { atlasContract } from './t04-atlas/contract'
 import { meta as t04 } from './t04-atlas/meta'
+import { emberContract } from './t05-ember/contract'
 import { meta as t05 } from './t05-ember/meta'
+import { harborContract } from './t06-harbor/contract'
 import { meta as t06 } from './t06-harbor/meta'
+import { summitContract } from './t07-summit/contract'
 import { meta as t07 } from './t07-summit/meta'
 import { meta as t08 } from './t08-vector/meta'
 import { meta as t09 } from './t09-linen/meta'
@@ -42,6 +45,9 @@ const CONTRACTS: ReadonlyMap<string, TemplateContract> = new Map([
   [monolithContract.meta.id, monolithContract],
   [meridianContract.meta.id, meridianContract],
   [atlasContract.meta.id, atlasContract],
+  [emberContract.meta.id, emberContract],
+  [harborContract.meta.id, harborContract],
+  [summitContract.meta.id, summitContract],
 ])
 
 // Checked at module load: fail fast.

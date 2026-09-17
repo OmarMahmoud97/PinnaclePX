@@ -27,6 +27,6 @@ describe('template registry', () => {
   })
 
   it('throws for a template without a contract', () => {
-    expect(() => contractFor('t05-ember')).toThrow(/No contract/)
+    expect(() => contractFor('t09-linen')).toThrow(/No contract/)
   })
 })
