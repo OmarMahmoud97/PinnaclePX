@@ -1,6 +1,6 @@
 # Third-party notices
 
-Three of the page templates under `templates/` are adapted from open-source landing pages released under the MIT License. The layouts were rebuilt in this codebase class for class (see `docs/adr/0023-three-templates-ported-from-open-source-layouts.md`); the notices below are kept as the licence requires.
+Six of the page templates under `templates/` are adapted from open-source landing pages released under the MIT License. The layouts were rebuilt in this codebase class for class (see `docs/adr/0023-three-templates-ported-from-open-source-layouts.md`, `docs/adr/0027-ember-ported-from-a-published-build.md`, `docs/adr/0028-harbor-ported-from-a-published-build.md` and `docs/adr/0029-summit-ported-from-a-published-build.md`); the notices below are kept as the licence requires.
 
 ## t02-monolith, from leoMirandaa/shadcn-landing-page
 
@@ -32,9 +32,39 @@ Copyright (c) 2022 Rafli Surya Pratama
 
 The example page's illustrations, coin icons, partner logos and step drawings (`templates/t04-atlas/example/img/`) are the repository's own files.
 
+## t05-ember, from prebuiltui/prebuiltui (Restro, the restaurant website template)
+
+https://github.com/prebuiltui/prebuiltui/tree/main/templates/restaurant-website-template
+
+MIT License
+
+Copyright (c) 2025 PrebuiltUI
+
+The repository holds the template's README; the template itself was ported from its published build at https://restro.prebuiltui.com, whose use in a product that is sold the owner confirmed on 15 September 2026. The two laurel marks beside About's eyebrow (`templates/t05-ember/sections/icon-l.png` and `icon-r.png`) and the example page's photographs and dishes (`templates/t05-ember/example/*.png`) are the build's own files.
+
+## t06-harbor, from prebuiltui/prebuiltui (Forged, the gym website template)
+
+https://github.com/prebuiltui/prebuiltui/tree/main/templates/forged-gym-website-template
+
+MIT License
+
+Copyright (c) 2025 PrebuiltUI
+
+The repository holds the template's README; the template itself was ported from its published build at https://forged.prebuiltui.com, under the owner's confirmation of 15 September 2026 that PrebuiltUI's templates are cleared for use in a product that is sold. The four social marks in the footer (`templates/t06-harbor/sections/socials.tsx`) are the build's own drawings. Every photograph on the example page (`templates/t06-harbor/example/unsplash-*.jpg`) is one the build loads from Unsplash, under the Unsplash License.
+
+## t07-summit, from prebuiltui/prebuiltui (MediCare, the hospital website template)
+
+https://github.com/prebuiltui/prebuiltui/tree/main/templates/hospital-website-template
+
+MIT License
+
+Copyright (c) 2025 PrebuiltUI
+
+The repository holds the template's README; the template itself was ported from its published build at https://medicare.prebuiltui.com, under the owner's confirmation of 15 September 2026 that PrebuiltUI's templates are cleared for use in a product that is sold. The example page's photographs (`templates/t07-summit/example/*.png`) are the build's own files; its four patient portraits (`templates/t07-summit/example/unsplash-*.jpg`) are the ones the build loads from Unsplash, under the Unsplash License.
+
 ## Example portraits
 
-The example pages show the placeholder people the sources show. Their portraits are the pictures the sources load at run time, saved so the examples render offline: from pravatar.cc (`pravatar-*.jpg`), which serves them as free placeholder avatars, and from Unsplash (`templates/t03-meridian/example/team-*.jpg`), under the Unsplash License. The avatar one source loads from GitHub (`radix.png`) is the Radix UI organisation's avatar. None appears on a visitor's page: the sections that show them are filled only by the example content.
+The example pages show the placeholder people the sources show. Their portraits are the pictures the sources load at run time, saved so the examples render offline: from pravatar.cc (`pravatar-*.jpg`), which serves them as free placeholder avatars, and from Unsplash (`templates/t03-meridian/example/team-*.jpg`, `templates/t05-ember/example/unsplash-*.jpg`, `templates/t06-harbor/example/unsplash-*.jpg` and `templates/t07-summit/example/unsplash-*.jpg`), under the Unsplash License. The avatar one source loads from GitHub (`radix.png`) is the Radix UI organisation's avatar. None appears on a visitor's page: the sections that show them are filled only by the example content.
 
 ## The MIT License
 
