@@ -14,6 +14,7 @@ import { harborContract } from './t06-harbor/contract'
 import { meta as t06 } from './t06-harbor/meta'
 import { summitContract } from './t07-summit/contract'
 import { meta as t07 } from './t07-summit/meta'
+import { vectorContract } from './t08-vector/contract'
 import { meta as t08 } from './t08-vector/meta'
 import { meta as t09 } from './t09-linen/meta'
 import { meta as t10 } from './t10-orbit/meta'
@@ -48,6 +49,7 @@ const CONTRACTS: ReadonlyMap<string, TemplateContract> = new Map([
   [emberContract.meta.id, emberContract],
   [harborContract.meta.id, harborContract],
   [summitContract.meta.id, summitContract],
+  [vectorContract.meta.id, vectorContract],
 ])
 
 // Checked at module load: fail fast.

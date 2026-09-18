@@ -62,6 +62,12 @@ Copyright (c) 2025 PrebuiltUI
 
 The repository holds the template's README; the template itself was ported from its published build at https://medicare.prebuiltui.com, under the owner's confirmation of 15 September 2026 that PrebuiltUI's templates are cleared for use in a product that is sold. The example page's photographs (`templates/t07-summit/example/*.png`) are the build's own files; its four patient portraits (`templates/t07-summit/example/unsplash-*.jpg`) are the ones the build loads from Unsplash, under the Unsplash License.
 
+## t08-vector, from React Bits Pro (Agency, the agency template)
+
+https://pro.reactbits.dev/docs/templates/agency-site
+
+The layout was re-implemented in this codebase from the template's published demo at https://rbp-agency-template.vercel.app, as a design rebuilt against this project's own tokens and contract. Its two shaders (the hero's waves and the project pictures' duotone and ripple) were written from the demo's own GLSL on raw WebGL, without its bloom pass. The example page's three pictures (`templates/t08-vector/example/project-*.webp`) are the demo's own files.
+
 ## Example portraits
 
 The example pages show the placeholder people the sources show. Their portraits are the pictures the sources load at run time, saved so the examples render offline: from pravatar.cc (`pravatar-*.jpg`), which serves them as free placeholder avatars, and from Unsplash (`templates/t03-meridian/example/team-*.jpg`, `templates/t05-ember/example/unsplash-*.jpg`, `templates/t06-harbor/example/unsplash-*.jpg` and `templates/t07-summit/example/unsplash-*.jpg`), under the Unsplash License. The avatar one source loads from GitHub (`radix.png`) is the Radix UI organisation's avatar. None appears on a visitor's page: the sections that show them are filled only by the example content.

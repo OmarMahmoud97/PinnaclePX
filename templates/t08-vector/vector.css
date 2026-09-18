@@ -1,0 +1,496 @@
+/*
+ * Vector (t08). What Tailwind utilities cannot write, scoped to the template's root. Colours
+ * are the semantic tokens on :root, so a brand's set recolours everything; nothing here is
+ * needed for the page to be complete.
+ *
+ * The source animated with two libraries. On load, its motion library dropped the bar in and
+ * rose the headline's lines out of clipped rows in three dimensions. Below, GSAP tied most
+ * entrances to the scroll itself (scrubbed between a start and an end line of the viewport),
+ * pinned the services sentence while its letters grew one by one, opened each project picture
+ * through a circle that widens with the scroll, and lit a menu row from the side the pointer
+ * came in on. Here the load animations are keyframes on a timer; the scrubbed ones chase the
+ * scroll in a small controller (scrubs.tsx), which switches off the scroll-driven animations
+ * below, kept as its fallback with the source's own start and end lines (a length in an
+ * animation-range is measured from the block's entry at the viewport's foot, so the source's
+ * "top 80%" is "cover 20vh"); the pinned sentence is a sticky block inside a tall one, its
+ * letters on the block's own view timeline; the picture's circle is a registered length on a
+ * mask under the shader (ripple.tsx); the rest is state in small client components
+ * (header.tsx, projects.tsx, menu.tsx, faq.tsx). All of it is off under reduced motion, and
+ * the page is complete without support.
+ */
+.vector {
+  /* The source's curves: its motion library's [0.22, 1, 0.36, 1] and [0.25, 1, 0.5, 1], and
+   * GSAP's power3.out, power2.out, power3.in, power2.in, expo, sine.out and sine.inOut. GSAP
+   * counts its powers from quad, so power2 is the cubic curve and power3 the quartic. */
+  --vector-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --vector-soft: cubic-bezier(0.25, 1, 0.5, 1);
+  --vector-power3: cubic-bezier(0.165, 0.84, 0.44, 1);
+  --vector-power2: cubic-bezier(0.215, 0.61, 0.355, 1);
+  --vector-power3-in: cubic-bezier(0.895, 0.03, 0.685, 0.22);
+  --vector-power2-in: cubic-bezier(0.55, 0.055, 0.675, 0.19);
+  --vector-expo: cubic-bezier(0.19, 1, 0.22, 1);
+  --vector-sine-out: cubic-bezier(0.39, 0.575, 0.565, 1);
+  --vector-sine-in-out: cubic-bezier(0.445, 0.05, 0.55, 0.95);
+  --vector-back: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Where the browser can take a sampled curve, the source's curves exactly: GSAP's powers are
+ * plain polynomials and its expo an exponential, which no cubic-bezier can flatten to. */
+@supports (animation-timing-function: linear(0, 1)) {
+  .vector {
+    --vector-power3: linear(
+      0,
+      0.1855 5%,
+      0.3439 10%,
+      0.478 15%,
+      0.5904 20%,
+      0.6836 25%,
+      0.7599 30%,
+      0.8215 35%,
+      0.8704 40%,
+      0.9085 45%,
+      0.9375 50%,
+      0.959 55%,
+      0.9744 60%,
+      0.985 65%,
+      0.9919 70%,
+      0.9961 75%,
+      0.9984 80%,
+      0.9995 85%,
+      0.9999 90%,
+      1 95%,
+      1
+    );
+    --vector-power2: linear(
+      0,
+      0.1426 5%,
+      0.271 10%,
+      0.3859 15%,
+      0.488 20%,
+      0.5781 25%,
+      0.657 30%,
+      0.7254 35%,
+      0.784 40%,
+      0.8336 45%,
+      0.875 50%,
+      0.9089 55%,
+      0.936 60%,
+      0.9571 65%,
+      0.973 70%,
+      0.9844 75%,
+      0.992 80%,
+      0.9966 85%,
+      0.999 90%,
+      0.9999 95%,
+      1
+    );
+    --vector-power3-in: linear(
+      0,
+      0 5%,
+      0.0001 10%,
+      0.0005 15%,
+      0.0016 20%,
+      0.0039 25%,
+      0.0081 30%,
+      0.015 35%,
+      0.0256 40%,
+      0.041 45%,
+      0.0625 50%,
+      0.0915 55%,
+      0.1296 60%,
+      0.1785 65%,
+      0.2401 70%,
+      0.3164 75%,
+      0.4096 80%,
+      0.522 85%,
+      0.6561 90%,
+      0.7321 92.5%,
+      0.8145 95%,
+      0.9037 97.5%,
+      1
+    );
+    --vector-power2-in: linear(
+      0,
+      0.0001 5%,
+      0.001 10%,
+      0.0034 15%,
+      0.008 20%,
+      0.0156 25%,
+      0.027 30%,
+      0.0429 35%,
+      0.064 40%,
+      0.0911 45%,
+      0.125 50%,
+      0.1664 55%,
+      0.216 60%,
+      0.2746 65%,
+      0.343 70%,
+      0.4219 75%,
+      0.512 80%,
+      0.6141 85%,
+      0.729 90%,
+      0.8574 95%,
+      1
+    );
+    --vector-expo: linear(
+      0,
+      0.1591 2.5%,
+      0.2929 5%,
+      0.4054 7.5%,
+      0.5 10%,
+      0.5796 12.5%,
+      0.6464 15%,
+      0.75 20%,
+      0.8232 25%,
+      0.875 30%,
+      0.9116 35%,
+      0.9375 40%,
+      0.9558 45%,
+      0.9688 50%,
+      0.9779 55%,
+      0.9844 60%,
+      0.989 65%,
+      0.9922 70%,
+      0.9945 75%,
+      0.9961 80%,
+      0.9972 85%,
+      0.998 90%,
+      0.9986 95%,
+      1
+    );
+  }
+}
+
+/* The circle a project picture opens through: a length the scroll animates. */
+@property --vector-mask {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 1200px;
+}
+
+@keyframes vector-drop {
+  from {
+    opacity: 0;
+    translate: 0 -20px;
+  }
+}
+
+@keyframes vector-line {
+  from {
+    opacity: 0;
+    transform: translateY(120%) translateZ(-200px) rotateX(-90deg);
+  }
+}
+
+@keyframes vector-rise {
+  from {
+    opacity: 0;
+    translate: 0 var(--from-y, 20px);
+  }
+}
+
+@keyframes vector-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+/* A scrubbed entrance: from the source's offset, opacity, and scale, to rest. */
+@keyframes vector-scrub {
+  from {
+    opacity: 0;
+    translate: var(--from-x, 0px) var(--from-y, 0px);
+    scale: var(--from-scale, 1);
+  }
+}
+
+@keyframes vector-grow {
+  from {
+    transform: scaleY(0);
+  }
+}
+
+@keyframes vector-open {
+  from {
+    --vector-mask: 0px;
+  }
+}
+
+/* The hero's waves turn from -55 to -120 degrees over the first screen of scroll, as the
+ * source's shader rotated its field with the scroll. */
+@keyframes vector-turn {
+  to {
+    rotate: -120deg;
+  }
+}
+
+/* A wave wipes in along its length over three and a half seconds on the source's quartic
+ * ease, and drifts along its length for ever after, one wavelength a minute. */
+@keyframes vector-sweep {
+  from {
+    clip-path: inset(0 0 100% 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes vector-drift {
+  to {
+    translate: 0 -20%;
+  }
+}
+
+/* The letters of a lit menu row hop up over 0.15s easing out on a sine and settle over 0.2s
+ * easing in and out on one, in order, as the row lights. */
+@keyframes vector-hop {
+  0% {
+    translate: 0 0;
+    animation-timing-function: var(--vector-sine-out);
+  }
+  42.857% {
+    translate: 0 -32px;
+    animation-timing-function: var(--vector-sine-in-out);
+  }
+  100% {
+    translate: 0 0;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* On load, at the source's lengths and waits. */
+  .vector [data-rise='drop'] {
+    animation: vector-drop var(--dur, 0.3s) var(--vector-out) both;
+    animation-delay: calc(var(--delay, 0) * 1s);
+  }
+
+  .vector [data-rise='line'] {
+    animation: vector-line 1.6s var(--vector-out) both;
+    animation-delay: calc(var(--delay, 0) * 1s);
+  }
+
+  .vector [data-rise='up'] {
+    animation: vector-rise 1s var(--vector-soft) both;
+    animation-delay: calc(var(--delay, 0) * 1s);
+  }
+
+  .vector [data-rise='fade'] {
+    animation: vector-fade 1.2s ease-out both;
+    animation-delay: calc(var(--delay, 0) * 1s);
+  }
+
+  .vector-wave {
+    animation:
+      vector-sweep 3.5s cubic-bezier(0.165, 0.84, 0.44, 1) both,
+      vector-drift 63s linear infinite;
+    animation-delay: calc(var(--delay, 0) * 1s), 0s;
+  }
+
+  /* Below the hero, tied to the scroll where the browser can tie it; finished where it
+   * cannot. A block names its offset, its curve, and the lines of the viewport its entrance
+   * runs between, as the source's triggers did. Every timeline's inset is set to nothing,
+     * because a view timeline otherwise takes the page's scroll-padding as its inset and the
+     * lines would sit a header's height too early. */
+  @supports (animation-timeline: scroll()) {
+    .vector [data-scrub] {
+      animation: vector-scrub var(--ease, var(--vector-power3)) both;
+      animation-timeline: view(block 0px);
+      animation-range: cover var(--start, 10vh) cover var(--end, 30vh);
+    }
+
+    /* Some parts run on their block's timeline rather than their own. */
+    .vector-about {
+      view-timeline-name: --vector-about;
+      view-timeline-inset: 0;
+    }
+
+    .vector-proof {
+      view-timeline-name: --vector-proof;
+      view-timeline-inset: 0;
+    }
+
+    .vector-faq {
+      view-timeline-name: --vector-faq;
+      view-timeline-inset: 0;
+    }
+
+    .vector [data-scrub='about'] {
+      animation-timeline: --vector-about;
+    }
+
+    .vector [data-scrub='proof'] {
+      animation-timeline: --vector-proof;
+    }
+
+    .vector [data-scrub='faq'] {
+      animation-timeline: --vector-faq;
+    }
+
+    /* The bento's cards: the source's 0.8s each, a tenth apart, scrubbed between two lines of
+     * the viewport forty hundredths apart; each card's share of that distance follows. */
+    .vector [data-scrub='proof-card'] {
+      animation-timeline: --vector-proof-grid;
+      animation-range: cover calc(20vh + var(--i) * 3.077vh) cover
+        calc(20vh + var(--i) * 3.077vh + 24.615vh);
+    }
+
+    .vector-proof-grid {
+      view-timeline-name: --vector-proof-grid;
+      view-timeline-inset: 0;
+    }
+
+    /* The pinned sentence: its block is two and a half screens tall and its inner sticks; the
+     * letters grow from their feet, each a twentieth of a second after the last and half a
+     * second long, the whole run of them stretched across the one and a half screens the
+     * block stays pinned for (the sentence names its count of letters, --n). */
+    .vector-pin {
+      view-timeline-name: --vector-services;
+      view-timeline-inset: 0;
+    }
+
+    .vector-char {
+      --vector-run: calc((var(--n, 56) - 1) * 0.05 + 0.5);
+      transform-origin: 50% 100%;
+      will-change: transform;
+      animation: vector-grow var(--vector-power3-in) both;
+      animation-timeline: --vector-services;
+      animation-range: contain calc(var(--i) * 0.05 / var(--vector-run) * 100%) contain
+        calc((var(--i) * 0.05 + 0.5) / var(--vector-run) * 100%);
+    }
+
+    /* A project picture opens through a circle from nothing to 1200px, from the card's top at
+     * four fifths of the viewport to a fifth above it. The picture sits inside a clipped
+     * frame, which the browser counts as a scroll container, so it runs on the card's own
+     * timeline rather than its own. */
+    .vector-card {
+      view-timeline-name: --vector-card;
+      view-timeline-inset: 0;
+    }
+
+    .vector-mask {
+      mask-image: radial-gradient(
+        circle at center,
+        black calc(var(--vector-mask) - 35px),
+        transparent var(--vector-mask)
+      );
+      animation: vector-open linear both;
+      animation-timeline: --vector-card;
+      animation-range: cover 20vh cover 120vh;
+    }
+
+    .vector-waves {
+      animation: vector-turn linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0 100vh;
+    }
+  }
+
+  /* A project's title and line: played when the card's top passes the middle of the screen
+   * and reversed when it goes back up (reveal.tsx), the line a little after the title. Hidden
+   * only where a script can do the marking, so a page without one is complete. */
+  @media (scripting: enabled) {
+    .vector [data-fade] {
+      opacity: 0;
+      translate: 0 var(--from-y, 60px);
+      transition:
+        opacity var(--dur, 1s) var(--hide-ease, var(--vector-power3-in)),
+        translate var(--dur, 1s) var(--hide-ease, var(--vector-power3-in));
+      transition-delay: calc(var(--hide-delay, 0) * 1s);
+    }
+
+    .vector [data-fade][data-shown] {
+      opacity: 1;
+      translate: 0 0;
+      transition-timing-function: var(--ease, var(--vector-power3));
+      transition-delay: calc(var(--delay, 0) * 1s);
+    }
+  }
+
+  /* The cursor grows in and shrinks away over 0.3s, its scale on the source's back curve and
+   * its opacity easing out, both ways. */
+  .vector-cursor {
+    opacity: 0;
+    scale: 0;
+    transition:
+      opacity 0.3s ease-out,
+      scale 0.3s var(--vector-back);
+  }
+
+  .vector-cursor[data-visible] {
+    opacity: 1;
+    scale: 1;
+  }
+
+  /* A lit menu row's letters hop. */
+  .vector-row[data-lit] .vector-letter {
+    animation: vector-hop 0.35s var(--vector-sine-out) both;
+    animation-delay: calc(var(--i) * 0.01s);
+  }
+}
+
+/* The header goes while a project is open full screen. */
+.vector:has([data-overlay]) .vector-bar {
+  opacity: 0;
+  translate: 0 -20px;
+  pointer-events: none;
+}
+
+.vector-bar {
+  transition:
+    opacity 0.3s var(--vector-out),
+    translate 0.3s var(--vector-out);
+}
+
+/* The waves behind the hero, standing in for the source's shader until the WebGL arrives:
+ * three sinuous bands in the glow, the second glow and the brand, each with a bright core,
+ * turned by the scroll, faded out over the foot of the screen and lined like a screen. */
+.vector-waves {
+  position: absolute;
+  inset: -60% -40%;
+  rotate: -55deg;
+  transform-origin: 62% 40%;
+  mask-image: linear-gradient(to top, transparent, black 25%);
+}
+
+.vector-wave {
+  position: absolute;
+  inset: 0;
+  filter: blur(10px);
+}
+
+/* The duotone on a project picture, as the source's shader mixed it: its lights towards a
+ * pale tint of the glow, its shadows a deep tint of the second glow on the surface. The
+ * picture, in grey, multiplies onto the light; the dark lightens what is left. */
+.vector-duotone-light {
+  background: color-mix(in srgb, var(--glow) 65%, white);
+}
+
+.vector-duotone-dark {
+  background: color-mix(in srgb, var(--glow-secondary) 25%, var(--surface));
+}
+
+.vector-scanlines {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--surface) 22%, transparent) 0 1px,
+    transparent 1px 3px
+  );
+  pointer-events: none;
+}
+
+/* A menu row's lit face and the face inside it slide in from the edge the pointer entered
+ * over and out over the edge it left by (menu.tsx sets the edges); the source's 0.6s expo. */
+.vector-row-face,
+.vector-row-inner {
+  transition: translate 0.6s var(--vector-expo);
+}
+
+/* A project picture leans towards the pointer over 0.8s and swells under it over 0.6s, on the
+ * source's two curves. */
+.vector-lean {
+  transition:
+    translate 0.8s var(--vector-power3),
+    scale 0.6s var(--vector-power2);
+}
