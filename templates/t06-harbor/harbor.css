@@ -1,0 +1,178 @@
+/*
+ * Harbor (t06). What Tailwind utilities cannot write, scoped to the template's root. Colours
+ * are the semantic tokens on :root, so a brand's set recolours everything; nothing here is
+ * needed for the page to be complete.
+ *
+ * The source animated with a motion library: the bar and the hero's parts arrive on a timer
+ * at load (the headline's lines rise out of clipped rows), every block below plays its entrance
+ * once, the first time it comes into view (up from below, or in from a side, or scaling up), a
+ * marquee of partner names runs forever, and buttons swell a little under the pointer. Here the
+ * hero is on a timer, each block below is marked shown by an observer (reveal.tsx) and plays
+ * its entrance from here, the marquee is a keyframe, and all of it is off under reduced motion.
+ */
+.harbor ::selection {
+  color: var(--on-brand);
+  background: var(--brand-deeper);
+}
+
+/* The source's glow shadows in its lime, as the same shadows in the accent. */
+.harbor-glow-a:hover {
+  box-shadow: 0 0 20px color-mix(in srgb, var(--brand-deeper) 35%, transparent);
+}
+
+.harbor-glow-b:hover {
+  box-shadow: 0 0 30px color-mix(in srgb, var(--brand-deeper) 40%, transparent);
+}
+
+.harbor-glow-c:hover {
+  box-shadow: 0 0 20px color-mix(in srgb, var(--brand-deeper) 30%, transparent);
+}
+
+.harbor-glow-d:hover {
+  box-shadow: 0 0 25px color-mix(in srgb, var(--brand-deeper) 35%, transparent);
+}
+
+.harbor-glow-e:hover {
+  box-shadow: 0 0 40px color-mix(in srgb, var(--brand-deeper) 45%, transparent);
+}
+
+.harbor-glow-card {
+  box-shadow: 0 0 60px color-mix(in srgb, var(--brand-deeper) 25%, transparent);
+}
+
+/* The lit capability card's hover: the source's #1a2000, a breath of lime in the black. */
+.harbor-hot:hover {
+  background-color: color-mix(in srgb, var(--brand-deeper) 8%, var(--surface));
+}
+
+/* A plan lifts eight pixels under the pointer, on transform so the entrance, which owns
+ * translate, is untouched. */
+.harbor-lift {
+  transition: transform 0.3s;
+}
+
+.harbor-lift:hover {
+  transform: translateY(-8px);
+}
+
+/* A closed question dims a little and its disc's ring brightens under the pointer; an open one
+ * keeps its accent whatever the pointer does, as the source's state-set classes did. Written
+ * here rather than as hover variants, which would outrank the open variants while the pointer
+ * rests on the row it has just opened. */
+.harbor details:not([open]) summary:hover .harbor-faq-question {
+  color: color-mix(in srgb, var(--on-surface) 80%, transparent);
+}
+
+.harbor details:not([open]) summary:hover .harbor-faq-disc {
+  border-color: color-mix(in srgb, var(--on-surface) 30%, transparent);
+}
+
+/* The FAQ's answer opens and closes at the source's 0.3s ease-in-out. */
+.harbor details > div {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.3s ease-in-out;
+}
+
+.harbor details[open] > div {
+  grid-template-rows: 1fr;
+}
+
+.harbor details > div > div {
+  overflow: hidden;
+}
+
+/* The partners' marquee: two copies of the row slide left forever, as the source's did. */
+@keyframes harbor-marquee {
+  from {
+    transform: translate(0);
+  }
+  to {
+    transform: translate(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .harbor-marquee {
+    animation: harbor-marquee 25s linear infinite;
+  }
+}
+
+/*
+ * The entrances. Each part names its wait (--delay, in seconds), its length (--dur), its travel
+ * (--travel) and its curve (--ease) inline, as the source's wrappers were configured; the
+ * curve falls back to the source's own default for its wrappers.
+ */
+.harbor {
+  --harbor-ease: cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+@keyframes harbor-rise {
+  from {
+    opacity: 0;
+    translate: 0 var(--travel, 40px);
+  }
+}
+
+@keyframes harbor-slide {
+  from {
+    opacity: 0;
+    translate: var(--travel, 60px) 0;
+  }
+}
+
+@keyframes harbor-scale {
+  from {
+    opacity: 0;
+    scale: 0.8;
+  }
+}
+
+@keyframes harbor-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* On load: the bar drops in and the hero's parts rise. */
+  .harbor-bar {
+    animation: harbor-rise 0.7s var(--harbor-ease) both;
+  }
+
+  .harbor [data-rise] {
+    animation: harbor-rise var(--dur, 0.6s) var(--ease, var(--harbor-ease)) both;
+    animation-delay: calc(var(--delay, 0) * 1s);
+  }
+
+  .harbor [data-rise='fade'] {
+    animation-name: harbor-fade;
+  }
+
+  /* Below the hero, once in view: a block is hidden until the observer marks it shown, and only
+   * where a script can do the marking, so a page without one is complete; then it plays its
+   * entrance once and is left alone after, so a later hover is not pinned by the animation. */
+  @media (scripting: enabled) {
+    .harbor [data-fade]:not([data-shown]) {
+      opacity: 0;
+    }
+
+    .harbor [data-fade][data-shown] {
+      animation: harbor-rise var(--dur, 0.6s) var(--ease, var(--harbor-ease)) backwards;
+      animation-delay: calc(var(--delay, 0) * 1s);
+    }
+
+    .harbor [data-fade='left'][data-shown] {
+      --travel: -60px;
+      animation-name: harbor-slide;
+    }
+
+    .harbor [data-fade='right'][data-shown] {
+      animation-name: harbor-slide;
+    }
+
+    .harbor [data-fade='scale'][data-shown] {
+      animation-name: harbor-scale;
+    }
+  }
+}
