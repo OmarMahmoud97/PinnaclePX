@@ -68,6 +68,12 @@ https://pro.reactbits.dev/docs/templates/agency-site
 
 The layout was re-implemented in this codebase from the template's published demo at https://rbp-agency-template.vercel.app, as a design rebuilt against this project's own tokens and contract. Its two shaders (the hero's waves and the project pictures' duotone and ripple) were written from the demo's own GLSL on raw WebGL, without its bloom pass. The example page's three pictures (`templates/t08-vector/example/project-*.webp`) are the demo's own files.
 
+## The hero's ink, from a WebGL fluid simulation
+
+https://codepen.io/ksenia-k/pen/jENEMjN and https://github.com/PavelDoGreat/WebGL-Fluid-Simulation
+
+The simulation behind the home page hero (`lib/motion/fluid.ts` and its shaders in `lib/motion/fluid-shaders.ts`) is the small GPU fluid that Ksenia Kondrashova's CodePen "Liquid Distortion Effect (WebGL)" runs, a cut-down of Pavel Dobryakov's WebGL Fluid Simulation, which is released under the MIT License (Copyright (c) 2017 Pavel Dobryakov). The shaders were taken from a published build that uses the same code (`docs/fluid-hero-guide.md`) and are reproduced there verbatim; the JavaScript around them was rewritten for this codebase, with the pointer measured against the canvas, the splat radius following the short side on portrait screens, and a clean stop. CodePen publishes its public pens under the MIT License unless the author says otherwise.
+
 ## Example portraits
 
 The example pages show the placeholder people the sources show. Their portraits are the pictures the sources load at run time, saved so the examples render offline: from pravatar.cc (`pravatar-*.jpg`), which serves them as free placeholder avatars, and from Unsplash (`templates/t03-meridian/example/team-*.jpg`, `templates/t05-ember/example/unsplash-*.jpg`, `templates/t06-harbor/example/unsplash-*.jpg` and `templates/t07-summit/example/unsplash-*.jpg`), under the Unsplash License. The avatar one source loads from GitHub (`radix.png`) is the Radix UI organisation's avatar. None appears on a visitor's page: the sections that show them are filled only by the example content.

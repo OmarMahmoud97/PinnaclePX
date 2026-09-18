@@ -1,8 +1,7 @@
 import { expect, test } from '@playwright/test'
 
-// A tablet at 768 by 1024, where the desktop composition first appears: the browser frame with
-// the phone over its corner, narrower than on desktop so the sketch's photograph never outgrows
-// the subhead as the largest contentful paint.
+// A tablet at 768 by 1024, where the desktop composition first appears: the hero fills the
+// screen with its prompt box, caption and logo strip.
 
 test('the primary action sits inside the first screen and the page never scrolls sideways', async ({
   page,
@@ -18,20 +17,10 @@ test('the primary action sits inside the first screen and the page never scrolls
   expect(scrollX).toBe(0)
 })
 
-test("the hero builds a client's brief in the browser frame", async ({ page }) => {
+// The headline or the subhead, never a picture.
+test('the largest contentful paint is text', async ({ page }) => {
   await page.goto('/')
-  const hero = page.locator('#hero')
-  await expect(hero.locator('[data-frame="browser"]')).toBeVisible()
-  await expect(hero).toHaveAttribute('data-built', '', { timeout: 25_000 })
-  await expect(
-    hero.getByText('The same sentence, drawn as a page. Not one of the designs.'),
-  ).toBeVisible()
-})
-
-// The frame is narrower here than on desktop for exactly this reason.
-test('the photograph never becomes the largest contentful paint', async ({ page }) => {
-  await page.goto('/')
-  await expect(page.locator('#hero')).toHaveAttribute('data-built', '', { timeout: 25_000 })
+  await expect(page.locator('html')).toHaveAttribute('data-motion', '')
   const lcp = await page.evaluate(
     () =>
       new Promise<string>((resolve) => {

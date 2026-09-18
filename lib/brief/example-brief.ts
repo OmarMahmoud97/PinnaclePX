@@ -21,11 +21,6 @@ export const EXAMPLE_ANSWERS: Answers = {
   colours: { kind: 'custom', hex: '#2e8c9c' },
 }
 
-// The stages the demo paints, in order: the sentence types at 1, the company lands at 2, the
-// style fills at 4 and the colour sweeps at 5. Stage 3 (the logo) is skipped because a wordmark
-// has nothing new to paint.
-export const DEMO_STAGES = [1, 2, 4, 5] as const
-
 export const FINAL_STAGE = 5
 
 // The answers as the demo has revealed them so far: the sentence cut to `chars` characters, the

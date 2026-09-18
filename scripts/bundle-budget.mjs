@@ -30,7 +30,10 @@ const BUDGETS = {
   // 14.5 KB on 6 September 2026 for the colour and motion pass (ADR 0026): --surface-tint and
   // the corrected --glow-secondary, the tinted commercial band and its two gradient rules, the
   // gradient the ask keeps on hover, and the colour the walkthrough's active step, the open FAQ
-  // entry and the six work cells take (13,975 B measured).
+  // entry and the six work cells take (13,975 B measured), then to 16 KB on 18 September 2026
+  // for the ink hero (ADR 0031): the fitted fifteen-stop ground, the ink canvas, the headline's
+  // blend and fills, the hero type token and the header's see-through and solid states
+  // (15,384 B measured, 15,149 B once the sketch loop's section went the same day).
   // HTML raised from 25 KB on 5 September 2026 for the three content sections and the longer FAQ
   // (26,971 B measured), then to 36 KB the same day for the work band's six cards, each with a
   // phone and a desktop capture in two formats at two widths and a view toggle (34,941 B
@@ -42,10 +45,10 @@ const BUDGETS = {
   // band rules, and the hover, focus and active-step classes the work cells, the walkthrough's
   // five steps and the hero's field now carry (39,185 B measured). Re-measured when the journey
   // band ships.
-  '/': { scripts: 216_000, stylesheets: 14_500, html: 40_000 },
+  '/': { scripts: 216_000, stylesheets: 16_000, html: 40_000 },
   // Raised from 230 KB on 4 September 2026 for zod 4, whose core is about 13 KB gzipped heavier
   // on this page than zod 3 (ADR 0019); its locales are kept out by the namespace import form.
-  '/start': { scripts: 245_000, stylesheets: 14_500, html: 25_000 },
+  '/start': { scripts: 245_000, stylesheets: 16_000, html: 25_000 },
 }
 
 function gzipped(file) {
@@ -88,12 +91,13 @@ for (const [route, budget] of Object.entries(BUDGETS)) {
       `${ok ? 'ok  ' : 'OVER'} ${route.padEnd(7)} ${kind.padEnd(12)} ${String(actual).padStart(8)} B gzipped (budget ${limit})`,
     )
   }
-  // GSAP (ADR 0005) and Lenis (ADR 0021) are lazy chunks on every route; the home page stands
-  // for all of them.
+  // GSAP (ADR 0005) and Lenis (ADR 0021) are lazy chunks on every route, and so is the hero's
+  // ink simulation with its shaders (ADR 0031); the home page stands for all of them.
   if (route === '/') {
     const lazy = {
       gsap: { pattern: /gsap\.version|_gsap|GreenSock/, minBytes: 20_000 },
       lenis: { pattern: /lenis-smooth|lenisVersion/, minBytes: 5_000 },
+      fluid: { pattern: /u_point_size/, minBytes: 3_000 },
     }
     for (const [name, { pattern, minBytes }] of Object.entries(lazy)) {
       const inInitial = scripts.filter((url) => {

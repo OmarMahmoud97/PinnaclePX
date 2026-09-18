@@ -1,11 +1,14 @@
 // Headings and leads that used to sit as JSX prose in their sections. They live here so
 // copy.test.ts guards every visitor sentence, not only the list items. Rendering is unchanged.
 
-// The hero's field and its second path. The label asks the first question in the visitor's words.
+// The hero's prompt box, the word its headline sets apart (the promise is in it), its second
+// path, and the arrow to the next section. The label asks the first question in the visitor's
+// words; it is the box's placeholder, and its label for a screen reader.
 export const HERO = {
   fieldLabel: 'What does your business do?',
-  fieldHint: 'Your answer fills the sketch as you type.',
+  emphasis: 'before',
   talkFirst: 'Rather talk first?',
+  scrollLabel: 'Scroll to the next section',
 } as const
 
 // The section sells how little the form asks and how soon it pays off, nothing about the

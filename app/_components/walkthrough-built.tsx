@@ -62,8 +62,8 @@ type Props = {
 }
 
 // The finished page the walkthrough builds from the example brand's five answers: an
-// illustration of a site, never anyone's. The same phone page the hero builds (built-page.tsx),
-// image-led, with this brand's type and colours: a serif for the wordmark and headline, a
+// illustration of a site, never anyone's. A phone page, image-led, with this brand's type and
+// colours: a serif for the wordmark and headline, a
 // terracotta kicker, the Forest green on the button, the mark and the footer. Laid under the
 // sketch inside the frame and hidden until the build reveals it part by part; each part carries
 // the data-part name of its counterpart in the sketch, and the kicker, which has none, rises in

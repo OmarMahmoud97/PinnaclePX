@@ -5,13 +5,13 @@ import { expect, test } from '@playwright/test'
 // scripts/bundle-budget.mjs; the dev server bundles every chunk up front, so it cannot be
 // asserted here.)
 
-test('the sketch is finished and nothing moves', async ({ page }) => {
+test('nothing moves', async ({ page }) => {
   await page.goto('/')
   expect(await page.evaluate(() => matchMedia('(prefers-reduced-motion: reduce)').matches)).toBe(
     true,
   )
-  await expect(page.getByText("A client's brief so far: Sentence, VetPres")).toBeAttached()
-  await expect(page.locator('#hero')).not.toHaveAttribute('data-built', '')
+  // The hero's ink is never started: its canvas keeps the size it was sent with.
+  await expect(page.locator('#hero canvas')).toHaveJSProperty('width', 300)
 
   for (const id of [
     'how-it-works',

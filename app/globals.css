@@ -20,6 +20,16 @@
 }
 
 /*
+ * The hero's headline alone, a step above --text-display: 36px to 90px, the size the reference
+ * sets its headline (ADR 0031). Site-only, here rather than in tokens.css, for the same reason.
+ */
+@theme {
+  --text-hero: clamp(2.25rem, 1.25rem + 3.7vw, 5.625rem);
+  --text-hero--line-height: 1;
+  --text-hero--letter-spacing: -0.025em;
+}
+
+/*
  * Semantic design tokens. Components consume only the utility classes generated from these
  * variables (bg-surface, text-on-surface, bg-brand, ...), never raw palette classes or hex.
  * Values live on :root and @theme inline maps each variable to a utility. Generated brand tokens
@@ -219,4 +229,98 @@ details.faq::details-content {
 
 details.faq[open]::details-content {
   height: auto;
+}
+
+/*
+ * The hero (ADR 0031). Its ground is the reference build's gradient (docs/fluid-hero-guide.md,
+ * section 11) re-fitted to the studio's hue, each stop keeping its lightness and chroma: white
+ * at the top, the brand's blue through the middle, near-black at the foot, bowed so the centre
+ * runs darker than the edges. It has a fixed height and is pinned to the bottom, like the
+ * content, so the headline always lands on the light part and the caption on the dark part
+ * whatever the viewport's height. The ink canvas multiplies onto it: ink shows over the light
+ * half and disappears into the dark. --hero-ink is what one splat reaches, read once by
+ * app/_components/hero-ink.tsx; built-up ink still goes black.
+ */
+.hero-ground {
+  --hero-ink: #004268;
+  --gradient-height: 62rem;
+  background: var(--surface)
+    radial-gradient(
+      ellipse 269% 310% at 50% 300%,
+      #020a12 65%,
+      #02101d 67%,
+      #021b2c 68.7%,
+      #002943 70.2%,
+      #003555 71.2%,
+      #044368 72.2%,
+      #175883 73.9%,
+      #4581ad 76.6%,
+      #75a5cc 79.1%,
+      #9abfdd 81.1%,
+      #c6dcee 83.9%,
+      #e2eef7 86.3%,
+      #f8fbfd 90.1%,
+      #fefeff 92.1%,
+      #ffffff 94.5%
+    )
+    bottom / 100% var(--gradient-height) no-repeat;
+}
+
+@media (width < 48rem) {
+  .hero-ground {
+    --gradient-height: 52rem;
+  }
+}
+
+/*
+ * The simulation runs at a quarter of the canvas, so the blur hides its 4px blocks, and the
+ * section's overflow clips the blur's bleed. Clicks fall through to the content, which is why
+ * the simulation listens for the pointer on the window.
+ */
+.hero-ink {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+  filter: blur(8px);
+}
+
+/*
+ * The headline's colour flip. Dark ink behind dark text would swallow it, so the letters are
+ * filled with the clean gradient behind them and blended by difference: no ink, the gradient
+ * minus itself, black; dark ink behind, the fill shows and the letters turn light. The fills
+ * were measured on this page with the ink off, sampling the ground behind the headline's first
+ * and last line at 390, 768, 1024, 1280, 1440 and 1920 wide and extending each pair to the
+ * heading box's edges (18 September 2026): on a phone the headline sits on the white top of
+ * the ground, from md on the light blue, and one pair per range holds every width to within
+ * about 11 levels of 255. Move the headline or change the ramp and measure again. The fill is
+ * cleared with text-fill-color rather than color, so the text keeps an opaque colour and stays
+ * a largest-contentful-paint candidate. A wrapper between the H1 and the section that creates
+ * a stacking context switches the effect off.
+ */
+.hero-heading {
+  color: var(--on-surface);
+  -webkit-text-fill-color: transparent;
+  background: linear-gradient(to bottom, #ffffff, #eff5fb);
+  background-clip: text;
+  mix-blend-mode: difference;
+}
+
+@media (width >= 48rem) {
+  .hero-heading {
+    background-image: linear-gradient(to bottom, #e6f0f8, #b1cee6);
+  }
+}
+
+.hero-heading em {
+  font-weight: 400;
+}
+
+/* Inside the blended layer white reads as black, and flips with the text. */
+.hero-heading::selection,
+.hero-heading ::selection {
+  background: var(--surface);
+  color: var(--scrim);
 }

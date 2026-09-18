@@ -9,9 +9,10 @@ import { cn } from '@/lib/cn'
 
 function Logo({ logo }: { logo: ClientLogo }) {
   const { width, height } = sizeFor(logo)
-  // The file is a mask, not a picture: the box is filled with the text colour and the mark's own
-  // alpha cuts it out, so every logo is the same ink whatever colour, or raster, it was drawn in.
-  // A committed file at a known size: no optimiser, no client script, no layout shift.
+  // The file is a mask, not a picture: the box is filled with the strip's text colour and the
+  // mark's own alpha cuts it out, so every logo is the same ink whatever colour, or raster, it
+  // was drawn in. A committed file at a known size: no optimiser, no client script, no layout
+  // shift.
   const mask = `url(${logo.src})`
   return (
     <li className="flex shrink-0 items-center">
@@ -19,7 +20,7 @@ function Logo({ logo }: { logo: ClientLogo }) {
         role="img"
         aria-label={logo.name}
         style={{ width, height, maskImage: mask, WebkitMaskImage: mask }}
-        className="block bg-current mask-contain mask-center mask-no-repeat text-on-surface-muted opacity-70"
+        className="block bg-current mask-contain mask-center mask-no-repeat opacity-70"
       />
     </li>
   )
@@ -28,6 +29,8 @@ function Logo({ logo }: { logo: ClientLogo }) {
 // The clients' logos, sliding by for ever and fading out at both edges. One row is drawn
 // twice; the track slides the width of a row and starts again, so the seam never arrives. The
 // second row is hidden from the accessibility tree because it says nothing the first has not.
+// The ink is the strip's text colour, muted by default; the hero, which shows the strip on the
+// dark foot of its ground, passes its own white.
 //
 // Reduced motion stops the slide: the keyframes exist only under `prefers-reduced-motion:
 // no-preference` (app/globals.css), and here the copy, the fades and the clipping go with them,
@@ -37,7 +40,7 @@ export function LogoMarquee({ className }: { className?: string }) {
   return (
     <div
       className={cn(
-        'relative w-full min-w-0 overflow-hidden mask-[linear-gradient(to_right,transparent,black_var(--logo-fade),black_calc(100%_-_var(--logo-fade)),transparent)] [--logo-fade:3rem] [--logo-gap:4rem] motion-reduce:overflow-visible motion-reduce:mask-none',
+        'relative w-full min-w-0 overflow-hidden mask-[linear-gradient(to_right,transparent,black_var(--logo-fade),black_calc(100%_-_var(--logo-fade)),transparent)] text-on-surface-muted [--logo-fade:3rem] [--logo-gap:4rem] motion-reduce:overflow-visible motion-reduce:mask-none',
         className,
       )}
       style={{ minHeight: LOGO_ROW_HEIGHT }}

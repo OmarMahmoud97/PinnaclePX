@@ -43,10 +43,14 @@ export function MobileNav() {
 
   return (
     <div ref={rootRef} className="md:hidden">
+      {/* See-through with a hairline in the current colour, and dimmed rather than recoloured on
+          hover: over the hero the header is drawn inverted (header-chrome.tsx), so a filled
+          surface or a coloured ring would show as its opposite. */}
       <Button
         ref={buttonRef}
-        variant="outline"
+        variant="ghost"
         size="icon-lg"
+        className="border-current/30 hover:border-current/30 hover:bg-transparent hover:opacity-60 focus-visible:ring-current"
         onClick={() => {
           setOpen((current) => !current)
         }}
@@ -57,13 +61,13 @@ export function MobileNav() {
         <span aria-hidden="true" className="relative flex size-5 items-center justify-center">
           <span
             className={cn(
-              'absolute h-0.5 w-4 bg-on-surface transition-transform duration-(--motion-enter) ease-standard',
+              'absolute h-0.5 w-4 bg-current transition-transform duration-(--motion-enter) ease-standard',
               open ? 'rotate-45' : '-translate-y-1',
             )}
           />
           <span
             className={cn(
-              'absolute h-0.5 w-4 bg-on-surface transition-transform duration-(--motion-enter) ease-standard',
+              'absolute h-0.5 w-4 bg-current transition-transform duration-(--motion-enter) ease-standard',
               open ? '-rotate-45' : 'translate-y-1',
             )}
           />

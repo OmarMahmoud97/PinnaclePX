@@ -3,19 +3,18 @@ import { type Box, flipDelta } from '@/lib/motion/flip'
 import type { Gsap } from '@/lib/motion/gsap'
 
 // The build: a sketch's parts travel to their places on the finished page laid under it and
-// become the real thing on arrival. One routine, run by the hero's loop on its two frames
-// (hero-loop.ts) and by the walkthrough on its one (walkthrough-timeline.ts), each with its own
-// beats. FLIP on GSAP core, hand-rolled (ADR 0006): every sketch part and its finished
-// counterpart share a data-part name; both are measured, and lib/motion/flip.ts gives the
-// transform that lays one over the other.
+// become the real thing on arrival. One routine, run by the walkthrough on its frame
+// (walkthrough-timeline.ts) with its own beats; it was written for the hero's loop as well
+// (ADR 0006), which ADR 0031 removed. FLIP on GSAP core, hand-rolled: every sketch part and its
+// finished counterpart share a data-part name; both are measured, and lib/motion/flip.ts gives
+// the transform that lays one over the other.
 
 export type Timeline = ReturnType<Gsap['timeline']>
 
 type Beat = Readonly<{ at: number; for: number; step?: number }>
 
 // When each beat starts, in ms from the build's start, how long it takes, and the wait between
-// siblings that move one after another. CONFIG.demo.build and CONFIG.walkthrough.beats.build are
-// both this shape. `cross` is the share of a travel each half of a crossfade takes: the sketch
+// siblings that move one after another. CONFIG.walkthrough.beats.build is this shape. `cross` is the share of a travel each half of a crossfade takes: the sketch
 // part fades out over the first share, the finished part fades in over the last, and the stretch
 // between, the fastest, shows neither.
 export type BuildPlan = Readonly<{
@@ -98,10 +97,6 @@ export function layersOf(root: HTMLElement): Layers | null {
   const sketch = root.querySelector<HTMLElement>('[data-layer="sketch"]')
   const built = root.querySelector<HTMLElement>('[data-layer="built"]')
   return sketch === null || built === null ? null : { root, sketch, built }
-}
-
-export function layersIn(roots: readonly HTMLElement[]): Layers[] {
-  return roots.map(layersOf).filter((layers): layers is Layers => layers !== null)
 }
 
 type Move = Readonly<{

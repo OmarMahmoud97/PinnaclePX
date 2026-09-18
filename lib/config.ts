@@ -137,61 +137,48 @@ export const CONFIG = {
   retention: { days: 30, cron: '0 3 * * *' },
   polling: { statusMs: 3_000 }, // how often the done page asks how the designs are coming along
   analytics: { sectionViewThreshold: 0.2 }, // share of a section on screen before it counts as viewed
-  // The hero sketch typing a client's brief and then building it into a page, on a loop: the
-  // 230-character VetPres brief takes about 4 s and the brief about 8 s, the build 2.4 s, the
-  // finished page holds 3.5 s, the reset takes 0.9 s, and the next loop starts 0.4 s later.
+  // The hero's ink (ADR 0031, lib/motion/fluid.ts): the simulation grid as a share of the
+  // canvas; the splat radius factor (splat / height, about 2 * sqrt(height) pixels across); how
+  // hard pointer movement pushes the fluid; the pressure passes a frame (more is tighter and
+  // more liquid, each is one pass); the fixed time step, per frame, so the look follows the
+  // display's refresh rate; and where the ink wanders before the first pointer event, per axis
+  // a sum of sines around the centre, each [amplitude, frequency per ms, phase], with
+  // unrelated frequencies so the path never visibly repeats. Two more constants live in the
+  // shaders, which cannot read this file: the fade (0.96 a frame) and the divergence scale.
+  hero: {
+    ink: {
+      resolution: 0.25,
+      splat: 4,
+      gain: 5,
+      pressureIterations: 4,
+      dt: 1 / 60,
+      idle: {
+        x: [
+          [0.25, 0.0017, 0],
+          [0.12, 0.0031, 1.3],
+          [0.08, 0.0053, 2.7 + Math.PI / 2],
+          [0.05, 0.0079, 4.1],
+        ],
+        y: [
+          [0.18, 0.0023, 0.5],
+          [0.12, 0.0041, 1.8 + Math.PI / 2],
+          [0.08, 0.0067, 3.2],
+          [0.05, 0.0089, 5 + Math.PI / 2],
+        ],
+      },
+    },
+  },
+  // The sketch's typing, which the walkthrough's sentence beat plays (lib/brief/typing.ts): a
+  // steady pace, a breath after a comma, a longer one after a full stop, and a fixed wobble of
+  // up to this much either way per character. The rest of what lived here drove the hero's
+  // sketch loop, removed by ADR 0031.
   demo: {
-    startDelayMs: 400,
-    // The typing: a steady pace, a breath after a comma, a longer one after a full stop, and a
-    // fixed wobble of up to this much either way per character (lib/brief/typing.ts). A phone
-    // shows two lines of the sentence, so below md only this many characters are typed.
     typing: {
       msPerChar: 16,
       pauseAfterCommaMs: 120,
       pauseAfterStopMs: 240,
       jitterMs: 4,
-      phoneChars: 80,
     },
-    beatMs: 1000,
-    holdMs: 900,
-    // The share of the sketch's column on screen before the loop starts, and below which it
-    // pauses. A quarter, so a phone with the frame's top at the fold sees the typing begin.
-    startThreshold: 0.25,
-    buildMs: 2400,
-    builtHoldMs: 3500,
-    resetMs: 900,
-    loopDelayMs: 400,
-    // The build's beats: when each starts, in ms from the build's start, how long it takes, and
-    // the wait between siblings that move one after another. The last must end inside buildMs.
-    // `cross` is the share of a travel each half of a crossfade takes: the sketch part fades out
-    // over the first share, the finished part fades in over the last, and the stretch between,
-    // the fastest, shows neither.
-    build: {
-      cross: 0.4,
-      label: { at: 0, for: 250 },
-      bg: { at: 250, for: 1100 },
-      nav: { at: 100, for: 600, step: 50 },
-      photo: { at: 250, for: 1100 },
-      text: { at: 500, for: 800, step: 60 },
-      cards: { at: 900, for: 600, step: 60 },
-      footer: { at: 900, for: 500 },
-      arrows: { at: 1650, for: 350, step: 80 },
-      doneAt: 2200,
-      // The photograph arrives with the sketch's treatment and returns to itself on the way.
-      photoFilter: { from: 'saturate(0.75)', to: 'saturate(1)' },
-      // A finished part that barely travels (under `underPx`) rises `byPx` into place instead.
-      rise: { underPx: 8, byPx: 4 },
-      // The headline's words arrive one after another, each rising, inside its crossfade.
-      words: { step: 40, risePx: 6 },
-      // A pill's label fades in over only the last share of the travel, once the pill has shape.
-      labelShare: 0.25,
-      // A card's icon and title resolve this long after the card starts to show, for this long.
-      card: { after: 80, for: 350, risePx: 4 },
-    },
-    // The reset: the finished page fades and lifts for this share of resetMs; at swapShare of
-    // that fade, under the hidden sketch layer and with time for React to commit, the frame
-    // swaps to empty; at dissolveShare the blank sketch starts fading in, so the two cross.
-    reset: { fadeShare: 0.65, swapShare: 0.45, dissolveShare: 0.7, liftPx: 6 },
   },
   // The How it works walkthrough (docs/walkthrough-plan.md, ADR 0025): one phone frame that paints
   // an example brand's five answers as the visitor scrolls, then builds them into a finished page.
@@ -220,7 +207,7 @@ export const CONFIG = {
       look: { for: 1100, photo: 800, chipAt: 500, cardsAt: 350, step: 70, arrive: 450 },
       // The colour pours through its parts top to bottom, and the glow breathes in.
       colour: { for: 900, each: 450, step: 70, glow: 900 },
-      // The build, on the same beats as the hero's phone (demo.build), scaled to one frame.
+      // The build's beats (app/_components/sketch-build.ts), scaled to one frame.
       build: {
         cross: 0.4,
         label: { at: 0, for: 250 },

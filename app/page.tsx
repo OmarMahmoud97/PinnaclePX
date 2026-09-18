@@ -30,33 +30,42 @@ if (env.LAUNCH_GATE === '1' && !readyForTraffic(READY_TEMPLATES.length)) {
   )
 }
 
+// The hairline frame the page sits in: the column with its two rules, which the header's inner
+// row and the footer share, so the rules run unbroken from the first section to the foot.
+const frame = 'mx-auto w-full max-w-7xl border-x border-border'
+
 // The order is the persuasion arc in docs/home-page-content-plan.md section 2, with the value
-// band from docs/copy-review.md: mechanism, proof, what the build includes, the ask, the deal,
-// the alternatives, the objections. Every section is a direct child of
-// <main> so divide-y draws the hairline between them. The examples band slots in between
-// HowItWorks and Outcomes once a real render exists.
+// band from docs/copy-review.md: the promise, then proof, what the build includes, the ask, the
+// deal, the alternatives, the objections. The hero fills the first screen edge to edge under the
+// see-through header (ADR 0031); every section after it is a direct child of the frame so
+// divide-y draws the hairline between them. The examples band slots in between HowItWorks and
+// Outcomes once a real render exists.
 export default function HomePage() {
   return (
-    <div className="mx-auto max-w-7xl border-x border-border">
+    <>
       <JsonLd />
       <SiteHeader />
-      <main id="main" className="flex flex-col divide-y divide-border pt-16">
+      <main id="main" className="flex flex-col">
         <Hero />
-        <WhatYouGet />
-        <HowItWorks />
-        <Outcomes />
-        <Taster />
-        <Work />
-        <Included />
-        <RealBuild />
-        <YourOptions />
-        <StraightAnswers />
-        <About />
-        <Faq />
-        <ClosingCta />
+        <div className={`${frame} flex flex-col divide-y divide-border`}>
+          <WhatYouGet />
+          <HowItWorks />
+          <Outcomes />
+          <Taster />
+          <Work />
+          <Included />
+          <RealBuild />
+          <YourOptions />
+          <StraightAnswers />
+          <About />
+          <Faq />
+          <ClosingCta />
+        </div>
       </main>
-      <SiteFooter />
+      <div className={frame}>
+        <SiteFooter />
+      </div>
       <PageMotion />
-    </div>
+    </>
   )
 }

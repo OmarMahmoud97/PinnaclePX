@@ -1,6 +1,8 @@
 # The hero sketch loops, and builds into a finished page
 
-- Status: accepted
+- Status: superseded by ADR 0031 on 18 September 2026. The hero was rebuilt after a reference
+  design and the owner then asked for the loop's section to be deleted; the FLIP build routine
+  it introduced lives on in the How it works walkthrough (ADR 0025).
 - Date: 3 September 2026
 - Note, 5 September 2026: the caption quoted in item 6 was replaced. The brief is a real client's (VetPres), so the captions in `components/sketch/captions.ts` now say "a client's brief" and name the client only with their recorded consent (`docs/home-page-content-plan.md`, section 3.2 and decision 41). The record below is unchanged.
 - Amends: 0005 (item 6, autoplay loops)

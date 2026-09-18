@@ -52,34 +52,11 @@ test('the walkthrough paints the example brand stop by stop, and unpaints on the
   await expect(headline).toBeHidden()
 })
 
-// Two passes, because the second is the one that breaks: it must build from a clean sketch
-// rather than from whatever the first pass left behind.
-test("the hero sketch builds a client's brief into a page, twice over", async ({ page }) => {
-  test.setTimeout(60_000)
+// The headline is the largest contentful paint: it is server-rendered, its colour flip is a
+// blend rather than a transparency, and the ink canvas paints nothing the metric counts.
+test('the headline is the largest contentful paint', async ({ page }) => {
   await page.goto('/')
-  const hero = page.locator('#hero')
-  const sketching = hero.getByText(
-    "Sketch of a client's brief. A first look, not one of the designs.",
-  )
-  const built = hero.getByText('The same sentence, drawn as a page. Not one of the designs.')
-
-  await expect(sketching).toBeVisible({ timeout: 15_000 })
-  await expect(hero).toHaveAttribute('data-built', '', { timeout: 20_000 })
-  await expect(hero).toHaveAttribute('data-tinted', '')
-  await expect(built).toBeVisible()
-
-  await expect(hero).not.toHaveAttribute('data-built', '', { timeout: 15_000 })
-  await expect(sketching).toBeVisible()
-  await expect(hero).toHaveAttribute('data-built', '', { timeout: 25_000 })
-  await expect(built).toBeVisible()
-})
-
-// A photograph that first paints at full size nine seconds in would become the LCP element for
-// a visitor who has not yet moved. It first paints small, so the H1 must stay the LCP element
-// after a whole build with no input.
-test('the hero photograph never becomes the largest contentful paint', async ({ page }) => {
-  await page.goto('/')
-  await expect(page.locator('#hero')).toHaveAttribute('data-built', '', { timeout: 25_000 })
+  await expect(page.locator('html')).toHaveAttribute('data-motion', '')
   const lcp = await page.evaluate(
     () =>
       new Promise<string>((resolve) => {
@@ -100,7 +77,8 @@ test('a sentence typed in the hero reaches question one on the start page', asyn
   const sentence =
     'Family-run cafe by Whitby harbour. Breakfasts, cakes, dog-friendly, open from seven.'
   await page.getByLabel('What does your business do?').fill(sentence)
-  await expect(page.locator('#hero').getByText(sentence).first()).toBeVisible()
+  // The closing frame redraws with the visitor's own words as they type.
+  await expect(page.locator('#cta').getByText(sentence).first()).toBeVisible()
   await page.locator('#hero-cta').click()
   await expect(page).toHaveURL(/\/start\?q=2$/)
   await page.getByRole('button', { name: 'Back' }).click()

@@ -25,7 +25,6 @@ test('the whole page reads and works without JavaScript', async ({ page }) => {
     'href',
     /^mailto:\?subject=/,
   )
-  await expect(page.getByText("A client's brief so far: Sentence, VetPres")).toBeAttached()
 
   const entry = page.locator('#faq details').first()
   await entry.locator('summary').click()
