@@ -3,12 +3,13 @@ import type { CSSProperties } from 'react'
 // The source's own utilities and its repeated recipes, class for class, painted with the
 // tokens. Class strings stay literal so Tailwind can see them.
 //
-// Token map from the source's fixed dark palette: its near-black page (#0b0b0b) is surface,
-// its slightly lighter bands (#0f0f0f) surface-muted, its cards (#111) accent, its hairlines
-// and tag fills (#1a1a1a) border, its lime (#d7ff2f) brand-deeper and the lime's hover
-// (#c8f020) brand-deepest, the near-black set on lime on-brand, and white on-surface, with
-// every alpha the source used kept as the same alpha on the token. Its two other greys are
-// white at an alpha: #222 is on-surface/10, #333 on-surface/16 and #555 on-surface/30. Its
+// Token map from the source's fixed dark palette, its hex codes written bare because no file
+// under templates/ may hold a hex literal: its near-black page (0b0b0b) is surface, its
+// slightly lighter bands (0f0f0f) surface-muted, its cards (111) accent, its hairlines and tag
+// fills (1a1a1a) border, its lime (d7ff2f) brand-deeper and the lime's hover (c8f020)
+// brand-deepest, the near-black set on lime on-brand, and white on-surface, with every alpha
+// the source used kept as the same alpha on the token. Its two other greys are white at an
+// alpha: 222 is on-surface/10, 333 on-surface/16 and 555 on-surface/30. Its
 // footer, three units darker than the page, is the page.
 
 // The source's `container-gym`: 1440px at most, centred, 2rem of padding, 4rem from md and
