@@ -6,10 +6,10 @@ export type InkColour = Readonly<{ r: number; g: number; b: number }>
 // A term of the idle path: amplitude, frequency per millisecond and phase, of one sine.
 type Wave = readonly [amplitude: number, frequency: number, phase: number]
 
-// The tunables, from CONFIG.hero.ink: the simulation grid as a share of the canvas, the splat
+// The tunables, from CONFIG.ink: the simulation grid as a share of the canvas, the splat
 // radius factor (4 / height is about 2 * sqrt(height) pixels across), how hard pointer movement
 // pushes the fluid, the pressure passes a frame, the fixed time step, and where the ink
-// wanders before the first pointer event.
+// wanders while the pointer is still, along with how long it waits before it does.
 export type FluidOptions = Readonly<{
   colour: InkColour
   resolution: number
@@ -17,7 +17,7 @@ export type FluidOptions = Readonly<{
   gain: number
   pressureIterations: number
   dt: number
-  idle: Readonly<{ x: readonly Wave[]; y: readonly Wave[] }>
+  idle: Readonly<{ after: number; x: readonly Wave[]; y: readonly Wave[] }>
 }>
 
 type Target = Readonly<{
@@ -212,7 +212,9 @@ export function startFluid(canvas: HTMLCanvasElement, options: FluidOptions): ()
   // Positions in CSS pixels relative to the canvas. Movement since the last call becomes the
   // velocity added, times the gain: a flick shoves the fluid, a slow drag barely stirs it.
   const pointer = { x: 0, y: 0, dx: 0, dy: 0, moved: false }
-  let idle = true
+  // When the pointer last moved, on the same clock as the frame's timestamp. Before the first
+  // event there is no such moment, which is what leaves the ink wandering as the page opens.
+  let movedAt = Number.NEGATIVE_INFINITY
   const updatePointer = (x: number, y: number) => {
     pointer.moved = true
     pointer.dx = gain * (x - pointer.x)
@@ -221,7 +223,7 @@ export function startFluid(canvas: HTMLCanvasElement, options: FluidOptions): ()
     pointer.y = y
   }
   const onPointer = ({ clientX, clientY }: { clientX: number; clientY: number }) => {
-    idle = false
+    movedAt = performance.now()
     const rect = canvas.getBoundingClientRect()
     updatePointer(clientX - rect.left, clientY - rect.top)
   }
@@ -235,10 +237,13 @@ export function startFluid(canvas: HTMLCanvasElement, options: FluidOptions): ()
 
   let raf = 0
   const frame = (time: number) => {
-    // Until the first real pointer event the ink moves by itself. While idle the moved flag is
-    // never cleared, so a splat lands every frame; and the pointer starts at (0, 0), so the
-    // first idle frame is a jump from the corner to the middle, which is the bloom of ink when
-    // the page opens.
+    // The ink moves by itself until the first pointer event, and again once the pointer has
+    // been still for idlePath.after. While idle the moved flag is never cleared, so a splat
+    // lands every frame; and the pointer sits where it was left, so the first idle frame is a
+    // jump to the path — from the corner on load, from the cursor afterwards. That single huge
+    // velocity is the bloom of ink. By then the dye it left has faded to nothing (0.96 a frame
+    // for five seconds), so the ink blooms into an empty canvas either way.
+    const idle = time - movedAt >= idlePath.after
     if (idle) {
       updatePointer(
         wander(idlePath.x, time) * canvas.width,

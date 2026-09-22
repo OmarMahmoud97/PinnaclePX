@@ -7,9 +7,13 @@ test('home page renders the promise and the two actions', async ({ page }) => {
   )
   await expect(page.getByRole('navigation', { name: 'Main' })).toBeVisible()
 
+  // The hero carries the primary action and its trigger; the call is asked for further down,
+  // where the build is explained, and in the closing (ADR 0031 moved it off the first screen).
   const hero = page.locator('#hero')
   await expect(hero.getByRole('link', { name: 'Show me my three designs' })).toBeVisible()
-  await expect(hero.getByRole('link', { name: 'Book a 20-minute call' })).toHaveAttribute(
+  await expect(hero.getByText('Free. No sign-up. Nobody calls you unless you book.')).toBeVisible()
+  await expect(hero.getByRole('link', { name: 'Book a 20-minute call' })).toHaveCount(0)
+  await expect(page.getByRole('link', { name: 'Book a 20-minute call' }).first()).toHaveAttribute(
     'href',
     /cal\.com/,
   )
@@ -18,7 +22,9 @@ test('home page renders the promise and the two actions', async ({ page }) => {
 test('how it works never lists the questions', async ({ page }) => {
   await page.goto('/')
   const section = page.locator('#how-it-works')
-  await expect(section.getByRole('heading', { name: 'One question at a time.' })).toBeVisible()
+  await expect(
+    section.getByRole('heading', { name: 'Five answers show you the look.' }),
+  ).toBeVisible()
   await expect(section.getByText(/^Question \d$/)).toHaveCount(0)
   await expect(section.getByText(/Question \d of 5/)).toHaveCount(1)
 })
@@ -38,7 +44,7 @@ test('the walkthrough paints the example brand stop by stop, and unpaints on the
   await expect(section.getByText('Question 1 of 5')).toBeVisible()
   await expect(slot).toBeVisible()
 
-  await page.locator('#outcomes').scrollIntoViewIfNeeded()
+  await page.locator('#real-build').scrollIntoViewIfNeeded()
   await expect(section.getByText('Question 5 of 5')).toBeVisible()
   await expect(
     section.getByText('Built as an illustration. Not a client, not one of the designs.'),
@@ -46,7 +52,7 @@ test('the walkthrough paints the example brand stop by stop, and unpaints on the
   await expect(headline).toBeVisible({ timeout: 15_000 })
   await expect(slot).toBeHidden()
 
-  await page.locator('#what-you-get').scrollIntoViewIfNeeded()
+  await page.locator('#included').scrollIntoViewIfNeeded()
   await expect(section.getByText('Question 1 of 5')).toBeVisible()
   await expect(slot).toBeVisible({ timeout: 15_000 })
   await expect(headline).toBeHidden()
@@ -85,34 +91,35 @@ test('a sentence typed in the hero reaches question one on the start page', asyn
   await expect(page.getByLabel('What does your business do?')).toHaveValue(sentence)
 })
 
-test('the taster section carries the call to action', async ({ page }) => {
+test('the build section says who does what and carries the call', async ({ page }) => {
   await page.goto('/')
-  const taster = page.locator('#taster')
+  const build = page.locator('#real-build')
+  await build.scrollIntoViewIfNeeded()
   await expect(
-    taster.getByRole('heading', { name: /A conversation starts your real site/ }),
+    build.getByRole('heading', { name: 'If a design fits, here is what happens next.' }),
   ).toBeVisible()
-  await expect(taster.getByRole('link', { name: 'Book a 20-minute call' })).toHaveAttribute(
+  await expect(build.getByRole('heading', { level: 3 })).toHaveCount(5)
+  await expect(build.getByText('We agree a timeline on the call.')).toBeVisible()
+  await expect(build.getByRole('link', { name: 'Book a 20-minute call' })).toHaveAttribute(
     'href',
     /cal\.com/,
   )
 })
 
-test('the taster opens into the build section, and the build says who does what', async ({
-  page,
-}) => {
+// Proof first, then the ask: the six live sites are followed by the page's first primary button.
+test('the work band leads the page and ends on the primary action', async ({ page }) => {
   await page.goto('/')
-  await page.locator('#taster').getByRole('link', { name: 'What the build includes' }).click()
-  await expect(page).toHaveURL(/#real-build$/)
-  const build = page.locator('#real-build')
-  await expect(build).toBeInViewport()
-  await expect(build.getByRole('heading', { level: 3 })).toHaveCount(5)
-  await expect(build.getByText('We agree a timeline on the call.')).toBeVisible()
+  const work = page.locator('#work')
+  await expect(work.getByRole('link', { name: 'Show me my three designs' })).toHaveAttribute(
+    'href',
+    '/start',
+  )
 })
 
 test('the comparison names no builder and labels both columns', async ({ page }) => {
   await page.goto('/')
   const options = page.locator('#your-options')
-  await expect(options.getByRole('heading', { level: 3 })).toHaveCount(6)
+  await expect(options.getByRole('heading', { level: 3 })).toHaveCount(4)
   await expect(options.getByText(/Wix|Squarespace/)).toHaveCount(0)
   await expect(options.getByText('You build it with a builder')).toBeVisible()
   await expect(options.getByText('We build it with you')).toBeVisible()
@@ -147,7 +154,7 @@ test('about makes no claim about agencies and counts the sites built', async ({ 
   await page.goto('/')
   const about = page.locator('#about')
   await expect(about.getByText(/Most agencies/)).toHaveCount(0)
-  await expect(about.getByText(/more than thirty websites since 2022/)).toBeVisible()
+  await expect(about.getByText(/More than thirty websites since 2021/)).toBeVisible()
 })
 
 test('the not-ready visitor can send the page on without giving anything', async ({ page }) => {

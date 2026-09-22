@@ -54,10 +54,9 @@ export function About() {
         <div className="flex flex-col gap-5 p-column text-lead text-pretty text-on-surface-muted max-md:pt-6 md:col-span-4">
           <p className="max-w-prose">
             <span className="font-medium text-on-surface">{SITE.legalName}</span>
-            {ABOUT.studio.slice(SITE.legalName.length)} {ABOUT.pattern}
+            {ABOUT.first.slice(SITE.legalName.length)}
           </p>
-          <p className="max-w-prose">{ABOUT.first}</p>
-          <p className="max-w-prose">{ABOUT.built}</p>
+          <p className="max-w-prose">{ABOUT.second}</p>
         </div>
       </div>
     </section>

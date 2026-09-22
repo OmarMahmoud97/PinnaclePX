@@ -1,12 +1,7 @@
 import { FaqEntry } from '@/app/_components/faq-entry'
 import { FAQ_ITEMS } from '@/app/_components/faq-items'
 import { FAQ } from '@/app/_components/section-copy'
-import {
-  headingColumn,
-  sectionGrid,
-  sectionLead,
-  titleHeading,
-} from '@/app/_components/section-styles'
+import { headingColumn, sectionGrid, titleHeading } from '@/app/_components/section-styles'
 
 export function Faq() {
   return (
@@ -14,7 +9,6 @@ export function Faq() {
       <div className={sectionGrid}>
         <div className={headingColumn}>
           <h2 className={titleHeading}>{FAQ.heading}</h2>
-          <p className={sectionLead}>{FAQ.lead}</p>
         </div>
         <div className="divide-y divide-border p-column max-md:pt-6 md:col-span-4">
           {FAQ_ITEMS.map(({ question, answer, link }, index) => (

@@ -5,7 +5,6 @@ import { CTA, NAV_LINKS } from '@/app/_components/nav-links'
 import { Logo } from '@/components/brand/logo'
 import { buttonStyles } from '@/components/ui/button'
 import { TrackedLink } from '@/components/ui/tracked-link'
-import { cn } from '@/lib/cn'
 import { SITE } from '@/lib/site'
 
 // A link in the header: text in the current colour, dimmed on hover rather than recoloured,
@@ -14,15 +13,25 @@ import { SITE } from '@/lib/site'
 const headerLink =
   'inline-flex h-8 items-center px-3 text-sm font-medium transition-opacity duration-(--motion-tap) hover:opacity-60 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-current'
 
-// The wordmark, the section links, a rule, and the ask, as the reference lays its nav out. Over
-// the hero the ask is a link like the others; once the header is solid it becomes the filled
-// button, which the blend would otherwise invert. On a phone the button appears only once the
-// hero's own button has scrolled away, taking the wordmark's place beside the mark, so the
-// first screen is unchanged and the primary action is never more than a thumb away after it.
+// The ask: the same element in both states, so the fill grows around the same words instead of
+// one link swapping for another. Over the hero it is a text link like the others; once the
+// chrome sets `data-filled` (only ever while the blend is normal, since brand blue under the
+// difference blend would show as orange) it is the primary button from components/ui/button.tsx,
+// size md: the padding is the button's throughout, so nothing beside it moves, and only the
+// height, the fill and the ink change. The timing, and the ink, are `.header-ask` in
+// app/globals.css.
+const headerCta =
+  'header-ask inline-flex h-8 items-center rounded-full px-5 text-sm font-medium hover:opacity-60 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-current group-data-filled:h-10 group-data-filled:bg-brand-deeper group-data-filled:hover:bg-brand-deepest group-data-filled:hover:opacity-100 group-data-filled:focus-visible:outline-brand-deeper group-data-filled:motion-safe:active:scale-[0.98]'
+
+// The wordmark, the section links, a rule, and the ask, as the reference lays its nav out. The
+// surface the header takes once scrolled, and the frame rules with it, are drawn by the chrome
+// underneath. On a phone the button appears only once the hero's own button has scrolled away,
+// taking the wordmark's place beside the mark, so the first screen is unchanged and the primary
+// action is never more than a thumb away after it.
 export function SiteHeader() {
   return (
     <HeaderChrome>
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6 md:group-data-scrolled:border-x md:group-data-scrolled:border-border">
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
         <Link href="/" aria-label={`${SITE.name} home`} className="shrink-0">
           <Logo nameClassName="max-md:group-data-past-hero:hidden" />
         </Link>
@@ -45,15 +54,7 @@ export function SiteHeader() {
                   href={CTA.href}
                   event="cta_click"
                   location="header"
-                  className={cn(headerLink, 'group-data-scrolled:hidden')}
-                >
-                  {CTA.label}
-                </TrackedLink>
-                <TrackedLink
-                  href={CTA.href}
-                  event="cta_click"
-                  location="header"
-                  className={buttonStyles({ className: 'hidden group-data-scrolled:inline-flex' })}
+                  className={headerCta}
                 >
                   {CTA.label}
                 </TrackedLink>

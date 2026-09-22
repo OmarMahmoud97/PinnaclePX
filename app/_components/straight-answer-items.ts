@@ -38,7 +38,10 @@ export function straightAnswerItems(readyCount: number): readonly StraightAnswer
     },
     {
       question: 'What do you do with my email?',
-      answer: "We send you your link. You book a call if you want one. We don't ring you.",
+      // "Nothing else": the link is the only email a visitor gets (lib/email/preview-link.ts);
+      // there is no newsletter and no follow-up in lib/email or lib/inngest (register rows 14, 15).
+      answer:
+        "We send you your link, and nothing else. No newsletter, no chasing. You book a call if you want one. We don't ring you.",
       Icon: Mail,
     },
     {

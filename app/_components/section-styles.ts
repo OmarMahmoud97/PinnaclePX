@@ -21,15 +21,15 @@ export const cardHeading = 'text-heading font-medium'
 // A left column pins only when its neighbour is taller than a viewport, at one offset.
 export const stickyColumn = 'md:sticky md:top-24 md:self-start'
 
-// The ground the page stands on where it turns from proof to price: Included, Real build and
-// Your options, and no fourth band ever — three tinted sections read as one stretch, four read
+// The ground the page stands on where it turns from the site to the deal: the build and the
+// comparison, and no third band ever — two tinted sections read as one stretch, four read
 // as a stripe. Every recipe below works on it unchanged (see the ratios in app/globals.css).
 export const commercialBand = 'bg-surface-tint'
 
 // The rule that opens and closes that stretch. It is a child, not a border, so `-mt-px` lets it
 // sit exactly on <main>'s own divide-y hairline and paint over it — descendants paint above a
 // parent's border — and the boundary is marked once rather than twice. Used exactly twice: at
-// the top of Included and at the top of the section after Your options.
+// the top of Real build and at the top of the section after Your options.
 export const bandEdge =
   '-mt-px h-px bg-linear-to-r from-transparent via-brand-deeper/45 to-transparent'
 

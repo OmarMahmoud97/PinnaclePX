@@ -6,12 +6,9 @@ import { CONFIG } from '@/lib/config'
 
 // The sections whose first appearance on screen is worth counting. Ids match app/page.tsx.
 const SECTION_IDS = [
-  'what-you-get',
-  'how-it-works',
-  'outcomes',
-  'taster',
   'work',
   'included',
+  'how-it-works',
   'real-build',
   'your-options',
   'straight-answers',

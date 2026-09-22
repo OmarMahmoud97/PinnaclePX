@@ -27,6 +27,9 @@
   --text-hero: clamp(2.25rem, 1.25rem + 3.7vw, 5.625rem);
   --text-hero--line-height: 1;
   --text-hero--letter-spacing: -0.025em;
+  /* The lift under the header's surface: short and soft, so it separates the bar from the hero's
+     ink and gradient and all but vanishes on the white sections. Site-only, like --text-hero. */
+  --shadow-header: 0 12px 32px -16px rgb(2 6 23 / 0.16);
 }
 
 /*
@@ -93,6 +96,48 @@ html {
   scroll-padding-top: 4rem;
 }
 
+/*
+ * The header's ask (app/_components/site-header.tsx): a text link that fills to the primary
+ * button once the header is solid, and empties again on the way back. The fill fades over
+ * --motion-enter. The ink must not fade with it, which would pass through grey on half a fill,
+ * and it cannot switch the moment the fill starts either, which would put white words on a bare
+ * surface for the first frames: it holds, then snaps between the header's colour and white at
+ * the point where both read alike against the blue, which is 85% of a fill. --ease-standard is
+ * front-loaded, so arriving blue is 85% there at 0.46 of the time and leaving blue is 85% still
+ * there at 0.1; each direction's rule carries its own hold. The ink is a registered property of
+ * its own, and the ask reads it only while the header is solid, so the fill is the one thing
+ * that moves it: over the hero the ask inherits the header's colour like every other link, and
+ * the flip between the two, which is instant, never starts a hold. (currentColor is no use as
+ * the held value: Chrome resolves it in a registered property when the style is computed, so
+ * the flip would move the property too.) Under reduced motion the ask changes in one go, ink
+ * and fill together (the rule is with the others below), since a timed fill is only readable
+ * with the hold.
+ */
+@property --ask-ink {
+  syntax: '<color>';
+  inherits: false;
+  initial-value: transparent;
+}
+
+.header-ask {
+  --ask-ink: var(--on-surface);
+  transition:
+    --ask-ink 0s var(--ease-standard) calc(var(--motion-enter) * 0.1),
+    background-color var(--motion-enter) var(--ease-standard),
+    height var(--motion-enter) var(--ease-standard),
+    opacity var(--motion-enter) var(--ease-standard),
+    scale var(--motion-tap) var(--ease-standard);
+}
+
+[data-solid] .header-ask {
+  color: var(--ask-ink);
+}
+
+[data-filled] .header-ask {
+  --ask-ink: var(--on-brand);
+  transition-delay: calc(var(--motion-enter) * 0.46), 0s, 0s, 0s, 0s;
+}
+
 /* The corner ticks reach past the column on purpose; clip (not hidden) keeps sticky working. */
 body {
   overflow-x: clip;
@@ -137,12 +182,13 @@ html.lenis.lenis-smooth {
   }
 
   /*
-   * The logo strip. The track holds two identical rows with the row gap between them, so sliding
-   * one row plus half that gap lands the second row exactly where the first began.
+   * The logo strip. The track holds --logo-copies identical rows with the row gap between them
+   * (app/_components/logo-marquee.tsx), so its width plus one gap is that many rows and gaps;
+   * sliding one share of it lands the next row exactly where the first began.
    */
   @keyframes logo-marquee {
     to {
-      translate: calc(-50% - var(--logo-gap) / 2) 0;
+      translate: calc((-100% - var(--logo-gap)) / var(--logo-copies, 2)) 0;
     }
   }
 
@@ -192,6 +238,13 @@ html.lenis.lenis-smooth {
   ::details-content {
     transition-property: color, background-color, border-color, opacity !important;
   }
+
+  /* The header's ask: the list above puts its ink hold on `color` by position, which would
+     delay the header's own flip; instant is the readable answer here. */
+  .header-ask {
+    transition-duration: 0s;
+    transition-delay: 0s;
+  }
 }
 
 /*
@@ -238,15 +291,31 @@ details.faq[open]::details-content {
  * runs darker than the edges. It has a fixed height and is pinned to the bottom, like the
  * content, so the headline always lands on the light part and the caption on the dark part
  * whatever the viewport's height. The ink canvas multiplies onto it: ink shows over the light
- * half and disappears into the dark. --hero-ink is what one splat reaches, read once by
- * app/_components/hero-ink.tsx; built-up ink still goes black.
+ * half and disappears into the dark.
+ *
+ * The ground is a layer of its own under the ink because it rises as the hero scrolls out, the
+ * way the reference build's does (docs/hero-gradient-scroll-animation.md): a scroll-driven
+ * transform, at rest at the top of the page and --hero-ground-rise up by the time the hero's
+ * foot reaches the top of the viewport, which Lenis's lerp (ADR 0021) turns into a glide. The
+ * layer overhangs the section's foot by the same distance, so the rise never exposes the
+ * section behind it, and the ellipse is written in lengths, the ones its percentages resolved
+ * to on a box --gradient-height tall, so the overhang continues the ramp's dark foot instead of
+ * re-shaping it. Browsers without scroll-driven animations, and reduced motion, keep the still
+ * ground, which is the ground at the top of the page.
  */
+.hero {
+  view-timeline: --hero block;
+}
+
 .hero-ground {
-  --hero-ink: #004268;
   --gradient-height: 62rem;
+  --hero-ground-rise: 20svh;
+  position: absolute;
+  inset: 0 0 calc(-1 * var(--hero-ground-rise));
+  pointer-events: none;
   background: var(--surface)
     radial-gradient(
-      ellipse 269% 310% at 50% 300%,
+      ellipse 269% calc(var(--gradient-height) * 3.1) at 50% calc(var(--gradient-height) * 3),
       #020a12 65%,
       #02101d 67%,
       #021b2c 68.7%,
@@ -263,7 +332,7 @@ details.faq[open]::details-content {
       #fefeff 92.1%,
       #ffffff 94.5%
     )
-    bottom / 100% var(--gradient-height) no-repeat;
+    bottom / 100% calc(var(--gradient-height) + var(--hero-ground-rise)) no-repeat;
 }
 
 @media (width < 48rem) {
@@ -272,12 +341,34 @@ details.faq[open]::details-content {
   }
 }
 
+@media (prefers-reduced-motion: no-preference) {
+  .hero-ground {
+    animation: hero-ground-rise linear both;
+    animation-timeline: --hero;
+    animation-range: exit;
+  }
+
+  @keyframes hero-ground-rise {
+    to {
+      translate: 0 calc(-1 * var(--hero-ground-rise));
+    }
+  }
+}
+
 /*
- * The simulation runs at a quarter of the canvas, so the blur hides its 4px blocks, and the
- * section's overflow clips the blur's bleed. Clicks fall through to the content, which is why
- * the simulation listens for the pointer on the window.
+ * The ink canvas, over the hero and the closing section (ADR 0032). It multiplies onto the
+ * section's ground, which must be opaque and the section isolated, so it is white where there
+ * is no ink and invisible until the simulation draws. --ink is what one splat reaches, read
+ * once by app/_components/ink.tsx and the same over both grounds; built-up ink still goes
+ * black. The simulation runs at a quarter of the canvas, so the blur hides its 4px blocks, and
+ * the section's overflow clips the blur's bleed. Clicks fall through to the content, which is
+ * why the simulation listens for the pointer on the window.
  */
-.hero-ink {
+:root {
+  --ink: #004268;
+}
+
+.ink {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -323,4 +414,30 @@ details.faq[open]::details-content {
 .hero-heading ::selection {
   background: var(--surface);
   color: var(--scrim);
+}
+
+/*
+ * Text over the closing section's ink (ADR 0032): the same flip as the headline's, without the
+ * fill, because the ground there is the page's white. Blended by difference, a colour shows as
+ * its complement over white and as itself over dark ink, so the tokens the text and its links
+ * use are declared again here as the complements of what should show: on-surface as a near-
+ * white that reads near-black; on-surface-muted, and the hover colour, as a grey of
+ * --on-surface-muted's lightness with its slate hue dropped, since a cool grey's complement is
+ * warm; the surface as black, so a focus ring's offset still reads as the ground. The element
+ * states its own colour with a utility (the inherited colour is the page's navy, which would
+ * read cream), and a token not listed here shows as its complement. Nothing between the text
+ * and the section may create a stacking context, or the flip switches off.
+ */
+.over-ink {
+  --on-surface: #f0f0f0;
+  --on-surface-muted: #ababab;
+  --brand-deeper: #ababab;
+  --surface: #000000;
+  mix-blend-mode: difference;
+}
+
+.over-ink::selection,
+.over-ink ::selection {
+  background: var(--on-surface);
+  color: var(--surface);
 }

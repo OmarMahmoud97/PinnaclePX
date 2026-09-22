@@ -6,16 +6,15 @@ import { expect, test } from '@playwright/test'
 test('the whole page reads and works without JavaScript', async ({ page }) => {
   await page.goto('/')
   for (const name of [
-    'One question at a time.',
-    'Four things your site has to do.',
     'Six sites we designed and built.',
-    'Everything your real site needs, built in.',
-    'If you like one, here is what happens next.',
+    'Everything your site needs, built in.',
+    'Five answers show you the look.',
+    'If a design fits, here is what happens next.',
     'Doing it yourself, or asking us.',
     'Straight answers.',
     'About the studio',
     'Frequently asked questions',
-    'Your three designs are five questions away.',
+    'A site that looks like your business. Looking is free.',
   ]) {
     await expect(page.getByRole('heading', { name })).toBeVisible()
   }
@@ -32,6 +31,5 @@ test('the whole page reads and works without JavaScript', async ({ page }) => {
   await expect(entry.locator('p')).toBeVisible()
 
   await expect(page.locator('#straight-answers').getByRole('heading', { level: 3 })).toHaveCount(4)
-  await expect(page.locator('#what-you-get').getByRole('heading', { level: 3 })).toHaveCount(4)
   await expect(page.locator('#included').getByRole('heading', { level: 3 })).toHaveCount(8)
 })

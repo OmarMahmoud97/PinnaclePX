@@ -12,6 +12,7 @@ import { captureFor, CLIENT_ITEMS, hostOf, longDate, WORK } from '@/app/_compone
 import { BrowserFrame } from '@/components/sketch/browser-frame'
 import { PhoneFrame } from '@/components/sketch/phone-frame'
 import { sketchModelFrom } from '@/components/sketch/sketch-model'
+import { buttonStyles } from '@/components/ui/button'
 import { captionStyles } from '@/components/ui/caption'
 import { tapLinkStyles } from '@/components/ui/text-link'
 import { TrackedAnchor, TrackedLink } from '@/components/ui/tracked-link'
@@ -138,15 +139,18 @@ export function Work() {
         })}
       </ul>
 
-      <div className="flex flex-col gap-1 p-column pt-5 md:pt-6">
+      <div className="flex flex-col items-start gap-4 p-column pt-5 md:pt-6">
         <p className={captionStyles}>{WORK.group}</p>
-        {/* Proof, then the ask: the band never ends with nothing to do. */}
-        <p className="pt-3 text-small text-on-surface-muted">
-          {WORK.ask}{' '}
-          <TrackedLink href={CTA.href} event="cta_click" location="work" className={tapLinkStyles}>
-            {CTA.label}
-          </TrackedLink>
-        </p>
+        {/* Proof, then the action: the reader who is convinced by six live sites should not have
+            to reach for the header. The button is the ask, so no sentence introduces it. */}
+        <TrackedLink
+          href={CTA.href}
+          event="cta_click"
+          location="work"
+          className={buttonStyles({ size: 'lg', className: 'w-full sm:w-fit' })}
+        >
+          {CTA.label}
+        </TrackedLink>
       </div>
     </section>
   )

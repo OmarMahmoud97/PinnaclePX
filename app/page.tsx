@@ -5,14 +5,11 @@ import { Hero } from '@/app/_components/hero'
 import { HowItWorks } from '@/app/_components/how-it-works'
 import { Included } from '@/app/_components/included'
 import { JsonLd } from '@/app/_components/json-ld'
-import { Outcomes } from '@/app/_components/outcomes'
 import { PageMotion } from '@/app/_components/page-motion'
 import { RealBuild } from '@/app/_components/real-build'
 import { SiteFooter } from '@/app/_components/site-footer'
 import { SiteHeader } from '@/app/_components/site-header'
 import { StraightAnswers } from '@/app/_components/straight-answers'
-import { Taster } from '@/app/_components/taster'
-import { WhatYouGet } from '@/app/_components/what-you-get'
 import { Work } from '@/app/_components/work'
 import { YourOptions } from '@/app/_components/your-options'
 import { CONFIG } from '@/lib/config'
@@ -34,12 +31,13 @@ if (env.LAUNCH_GATE === '1' && !readyForTraffic(READY_TEMPLATES.length)) {
 // row and the footer share, so the rules run unbroken from the first section to the foot.
 const frame = 'mx-auto w-full max-w-7xl border-x border-border'
 
-// The order is the persuasion arc in docs/home-page-content-plan.md section 2, with the value
-// band from docs/copy-review.md: the promise, then proof, what the build includes, the ask, the
-// deal, the alternatives, the objections. The hero fills the first screen edge to edge under the
-// see-through header (ADR 0031); every section after it is a direct child of the frame so
-// divide-y draws the hairline between them. The examples band slots in between HowItWorks and
-// Outcomes once a real render exists.
+// The order is the arc in docs/adr/0033: proof the visitor can open on a phone, the site they
+// would get, the free look at it, what happens if they like one, the other route compared
+// fairly, the catch, the person, the questions left, the ask. Nine bands where there were
+// twelve: the free designs are the first step in that story rather than its subject, so what the
+// taster gives is now told once, by the walkthrough. The hero fills the first screen edge to
+// edge under the see-through header (ADR 0031); every section after it is a direct child of the
+// frame so divide-y draws the hairline between them.
 export default function HomePage() {
   return (
     <>
@@ -48,12 +46,9 @@ export default function HomePage() {
       <main id="main" className="flex flex-col">
         <Hero />
         <div className={`${frame} flex flex-col divide-y divide-border`}>
-          <WhatYouGet />
-          <HowItWorks />
-          <Outcomes />
-          <Taster />
           <Work />
           <Included />
+          <HowItWorks />
           <RealBuild />
           <YourOptions />
           <StraightAnswers />
