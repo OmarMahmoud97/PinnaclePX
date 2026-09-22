@@ -44,7 +44,7 @@ test('the header takes the primary action once the hero button has scrolled away
 test('the added sections stay within ten phone screens together', async ({ page }) => {
   await page.goto('/')
   const total = await page.evaluate(() =>
-    ['examples', 'outcomes', 'work', 'included', 'real-build', 'your-options'].reduce(
+    ['work', 'included', 'real-build', 'your-options'].reduce(
       (sum, id) => sum + (document.getElementById(id)?.offsetHeight ?? 0),
       0,
     ),
@@ -68,16 +68,7 @@ test('the walkthrough shows the whole phone frame under the header', async ({ pa
 
 test('every list and answer is readable without any interaction', async ({ page }) => {
   await page.goto('/')
-  for (const id of [
-    'what-you-get',
-    'outcomes',
-    'included',
-    'real-build',
-    'your-options',
-    'straight-answers',
-    'about',
-    'faq',
-  ]) {
+  for (const id of ['included', 'real-build', 'your-options', 'straight-answers', 'about', 'faq']) {
     await page.locator(`#${id}`).scrollIntoViewIfNeeded()
     await expect(page.locator(`#${id}`)).toBeVisible()
   }

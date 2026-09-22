@@ -144,3 +144,34 @@ The owner has asked for it, and it is the design's whole point.
   get. The Playwright assertions on the loop are gone, and the accessibility scans run on the
   page as it loads. Measured after the removal: initial scripts on `/` 211,303 B gzipped, HTML
   37,905 B, stylesheet 15,149 B; the lines stay where decision 9 set them.
+- 21 September 2026: decision 5's change of state is staged rather than snapped, at the owner's
+  request (the snap was visible and the bar it snapped to looked unfinished over the hero). The
+  surface is a layer of its own under the header (`app/_components/header-chrome.tsx`), never
+  inside it, because a white bar inside the blended group would read black; it fades in over
+  `--motion-enter`, then the blend flips over the now-opaque surface, where white minus white
+  was already the header's black, so nothing is seen to change, and only then does the ask fill.
+  Leaving runs the steps in reverse. The ask is one element in both states, a text link that
+  fills to the primary button around the same words; its ink holds and snaps at the point where
+  the two colours read alike against the blue (`.header-ask` in `app/globals.css`), so the
+  words never pass through a moment of weak contrast. The frame rules on the header's column
+  wait for the page's frame to be what runs under it (`data-framed`), since over the
+  edge-to-edge hero they hung from nothing. The surface is `--surface` at 92% with a 16px blur
+  and a short soft lift (`--shadow-header`), in place of 88% and 12px, which read grey over the
+  hero's dark foot. Reduced motion keeps the surface fade and takes the ask's change in one go.
+  Measured: stylesheet 15,333 B gzipped, HTML 38,650 B; both lines stand.
+- 21 September 2026, later the same day: the ground rises as the hero scrolls out, the way the
+  reference build's does (`docs/hero-gradient-scroll-animation.md`), at the owner's request. It
+  is a layer of its own, first in the section (`app/_components/hero.tsx`), and a CSS
+  scroll-driven animation on the section's view timeline moves it (`.hero-ground` in
+  `app/globals.css`): the `exit` range is the reference's `start start` to `end start`, and the
+  rise is `--hero-ground-rise`, 20svh, so it stays a fraction of the screen on every phone. No
+  JavaScript is involved; Lenis's lerp is what turns the scroll into a glide, and a browser
+  without scroll-driven animations, or a visitor preferring reduced motion, keeps the still
+  ground, which is the ground at the top of the page. The layer overhangs the section's foot by
+  the rise and the gradient's ellipse is written in lengths, so the overhang continues the
+  ramp's dark foot rather than re-shaping it: the ground at rest is the pixel-for-pixel ground
+  this record measured. Known and accepted for now: decision 3's headline fill was measured
+  against the ground at rest, so as the ground rises under it the difference blend shows the
+  mismatch as a warm cast on the letters, a very dark brown rather than black, growing to about
+  25 levels of 255 by the time the last line passes under the header; the ink is invisible in the
+  same seconds, and the rise can be reduced if the owner sees it.

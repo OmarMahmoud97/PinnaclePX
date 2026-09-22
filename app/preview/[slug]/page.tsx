@@ -9,7 +9,7 @@ import { buttonStyles } from '@/components/ui/button'
 import { TrackedLink } from '@/components/ui/tracked-link'
 import { readPreview } from '@/lib/preview/read'
 import { statusOf } from '@/lib/preview/status'
-import { SITE } from '@/lib/site'
+import { PRICE, SITE } from '@/lib/site'
 
 type Params = Promise<{ slug: string }>
 
@@ -65,6 +65,12 @@ export default async function PreviewPage({ params }: { params: Params }) {
             {status.status === 'exhausted' || status.status === 'failed'
               ? 'The next step is a call: we go through what you have seen together.'
               : `Built from your five answers. ${SITE.callPromise}`}
+          </p>
+          {/* The price, above the call it leads to, with the taster set apart from the build
+              first so the figure is read against a hand-built site, not the designs above it. */}
+          <p className="text-on-surface-muted">
+            {concepts.length > 0 && `${PRICE.taster} `}
+            {PRICE.build} {PRICE.scope} {PRICE.basis}
           </p>
         </div>
         {concepts.length > 0 && (

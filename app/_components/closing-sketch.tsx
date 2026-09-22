@@ -18,7 +18,8 @@ const BLANK: Answers = { ...EXAMPLE_ANSWERS, description: '', company: '' }
 const getServerSentence = () => ''
 
 // The phone frame at the end of the page: the visitor's own sentence if they typed one at the
-// top, otherwise the finished sketch of the client's brief. The server renders the client's.
+// top, otherwise the finished sketch of the client's brief. The server renders the client's. The
+// caption sits on the section's ink, so it flips colour over it (ADR 0032); the frame is opaque.
 export function ClosingSketch() {
   const sentence = useSyncExternalStore(subscribeToSentence, getSentence, getServerSentence)
   const own = sentence.trim() !== ''
@@ -31,7 +32,7 @@ export function ClosingSketch() {
       <div aria-hidden="true">
         <PhoneSketch model={model} zoom={1.2} />
       </div>
-      <p className={`${captionStyles} max-w-56 text-center`}>
+      <p className={`${captionStyles} over-ink max-w-56 text-center`}>
         {own ? SKETCH_CAPTION.closing : `${SKETCH_CAPTION.closingPrefix}${SKETCH_CAPTION.closing}`}
       </p>
     </div>

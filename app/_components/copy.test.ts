@@ -1,9 +1,10 @@
 import { describe, expect, it } from 'vitest'
 import { COPY } from '@/app/_components/copy-corpus'
-import { OUTCOME_ITEMS } from '@/app/_components/outcome-items'
+import { includedGroups } from '@/app/_components/included-items'
 import { SECOND_VISIT, straightAnswerItems } from '@/app/_components/straight-answer-items'
 import { MEASURED_RESULTS } from '@/app/_components/work-items'
-import { CALL_AGENDA } from '@/lib/site'
+import { CONFIG } from '@/lib/config'
+import { CALL_AGENDA, PRICE, printedPrice } from '@/lib/site'
 
 const MAX_WORDS = 20
 
@@ -50,12 +51,26 @@ describe('visitor-facing copy', () => {
     expect(MEASURED_RESULTS.some((result) => result.includes('!'))).toBe(false)
   })
 
-  // Outcomes sets up "before they book" and the call agenda pays it off, so the phrase is held
-  // identical in both, and the Taster renders the agenda.
-  it('shares the booking phrase between the outcomes and the call agenda', () => {
+  // The site band sets up "before they book" and the call agenda pays it off, so the phrase is
+  // held identical in both, and the build section renders the agenda.
+  it('shares the booking phrase between the site band and the call agenda', () => {
     const phrase = 'before they book'
-    expect(OUTCOME_ITEMS.some((item) => item.body.includes(phrase))).toBe(true)
+    expect(includedGroups(null).some((group) => group.scene.includes(phrase))).toBe(true)
     expect(CALL_AGENDA.some((item) => item.what.includes(phrase))).toBe(true)
+  })
+
+  // The rate card prints through PRICE, never typed, and never as a bare "from" figure: a price
+  // without its scope in the same sentence reads as the opening of a range (CAP 3.17). The
+  // corpus's own VAT sample is a bare figure on purpose and renders nowhere, so it is exempt.
+  it('prints every price through PRICE, with its scope and never as a "from" figure', () => {
+    const vatSample = printedPrice(CONFIG.price.from, {
+      vatRegistered: true,
+      vatRate: CONFIG.price.vatRate,
+    })
+    const rendered = COPY.filter((text) => text.includes('£') && text !== vatSample)
+    const priceLines = Object.values(PRICE)
+    expect(rendered.filter((text) => !priceLines.some((line) => text.includes(line)))).toEqual([])
+    expect(COPY.filter((text) => /from £/i.test(text))).toEqual([])
   })
 
   // The second-visit answer promises unseen templates only once enough are ready.

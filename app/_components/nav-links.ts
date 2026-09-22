@@ -4,11 +4,13 @@ import { SITE } from '@/lib/site'
 
 export type NavLink = Readonly<{ label: string; href: Route }>
 
-// One list feeds the desktop nav and the mobile panel.
+// One list feeds the desktop nav and the mobile panel. Every label names a part of the finished
+// site or what it costs, in the page's own order, so the nav reads as the page does; About moved
+// to the footer to keep the row to four and the CTA dominant.
 export const NAV_LINKS: readonly NavLink[] = [
-  { label: 'How it works', href: '/#how-it-works' },
-  { label: 'Our work', href: '/#work' },
-  { label: 'About', href: '/#about' },
+  { label: 'Work', href: '/#work' },
+  { label: 'What you get', href: '/#included' },
+  { label: 'The build', href: '/#real-build' },
   { label: 'FAQ', href: '/#faq' },
 ]
 

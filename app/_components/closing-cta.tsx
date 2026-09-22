@@ -1,4 +1,5 @@
 import { ClosingSketch } from '@/app/_components/closing-sketch'
+import { Ink } from '@/app/_components/ink'
 import { BOOK_CALL, CTA } from '@/app/_components/nav-links'
 import { CLOSING } from '@/app/_components/section-copy'
 import { displayHeading } from '@/app/_components/section-styles'
@@ -22,14 +23,21 @@ function shareUrl(): string {
 // The last heading is the first heading's echo, and the page ends on the thing it promised: the
 // phone frame, still, with the visitor's sentence or the example brief in it. Under the two
 // actions, the not-ready visitor's exit: send the page on, capturing nothing.
+//
+// The hero's ink comes back under it all (ADR 0032). The section paints its own surface, so the
+// canvas has an opaque ground to multiply onto, and the content is positioned so it paints over
+// the canvas rather than under it. Every run of text on the ground flips by difference
+// (`over-ink`, app/globals.css), as the hero's headline does, because built-up ink goes black
+// and would swallow dark letters; the button and the phone are opaque and need nothing.
 export function ClosingCta() {
   return (
-    <section id="cta" className="relative isolate overflow-hidden px-6 py-section">
+    <section id="cta" className="relative isolate overflow-hidden bg-surface px-6 py-section">
       <GlowBackdrop />
-      <div className="mx-auto grid max-w-5xl items-center gap-10 md:grid-cols-[1fr_auto] md:gap-16">
+      <Ink />
+      <div className="relative mx-auto grid max-w-5xl items-center gap-10 md:grid-cols-[1fr_auto] md:gap-16">
         <div className="flex flex-col items-center gap-6 text-center md:items-start md:text-left">
-          <h2 className={displayHeading}>
-            {CLOSING.opening} <span className="text-brand-deepest">{CLOSING.ask}</span>
+          <h2 className={`${displayHeading} over-ink text-on-surface`}>
+            {CLOSING.opening} <em className="font-normal">{CLOSING.ask}</em>
           </h2>
           <div className="flex flex-col items-center gap-3 md:items-start">
             <TrackedLink
@@ -40,9 +48,9 @@ export function ClosingCta() {
             >
               {CTA.label}
             </TrackedLink>
-            <p className="text-small text-on-surface-muted">{SITE.reassurance}</p>
+            <p className="over-ink text-small text-on-surface-muted">{SITE.reassurance}</p>
           </div>
-          <p className="text-small text-on-surface-muted">
+          <p className="over-ink text-small text-on-surface-muted">
             or{' '}
             <TrackedLink
               href={BOOK_CALL.href}
@@ -53,7 +61,7 @@ export function ClosingCta() {
               {BOOK_CALL.label.toLowerCase()}
             </TrackedLink>
           </p>
-          <p className="text-small text-on-surface-muted">
+          <p className="over-ink text-small text-on-surface-muted">
             {NOT_READY.lead} <SendPage url={shareUrl()} location="closing" /> {NOT_READY.tail}
           </p>
         </div>

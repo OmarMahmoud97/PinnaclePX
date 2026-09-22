@@ -374,7 +374,7 @@ if (idle) {
 
 The idle position is a sum of four sine waves per axis with unrelated frequencies, so the path wanders without visibly repeating. Adding up the amplitudes gives the reach: x covers the full width, 0 to 1, and y covers 0.07 to 0.93 of the height. Two details matter. While `idle` is true the `moved` flag is never cleared, so a splat lands every frame. And the pointer starts at (0, 0), so the first idle frame registers a jump from the top left corner to the middle of the canvas. That single huge velocity is what produces the bloom of ink when the page opens.
 
-The first real pointer event sets `idle = false` for good. From then on ink appears only under the cursor. This is the deployed behaviour.
+In the original the first real pointer event sets `idle = false` for good, and from then on ink appears only under the cursor. The deployed version differs: it records when the pointer last moved and treats itself as idle whenever that was more than `CONFIG.ink.idle.after` ago, five seconds. The cursor takes the ink while it is moving, and the wander resumes five seconds after it stops. Re-entering idle jumps from the cursor to the path, which blooms exactly as the corner-to-middle jump does on load, and nothing jars because five seconds of the 0.96 per frame fade has already cleared the canvas.
 
 ## 7. One frame, pass by pass
 
@@ -800,7 +800,8 @@ The gradient has a fixed height, `--gradient-height`, 62rem and 52rem on small s
 | Pressure iterations   | `frame()` loop                       | `4`                             | More makes the flow tighter and more liquid. Each costs one pass                               |
 | Divergence scale      | divergence shader                    | `.6`                            | How hard the pressure step pushes back                                                         |
 | Ink colour            | second argument of `fluidBackground` | `{ r: 0.21, g: 0.18, b: 0.51 }` | The colour a single splat reaches. Built-up ink still goes black                               |
-| Idle path             | `frame()`                            | four sines per axis             | Where the ink wanders before the first input, and how fast                                     |
+| Idle path             | `frame()`                            | four sines per axis             | Where the ink wanders while the pointer is still, and how fast                                 |
+| Idle delay            | `frame()`                            | `5_000`                         | How long the pointer must be still before the wander takes over again                          |
 | Blur                  | `.hero_ink`                          | `8px`                           | Softness. The raw output is made of 4px blocks, so a much smaller blur lets them show          |
 | Headline fill         | `.hero_heading`                      | `#d6d9f2`, `#949bd0`            | Must track the page gradient, see section 10                                                   |
 

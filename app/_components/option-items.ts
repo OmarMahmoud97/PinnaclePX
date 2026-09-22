@@ -1,16 +1,18 @@
 import { CONFIG } from '@/lib/config'
+import { PRICE } from '@/lib/site'
 
 // The two ways of getting a site, compared on how the work is split. A table headed "a website
 // builder" is a comparison with identifiable competitors even though none is named (CAP Code
 // section 3; docs/research/home-page-content/compliance-honesty.md), so every builder cell is a
 // plain statement of how builders work, checkable on their own help pages, and no cell carries a
-// quality word about either route. The rows about ownership, care and staged payment join once
-// the owner has recorded those decisions (docs/home-page-content-plan.md, section 3.9).
+// quality word about either route. Four rows, not six: the two that were cut said nothing rows
+// one and two and the Connected cell do not. The rows about ownership, care and staged payment
+// join once the owner has recorded those decisions (docs/home-page-content-plan.md, 3.9).
 export type OptionRow = Readonly<{ question: string; builder: string; studio: string }>
 
 export const YOUR_OPTIONS = {
   heading: 'Doing it yourself, or asking us.',
-  lead: 'Website builders suit many businesses. Here is how the work is split, so you can choose.',
+  lead: 'Here is who does what, so you can choose.',
   builderHead: 'You build it with a builder',
   studioHead: 'We build it with you',
   builderLabel: 'With a builder',
@@ -21,8 +23,6 @@ export const YOUR_OPTIONS = {
     'If you enjoy building things, a builder may suit you. Many good sites started that way.',
   agency:
     'Hired an agency before? What changes here is the order: you see designs first, then decide, then pay.',
-  // The comparison's ask: the free half of "asking us" is five minutes away.
-  ask: 'See what asking us looks like first. Three designs, free, in about five minutes.',
 } as const
 
 // What the visitor sees before paying: the count is a promise only once that many templates are
@@ -37,7 +37,7 @@ export function optionRows(readyCount: number): readonly OptionRow[] {
     {
       question: 'Who designs the layout',
       builder: 'You pick a template and change it yourself.',
-      studio: 'We design it for you, from scratch, around what you liked.',
+      studio: 'We design it for you.',
     },
     {
       question: 'Who writes the words',
@@ -53,20 +53,14 @@ export function optionRows(readyCount: number): readonly OptionRow[] {
           : BEFORE_YOU_PAY.uncounted,
     },
     {
-      question: 'Who does the work',
-      builder: 'You do, in your own time.',
-      studio: 'We do, to a timeline we agree.',
-    },
-    {
-      // Checked against Wix's and Squarespace's help pages on 5 September 2026 (claims register).
-      question: 'Search, bookings and visitor numbers',
-      builder: "You set them up yourself with the builder's tools.",
-      studio: 'Built in from the start, and connected for you.',
-    },
-    {
+      // The contrast is the shape of the payment, so the builder's recurring figure is read
+      // first and the studio's is the rate card said exactly as the cost answer says it: the
+      // scope in the same sentence as the figure, never a bare "from £679" (CAP 3.17; DMCC
+      // s.230). What hosting and care cost, and that the web address is separate, belong with
+      // the full answer in the FAQ rather than split across two homes.
       question: 'How you pay',
       builder: 'Usually a subscription, paid every month the site is up.',
-      studio: 'One fixed quote, agreed on the call.',
+      studio: `${PRICE.scope} ${PRICE.extras}`,
     },
   ]
 }

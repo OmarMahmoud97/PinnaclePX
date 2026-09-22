@@ -9,7 +9,10 @@
 // under a mask it would be a solid block. Go Wild and TrvlWell have no mark yet and are left out
 // rather than shown as type (owner, 6 September 2026): when a file arrives, trim it the same way
 // and add a line here. The clients are real and shown with each one's permission
-// (docs/claims-register.md).
+// (docs/claims-register.md). A mark joins the strip only once the register names the brand and
+// what was built for it: an unnamed logo is decoration to the visitor who does not know it and a
+// liability to the one who does (docs/copy-review.md section 11). The two the owner supplied
+// without a name on 6 September 2026 (public/logos/n-mark.svg, va-mark.svg) wait in the folder.
 export type ClientLogo = Readonly<{
   slug: string
   name: string
@@ -24,6 +27,10 @@ export type ClientLogo = Readonly<{
 export const LOGOS = {
   // What a screen reader hears in place of the strip.
   label: 'Companies we have designed and built for',
+  // Under the strip, for everyone: what the marks are, and that four of them are one group, said
+  // where the logos are rather than four sections down in the work band, so the strip never
+  // implies more breadth than it has.
+  caption: 'Companies we have designed and built for. Four of them belong to one group.',
 } as const
 
 export const CLIENT_LOGOS: readonly ClientLogo[] = [
@@ -35,19 +42,6 @@ export const CLIENT_LOGOS: readonly ClientLogo[] = [
   // Heavy, round letters carry more weight than the rule allows for, so it is held a shade under
   // its shape; a wide, low wordmark next to tall marks needs most of that height back, though.
   { slug: 'sky', name: 'Sky', src: '/logos/sky.svg', width: 52.48, height: 32.21, scale: 0.98 },
-  // PROVISIONAL NAMES. The owner supplied these two marks without saying whose they are (6
-  // September 2026); the label is what the mark shows until the owner names the brand. The n's
-  // circular tile is dropped, as Mvmnt's is. Both are solid squares, which read heavier than
-  // their box says, so both are drawn smaller.
-  { slug: 'n-mark', name: 'n', src: '/logos/n-mark.svg', width: 20.16, height: 20.16, scale: 0.82 },
-  {
-    slug: 'va-mark',
-    name: 'VA',
-    src: '/logos/va-mark.svg',
-    width: 246.5,
-    height: 248.5,
-    scale: 0.84,
-  },
 ]
 
 // A wordmark four times wider than it is tall, drawn 32 px tall, is the size the rest are judged

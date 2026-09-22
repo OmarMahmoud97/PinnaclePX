@@ -16,6 +16,9 @@ export function JsonLd() {
         // The 1200x630 social image: /icon is 32px, below the 112px minimum for a logo.
         logo: `${url}/opengraph-image`,
         areaServed: 'GB',
+        // The same name the About section and the booking page show, so the entity is one
+        // person everywhere an answer engine looks.
+        founder: { '@type': 'Person', name: SITE.owner },
       },
       {
         '@type': 'WebSite',

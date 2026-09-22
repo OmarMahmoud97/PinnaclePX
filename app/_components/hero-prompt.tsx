@@ -45,7 +45,7 @@ export function HeroPrompt() {
 
   return (
     <form
-      className="flex flex-col gap-8 rounded-3xl bg-surface p-5 shadow-dialog focus-within:ring-2 focus-within:ring-brand-deeper/40 md:rounded-[2.5rem] md:p-7"
+      className="flex flex-col gap-8 rounded-3xl bg-surface p-5 shadow-dialog focus-within:ring-2 focus-within:ring-brand-deeper/40 md:rounded-[1.5rem] md:p-6"
       onSubmit={(event) => {
         event.preventDefault()
         document.getElementById('hero-cta')?.click()

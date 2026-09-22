@@ -27,7 +27,7 @@ async function nextTo(page: Page, question: number) {
 
 test('every call to action on the home page leads to the start page', async ({ page }) => {
   await page.goto('/')
-  for (const section of ['#hero', '#how-it-works', '#taster', '#cta']) {
+  for (const section of ['#hero', '#work', '#how-it-works', '#cta']) {
     const link = page
       .locator(section)
       .getByRole('link', { name: /Show me my three designs|Answer the five questions/ })

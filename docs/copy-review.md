@@ -184,3 +184,128 @@ Copy that is written and waiting on a decision or evidence, and work the review 
 5. **The journey band** (`#examples`: VetPres's sentence re-run through the five questions, beside their real site) waits on a real render and VetPres's consent row.
 6. **Before launch**, unchanged: the verified sending domain, the studio's contact email and town, the Vercel environment. The Cal.com link is confirmed: the owner gave `https://cal.com/pinnaclepx/quick-chat` on 5 September 2026, the address `SITE.bookingUrl` already held.
 7. **Nothing is committed.** The whole of today's work sits uncommitted on `main`, alongside the template work from outside this session; branch off main before committing.
+
+## 10. The evidence pass, 21 September 2026
+
+The owner ran an evidence-graded review of what makes a lead-generation page convert (`docs/compass_artifact_wf-deafb080-cb89-5e00-b4c2-71b285cf9ac8_text_markdown.md`) and asked for its findings to be applied. Read against the page, most of the best-evidenced findings were already in place: one goal repeated down the page and no exit links in the nav (anchors only), the first question in the hero as a form, a first-person and specific button, a risk-reducer beside it, named and numeric results, the "what's the catch", "is this AI" and "my email" objections answered before the final ask, a native `<details>` FAQ that crawlers and answer engines can read, and copy scoring well under the reading ceiling (`reading-level.test.ts`). So this was a targeted pass, not a rewrite, in keeping with the owner's rule that the page is refined and not redesigned. Every sentence below passed `copy.test.ts` (550 unit tests green), typecheck, lint and Prettier, and was checked at 390 and 1440 on the dev server.
+
+**Applied.**
+
+1. **The five-second test (review section 3).** The hero subhead now opens with the audience: "For UK small businesses and start-ups." The headline keeps the outcome alone. Still thirty words, so the 390 by 844 fold holds the button. The last sentence is one risk-reducer ("Free, before you talk to anyone."); the "see how we work" clause moved out, since Straight answers' "What's the catch?" carries it. `SITE.description` says "A UK web design studio" first, for the search snippet and the WebSite schema.
+2. **Proof next to the claim (section 6).** Two Outcomes rows end on a measured result: Found carries URUNN ("From unranked to page one on Google.") and Reachable carries TrvlWell ("Demo requests rose 40% after the relaunch."). The row names the client by slug and `outcomes.tsx` renders the client's own result string from `work-items.ts` (`measuredClient`), so the figure is the register's, character for character, and the copy test's exemption already covers it; a new test holds that a row can only cite a client with a result. Trusted and Answered carry none: Mvmnt's "bounce rate" is jargon to this reader, and a result on every row would read as decoration.
+3. **Plainer Outcomes bodies.** "Structured data" and "local SEO" left the Found row; "speed feeds into where you rank" became "people leave a slow page", which is behaviour, not a ranking claim. Trusted opens on the register's own sentence ("People decide whether you look real before they read a word."). The lead's four "perhaps" fragments became three "maybe" sentences and a bridge.
+4. **Message match between the offer and its caveats.** What you get's wording cell now says "A first draft from your own sentence, so there are no blank boxes and nothing to write.", which agrees with the FAQ's "placeholder" and sells the benefit (nothing to write). How it works step 02 no longer implies the company name is where the link goes: "Your email is only where the link goes."
+5. **The call's risk reversal.** `SITE.callPromise`, under every call button: "No pitch. We look at your designs together, and you leave with a fixed quote. Go ahead only if you want to." The agenda's last line, said where the button is.
+6. **The email objection (section 7).** "We send you your link, and nothing else. No newsletter, no chasing. You book a call if you want one. We don't ring you." Register rows 14 and 15 back it: the link is the only email a visitor gets and no follow-up exists.
+7. **FAQ answers that were weak or off-voice.** Cost: no price on the page (owner's rule), so the answer gives what a price gives a buyer (section 8 of the review, "decision support"): one fixed number, agreed before work starts, unchanged after, what moves it, and that the designs and the call cost nothing. Care: "We can provide a post launch update and maintenance package." became "We can, if you want us to. We say what looking after it covers, and what it costs, on the call.", with the plan's terms still gated on the contract. "Can I use one of the designs" lost "Imagine what a proper conversation would give you." "What if the wording is wrong?" now opens "Some of it will be."
+
+**Decisions for the owner.**
+
+1. **A "starting from" price.** The strongest recommendation in the review that the page does not follow (section 8: 81 per cent of B2B buyers want to find a price themselves; 16 per cent cross off a supplier who hides it). It is blocked by the no-price rule. If the rule is ever relaxed, one anchor ("Sites start from £N") in the cost FAQ and the comparison's "How you pay" row is the place, and it needs a real number and a register row.
+2. **What moves the quote.** The cost FAQ now says "how many pages you need and what has to connect, like bookings or payments." Confirm this is how the studio prices, or say what is. Register row added, marked owner to confirm.
+3. **A named person.** The review counts a named human among the trust signals a free offer with AI in it needs (section 7). About says "one-person studio" but not who. The Cal.com page already shows the name. Adding it is one word in `ABOUT.first`; the no-photo rule is untouched either way.
+4. **The logo strip's disclosure.** Section 6 warns that logos from one parent group, shown as breadth, invite scepticism, and recommends disclosing the relationship next to the logos. The page discloses it in the work band ("Four of the six are brands of one group"), four sections down. A caption under the hero strip would cost fold space on a phone; a screen-reader label is free. Left as is pending the owner's view.
+5. **The headline.** "See your new website before you hire." names the outcome, not the audience, and promises a website where the offer is three homepage designs. It was kept: the subhead now names the audience, the fold is tight, and the six-word promise is the page's identity. If a five-second test (Lyssna or Maze, review section 3) shows visitors cannot say what the offer is, "See three designs for your new website before you hire." is the honest longer form.
+
+**Not done, and why.** Removing the header nav (section 10 of the review): the links are all anchors, which the review allows, and the footer's only exits are the privacy notice and the booking page. Cutting the secondary call button: the review itself notes a demoted "book a call" route captures high-intent buyers on high-consideration services; it is a text link everywhere except the Taster, whose job is the call. Scroll-depth and conversion heatmaps (section 10, Stage 3): instrumentation, not copy, and the right next step before any further structural change.
+
+## 11. The five decisions, 21 September 2026
+
+The owner asked for the five decisions left open in section 10 to be made for them, with one instruction on the price: it has to cover the ads, pay the owner and pay the contract designers, and still be the best price the customer can be given. Decisions 2 to 5 were made on the evidence already in hand. The price was worked through a twelve-agent pass: five researchers (UK market prices, ad and funnel costs, labour rates, the rules on "from" prices, the studio's cost to serve; every figure sourced and graded), three pricing strategists (cost-plus, market-anchored, funnel-optimised), a judge, and three refuters (viability, compliance, market). Everything below is applied and tested (551 unit tests, typecheck, lint, knip, Prettier; the FAQ and the comparison row checked at 390).
+
+### 11.1 The price: £4,750 for a five-page site, £250 a page beyond it
+
+**The number.** A five-page site with one form or booking connected, wording, a content system and the launch included, is £4,750. Extra pages are £250 each; bookings, payments and other tools are quoted by what they are. Both figures live in `CONFIG.price` and render through `printedPrice` and `PRICE` in `lib/site.ts`, so the page never carries a typed digit and one edit changes every instance.
+
+**Where it appears.** Four places, never the hero (the studio's own research: a hero price reads budget-tier, `home-page-design-research.md`). The cost FAQ, in full; the "How you pay" row, as the figure against a builder's monthly fee, with care after launch named beside it so a one-off against a subscription does not mislead by omission; the designs page (`app/preview/[slug]`), above the call button, after two sentences that set the taster apart from the build so the reader prices a hand-built site and not the three designs above it; and the emailed link, the same two lines above the booking address. **Owner action:** paste `PRICE.taster`, `PRICE.build`, `PRICE.scope` and `PRICE.basis` into the Cal.com event description, so nobody arrives at the call surprised; and carry no price in an ad, or the identical qualified sentence, never a bare "from £4,750" (the ASA's DFDS test).
+
+**How the number was reached.** The judge priced bottom-up and checked against the market. The smallest paid-channel job costs about £4,140 fully loaded: the owner 48 hours at £45 (£2,160; the ONS median for web design professionals over about 1,100 billable hours, lifted for the holiday and National Insurance a sole trader carries); a contract designer 16 hours at £48 (£768; YunoJuno's £385 design day rate); £1,125 of ads per signed client (£3 a click, the evidence midpoint for plain UK terms like "website for my business", through a funnel of 6 in 100 clicks to a taster, 15 in 100 tasters to a call, 30 in 100 calls to a signed build); and £87 of overhead, free tasters (about 30p a run at Anthropic list prices, roughly 22 runs a client) and launch-month hosting. The judge rounded to £4,500. The viability refuter rejected that: the £360 buffer is a third of an ad line that is the product of three unmeasured rates, so any one of them missing by a quarter, or £1 on the click, or eight more owner hours, makes the from-price job a loss; and the £982 of monthly "profit" is already about 22 hours of the owner's unbilled sales, ad and admin time. Its fix was £4,750, which gives the smallest job a £610 buffer (tolerating clicks-to-taster down to about 3.9 in 100, or calls-to-sign down to 20 in 100, before it loses money) while still reading "under five thousand", £250 under Fit Design's £5,000 without copy, and clearly above the £499 to £1,850 productised tier the page positions against. The market refuter confirmed the placing: the UK studio band for design alone is £3,000 to £8,000 (Media Village £3,000 to £4,500 for five pages; wat.studio £3,500 to £6,500), copy is usually £1,150 or more on top (Let Me Write: £350 for a home page, £200 a page), and every published UK price under £4,000 leaves out copy, accessibility and answer-engine readiness. A typical six or seven page build with two connections costs about £4,880 and quotes at about £5,750, so the from-to-typical gap is real scope, not a decoy.
+
+**The monthly model it rests on** (paid channel only; every referral client, and the studio has thirty sites of them, adds about £1,125 straight to margin): £2,250 of Google Search spend buys 750 clicks, 45 tasters, about 7 calls and 2 signed builds; revenue about £10,500; designers £1,824; the owner £4,770 for 106 build hours (about £57,000 a year) plus about 22 unbilled hours; overhead £174; about £1,480 left after the unbilled hours are counted.
+
+**Why not lower.** £4,500 pays everyone only if all three funnel rates hold, and nothing is left for one revision round. £3,500 pays everyone only if the owner does the whole build in 35 hours at £40 with no unpaid sales time, under every hours guide found (70 to 110 hours for this scope); £3,000 pays the owner about £26 an hour. Every published price below £4,000 is a different product. The best price for the customer is the lowest honest one, and honest means the designer and the owner are paid.
+
+**Why not higher.** £5,000 copies Fit Design's number and reads agency to a wary small-business audience, which undoes the page's position between builders and agencies. A higher from price does not raise the typical quote, which pages and connections set on the call; it only narrows who books the call, the cheapest lever in the funnel, and makes the ASA's significant-proportion test harder because fewer builds would land at the printed figure.
+
+**Conditions that keep the number on the page.**
+
+1. **Quote log from day one.** Every quote issued, with pages and connections. Over any rolling six months at least a quarter of signed builds must be at £4,750 (the ASA passed Accor at 23 in 100 spread evenly and failed Octopus at 5.8, FlixBus at 6, Better Bathrooms at 8.6). Review quarterly; if fewer than a quarter land there, raise the printed figure to what a quarter actually pay. The five-page scope is offered on every call and never upsold away: it is a real product with a real delivery (CAP 3.22, CMA209 3.2).
+2. **Scope and basis beside the figure, every time, in the same type size** (DMCC Act 2024 s.230, CMA209 4.16 and 4.23). `PRICE.scope` and `PRICE.basis` are the only sentences that carry the number for that reason; nothing renders `CONFIG.price.from` bare.
+3. **The two qualifications sit in the same sentence as the promise they qualify** (CRA 2015 s.50(2)): "It does not change unless you ask for more, and then we quote that in writing first."
+4. **VAT.** The number assumes the studio is not VAT registered (thirty sites in four years implies turnover under the £90,000 threshold). While unregistered, no VAT wording anywhere: showing VAT unregistered is penalised (Finance Act 2008 Sch 41). Check the rolling twelve-month turnover monthly; at the modelled £10,500 a month the threshold is crossed in about month nine. When registration comes, flip `CONFIG.price.vatRegistered` and every instance becomes "£5,700 including VAT" with equal prominence, never "plus VAT", because the audience is mixed and mostly cannot recover it (CAP 3.18). Never absorb it: £4,750 inclusive nets £3,958, under the £4,140 floor. From about £80,000 of rolling turnover, quote builds that will invoice after the expected registration date at the inclusive figure, so no in-flight build is honoured below the floor. Honour any quote already issued at the price on the quote.
+5. **Measurement gate before the ad budget scales.** Run a first tranche of about 500 clicks (£1,500) to read clicks-to-taster; pause ads whenever the trailing cost per signed client over the last three exceeds £1,700; do not scale past £750 a month until three signed builds have come through paid ads. Time the next three builds: if owner hours pass 58 on a typical build, the typical quote moves first; the from price rises only if the quote log says so.
+6. **Total price.** The figure includes the domain set-up, the launch and launch-month hosting (s.230). Care after launch is optional and priced on its own, and the client can host elsewhere if they decline it; its terms stay gated on decision 10.
+7. **Held back until the log supports it:** "Most builds land between £4,750 and £6,500", an objective claim with no history behind it at launch (CAP 3.7).
+
+**Inputs the owner can change, each with the value assumed:** owner hours 48 on the smallest build and 58 on a typical one; owner rate £45 an hour; designer £48 an hour for 16 and 22 hours; £3 a click and £2,250 a month; the 6, 15 and 30 in 100 funnel; overhead £150 a month; copy written by the owner from the AI draft in 6 to 8 of the owner hours (outsourcing at £440 a day adds about £660 a build and would push the from price to £5,000). Every one is a line in the model, and none is measured yet: the gate above measures them.
+
+### 11.2 The quote basis: pages and what has to connect, confirmed
+
+All three strategists and the hours evidence agree that time scales per page (about 4 to 10 hours a page) and per integration (a booking £200 to £1,000, a CRM £500 to £3,000 at contractor rates), so the basis the cost FAQ stated is the honest one. It is now a rate card: £250 a page, connections by what they are.
+
+### 11.3 The owner is named
+
+"If you like one, you talk to Omar Mahmoud, who runs the studio." in About, and `founder` on the Organization schema, so the entity is one person everywhere an answer engine looks. The booking page already showed the name; the no-photo rule is untouched. The old line "that is the same person all the way through" went, because the owner pays contract designers on builds: the new line, "Omar stays on your build from the call to launch", is true of the person and claims nothing about who does every task. `SITE.owner` holds the name.
+
+### 11.4 The logo strip discloses the group, and drops the two unnamed marks
+
+"Companies we have designed and built for. Four of them belong to one group." under the strip, at every size. It costs nothing on the phone fold, which the strip was already below, and reads at 1440 under the six marks. The two marks the owner supplied without a name (the "n" and the "VA") left the strip: an unnamed logo is decoration to the visitor who does not know it and a liability to the one who does, and the review's rule is logos only if recognisable and evidenced. They return the day the register names each brand and what was built for it. **Still to file before launch:** what was built for Sky and when.
+
+### 11.5 The headline stays
+
+"See your new website before you hire." The audience now sits in the first line of the subhead, the fold is tight, and the six-word promise is the page's identity. The honest longer form ("See three designs for your new website before you hire.") is recorded in section 10 for the day a five-second test says the offer is not landing; until a test says so, the identity wins.
+
+### 11.6 The owner's override: websites from £679 (21 September 2026, later the same day)
+
+The owner set the starting price at £679 in place of the pass's £4,750. Applied as `CONFIG.price = { from: 679, perPage: 250, pages: 1 }`, so every instance now reads "A one-page site with a contact form is £679." with the rate card unchanged beyond it: extra pages £250 each, bookings, payments and other tools quoted by what they are, one fixed quote on the call. A five-page site therefore quotes at £1,679 and a typical six or seven page build with two connections at about £2,500 to £2,800.
+
+**Why the scope is one page.** A printed price has to be one the studio genuinely sells at (CAP 3.22, CMA209 4.19), with what it buys beside it (DMCC s.230). The pass costed the five-page build at about £4,140 fully loaded (48 owner hours, 16 designer hours, £1,125 of ads, overhead); £679 covers about fifteen owner hours at £45 and nothing for a designer or ads, which is a one-page site the owner designs and builds alone. To print £679 for the five-page scope instead, set `pages` to 5 in `CONFIG.price`; nothing else changes.
+
+**What the override changes in the model.** At £679 the smallest job cannot carry an ad cost: the paid channel only works if the typical quote, not the from price, pays for it, and the ASA condition in 11.1 now applies to £679 (a quarter of signed builds over any six months must be one-page sites at that figure, or the printed number rises to what a quarter actually pay). The design research's finding that a low price reads budget-tier (`home-page-design-research.md`, Appero "from £499") still stands, which is why the number stays out of the hero. The conditions in 11.1 (quote log, scope and basis beside every instance, the VAT flip to "£815 including VAT", the ad stop-loss) are unchanged.
+
+## 12. The mandate pass, 22 September 2026
+
+The owner's brief that morning: the page is text heavy and repetitive; it is about the five
+questions and the three free designs when it should be about the website the studio would build;
+the visitor should finish it believing the studio can build them the best possible site; the
+voice should be professional, and fun and cool with it; the hero is out of scope.
+
+**Method.** Eight research lenses (page structure, end-product copy, twenty-five live studio home
+pages, brand voice, buyer language, text density, one-person-studio credibility, and this repo's
+own prior research), a completeness critic that sent four gaps back for study (pricing
+presentation, the walkthrough's captions, the closing and footer, and what "cool" means for a
+trust-dependent service), then a marketer, a copywriter and a designer auditing the page
+independently, a creative director settling the plan, three drafts written to different angles,
+three judges scoring them band by band, one assembly, and four adversarial verifiers
+(compliance, voice, mandate, mechanics) whose 61 findings, 14 of them must-fix, were applied
+before the wording shipped. The decisions are in `docs/adr/0033`.
+
+**What shipped.** Nine bands where there were twelve, 1,189 visible words where there were 2,262,
+and the served HTML down from 38 KB to 33.5 KB gzipped. Work moves to first after the hero.
+Outcomes and Included merge into one band about the site (`#included`): four jobs, each a label,
+a scene and the two things built in to do it. The Taster and the real build merge into one
+process band (`#real-build`) ending on the call. What you get is cut, its two facts rehoused in
+the walkthrough's lead and the details answer. The FAQ goes from eleven items to seven, losing
+the five that restated the taster and gaining "Who will I actually work with?". The closing opens
+on the finished site and closes on the free step.
+
+**The repetition it removes.** "Three designs" eighteen times to five, each doing a different job
+(shown, compared, defended, priced against, asked for); "real site" eleven to one; "on the call"
+twelve to three; "five minutes" eight to two; "every page" ten to six; "designed by hand" five to
+three. Every ask line under a band is gone: the button is the ask.
+
+**What it refuses to say.** No superlative about the studio's work, no enquiry or ranking promise,
+no class claim about agencies or builders, nothing gated (ownership, payment terms, weeks, the
+care plan, training data, reply times). "Google can show every page" and "the chat assistants can
+quote it" are withdrawn to what register rows 26 and 29 actually say, "read". The Answered scene
+loses "More people who arrive ready." because no row covers enquiry quality.
+
+**Open for the owner** (the full list is in the session's plan; these are the ones that change
+what is on the page): the closing heading replaces the hero's bookend; the build heading is no
+longer the pinned "If you like one, here is what happens next."; About says "since 2021" while
+register row 31 says 2022, so the row needs amending with the owner's record before this ships;
+`SITE.description` is the search snippet and now names the product; the worked five-page total
+(£1,679) is new and renders from `CONFIG.price`; and the one gap the pass could not close, that
+nothing on the page says the finished design will be good rather than merely complete, which
+needs a register row about how the six client sites were designed plus one checkable line under
+their cards.

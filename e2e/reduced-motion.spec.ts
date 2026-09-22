@@ -14,10 +14,9 @@ test('nothing moves', async ({ page }) => {
   await expect(page.locator('#hero canvas')).toHaveJSProperty('width', 300)
 
   for (const id of [
-    'how-it-works',
-    'outcomes',
-    'taster',
+    'work',
     'included',
+    'how-it-works',
     'real-build',
     'your-options',
     'straight-answers',

@@ -43,14 +43,19 @@ export function HowItWorks() {
           </ol>
         }
         actions={
-          <TrackedLink
-            href={CTA.href}
-            event="cta_click"
-            location="how-it-works"
-            className={buttonStyles({ size: 'lg', className: 'w-full sm:w-fit' })}
-          >
-            {CTA.label}
-          </TrackedLink>
+          <div className="flex flex-col items-start gap-3">
+            <TrackedLink
+              href={CTA.href}
+              event="cta_click"
+              location="how-it-works"
+              className={buttonStyles({ size: 'lg', className: 'w-full sm:w-fit' })}
+            >
+              {CTA.label}
+            </TrackedLink>
+            {/* What the designs lead to, after the button rather than inside the steps: the
+                five beats are about the sketch, and this is the one line about the site. */}
+            <p className="text-small text-pretty text-on-surface-muted">{HOW_IT_WORKS.bridge}</p>
+          </div>
         }
       />
     </section>

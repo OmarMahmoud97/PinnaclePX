@@ -121,6 +121,18 @@ export const CONFIG = {
     minMs: 3_000,
   },
   call: { minutes: 20 }, // the Cal.com event length is set by hand to match
+  // The studio's rate card, as the page prints it (docs/copy-review.md section 11): `from` is
+  // the fixed quote for a site of `pages` pages with a contact form, wording, a content system
+  // and the launch included; `perPage` is what each page beyond that adds. The owner set the
+  // starting price at £679 on 21 September 2026, over the pass's £4,750, so the scope it buys is
+  // one page: the evidence puts a five-page build with a designer and ads at about £4,140 to
+  // deliver, and a printed price must be one the studio genuinely sells at (CAP 3.22; CMA209
+  // 4.19). To price the five-page scope at the starting figure instead, set `pages` to 5. Every
+  // build quoted goes in the quote log the same section describes. While the studio is not VAT
+  // registered the number is the whole number and VAT is never mentioned; once it registers,
+  // `vatRegistered` turns every printed price into the VAT-inclusive figure with equal
+  // prominence (CAP 3.18), never "plus VAT", and quotes already issued are honoured as written.
+  price: { from: 679, perPage: 250, pages: 1, vatRegistered: false as boolean, vatRate: 0.2 },
   // The real build, as the home page describes it (app/_components/build-items.ts). Every value
   // here is a commitment the studio has measured or confirmed against its contract, so each is
   // null until then and the page renders its minimum line instead (docs/home-page-content-plan.md,
@@ -137,35 +149,36 @@ export const CONFIG = {
   retention: { days: 30, cron: '0 3 * * *' },
   polling: { statusMs: 3_000 }, // how often the done page asks how the designs are coming along
   analytics: { sectionViewThreshold: 0.2 }, // share of a section on screen before it counts as viewed
-  // The hero's ink (ADR 0031, lib/motion/fluid.ts): the simulation grid as a share of the
-  // canvas; the splat radius factor (splat / height, about 2 * sqrt(height) pixels across); how
-  // hard pointer movement pushes the fluid; the pressure passes a frame (more is tighter and
-  // more liquid, each is one pass); the fixed time step, per frame, so the look follows the
-  // display's refresh rate; and where the ink wanders before the first pointer event, per axis
-  // a sum of sines around the centre, each [amplitude, frequency per ms, phase], with
-  // unrelated frequencies so the path never visibly repeats. Two more constants live in the
-  // shaders, which cannot read this file: the fade (0.96 a frame) and the divergence scale.
-  hero: {
-    ink: {
-      resolution: 0.25,
-      splat: 4,
-      gain: 5,
-      pressureIterations: 4,
-      dt: 1 / 60,
-      idle: {
-        x: [
-          [0.25, 0.0017, 0],
-          [0.12, 0.0031, 1.3],
-          [0.08, 0.0053, 2.7 + Math.PI / 2],
-          [0.05, 0.0079, 4.1],
-        ],
-        y: [
-          [0.18, 0.0023, 0.5],
-          [0.12, 0.0041, 1.8 + Math.PI / 2],
-          [0.08, 0.0067, 3.2],
-          [0.05, 0.0089, 5 + Math.PI / 2],
-        ],
-      },
+  // The ink over the hero and the closing section (ADR 0031, ADR 0032, lib/motion/fluid.ts):
+  // the simulation grid as a share of the canvas; the splat radius factor (splat / height,
+  // about 2 * sqrt(height) pixels across); how hard pointer movement pushes the fluid; the
+  // pressure passes a frame (more is tighter and more liquid, each is one pass); the fixed time
+  // step, per frame, so the look follows the display's refresh rate; and where the ink wanders
+  // while nobody is moving the pointer — from the start, and again once the pointer has been
+  // still for `after` milliseconds — per axis a sum of sines around the centre, each
+  // [amplitude, frequency per ms, phase], with unrelated frequencies so the path never visibly
+  // repeats. Two more constants live in the shaders, which cannot read this file: the fade
+  // (0.96 a frame) and the divergence scale.
+  ink: {
+    resolution: 0.25,
+    splat: 4,
+    gain: 5,
+    pressureIterations: 4,
+    dt: 1 / 60,
+    idle: {
+      after: 5_000,
+      x: [
+        [0.25, 0.0017, 0],
+        [0.12, 0.0031, 1.3],
+        [0.08, 0.0053, 2.7 + Math.PI / 2],
+        [0.05, 0.0079, 4.1],
+      ],
+      y: [
+        [0.18, 0.0023, 0.5],
+        [0.12, 0.0041, 1.8 + Math.PI / 2],
+        [0.08, 0.0067, 3.2],
+        [0.05, 0.0089, 5 + Math.PI / 2],
+      ],
     },
   },
   // The sketch's typing, which the walkthrough's sentence beat plays (lib/brief/typing.ts): a
@@ -234,6 +247,9 @@ export const CONFIG = {
   motion: {
     staggerMax: 4, // items that wait their turn in a list reveal; the rest arrive with the fourth
     headerScrolledAtPx: 24, // scroll depth at which the header takes its scrolled state
+    // One step of the header's staged change (app/_components/header-chrome.tsx): the surface
+    // fades in over --motion-enter, and the blend flips and the ask fills once it has.
+    headerStepMs: 200,
     // Lenis (ADR 0021): the share of the distance still to go that each frame covers, on the wheel
     // and on a link to a section. Lower drifts further after the wheel stops; 0.1 is its default.
     scroll: { lerp: 0.1 },
