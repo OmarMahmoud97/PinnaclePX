@@ -1,0 +1,67 @@
+/* #work: this section's own rules, plain CSS only; tokens and utilities stay in app/globals.css. */
+
+/*
+ * The pool behind each phone. It is registered as a colour so the hover step is a transition and
+ * not a jump; the value at rest is the token in globals.css, and inheritance carries it into the
+ * layer, where the tile's hover raises it.
+ */
+@property --backlight {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: transparent;
+}
+
+.work-backlight {
+  transition:
+    opacity var(--motion-reveal) var(--ease-enter),
+    --backlight var(--motion-tap) var(--ease-standard);
+}
+
+/* Colour only, so it runs under reduced motion too, and a keyboard on the pills gets it as well. */
+.work-tile:hover .work-backlight,
+.work-tile:focus-within .work-backlight {
+  --backlight: color-mix(in srgb, var(--glow) 32%, transparent);
+}
+
+/*
+ * The pool fades in with its tile's reveal. Its hidden state exists only once JavaScript has
+ * armed motion, so the page without it shows the finished pool, and under reduced motion the
+ * fade is an opacity beat the global allowlist keeps.
+ */
+html[data-motion] [data-reveal]:not([data-inview]) .work-backlight {
+  opacity: 0;
+}
+
+/*
+ * Once the choreography owns the tiles (from md) it fades the pools itself, so the opacity
+ * transition steps back and CSS does not race it; the colour beat under the pointer is still
+ * CSS, so it keeps its timing.
+ */
+@media (width >= 48rem) {
+  html[data-choreo] [data-choreo='tiles'] .work-backlight {
+    transition: --backlight var(--motion-tap) var(--ease-standard);
+  }
+}
+
+/*
+ * Windows High Contrast strips the backgrounds the segmented control is drawn with, and the
+ * radios themselves are visually hidden, so the checked pill takes the system's own highlight
+ * pair and the track a visible edge; the focus ring is a box shadow, which forced colours drop,
+ * so the keyboard gets an outline in its place.
+ */
+@media (forced-colors: active) {
+  .work-tile fieldset {
+    border: 1px solid CanvasText;
+  }
+
+  .work-tile label:has(:checked) {
+    forced-color-adjust: none;
+    background: Highlight;
+    color: HighlightText;
+  }
+
+  .work-tile label:has(:focus-visible) {
+    outline: 2px solid CanvasText;
+    outline-offset: 2px;
+  }
+}

@@ -1,0 +1,11 @@
+/* #about: this section's own rules, plain CSS only; tokens and utilities stay in app/globals.css. */
+
+/* From md up, once the choreography is armed, motion/about.ts scales the studio tile inside its
+   slot while the column's CSS reveal keeps the slot's opacity and rise. The reveal's own scale
+   steps back from the slot so 0.97 and scaleFrom never multiply below the cap. The id outranks
+   the reveal rule in globals.css, which lands later in the sheet at the same weight. */
+@media (min-width: 48rem) {
+  html[data-choreo] #about .about-tile-slot {
+    scale: 1;
+  }
+}

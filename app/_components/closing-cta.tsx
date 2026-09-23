@@ -29,14 +29,24 @@ function shareUrl(): string {
 // the canvas rather than under it. Every run of text on the ground flips by difference
 // (`over-ink`, app/globals.css), as the hero's headline does, because built-up ink goes black
 // and would swallow dark letters; the button and the phone are opaque and need nothing.
+//
+// The heading's em takes the serif italic through `emphasis` (a font rule, so no stacking
+// context comes between the heading and the section). The band ends in `before-sheet`: the
+// footer is a sheet laid over its foot (ADR 0034), so the extra padding under the phone is the
+// footer's overlap, not air. The two `data-rise` marks are for app/_components/motion/closing.ts,
+// which lifts the button and the phone from md up; both are opaque leaves with no ink text
+// inside them, so their tweens never make a stacking context over an `.over-ink` run.
 export function ClosingCta() {
   return (
-    <section id="cta" className="relative isolate overflow-hidden bg-surface px-6 py-section">
+    <section
+      id="cta"
+      className="before-sheet relative isolate overflow-hidden bg-surface px-6 pt-band"
+    >
       <GlowBackdrop />
       <Ink />
       <div className="relative mx-auto grid max-w-5xl items-center gap-10 md:grid-cols-[1fr_auto] md:gap-16">
         <div className="flex flex-col items-center gap-6 text-center md:items-start md:text-left">
-          <h2 className={`${displayHeading} over-ink text-on-surface`}>
+          <h2 className={`${displayHeading} emphasis over-ink text-on-surface`}>
             {CLOSING.opening} <em className="font-normal">{CLOSING.ask}</em>
           </h2>
           <div className="flex flex-col items-center gap-3 md:items-start">
@@ -44,6 +54,7 @@ export function ClosingCta() {
               href={CTA.href}
               event="cta_click"
               location="closing"
+              data-rise="ask"
               className={buttonStyles({ variant: 'cta', size: 'lg' })}
             >
               {CTA.label}
@@ -65,7 +76,7 @@ export function ClosingCta() {
             {NOT_READY.lead} <SendPage url={shareUrl()} location="closing" /> {NOT_READY.tail}
           </p>
         </div>
-        <div className="max-md:order-first">
+        <div data-rise="phone" className="max-md:order-first">
           <ClosingSketch />
         </div>
       </div>

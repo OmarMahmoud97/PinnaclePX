@@ -12,7 +12,7 @@ import { CONFIG } from '@/lib/config'
 // the white page reads black, and over dark ink it stays light. Anything drawn in here is shown
 // inverted, so its links change opacity on hover, never colour, and the filled button waits for
 // the solid state. Once scrolled, or while the phone menu is open, the header is the plain bar
-// it always was: surface, hairline, blur, normal blending.
+// it always was: surface, blur, normal blending.
 //
 // The blend mode cannot animate, so the change is staged rather than snapped. The surface is a
 // layer of its own under the header (inside it, a white bar would blend to black too) and fades
@@ -24,9 +24,12 @@ import { CONFIG } from '@/lib/config'
 //   data-scrolled  the surface is shown
 //   data-solid     the blend is normal and the text is --on-surface
 //   data-filled    the ask is the filled button
-// and two the hero sets as it leaves: data-past-hero once its own button has scrolled out of the
-// top of the viewport (the phone's ask takes over), and data-framed once the whole hero has and
-// the page's hairline frame is what runs under the header, so the header's own frame rules draw.
+// one the hero sets as it leaves, data-past-hero, once its own button has scrolled out of the
+// top of the viewport (the phone's ask takes over), and one the page below sets, data-over-dark,
+// while what runs under the bar is dark (ADR 0034): the hero's own foot, then either of the two
+// dark bands, the ink stretch under the hero and the footer. The dark scope in app/globals.css
+// reads it only together with data-solid, so the bar and its text swap to the dark set while
+// the blend, whose text is already light, never sees a dark surface.
 export function HeaderChrome({ children }: { children: ReactNode }) {
   const ref = useRef<HTMLDivElement>(null)
 
@@ -64,9 +67,58 @@ export function HeaderChrome({ children }: { children: ReactNode }) {
         root.removeAttribute('data-scrolled')
       }
     }
+
+    // What is under the bar, read at its middle. Two sources, ORed: any dark band whose box
+    // crosses that line, watched by an observer whose root is the one-pixel strip at that
+    // height, and the hero's own foot, which is not a band but the ramp's dark end, dark once no
+    // more than heroDarkFootShare of the hero is still below the line. The foot check stays true
+    // until the hero has left the viewport altogether, so the hand-over to the stretch that
+    // follows it, which the observer reports a frame later, never shows a light bar between.
+    const hero = document.getElementById('hero')
+    const headerPx = root.querySelector('header')?.offsetHeight ?? 0
+    const mid = Math.round(headerPx / 2)
+    const dark = new Set<Element>()
+    const heroDark = () => {
+      if (hero === null) return false
+      const box = hero.getBoundingClientRect()
+      return box.bottom > 0 && box.bottom - mid <= box.height * CONFIG.motion.heroDarkFootShare
+    }
+    const apply = () => {
+      root.toggleAttribute('data-over-dark', dark.size > 0 || heroDark())
+    }
+    // The strip's margins bake in the viewport height, so the observer is rebuilt once a resize
+    // has settled; observing fires for every band at once, which refills the set.
+    let bands: IntersectionObserver | undefined
+    const watchBands = () => {
+      bands?.disconnect()
+      dark.clear()
+      bands = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            if (entry.isIntersecting) dark.add(entry.target)
+            else dark.delete(entry.target)
+          }
+          apply()
+        },
+        {
+          rootMargin: `-${String(mid)}px 0px -${String(window.innerHeight - mid - 1)}px 0px`,
+        },
+      )
+      for (const band of document.querySelectorAll('[data-theme="dark"]')) bands.observe(band)
+    }
+    watchBands()
+    let resizeSettle: ReturnType<typeof setTimeout> | undefined
+    const onResize = () => {
+      clearTimeout(resizeSettle)
+      resizeSettle = setTimeout(watchBands, CONFIG.motion.choreo.resizeSettleMs)
+    }
+    window.addEventListener('resize', onResize)
+
     let scrolled = window.scrollY > CONFIG.motion.headerScrolledAtPx
     settle(scrolled, false)
+    apply()
     const onScroll = () => {
+      apply()
       const next = window.scrollY > CONFIG.motion.headerScrolledAtPx
       if (next === scrolled) return
       scrolled = next
@@ -81,41 +133,29 @@ export function HeaderChrome({ children }: { children: ReactNode }) {
     })
     if (heroCta !== null) pastCta.observe(heroCta)
 
-    // The frame is under the header once the hero's foot has passed the header's own foot: the
-    // root is the viewport less the header, and the hero, first on the page, can only leave it
-    // upwards.
-    const hero = document.getElementById('hero')
-    const headerPx = root.querySelector('header')?.offsetHeight ?? 0
-    const framed = new IntersectionObserver(
-      ([entry]) => {
-        root.toggleAttribute('data-framed', entry !== undefined && !entry.isIntersecting)
-      },
-      { rootMargin: `-${String(headerPx)}px 0px 0px 0px` },
-    )
-    if (hero !== null) framed.observe(hero)
-
     return () => {
       clearTimeout(step)
+      clearTimeout(resizeSettle)
       window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onResize)
       pastCta.disconnect()
-      framed.disconnect()
+      bands?.disconnect()
     }
   }, [])
 
   return (
     <div ref={ref} className="group contents">
-      <header className="fixed inset-x-0 top-0 z-50 text-surface mix-blend-difference group-has-[[aria-expanded=true]]:text-on-surface group-has-[[aria-expanded=true]]:mix-blend-normal group-data-solid:text-on-surface group-data-solid:mix-blend-normal">
+      {/* The text takes --on-surface once solid through `.header-bar` (app/globals.css), whose
+          held ink fades between the light and dark sets while the blend flip itself snaps. */}
+      <header className="header-bar fixed inset-x-0 top-0 z-50 text-surface mix-blend-difference group-has-[[aria-expanded=true]]:text-on-surface group-has-[[aria-expanded=true]]:mix-blend-normal group-data-solid:mix-blend-normal">
         {children}
       </header>
-      {/* The surface, painted under the header and never inside it. The frame rules on its inner
-          column draw only while the page's frame is what runs beneath, so they never hang over
-          the edge-to-edge hero. */}
+      {/* The surface, painted under the header and never inside it. Its colour follows the dark
+          scope, so over a dark band it is the foot at the same alpha, and the change fades. */}
       <div
         aria-hidden="true"
-        className="pointer-events-none fixed inset-x-0 top-0 z-40 h-16 border-b border-on-surface/10 bg-surface/92 opacity-0 shadow-header backdrop-blur-lg transition-opacity duration-(--motion-enter) ease-standard group-has-[[aria-expanded=true]]:opacity-100 group-data-scrolled:opacity-100"
-      >
-        <div className="mx-auto h-full max-w-7xl border-border opacity-0 transition-opacity duration-(--motion-enter) ease-standard group-data-framed:opacity-100 md:border-x" />
-      </div>
+        className="pointer-events-none fixed inset-x-0 top-0 z-40 h-16 bg-surface/92 opacity-0 shadow-header backdrop-blur-lg transition-[opacity,background-color] duration-(--motion-enter) ease-standard group-has-[[aria-expanded=true]]:opacity-100 group-data-scrolled:opacity-100"
+      />
     </div>
   )
 }

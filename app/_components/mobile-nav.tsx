@@ -45,12 +45,13 @@ export function MobileNav() {
     <div ref={rootRef} className="md:hidden">
       {/* See-through with a hairline in the current colour, and dimmed rather than recoloured on
           hover: over the hero the header is drawn inverted (header-chrome.tsx), so a filled
-          surface or a coloured ring would show as its opposite. */}
+          surface or a coloured ring would show as its opposite. Once the header is solid the
+          focus ring takes the site's brand-ink, which the dark scope keeps readable. */}
       <Button
         ref={buttonRef}
         variant="ghost"
         size="icon-lg"
-        className="border-current/30 hover:border-current/30 hover:bg-transparent hover:opacity-60 focus-visible:ring-current"
+        className="border-current/30 hover:border-current/30 hover:bg-transparent hover:opacity-60 focus-visible:ring-current group-data-solid:focus-visible:ring-brand-ink"
         onClick={() => {
           setOpen((current) => !current)
         }}

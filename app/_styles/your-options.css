@@ -1,0 +1,15 @@
+/* #your-options: this section's own rules, plain CSS only; tokens and utilities stay in app/globals.css. */
+
+/* ==== your-options ==== */
+
+/*
+ * The tinted stretch ends here. The wash holds until the last band and a half of the section's
+ * padding, then fades to white under the notes, so Straight answers opens on white with no rule.
+ */
+.wash-dissolve {
+  background: linear-gradient(
+    to bottom,
+    var(--surface-wash) calc(100% - var(--spacing-band) * 1.5),
+    var(--surface)
+  );
+}

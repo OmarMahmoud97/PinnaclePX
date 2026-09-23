@@ -1,0 +1,47 @@
+/* ==== brand: the PX mark (components/brand/logo-mark.tsx) ==== */
+/*
+ * One box, two renderings. The artwork (an <img>) is the default and shows on every light
+ * ground: the pages' headers, the About tile and card, the solid light bar. The mask (a span
+ * filled through the mark's alpha) takes over where the artwork cannot work: over the hero,
+ * where the header is blended by difference and the fill is the current colour so it flips
+ * with the text; and on dark grounds (the footer, the solid bar over a dark band), where the
+ * fill is the ramp's light gradient. The rules run from the default to the most specific
+ * state, so each later rule wins by source order where the specificity is equal.
+ */
+.brand-mark-mask {
+  display: none;
+  background: currentColor;
+  mask: url('/brand/px-mark-240.webp?v=2026-09-23') center / contain no-repeat;
+}
+
+/* Over the hero: the silhouette in the header's own colour, so the difference blend flips it. */
+.header-bar .brand-mark-image {
+  display: none;
+}
+
+.header-bar .brand-mark-mask {
+  display: block;
+}
+
+/* The solid light bar, and the bar behind an open menu, show the artwork again. */
+[data-solid]:not([data-over-dark]) .header-bar .brand-mark-image,
+.group:has([aria-expanded='true']):not([data-over-dark]) .header-bar .brand-mark-image {
+  display: block;
+}
+
+[data-solid]:not([data-over-dark]) .header-bar .brand-mark-mask,
+.group:has([aria-expanded='true']):not([data-over-dark]) .header-bar .brand-mark-mask {
+  display: none;
+}
+
+/* Dark grounds: the footer, and the solid bar over a dark band, take the light gradient. */
+[data-theme='dark'] .brand-mark-image,
+[data-solid][data-over-dark] .header-bar .brand-mark-image {
+  display: none;
+}
+
+[data-theme='dark'] .brand-mark-mask,
+[data-solid][data-over-dark] .header-bar .brand-mark-mask {
+  display: block;
+  background: linear-gradient(135deg, var(--on-ink) 20%, var(--glow));
+}

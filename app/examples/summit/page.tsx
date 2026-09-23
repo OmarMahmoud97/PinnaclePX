@@ -45,7 +45,7 @@ function tokensFor(scheme: Scheme): CSSProperties {
       scheme === 'dark' ? deriveTokens('#a855f7', 'dark', SUMMIT_CONTRAST_PAIRS) : LIGHT,
     ),
     '--template-font-display': urbanist.style.fontFamily,
-    '--template-font-body': 'var(--font-geist-sans)',
+    '--template-font-body': 'var(--font-site-sans)',
   } as CSSProperties
 }
 

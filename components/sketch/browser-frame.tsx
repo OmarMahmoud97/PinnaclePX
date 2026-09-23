@@ -33,7 +33,7 @@ export function BrowserFrame({ company, coloured, className, children }: Props) 
         </span>
         <span
           key={company}
-          className="flex animate-sketch-in items-center gap-1.5 rounded-md border border-(--sketch-line) bg-(--sketch-bg) px-3 py-0.5 font-mono text-[9px] text-(--sketch-muted)"
+          className="flex animate-sketch-in items-center gap-1.5 rounded-md border border-(--sketch-line) bg-(--sketch-bg) px-3 py-0.5 text-[9px] text-(--sketch-muted)"
         >
           {coloured && (
             <span className="size-1.5 animate-sketch-in rounded-full bg-(--sketch-strong)" />

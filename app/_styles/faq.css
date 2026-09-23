@@ -1,0 +1,37 @@
+/* #faq: this section's own rules, plain CSS only; tokens and utilities stay in app/globals.css. */
+
+/*
+ * The light beat (ADR 0034, plan 7.8). A closed entry is a plain tinted card; the one the visitor
+ * opens turns white, lifts, and lights in one corner. The glow is the shared .glow-corner radial
+ * from globals.css, which every light card paints at once; here it is held at nothing until the
+ * card opens, and it comes up over --motion-enter beside the card's own ground and shadow. It is
+ * an opacity change, so it keeps its timing under reduced motion (WCAG 2.3.3), and it sits on
+ * the open card's white, where brand-ink reads at 5.53 and the muted body at 7.07 at worst.
+ */
+details.faq.glow-corner::before {
+  opacity: 0;
+  transition: opacity var(--motion-enter) var(--ease-standard);
+}
+
+details.faq[open].glow-corner::before {
+  opacity: 1;
+}
+
+/*
+ * Once motion is armed, the list reveal in globals.css sets `transition` on every direct child of
+ * a [data-reveal] group, and it outranks a utility on the child, so the card's own ground and
+ * shadow beats would go with it: the entry would still rise in, then snap white when opened.
+ * The reveal's three properties are restated here with the card's two beside them, on the same
+ * clocks each has elsewhere. Under reduced motion the global allowlist keeps background-color
+ * and drops box-shadow, which is right.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  html[data-motion] [data-reveal] > details.faq {
+    transition:
+      opacity var(--motion-reveal) var(--ease-enter) calc(var(--i, 0) * var(--motion-stagger)),
+      translate var(--motion-reveal) var(--ease-enter) calc(var(--i, 0) * var(--motion-stagger)),
+      scale var(--motion-reveal) var(--ease-enter) calc(var(--i, 0) * var(--motion-stagger)),
+      background-color var(--motion-enter) var(--ease-standard),
+      box-shadow var(--motion-enter) var(--ease-standard);
+  }
+}

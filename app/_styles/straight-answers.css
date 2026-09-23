@@ -1,0 +1,11 @@
+/* #straight-answers: this section's own rules, plain CSS only; tokens and utilities stay in app/globals.css. */
+
+/*
+ * A card lands on its foot. The entrance (app/_components/motion/straight-answers.ts) leans each
+ * card one degree and uprights it; pivoting at the bottom edge makes that a card set down on the
+ * page rather than one turning about its middle. Declared here rather than inline by GSAP so the
+ * landing's clearProps leaves nothing behind. At rest there is no transform, so it costs nothing.
+ */
+.answer {
+  transform-origin: 50% 100%;
+}

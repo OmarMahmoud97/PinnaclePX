@@ -20,6 +20,9 @@ export const HERO = {
 // the button is the one line that says what happens if they like one.
 export const HOW_IT_WORKS = {
   heading: 'Five answers show you the look.',
+  // The word the heading sets apart in the serif italic (app/_components/words.tsx, emphasised).
+  // A constant like HERO.emphasis, not a visitor sentence: the heading string is unchanged.
+  emphasis: 'look',
   lead: `Nothing to prepare. We'll ask for your email, and your link stays live for ${String(CONFIG.retention.days)} days.`,
   // Five steps beside the phone frame, one per answer. A step paints the stages it names as the
   // visitor scrolls it past the frame, spread evenly down its height (walkthrough-stops.ts); the

@@ -189,7 +189,7 @@ export function WalkthroughFrame({ className, built }: Props) {
               data-wire="label-slot"
               className={cn(SLOT, 'absolute inset-0 flex items-center justify-center')}
             >
-              <span className="rounded-full border border-(--sketch-line) bg-(--sketch-bg) px-2 py-0.5 font-mono text-[9px] text-(--sketch-muted)">
+              <span className="rounded-full border border-(--sketch-line) bg-(--sketch-bg) px-2 py-0.5 text-[9px] text-(--sketch-muted)">
                 your photos
               </span>
             </span>
@@ -198,7 +198,7 @@ export function WalkthroughFrame({ className, built }: Props) {
               data-wire="label-style"
               className={cn(
                 ANSWER,
-                'absolute bottom-1.5 left-2 flex max-w-[90%] items-center gap-1 rounded-full bg-(--sketch-bg) px-1.5 py-0.5 font-mono text-[8px] text-(--sketch-muted)',
+                'absolute bottom-1.5 left-2 flex max-w-[90%] items-center gap-1 rounded-full bg-(--sketch-bg) px-1.5 py-0.5 text-[8px] text-(--sketch-muted)',
               )}
             >
               <span
@@ -240,7 +240,7 @@ export function WalkthroughFrame({ className, built }: Props) {
 
           <div
             data-part="footer"
-            className="mt-auto flex items-center justify-between border-t border-(--sketch-line) pt-2 font-mono text-[6px] text-(--sketch-muted)"
+            className="mt-auto flex items-center justify-between border-t border-(--sketch-line) pt-2 text-[6px] text-(--sketch-muted) tabular-nums"
           >
             <span className="flex items-center gap-1">
               <span>© {YEAR}</span>

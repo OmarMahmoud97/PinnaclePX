@@ -39,6 +39,8 @@ Method: every visitor sentence read in its source file and again in its layout (
 
 > [Caption, mono] If you know the terms: a custom CMS, SEO, AEO, GEO and WCAG.
 >
+> Removed at the owner's request on 23 September 2026; the band ends on its last row of cards.
+>
 > [Ask, small] It starts with your three designs.
 > [Text link] Show me my three designs
 > [Small] or [text link] book a 20-minute call

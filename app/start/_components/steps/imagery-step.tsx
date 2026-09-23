@@ -100,7 +100,7 @@ export function ImageryStep({
               />
               {photo.status !== 'done' && (
                 <span
-                  className={`absolute inset-x-0 bottom-0 px-1.5 py-0.5 text-center font-mono text-[10px] ${photo.status === 'failed' ? 'bg-danger text-on-brand' : 'bg-surface/90 text-on-surface-muted'}`}
+                  className={`absolute inset-x-0 bottom-0 px-1.5 py-0.5 text-center text-[10px] ${photo.status === 'failed' ? 'bg-danger text-on-brand' : 'bg-surface/90 text-on-surface-muted'}`}
                 >
                   {photo.status === 'failed' ? 'failed' : 'uploading'}
                 </span>

@@ -80,7 +80,7 @@ export default async function PreviewPage({ params }: { params: Params }) {
                 key={concept.templateId ?? index}
                 className="flex items-center gap-4 rounded-xl border border-border bg-surface px-4 py-3 shadow-badge"
               >
-                <span className="font-mono text-xs text-on-surface-muted tabular-nums">
+                <span className="text-xs text-on-surface-muted tabular-nums">
                   {String(index + 1).padStart(2, '0')}
                 </span>
                 {concept.href === null ? (

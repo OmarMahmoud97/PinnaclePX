@@ -116,7 +116,7 @@ export function BriefSketch({ model, phoneFrom = 'lg', ticks = true, built, phon
 
               <div
                 data-part="footer"
-                className="flex items-center justify-between border-t border-(--sketch-line) bg-(--sketch-bg-muted) px-5 py-3 font-mono text-[9px] text-(--sketch-muted) transition-colors duration-500 sm:px-6"
+                className="flex items-center justify-between border-t border-(--sketch-line) bg-(--sketch-bg-muted) px-5 py-3 text-[9px] text-(--sketch-muted) tabular-nums transition-colors duration-500 sm:px-6"
               >
                 <span key={company} className="flex animate-sketch-in items-center gap-1.5">
                   <span>© {YEAR}</span>

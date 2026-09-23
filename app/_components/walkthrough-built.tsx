@@ -165,7 +165,7 @@ export const WalkthroughBuilt = memo(function WalkthroughBuilt({ onReady }: Prop
         data-part="footer"
         className={cn(
           HIDDEN,
-          'relative flex items-center justify-between bg-(--built-footer) px-3 py-1.5 font-mono text-[6px] text-surface/80',
+          'relative flex items-center justify-between bg-(--built-footer) px-3 py-1.5 text-[6px] text-surface/80 tabular-nums',
         )}
       >
         <span>

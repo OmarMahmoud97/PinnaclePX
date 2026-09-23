@@ -33,7 +33,7 @@ export const HATCH =
 
 // A dashed slot's look, shared with the walkthrough's frame.
 export const SLOT_STYLES =
-  'flex items-center rounded-md border border-dashed border-(--sketch-dash) px-2 font-mono text-[9px] tracking-wide text-(--sketch-muted)'
+  'flex items-center rounded-md border border-dashed border-(--sketch-dash) px-2 text-[9px] tracking-wide text-(--sketch-muted)'
 
 type BarProps = { className: string; part?: string | undefined }
 
@@ -214,7 +214,7 @@ export function ImageBlock({ model, className }: { model: SketchModel; className
         <span className="absolute inset-0 flex items-center justify-center">
           <span
             data-part="image-label"
-            className="rounded-full border border-(--sketch-line) bg-(--sketch-bg) px-2 py-0.5 font-mono text-[9px] text-(--sketch-muted)"
+            className="rounded-full border border-(--sketch-line) bg-(--sketch-bg) px-2 py-0.5 text-[9px] text-(--sketch-muted)"
           >
             your photos
           </span>
@@ -222,7 +222,7 @@ export function ImageBlock({ model, className }: { model: SketchModel; className
       ) : (
         <span
           data-part="image-label"
-          className="absolute bottom-1.5 left-2 max-w-[90%] truncate rounded-full bg-(--sketch-bg) px-1.5 py-0.5 font-mono text-[8px] text-(--sketch-muted)"
+          className="absolute bottom-1.5 left-2 max-w-[90%] truncate rounded-full bg-(--sketch-bg) px-1.5 py-0.5 text-[8px] text-(--sketch-muted)"
         >
           {model.imageLabel}
         </span>

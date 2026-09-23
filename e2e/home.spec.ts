@@ -203,3 +203,24 @@ test('the page scrolls smoothly and a section link glides into view', async ({ p
   const top = await page.locator('#faq').evaluate((section) => section.getBoundingClientRect().top)
   expect(top).toBeGreaterThanOrEqual(64)
 })
+
+// The closing's button and phone rise in by GSAP from md up (ADR 0034). Their fail-safe plays
+// only what the viewport has reached, so a visitor who paused long enough for its clock to tick
+// before scrolling down must still find both: the tween is played by a plain trigger and never
+// killed with one, which is what once left the page's final ask at opacity 0.
+test('the closing ask and phone are in place after a long pause', async ({ page }) => {
+  await page.goto('/')
+  await expect(page.locator('html')).toHaveAttribute('data-motion', '')
+  await page.mouse.move(720, 450)
+  await page.mouse.wheel(0, 300)
+  await expect(page.locator('html')).toHaveAttribute('data-choreo', 'scrubs')
+  // Longer than the fail-safe clock (CONFIG.motion.choreo.settleFailSafeMs).
+  await page.waitForTimeout(4500)
+  await page.locator('#cta').scrollIntoViewIfNeeded()
+  const ask = page.locator('[data-rise="ask"]')
+  const phone = page.locator('[data-rise="phone"] > div > div[aria-hidden="true"]')
+  await expect(ask).toHaveCSS('opacity', '1')
+  await expect(phone).toHaveCSS('opacity', '1')
+  await expect.poll(() => ask.evaluate((el) => el.getAttribute('style') ?? '')).toBe('')
+  await expect.poll(() => phone.evaluate((el) => el.getAttribute('style') ?? '')).toBe('')
+})

@@ -24,16 +24,17 @@
   --color-warning: var(--warning);
   --color-success: var(--success);
 
-  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  --font-sans: var(--font-site-sans), ui-sans-serif, system-ui, sans-serif;
+  /* No file behind this stack: it exists only for Tailwind's code/pre/kbd/samp preflight. */
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   /*
    * Template type. A preview sets the two families on its root (--template-font-display and
-   * --template-font-body); the site's own pages never do, so both fall back to Geist.
+   * --template-font-body); the site's own pages never do, so both fall back to the site's face.
    */
   --font-display:
-    var(--template-font-display, var(--font-geist-sans)), ui-sans-serif, system-ui, sans-serif;
+    var(--template-font-display, var(--font-site-sans)), ui-sans-serif, system-ui, sans-serif;
   --font-body:
-    var(--template-font-body, var(--font-geist-sans)), ui-sans-serif, system-ui, sans-serif;
+    var(--template-font-body, var(--font-site-sans)), ui-sans-serif, system-ui, sans-serif;
 
   --ease-enter: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-standard: cubic-bezier(0.2, 0, 0, 1);

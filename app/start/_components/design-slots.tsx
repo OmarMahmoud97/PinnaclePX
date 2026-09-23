@@ -30,13 +30,13 @@ export function DesignSlots({ status, timeUp }: Props) {
                 : 'border-border bg-surface shadow-badge',
             )}
           >
-            <span className="font-mono text-xs text-on-surface-muted tabular-nums">
+            <span className="text-xs text-on-surface-muted tabular-nums">
               {String(index + 1).padStart(2, '0')}
             </span>
             {concept.href === null ? (
               <>
                 <span className="flex-1">{label}</span>
-                <span className="flex items-center gap-2 font-mono text-[11px] text-on-surface-muted">
+                <span className="flex items-center gap-2 text-[11px] text-on-surface-muted">
                   <span
                     aria-hidden="true"
                     className={cn(

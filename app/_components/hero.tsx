@@ -1,26 +1,12 @@
 import { ArrowDown } from 'lucide-react'
 import Link from 'next/link'
-import type { ReactNode } from 'react'
 import { HeroPrompt } from '@/app/_components/hero-prompt'
 import { Ink } from '@/app/_components/ink'
 import { LOGOS } from '@/app/_components/client-logos'
 import { LogoMarquee } from '@/app/_components/logo-marquee'
 import { HERO } from '@/app/_components/section-copy'
+import { emphasised } from '@/app/_components/words'
 import { SITE } from '@/lib/site'
-
-// The tagline with one word set apart, the way the reference sets its headline: the promise
-// is in that word. The sentence stays whole in SITE.tagline for the title and the copy tests.
-function emphasised(text: string, word: string): ReactNode {
-  const at = text.indexOf(word)
-  if (at < 0) return text
-  return (
-    <>
-      {text.slice(0, at)}
-      <em>{word}</em>
-      {text.slice(at + word.length)}
-    </>
-  )
-}
 
 // The hero (ADR 0031): one screen, edge to edge, whose ground runs from the page's white at the
 // top through the studio's blue to near-black at the foot, with the ink canvas multiplied onto

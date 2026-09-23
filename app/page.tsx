@@ -5,6 +5,7 @@ import { Hero } from '@/app/_components/hero'
 import { HowItWorks } from '@/app/_components/how-it-works'
 import { Included } from '@/app/_components/included'
 import { JsonLd } from '@/app/_components/json-ld'
+import { PageChoreography } from '@/app/_components/page-choreography'
 import { PageMotion } from '@/app/_components/page-motion'
 import { RealBuild } from '@/app/_components/real-build'
 import { SiteFooter } from '@/app/_components/site-footer'
@@ -27,17 +28,22 @@ if (env.LAUNCH_GATE === '1' && !readyForTraffic(READY_TEMPLATES.length)) {
   )
 }
 
-// The hairline frame the page sits in: the column with its two rules, which the header's inner
-// row and the footer share, so the rules run unbroken from the first section to the foot.
-const frame = 'mx-auto w-full max-w-7xl border-x border-border'
-
 // The order is the arc in docs/adr/0033: proof the visitor can open on a phone, the site they
 // would get, the free look at it, what happens if they like one, the other route compared
 // fairly, the catch, the person, the questions left, the ask. Nine bands where there were
 // twelve: the free designs are the first step in that story rather than its subject, so what the
-// taster gives is now told once, by the walkthrough. The hero fills the first screen edge to
-// edge under the see-through header (ADR 0031); every section after it is a direct child of the
-// frame so divide-y draws the hairline between them.
+// taster gives is now told once, by the walkthrough.
+//
+// Below the hero the page continues the hero's ink (ADR 0034). There is no frame and no hairline
+// between bands: each section paints its own ground edge to edge and keeps its content in the
+// shell, and the separation is a ground, a card, air or one of two shapes. The proof and the
+// promise sit on the hero's own foot as one dark stretch, which ends in a pooled curve over the
+// walkthrough's wash; the wash carries the two commercial bands and dissolves to white for the
+// answers, the studio and the questions; the closing hands the ink back on white; and the footer,
+// a dark sheet with rounded top corners laid over the closing's foot, ends the page on the foot
+// again. The stretch and the footer are the page's two dark scopes (data-theme="dark"), which
+// the header reads as it passes over them (app/_components/header-chrome.tsx). PageMotion runs the
+// list reveals; PageChoreography, after it, loads the scroll choreography once the visitor scrolls.
 export default function HomePage() {
   return (
     <>
@@ -45,22 +51,21 @@ export default function HomePage() {
       <SiteHeader />
       <main id="main" className="flex flex-col">
         <Hero />
-        <div className={`${frame} flex flex-col divide-y divide-border`}>
+        <div data-theme="dark" className="ink-stretch flex flex-col">
           <Work />
           <Included />
-          <HowItWorks />
-          <RealBuild />
-          <YourOptions />
-          <StraightAnswers />
-          <About />
-          <Faq />
-          <ClosingCta />
         </div>
+        <HowItWorks />
+        <RealBuild />
+        <YourOptions />
+        <StraightAnswers />
+        <About />
+        <Faq />
+        <ClosingCta />
       </main>
-      <div className={frame}>
-        <SiteFooter />
-      </div>
+      <SiteFooter />
       <PageMotion />
+      <PageChoreography />
     </>
   )
 }

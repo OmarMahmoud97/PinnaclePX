@@ -1,37 +1,35 @@
-// The page's shared recipes — type, section shell, cells and rows — in one place, so every
+// The page's shared recipes — type, section shell, cards and wells — in one place, so every
 // section is built the same way. The caption register lives in components/ui/caption.ts and the
-// inline link in components/ui/text-link.ts.
+// inline link in components/ui/text-link.ts. Plain strings, hand-ordered, never cn(): a colour
+// utility appended after a recipe that already sets one does not win (Tailwind emits the
+// recipe's class later in the sheet), so a variant that changes a colour is written out in full.
+//
+// The hairline recipes that once lived here (commercialBand, bandEdge, cellGrid, hairlineCell,
+// stepRow, stepNumber, trailingNote) went with ADR 0034: every separation below the hero is now
+// a ground, a card, air or one of two shapes, never a rule.
 
-import { captionStyles } from '@/components/ui/caption'
+// Type. Mona Sans at 500 reads light on the dark and tinted grounds, so every heading is 600.
 
 // The first heading and the last: the H1 and the closing H2.
 export const displayHeading = 'text-display font-semibold text-balance'
 
 // Every section H2.
-export const titleHeading = 'text-title font-medium text-balance'
+export const titleHeading = 'text-title font-semibold text-balance'
 
 // The walkthrough's step titles. They are beats in a scrolling story rather than cards in a
 // grid — one to a screenful, alone in a wide column beside the frame — so they take the step
 // under the section H2 and carry the reading on their own.
-export const stepHeading = 'text-subtitle font-medium text-balance'
+export const stepHeading = 'text-subtitle font-semibold text-balance'
 
 // Card titles.
-export const cardHeading = 'text-heading font-medium'
+export const cardHeading = 'text-heading font-semibold'
 
-// A left column pins only when its neighbour is taller than a viewport, at one offset.
-export const stickyColumn = 'md:sticky md:top-24 md:self-start'
+// Real build's 01 to 05: the heaviest weight, so the page's one set of big figures is a shape,
+// and tabular so the column keeps its edge as it counts.
+export const numeral = 'text-numeral font-extrabold tabular-nums'
 
-// The ground the page stands on where it turns from the site to the deal: the build and the
-// comparison, and no third band ever — two tinted sections read as one stretch, four read
-// as a stripe. Every recipe below works on it unchanged (see the ratios in app/globals.css).
-export const commercialBand = 'bg-surface-tint'
-
-// The rule that opens and closes that stretch. It is a child, not a border, so `-mt-px` lets it
-// sit exactly on <main>'s own divide-y hairline and paint over it — descendants paint above a
-// parent's border — and the boundary is marked once rather than twice. Used exactly twice: at
-// the top of Real build and at the top of the section after Your options.
-export const bandEdge =
-  '-mt-px h-px bg-linear-to-r from-transparent via-brand-deeper/45 to-transparent'
+// Included's four job words: the largest text in the band and its colour moment.
+export const jobWord = 'text-jobword font-bold'
 
 // The line under a section H2: one step up from the body, quieter than it, wrapped kindly.
 export const sectionLead = 'text-lead text-pretty text-on-surface-muted'
@@ -39,33 +37,41 @@ export const sectionLead = 'text-lead text-pretty text-on-surface-muted'
 // The paragraph under a card, step or answer title.
 export const cardBody = 'text-body text-pretty text-on-surface-muted'
 
+// Shell. Every band paints its own ground edge to edge; its content sits in the shell.
+export const shell = 'mx-auto w-full max-w-7xl px-6 md:px-10'
+
+// A heading block: the H2, its lead, and whatever else stands with them, at reading width.
+export const headingBlock = 'flex max-w-3xl flex-col gap-3'
+
+// A left column pins only when its neighbour is taller than a viewport, at one offset.
+export const stickyColumn = 'md:sticky md:top-24 md:self-start'
+
 // The six-column band a section splits into from md: a narrow heading column and a wide body,
-// with the hairline between them. Below md it is one column and the rule never draws.
-export const sectionGrid = 'grid md:grid-cols-6 md:divide-x md:divide-border'
+// with air between them and no rule. Below md it is one column.
+export const sectionGrid = 'grid gap-10 md:grid-cols-6 md:gap-x-10 lg:gap-x-14'
 
-// The narrow column of a sectionGrid band: the H2, its lead, and whatever else pins there. On a
-// phone the body follows underneath, so the column drops its own bottom padding.
-export const headingColumn = `flex flex-col gap-3 p-column max-md:pb-3 md:col-span-2 ${stickyColumn}`
+// The narrow column of a sectionGrid band: the H2, its lead, and whatever else pins there.
+export const headingColumn = `flex flex-col gap-3 md:col-span-2 ${stickyColumn}`
 
-// A grid of cells with a hairline between them: gap-px over a border-coloured background draws
-// the rules, so no cell draws its own edges. Two across from the smallest screen; the section
-// says how many it widens to.
-export const cellGrid = 'grid grid-cols-2 gap-px bg-border'
+// Surfaces. Elevation on light is the shadow; on dark it is the surface step plus the inset
+// top light. No card has a border.
 
-// One cell of a cellGrid: its own surface painted back over the border colour, and tighter
-// padding on a phone than the cell step gives it.
-export const hairlineCell = 'flex flex-col gap-3 bg-surface p-4 sm:p-cell'
+// A white card, on the wash or on white.
+export const card = 'rounded-(--radius-card) bg-surface shadow-card'
 
-// A numbered step: the counter beside the words, on the cell's padding.
-export const stepRow = 'flex gap-5 p-5 md:p-cell'
+// The wash as a card on white (Straight answers, a closed FAQ entry).
+export const cardWash = 'rounded-(--radius-card) bg-surface-wash'
 
-// Its counter. Two characters wide so 01 and 09 line up, and lining figures so the column does
-// not shift as the list counts on. It takes the caption register's own muted colour: a
-// `text-brand-deeper` sat here for a while but never applied, because captionStyles' own
-// `text-on-surface-muted` is emitted later at the same specificity and won. Removing it keeps
-// what the page has always shown; to make the counters brand instead, build this with `cn()`,
-// which drops the losing class, rather than adding the utility back.
-export const stepNumber = `${captionStyles} w-[2ch] shrink-0 pt-1 tabular-nums`
+// A card inside the dark scope, where bg-surface-muted is --ink-card.
+export const cardInk = 'rounded-(--radius-card) bg-surface-muted shadow-card-ink'
 
-// The quiet block a list ends on: the bridge to what follows and the ask, on the rows' padding.
-export const trailingNote = 'flex flex-col gap-2 p-5 text-small text-on-surface-muted md:p-cell'
+// A card's padding; phones use p-4 where a section says so.
+export const cardPad = 'p-5 md:p-7'
+
+// A cell inside a card that takes the ground colour: a darker well in the dark scope, a white
+// cell on white.
+export const well = 'rounded-2xl bg-surface p-4 md:p-5'
+
+// The disc behind a card's icon.
+export const iconDisc =
+  'grid size-12 shrink-0 place-items-center rounded-full bg-surface text-brand-ink'

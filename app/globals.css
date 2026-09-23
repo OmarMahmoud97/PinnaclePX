@@ -88,8 +88,191 @@
   --motion-tap: 120ms;
   --motion-enter: 200ms;
   --motion-settle: 300ms;
-  --motion-stagger: 40ms;
+  --motion-stagger: 70ms;
 }
+
+/* ==== redesign: site-only tokens (ADR 0034) ==== */
+/*
+ * The page below the hero runs the hero's ramp again: a dark stretch on its foot, a wash from
+ * its top stops, white, and a dark footer. The values are ramp stops or existing tokens; the
+ * ratios that clear them are in docs/adr/0034. --brand-ink splits coloured text from fills so
+ * one class is right inside and outside the dark scope, where --brand-deeper as text would fail.
+ */
+@theme inline {
+  --color-brand-ink: var(--brand-ink);
+  --color-surface-wash: var(--surface-wash);
+  --color-surface-wash-deep: var(--surface-wash-deep);
+  --color-ink-card: var(--ink-card);
+  --color-ink-raised: var(--ink-raised);
+  --color-job-found: var(--job-found);
+  --color-job-trusted: var(--job-trusted);
+  --color-job-answered: var(--job-answered);
+  --color-job-reachable: var(--job-reachable);
+  --color-wordmark: var(--wordmark);
+  --font-emphasis: var(--font-site-serif), 'Iowan Old Style', Georgia, serif;
+  --shadow-card: var(--shadow-card);
+  --shadow-card-ink: var(--shadow-card-ink);
+  --shadow-panel: var(--shadow-panel);
+}
+
+@theme {
+  --spacing-band: clamp(4rem, 2.5rem + 6vw, 8rem);
+  --spacing-band-sm: clamp(2.5rem, 1.5rem + 4vw, 5rem);
+  --spacing-seam: clamp(2rem, 6vw, 5rem);
+  --radius-card: 1.5rem;
+  --radius-panel: 2rem;
+  --tracking-eyebrow: 0.08em;
+  --text-numeral: clamp(2.5rem, 1.5rem + 3vw, 4.5rem);
+  --text-numeral--line-height: 1;
+  --text-numeral--letter-spacing: -0.02em;
+  --text-jobword: clamp(1.75rem, 1.25rem + 1.25vw, 2.5rem);
+  --text-jobword--line-height: 1;
+  --text-jobword--letter-spacing: -0.02em;
+  /* The site's retune of the shared scale (sizes unchanged). Declared here, not in tokens.css,
+     because t01-aurora reads text-title and text-display from that file. */
+  --text-display--line-height: 1.02;
+  --text-display--letter-spacing: -0.035em;
+  --text-title--line-height: 1.06;
+  --text-title--letter-spacing: -0.025em;
+  --text-subtitle--line-height: 1.2;
+  --text-subtitle--letter-spacing: -0.015em;
+  --text-heading--line-height: 1.3;
+  --text-heading--letter-spacing: -0.005em;
+  --text-label--letter-spacing: 0em;
+}
+
+:root {
+  --ink-foot: #020a12;
+  --ink-card: #021b2c;
+  --ink-raised: #002943;
+  --on-ink: #e2eef7;
+  --on-ink-muted: #9abfdd;
+  --ink-line: #18242c;
+  --brand-ink: #0369a1;
+  --surface-wash: #e2eef7;
+  --surface-wash-deep: #c6dcee;
+  --job-found: var(--glow);
+  --job-trusted: var(--glow-secondary);
+  --job-answered: #75a5cc;
+  --job-reachable: #c6dcee;
+  --backlight: rgb(44 213 255 / 0.18);
+  --wordmark: #1b2e44;
+  --seam: var(--spacing-seam);
+  --shadow-card: 0 1px 2px rgb(2 6 23 / 0.04), 0 16px 40px -16px rgb(2 6 23 / 0.14);
+  --shadow-card-ink: inset 0 1px 0 rgb(226 238 247 / 0.06);
+  --shadow-panel: var(--shadow-card), 0 0 120px -30px rgb(44 213 255 / 0.35);
+  --glow-corner: color-mix(in oklab, var(--glow) 12%, transparent);
+  --motion-reveal: 600ms;
+}
+
+/*
+ * The dark scope: the wrapper around #work and #included, the footer, and the header while it is
+ * solid over either. Every recipe flips with no class churn; buttons keep their navy fill.
+ */
+[data-theme='dark'],
+[data-solid][data-over-dark] {
+  color-scheme: dark;
+  /* Restart inheritance here: body's colour was computed in the light scope and would otherwise
+     carry navy into the scope on every element that sets no colour of its own. */
+  color: var(--on-surface);
+  --surface: var(--ink-foot);
+  --surface-muted: var(--ink-card);
+  --surface-tint: var(--ink-raised);
+  --on-surface: var(--on-ink);
+  --on-surface-muted: var(--on-ink-muted);
+  --border: var(--ink-line);
+  --accent: var(--ink-card);
+  --brand-ink: var(--brand);
+}
+
+/* A missing italic shows as missing, never as a slanted sans. */
+body {
+  font-synthesis: none;
+}
+
+/*
+ * The three serif italics: the hero's em keeps its 1em box (the fills are measured on it); the
+ * two H2 ems grow optically and tighten their line-height so the product stays under the strut.
+ */
+.hero-heading em,
+.emphasis em {
+  font-family: var(--font-emphasis);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+.emphasis em {
+  font-size: 1.06em;
+  line-height: 0.94;
+}
+
+/*
+ * The two shaped seams. The ink stretch paints over the walkthrough band's top (it is positioned,
+ * the band is not, and no z-index is set so no stacking context is made); the band under it
+ * carries the extra padding. The footer is a sheet laid over the closing's foot the same way.
+ *
+ * The stretch is the hero's foot, flat. A feather from the hero's rest edge (#02111e) was tried
+ * and read as a line: after the ground's rise the foot is #020a12 across the whole width, and at
+ * rest it is #020a12 at the centre, so the flat foot joins invisibly wherever the eye lands and
+ * only the outer edges at rest, under reduced motion, keep a step of a few levels.
+ */
+.ink-stretch {
+  position: relative;
+  margin-bottom: calc(-1 * var(--seam));
+  border-radius: 0 0 50% 50% / 0 0 var(--seam) var(--seam);
+  background: var(--ink-foot);
+}
+
+.under-ink {
+  padding-top: calc(var(--spacing-band) + var(--seam));
+}
+
+.sheet {
+  position: relative;
+  margin-top: calc(-1 * var(--seam));
+  border-start-start-radius: var(--seam);
+  border-start-end-radius: var(--seam);
+}
+
+.before-sheet {
+  padding-bottom: calc(var(--spacing-band) + var(--seam));
+}
+
+/*
+ * The one corner glow a light card may carry, placed by the list's --i so neighbours differ: the
+ * even cards light their top-right corner, the odd ones their top-left (cos of a half turn per
+ * step swings the centre between 85% and 15%), so it is always a corner and never the same one
+ * twice running. A browser without cos() drops the whole background and shows a plain card.
+ */
+.glow-corner::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  pointer-events: none;
+  background: radial-gradient(
+    60% 50% at calc(50% + 35% * cos(var(--i, 0) * 180deg)) 0%,
+    var(--glow-corner),
+    transparent 70%
+  );
+}
+
+.glow-corner {
+  position: relative;
+  isolation: isolate;
+}
+
+/* Each section's own rules live in its own file, so parallel builders never share a line. */
+@import './_styles/work.css';
+@import './_styles/how-it-works.css';
+@import './_styles/your-options.css';
+@import './_styles/straight-answers.css';
+@import './_styles/about.css';
+@import './_styles/faq.css';
+@import './_styles/footer.css';
+@import './_styles/brand.css';
 
 /* The fixed header is 4rem tall; keep every fragment jump and focus scroll clear of it. */
 html {
@@ -136,6 +319,29 @@ html {
 [data-filled] .header-ask {
   --ask-ink: var(--on-brand);
   transition-delay: calc(var(--motion-enter) * 0.46), 0s, 0s, 0s, 0s;
+}
+
+/*
+ * The header's own ink (app/_components/header-chrome.tsx), held apart from the blend flip the
+ * same way. Once solid the text reads this property rather than --on-surface directly: the flip
+ * changes which value `color` reads, which snaps, since a fade there would pass through white on
+ * a white bar; the bar arriving over a dark band (data-over-dark, ADR 0034) changes only what
+ * --on-surface resolves to, which this property carries over --motion-enter beside the surface's
+ * own fade. Where @property is unsupported the value still resolves and the change snaps.
+ */
+@property --bar-ink {
+  syntax: '<color>';
+  inherits: false;
+  initial-value: transparent;
+}
+
+.header-bar {
+  --bar-ink: var(--on-surface);
+  transition: --bar-ink var(--motion-enter) var(--ease-standard);
+}
+
+[data-solid] .header-bar {
+  color: var(--bar-ink);
 }
 
 /* The corner ticks reach past the column on purpose; clip (not hidden) keeps sticky working. */
@@ -198,16 +404,47 @@ html.lenis.lenis-smooth {
    */
   html[data-motion] [data-reveal] > * {
     opacity: 0;
-    translate: 0 0.5rem;
+    translate: 0 2rem;
+    scale: 0.97;
     transition:
-      opacity var(--motion-settle) var(--ease-enter),
-      translate var(--motion-settle) var(--ease-enter);
+      opacity var(--motion-reveal) var(--ease-enter),
+      translate var(--motion-reveal) var(--ease-enter),
+      scale var(--motion-reveal) var(--ease-enter);
     transition-delay: calc(var(--i, 0) * var(--motion-stagger));
   }
 
   html[data-motion] [data-reveal][data-inview] > * {
     opacity: 1;
     translate: 0 0;
+    scale: 1;
+  }
+
+  /*
+   * Groups the choreography owns move by GSAP once it is armed; CSS must not race it. Keyed on
+   * the value: the leaf arms html[data-choreo] on a phone too (GSAP core, for the draw-on), as
+   * 'entrances', but without ScrollTrigger no group is ever claimed there, and the CSS reveal
+   * must keep carrying them; only 'scrubs' (armed from md, with ScrollTrigger) claims a group.
+   * The media query is the other half: a window armed wide and narrowed below md reverts its
+   * claims to the CSS reveal, which must transition again.
+   */
+  @media (width >= 48rem) {
+    html[data-choreo='scrubs'] [data-reveal][data-choreo] > * {
+      transition: none;
+    }
+  }
+}
+
+/*
+ * On paper every list is shown, whether or not the page was ever scrolled: over the CSS reveal's
+ * hidden state and over the inline styles an armed, owned group carries (hence !important).
+ */
+@media print {
+  html[data-motion] [data-reveal] > * {
+    opacity: 1 !important;
+    transform: none !important;
+    translate: none !important;
+    scale: none !important;
+    transition: none !important;
   }
 }
 
@@ -264,7 +501,7 @@ html.lenis.lenis-smooth {
 }
 
 [data-stages][data-current] > h3 {
-  color: var(--brand-deeper);
+  color: var(--brand-ink);
 }
 
 /* The FAQ opens by height, where the browser can animate it, and snaps where it cannot. */
@@ -392,6 +629,13 @@ details.faq[open]::details-content {
  * a stacking context switches the effect off.
  */
 .hero-heading {
+  /* Two lines from md whatever the width: the site's face (ADR 0034) is narrower than Geist,
+     and without a cap the tagline fits one line between about 990 and 1150 px, which moves the
+     heading box the fills below were measured on. The cap is in em so it scales with the type:
+     the whole tagline is about 16em and its longer two-line half about 10.3em, so 14em always
+     breaks it once and never twice. On a phone the column is narrower than the cap already. */
+  max-width: 14em;
+  margin-inline: auto;
   color: var(--on-surface);
   -webkit-text-fill-color: transparent;
   background: linear-gradient(to bottom, #ffffff, #eff5fb);
@@ -432,6 +676,7 @@ details.faq[open]::details-content {
   --on-surface: #f0f0f0;
   --on-surface-muted: #ababab;
   --brand-deeper: #ababab;
+  --brand-ink: #ababab;
   --surface: #000000;
   mix-blend-mode: difference;
 }

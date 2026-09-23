@@ -1,0 +1,29 @@
+/* #how-it-works: this section's own rules, plain CSS only; tokens and utilities stay in app/globals.css. */
+
+/*
+ * The band's ground. The ink stretch above ends in a pooled curve painted over this band's top,
+ * and the wash starts from the ramp's deeper stop under it, the way the hero's own ramp lightens,
+ * then reaches the flat wash 6rem past the band's top padding: inside the heading cell at every
+ * width, so no step title ever sits on the deep top, where the active step's blue (--brand-ink)
+ * would fall short of 4.5:1. Real build, next, is the flat wash, so the two meet on one colour.
+ */
+.walkthrough-band {
+  background: linear-gradient(
+    to bottom,
+    var(--surface-wash-deep),
+    var(--surface-wash) calc(var(--spacing-band) + var(--seam) + 6rem)
+  );
+}
+
+/*
+ * The stage on a viewport too short to pin it. Below md the panel is 458px tall at every width,
+ * so on a screen under 600px (a phone in landscape, a 1440x900 window at 200% zoom) a pinned
+ * stage would cover every step's words while it is stuck (WCAG 1.4.4, 1.4.10); there the frame
+ * scrolls with the copy instead, and the track's reading line falls back to its viewport share.
+ * A 390x844 phone keeps the pin the mobile test measures. Unlayered, so it beats the utility.
+ */
+@media (width < 48rem) and (max-height: 37.5rem) {
+  .walkthrough-stage {
+    position: static;
+  }
+}

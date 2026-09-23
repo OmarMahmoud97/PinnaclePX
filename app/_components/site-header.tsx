@@ -11,7 +11,7 @@ import { SITE } from '@/lib/site'
 // because over the hero the header is drawn inverted (header-chrome.tsx) and any colour set in
 // here would show as its opposite. The focus outline follows the text for the same reason.
 const headerLink =
-  'inline-flex h-8 items-center px-3 text-sm font-medium transition-opacity duration-(--motion-tap) hover:opacity-60 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-current'
+  'inline-flex h-8 items-center px-2 text-sm font-medium transition-opacity lg:px-3 duration-(--motion-tap) hover:opacity-60 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-current'
 
 // The ask: the same element in both states, so the fill grows around the same words instead of
 // one link swapping for another. Over the hero it is a text link like the others; once the
@@ -21,7 +21,7 @@ const headerLink =
 // height, the fill and the ink change. The timing, and the ink, are `.header-ask` in
 // app/globals.css.
 const headerCta =
-  'header-ask inline-flex h-8 items-center rounded-full px-5 text-sm font-medium hover:opacity-60 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-current group-data-filled:h-10 group-data-filled:bg-brand-deeper group-data-filled:hover:bg-brand-deepest group-data-filled:hover:opacity-100 group-data-filled:focus-visible:outline-brand-deeper group-data-filled:motion-safe:active:scale-[0.98]'
+  'header-ask inline-flex h-8 items-center rounded-full px-4 text-sm font-medium hover:opacity-60 lg:px-5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-current group-data-filled:h-10 group-data-filled:bg-brand-deeper group-data-filled:hover:bg-brand-deepest group-data-filled:hover:opacity-100 group-data-filled:focus-visible:outline-brand-ink group-data-filled:motion-safe:active:scale-[0.98]'
 
 // The wordmark, the section links, a rule, and the ask, as the reference lays its nav out. The
 // surface the header takes once scrolled, and the frame rules with it, are drawn by the chrome
@@ -38,7 +38,7 @@ export function SiteHeader() {
 
         <div className="flex items-center gap-2">
           <nav aria-label="Main" className="hidden md:block">
-            <ul className="flex items-center gap-1">
+            <ul className="flex items-center gap-1 whitespace-nowrap">
               {NAV_LINKS.map((link) => (
                 <li key={link.href}>
                   <Link href={link.href} className={headerLink}>
@@ -47,8 +47,13 @@ export function SiteHeader() {
                 </li>
               ))}
               {/* The rule between the sections and the ask: the current colour at 30%, which
-                  reads as a mid grey after the difference blend and as itself once solid. */}
-              <li aria-hidden="true" className="mx-3 h-px w-8 bg-current opacity-30" />
+                  reads as a mid grey after the difference blend and as itself once solid. It
+                  waits for lg: at md the 720 px row holds the wordmark, four links and the ask
+                  with nothing to spare, so the links and the ask draw in and the rule sits out. */}
+              <li
+                aria-hidden="true"
+                className="mx-3 hidden h-px w-8 bg-current opacity-30 lg:block"
+              />
               <li>
                 <TrackedLink
                   href={CTA.href}

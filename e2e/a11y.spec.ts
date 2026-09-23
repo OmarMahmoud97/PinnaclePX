@@ -14,6 +14,11 @@ async function settled(page: Page) {
       list.setAttribute('data-inview', '')
     }
   })
+  // The scroll choreography, once armed, owns some reveals; wait for it to have finished them.
+  await page.waitForFunction(() => {
+    const html = document.documentElement
+    return !html.hasAttribute('data-choreo') || html.hasAttribute('data-motion-settled')
+  })
   // Only animations that end are waited for. The logo strip's marquee (app/tokens.css) runs
   // `infinite`, so waiting on every animation would never resolve once the strip is on screen —
   // and axe is the only automated check that reads colour, so it has to be able to run.
