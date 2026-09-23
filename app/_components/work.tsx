@@ -119,7 +119,7 @@ export function Work() {
                     motion too. */}
                 <div
                   aria-hidden
-                  className="work-backlight pointer-events-none absolute inset-x-0 top-12 -z-1 h-3/5 bg-radial-[at_50%_40%] from-(--backlight) to-transparent to-70%"
+                  className="work-backlight pointer-events-none absolute inset-0 -z-1"
                 />
 
                 {/* The phone view fills its frame edge to edge: the frame takes the picture's own

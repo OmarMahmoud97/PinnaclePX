@@ -342,3 +342,86 @@ the studio's own mark appears: the header, the footer, the About tile and addres
    18,500 to 19,000, because 18,430 plus the 70 B Windows-to-Linux margin sat exactly on the
    old line; scripts 212,832 B and fonts 55,480 B unchanged; every lazy guard ok; the full
    Playwright suite passes (45, one skipped for the database).
+
+## Amendment, 23 September 2026, evening: the header is an island
+
+The owner asked for a navigation bar as creative as the rest of the page, still responsive. Over
+the hero nothing changes (ADR 0031: the row, the blend). Once scrolled, the row draws in to a
+floating pill in the middle of the bar (`app/_styles/header.css`): the same elements in the same
+order, 48 px tall on a glass of the page's surface, dark glass over the dark bands through the
+existing `data-over-dark` state. The width moves from the column to fit-content, which
+`interpolate-size` lets Chromium animate; other engines snap. The separate surface layer under
+the header is gone: the glass is the row's own pseudo-element (a backdrop filter on the row
+itself would make it the containing block of the phone sheet), drawn only once the blend is
+normal, and dropped in the same instant the blend flips back, so no glass is ever blended. The
+way in is no longer staged; the way out still empties the ask before the flip.
+
+Under the section links a 6 px dot in `--brand-ink` marks the section the reader is in: the last
+linked section whose top has passed the middle of the viewport, so a band without a link keeps
+the link of the band before it. The chrome writes the dot's position as `--dot-x` on the nav and
+the dot translates there over 420 ms; reduced motion snaps it. Between md and lg the pill drops
+the name beside the mark so the four links and the ask fit at 768.
+
+On a phone the menu is a sheet over the whole screen in the dark set: the four sections as big
+type with their numerals, the ask and the call at the foot, the mark as a faint watermark, the
+header's mark and cross above it (the dark scope now covers the header while the menu button is
+expanded). Escape and focus return are unchanged; the tests that pin the header pass.
+
+## Amendment, 23 September 2026, evening: the pooled curve is a circle segment on a spring
+
+The owner asked for the curve under the ink stretch to be rounder, "like a circle", and to move
+like liquid as the page scrolls. Both change decision 1's pooled edge; the rest of the record
+stands.
+
+1. **The shape is a circle segment, not the box's corners.** The stretch ends flat and the curve
+   is an inline SVG at the end of it (`app/page.tsx`; `.ink-pool` in `app/globals.css`): one arc
+   from edge to edge with a sagitta of 0.14 of the width, which is a circle of radius 0.96 of
+   the width, hung over the walkthrough band's top the way the corners were. `--spacing-pool`
+   (`clamp(3rem, 14vw, 17rem)`) is its depth and replaces `--seam` in the three places that
+   measured the curve (`.under-ink`, the wash's flat stop, and Included's foot); `--seam` stays
+   the footer sheet's radius. Included's foot is no longer a band at all: the owner saw a band
+   of empty foot between the last row of cards and the curve and asked for the curve to begin
+   where the cards end, its size unchanged, so the section ends one grid gap (20 px, the gap
+   between the cards) under the last row and the ink pools straight under the content. A border-radius of the same depth is an
+   ellipse, flat across the middle with steep shoulders; a circle's curvature is even, which is
+   what "like a circle" means. The depth is 269 px at 1920 (measured) against 80 before. Between
+   the token's two caps (343 to 1943 px wide) the SVG's box keeps the arc's own 1000:140, so the
+   segment is a true circle there and a gently stretched one past them.
+2. **It moves with the scroll, as a mass on a spring** (`app/_components/motion/ink-pool.ts`,
+   numbers in `CONFIG.motion.choreo.pool`). From md up, with motion allowed, the scroll's speed
+   pulls the apex (deeper on the way down, flatter on the way up, through tanh so a flick
+   saturates) and a spring at 1 Hz with a damping ratio of 0.1 carries it back with a wobble.
+   The spring is integrated by hand on GSAP's ticker from each frame's own length, so the motion
+   keeps its momentum across wheel ticks, which a tween restarted on each tick cannot. Only
+   `scaleY` about the curve's flat top moves, so the compositor stretches the pool's own layer
+   and nothing repaints; a border-radius on the stretch itself would have repainted the whole
+   dark band every frame. The loop wakes on the trigger's onUpdate while the pool is on screen
+   and sleeps once the spring rests, so a still page costs nothing. Measured at 1920 on a
+   six-notch wheel flick under Lenis: 104 px deeper at the peak, 68 px flatter at the swing
+   back, then 51 px deeper, 35 flatter, 26 deeper, 18 flatter, at rest in about six seconds.
+   Two quieter tunings came first: 1.3 Hz at 0.35 swung back 4 px, too little to read, and
+   1.1 Hz at 0.2 swung back 18 px, which the owner saw and asked to be more prominent; the pull
+   also now saturates at 1500 px/s rather than 2000, so one wheel notch stirs the curve (about
+   23 px, swinging back 14). Phones keep the resting segment (no ScrollTrigger, D5); reduced
+   motion never mounts the leaf, and the stylesheet keeps `will-change` off there too.
+3. **The heading is never touched.** The walkthrough's `under-ink` padding is the band plus the
+   pool. Up to `stretchKnee` (0.25) the curve is drawn as the spring has it; past the knee what
+   is drawn eases toward `stretchCap` (0.42) and never reaches it, so the spring runs free (it
+   can swing to about 0.5 on a hard flick) and the apex still stays under the padding: the band
+   over the pool is 0.47 at its tightest (from 1943 px, where both tokens are at their caps),
+   and the measured clearance to the heading at 1920 is 430 px against 382 at the cap. A hard
+   wall at the cap was tried first and the spring stopped dead against it on a six-notch flick,
+   which read as a thud. The caps in D12 gain one line: the pool's `scaleY` is decoration, like
+   the rail's, bounded by `stretchCap` rather than by `scaleFrom`.
+4. **The header reads the ink's true foot.** The stretch's box now ends at the band's top, so
+   the SVG carries `data-theme="dark"` of its own and the header's observer counts it: the bar
+   flips where the apex passes it, as it did when the box overhung. The plan's section 4.4 row
+   on the sheet mechanism (negative margin, corner radii) no longer describes the pooled edge;
+   this record does.
+5. **Budgets, re-measured on the production build** (23 September 2026, evening, with the
+   other uncommitted changes of the day in the tree, after the owner's two follow-ups): `/`
+   scripts 213,523 B gzipped against 216,000 (the pool's numbers ride CONFIG; the module itself
+   is in the lazy choreography chunk), stylesheet 18,483 B against 19,000 (was 18,430), HTML
+   35,306 B against 40,000 (the SVG is one short element and Included's foot is one utility),
+   fonts unchanged, every lazy guard ok. Typecheck, lint, prettier, knip, the 551 unit tests
+   and the Playwright suite (45 passed, one skipped for the database) pass.

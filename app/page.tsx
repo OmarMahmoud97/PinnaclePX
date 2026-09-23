@@ -38,7 +38,10 @@ if (env.LAUNCH_GATE === '1' && !readyForTraffic(READY_TEMPLATES.length)) {
 // between bands: each section paints its own ground edge to edge and keeps its content in the
 // shell, and the separation is a ground, a card, air or one of two shapes. The proof and the
 // promise sit on the hero's own foot as one dark stretch, which ends in a pooled curve over the
-// walkthrough's wash; the wash carries the two commercial bands and dissolves to white for the
+// walkthrough's wash (the SVG at the end of the stretch: a circle segment, --pool deep, that the
+// scroll stretches and lets spring back from md up, app/_components/motion/ink-pool.ts; it is a
+// dark scope of its own so the header reads the ink's true foot, which the stretch's box no
+// longer reaches); the wash carries the two commercial bands and dissolves to white for the
 // answers, the studio and the questions; the closing hands the ink back on white; and the footer,
 // a dark sheet with rounded top corners laid over the closing's foot, ends the page on the foot
 // again. The stretch and the footer are the page's two dark scopes (data-theme="dark"), which
@@ -54,6 +57,23 @@ export default function HomePage() {
         <div data-theme="dark" className="ink-stretch flex flex-col">
           <Work />
           <Included />
+          {/* The arc spans the box with a sagitta of 140 on 1000, a circle of radius 962.857
+              (r = (500² + 140²) / 280), drawn from the right end through the bottom, which with
+              y down is the clockwise sweep (flag 1; 0 draws the same arc upward into the
+              stretch, where it cannot be seen); the strip above y=0 is the overlap with the
+              stretch. preserveAspectRatio="none" maps the box to 100% by --pool, the same
+              1000:140 between the token's two caps, so the segment is a true circle there and a
+              gently stretched one past them. */}
+          <svg
+            data-theme="dark"
+            className="ink-pool"
+            viewBox="0 0 1000 140"
+            preserveAspectRatio="none"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <path d="M0 -2H1000V0A962.857 962.857 0 0 1 0 0Z" />
+          </svg>
         </div>
         <HowItWorks />
         <RealBuild />

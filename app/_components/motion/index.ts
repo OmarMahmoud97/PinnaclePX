@@ -3,6 +3,7 @@ import { about } from '@/app/_components/motion/about'
 import { closing } from '@/app/_components/motion/closing'
 import { footer } from '@/app/_components/motion/footer'
 import { included } from '@/app/_components/motion/included'
+import { inkPool } from '@/app/_components/motion/ink-pool'
 import { realBuild } from '@/app/_components/motion/real-build'
 import { straightAnswers } from '@/app/_components/motion/straight-answers'
 import { work } from '@/app/_components/motion/work'
@@ -126,10 +127,13 @@ const { choreo } = CONFIG.motion
 // tween on the steps would move the stop lines under it mid-entrance; its one contribution is
 // the `walkthrough:ready` event HowItWorksTrack dispatches, which becomes a refresh below. And
 // the FAQ (plan 7.8), whose entrance is the CSS reveal and whose light beat on an open card is
-// CSS. A section that gains choreography gets a module here and nowhere else.
+// CSS. One shape has a module of its own: the ink stretch's pooled curve (ink-pool.ts), which
+// is not a section but the edge between two, and sits here where it sits in the DOM, after
+// Included. A section that gains choreography gets a module here and nowhere else.
 const MODULES: readonly SectionModule[] = [
   work,
   included,
+  inkPool,
   realBuild,
   yourOptions,
   straightAnswers,
