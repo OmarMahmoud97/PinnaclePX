@@ -119,6 +119,11 @@
   --spacing-band: clamp(4rem, 2.5rem + 6vw, 8rem);
   --spacing-band-sm: clamp(2.5rem, 1.5rem + 4vw, 5rem);
   --spacing-seam: clamp(2rem, 6vw, 5rem);
+  /* The pooled curve's depth: 0.14 of the width, which with the arc in app/page.tsx makes it a
+     circle segment (radius 0.96 of the width); at the two caps it is that segment gently
+     stretched. The band above the walkthrough's heading is --spacing-band on top of this, and
+     the curve's stretch (CONFIG.motion.choreo.pool) is capped under that ratio. */
+  --spacing-pool: clamp(3rem, 14vw, 17rem);
   --radius-card: 1.5rem;
   --radius-panel: 2rem;
   --tracking-eyebrow: 0.08em;
@@ -158,6 +163,7 @@
   --backlight: rgb(44 213 255 / 0.18);
   --wordmark: #1b2e44;
   --seam: var(--spacing-seam);
+  --pool: var(--spacing-pool);
   --shadow-card: 0 1px 2px rgb(2 6 23 / 0.04), 0 16px 40px -16px rgb(2 6 23 / 0.14);
   --shadow-card-ink: inset 0 1px 0 rgb(226 238 247 / 0.06);
   --shadow-panel: var(--shadow-card), 0 0 120px -30px rgb(44 213 255 / 0.35);
@@ -170,7 +176,8 @@
  * solid over either. Every recipe flips with no class churn; buttons keep their navy fill.
  */
 [data-theme='dark'],
-[data-solid][data-over-dark] {
+[data-solid][data-over-dark],
+.group:has([aria-expanded='true']) > .header-bar {
   color-scheme: dark;
   /* Restart inheritance here: body's colour was computed in the light scope and would otherwise
      carry navy into the scope on every element that sets no colour of its own. */
@@ -208,9 +215,20 @@ body {
 }
 
 /*
- * The two shaped seams. The ink stretch paints over the walkthrough band's top (it is positioned,
- * the band is not, and no z-index is set so no stacking context is made); the band under it
- * carries the extra padding. The footer is a sheet laid over the closing's foot the same way.
+ * The two shaped seams. The ink stretch ends flat, and its pool, the inline SVG at the end of
+ * the stretch (app/page.tsx), hangs a circle segment --pool deep over the walkthrough band's
+ * top: the stretch is positioned, the band is not, and no z-index is set so no stacking context
+ * is made; the band under it carries the extra padding. The footer is a sheet laid over the
+ * closing's foot the same way, with its own rounded corners.
+ *
+ * The pool is its own element so the scroll can move it (app/_components/motion/ink-pool.ts):
+ * from md up, with motion allowed, it stretches with the scroll's speed and springs back, by a
+ * scaleY about its flat top edge, which the compositor does on the pool's own layer; a
+ * border-radius on the stretch itself would repaint the whole dark band on every frame. The
+ * path starts two units above its top edge, so the join with the stretch never shows a hairline
+ * where two layers meet on a fractional pixel; overflow is visible so that strip is drawn. The
+ * layer is kept up only where the scroll drives it. Phones and reduced motion get the resting
+ * segment, which is the server markup.
  *
  * The stretch is the hero's foot, flat. A feather from the hero's rest edge (#02111e) was tried
  * and read as a line: after the ground's rise the foot is #020a12 across the whole width, and at
@@ -219,13 +237,28 @@ body {
  */
 .ink-stretch {
   position: relative;
-  margin-bottom: calc(-1 * var(--seam));
-  border-radius: 0 0 50% 50% / 0 0 var(--seam) var(--seam);
   background: var(--ink-foot);
 }
 
+.ink-pool {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  display: block;
+  width: 100%;
+  height: var(--pool);
+  overflow: visible;
+  fill: var(--ink-foot);
+  transform-origin: 50% 0;
+  pointer-events: none;
+
+  @media (min-width: 48rem) and (prefers-reduced-motion: no-preference) {
+    will-change: transform;
+  }
+}
+
 .under-ink {
-  padding-top: calc(var(--spacing-band) + var(--seam));
+  padding-top: calc(var(--spacing-band) + var(--pool));
 }
 
 .sheet {
@@ -273,6 +306,7 @@ body {
 @import './_styles/faq.css';
 @import './_styles/footer.css';
 @import './_styles/brand.css';
+@import './_styles/header.css';
 
 /* The fixed header is 4rem tall; keep every fragment jump and focus scroll clear of it. */
 html {

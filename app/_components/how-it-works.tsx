@@ -28,8 +28,9 @@ const STEP_ROOM = 'pb-[7vh] md:pb-[14vh]'
 // frame's progress line already counts.
 //
 // The band is the first light ground after the hero's ink (ADR 0034): the dark stretch above
-// ends in a pooled curve painted over this band's top, so `under-ink` carries the extra padding
-// that keeps the heading clear of it, and `walkthrough-band` (app/_styles/how-it-works.css) runs
+// ends in a pooled curve hung over this band's top, so `under-ink` carries the extra padding
+// that keeps the heading clear of it at the curve's fullest stretch (app/globals.css), and
+// `walkthrough-band` (app/_styles/how-it-works.css) runs
 // the wash from its deep top stop to flat before the first step, where the active title's blue
 // needs the lighter ground. The H2 sets "look" in the serif italic, the one emphasis the section
 // carries; the sentence itself is unchanged, so a test reading the heading by name still finds

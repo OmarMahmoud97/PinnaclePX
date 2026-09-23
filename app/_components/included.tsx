@@ -39,15 +39,15 @@ const JOBS: Readonly<Record<IncludedJob, Readonly<{ Icon: LucideIcon; hue: strin
 // shared rows and the eight titles are level across the band whatever each line's length. One
 // column on a phone, two from md, and four from lg; the pair stacks at every width so each well
 // keeps a full line. No counters, no ask: the walkthrough's button is one section down,
-// and a second pair of links here would split the page's one goal. The band's foot carries the
-// seam's extra padding so the pooled curve the stretch ends in never clips the last cards.
+// and a second pair of links here would split the page's one goal. The pooled curve the stretch
+// ends in hangs below the stretch's box (app/page.tsx) and begins one grid gap under the last
+// row of cards, the same 20 px that separates the cards, so the ink reads as the row after them
+// rather than a band of empty foot; the curve itself carries the depth (the owner's ask, 23
+// September 2026, evening: the curve where the cards end, its size unchanged).
 export function Included() {
   const groups = includedGroups(CONFIG.care)
   return (
-    <section
-      id="included"
-      className="scroll-mt-16 pt-band pb-[calc(var(--spacing-band)+var(--seam))]"
-    >
+    <section id="included" className="scroll-mt-16 pt-band pb-5">
       <div className={shell}>
         <div data-reveal className={headingBlock}>
           <h2 className={titleHeading}>{INCLUDED.heading}</h2>

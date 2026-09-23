@@ -1,0 +1,101 @@
+/* ==== header: the island, the ink dot and the phone sheet (app/_components/site-header.tsx) ==== */
+/*
+ * Over the hero the header is the reference's row, edge to edge and blended by difference
+ * (ADR 0031). Once the page has scrolled the row draws in to a floating pill in the middle of
+ * the bar: the same elements, the same order, half the height, on a glass of the page's own
+ * surface, so it reads as one of the page's cards rather than a strip across it. The glass is
+ * a pseudo-element, not a background on the row, because a backdrop filter on the row would
+ * make it the containing block of the phone sheet, which is fixed to the viewport.
+ *
+ * The width moves from the column to fit-content, which interpolate-size lets Chromium animate;
+ * elsewhere it snaps, which is still the right shape. Only the way in is eased: the glass and
+ * its shadow appear once the blend is normal, and on the way out they go in the same instant
+ * the blend flips back to difference, because a white glass fading inside a blended header
+ * would show as black over the hero. Reduced motion keeps opacity and colour only.
+ */
+.header-row {
+  position: relative;
+  isolation: isolate;
+  interpolate-size: allow-keywords;
+  max-width: 80rem;
+  transition:
+    max-width var(--motion-settle) var(--ease-standard),
+    height var(--motion-settle) var(--ease-standard),
+    translate var(--motion-settle) var(--ease-standard),
+    padding var(--motion-settle) var(--ease-standard),
+    gap var(--motion-settle) var(--ease-standard);
+}
+
+.header-row::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: 9999px;
+  background: color-mix(in srgb, var(--surface) 84%, transparent);
+  box-shadow:
+    var(--shadow-card),
+    inset 0 0 0 1px color-mix(in srgb, var(--on-surface) 9%, transparent);
+  backdrop-filter: blur(20px);
+  opacity: 0;
+  transition: opacity 0s;
+}
+
+[data-solid] .header-row {
+  max-width: fit-content;
+  height: 3rem;
+  translate: 0 0.5rem;
+  padding-inline: 0.75rem 0.5rem;
+  gap: 1.25rem;
+}
+
+[data-solid] .header-row::before {
+  opacity: 1;
+  transition: opacity var(--motion-settle) var(--ease-standard);
+}
+
+@media (width >= 48rem) {
+  [data-solid] .header-row {
+    padding-inline: 1.25rem 0.5rem;
+    gap: 2rem;
+  }
+}
+
+/* Behind the open phone sheet the row is the sheet's own top edge: no glass, full width. The
+   translate must be none, not zero: any translate makes the row the containing block of the
+   sheet, which is fixed to the viewport, and the sheet would be clipped to the bar. */
+.group:has([aria-expanded='true']) .header-row {
+  max-width: 80rem;
+  height: 4rem;
+  translate: none;
+  padding-inline: 1.5rem;
+}
+
+.group:has([aria-expanded='true']) .header-row::before {
+  opacity: 0;
+}
+
+/*
+ * The ink dot: one dot of the product's blue under the section link the reader is in. Its
+ * position is a custom property the chrome sets from the link's box (header-chrome.tsx), so
+ * the move is a translate, which is the one thing that glides; it shows only once the header
+ * is solid and a section is under the reader.
+ */
+.header-dot {
+  position: absolute;
+  bottom: 0.125rem;
+  left: 0;
+  width: 0.375rem;
+  height: 0.375rem;
+  border-radius: 9999px;
+  background: var(--brand-ink);
+  opacity: 0;
+  translate: var(--dot-x, 0px) 0;
+  transition:
+    translate 420ms var(--ease-enter),
+    opacity var(--motion-enter) var(--ease-standard);
+}
+
+[data-solid][data-section] .header-dot {
+  opacity: 1;
+}

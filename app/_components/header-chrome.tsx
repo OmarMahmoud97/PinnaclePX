@@ -3,33 +3,36 @@
 import { type ReactNode, useEffect, useRef } from 'react'
 import { CONFIG } from '@/lib/config'
 
-// The fixed header and, under it, the surface it stands on once the page has scrolled. Every
-// state is an attribute on the wrapper that the CSS reads (`group-data-*`), so nothing
-// re-renders, and with JavaScript off the header is exactly the plain one the server sent.
-// Height never changes.
+// The fixed header. Every state is an attribute on the wrapper that the CSS reads
+// (`group-data-*` in site-header.tsx, `[data-*]` in app/_styles/header.css), so nothing
+// re-renders, and with JavaScript off the header is exactly the plain row the server sent.
 //
 // Over the hero the header is see-through and blends by difference (ADR 0031): white text minus
 // the white page reads black, and over dark ink it stays light. Anything drawn in here is shown
-// inverted, so its links change opacity on hover, never colour, and the filled button waits for
-// the solid state. Once scrolled, or while the phone menu is open, the header is the plain bar
-// it always was: surface, blur, normal blending.
+// inverted, so its links change opacity on hover, never colour, and the filled button and the
+// row's glass wait for the solid state. Once scrolled the row draws in to a floating pill on a
+// glass of the page's surface (header.css); while the phone menu is open the header sits on
+// the menu's dark sheet with normal blending.
 //
-// The blend mode cannot animate, so the change is staged rather than snapped. The surface is a
-// layer of its own under the header (inside it, a white bar would blend to black too) and fades
-// in first; once it is opaque the blend flips, which nobody sees, because white minus a white
-// surface was already reading as the header's black; only then does the ask fill with brand
-// blue, which the difference blend would have shown as orange. Leaving runs the same steps in
-// reverse: the ask empties while the blend is still normal, then the blend flips over the
-// still-opaque surface and the surface fades. One attribute per step:
-//   data-scrolled  the surface is shown
-//   data-solid     the blend is normal and the text is --on-surface
+// The blend mode cannot animate, so the two directions differ. On the way in the flip happens
+// at once, over the hero's white top where black text becoming navy is nothing to see, and the
+// glass and the ask's fill follow it. On the way out the ask empties first, then the blend
+// flips and the glass goes in the same instant, so no white glass is ever drawn inside the
+// blended header, where it would show as black. Two attributes:
+//   data-solid     the blend is normal, the text is --on-surface and the row is the pill
 //   data-filled    the ask is the filled button
 // one the hero sets as it leaves, data-past-hero, once its own button has scrolled out of the
-// top of the viewport (the phone's ask takes over), and one the page below sets, data-over-dark,
+// top of the viewport (the phone's ask takes over); one the page below sets, data-over-dark,
 // while what runs under the bar is dark (ADR 0034): the hero's own foot, then either of the two
-// dark bands, the ink stretch under the hero and the footer. The dark scope in app/globals.css
-// reads it only together with data-solid, so the bar and its text swap to the dark set while
-// the blend, whose text is already light, never sees a dark surface.
+// dark bands, the ink stretch under the hero and the footer, which the dark scope in
+// app/globals.css reads only together with data-solid, so the bar and its text swap to the
+// dark set while the blend, whose text is already light, never sees a dark surface; and
+// data-section, the linked section under the reader, for the ink dot under its link.
+// The dot's diameter, as app/_styles/header.css draws it, and the reading line the spy uses: the
+// share of the viewport's height a section's top must pass for its link to take the dot.
+const DOT_PX = 6
+const SPY_LINE_SHARE = 0.5
+
 export function HeaderChrome({ children }: { children: ReactNode }) {
   const ref = useRef<HTMLDivElement>(null)
 
@@ -42,29 +45,22 @@ export function HeaderChrome({ children }: { children: ReactNode }) {
       step = setTimeout(next, CONFIG.motion.headerStepMs)
     }
 
-    // The three steps, in order on the way in and reversed on the way out. A page that loads
-    // already scrolled (a fragment link, a reload) takes the settled state at once.
+    // On the way in the three attributes land together: the row's glass is drawn only once the
+    // blend is normal, so there is nothing to stage ahead of it (app/_styles/header.css). On
+    // the way out the ask empties first, then the blend flips and the glass goes in the same
+    // instant, so no white glass is ever drawn inside the blended header.
     const settle = (scrolled: boolean, staged: boolean) => {
       clearTimeout(step)
       if (scrolled) {
-        root.setAttribute('data-scrolled', '')
-        const solid = () => {
-          root.setAttribute('data-solid', '')
-          root.setAttribute('data-filled', '')
-        }
-        if (staged) then(solid)
-        else solid()
+        root.setAttribute('data-solid', '')
+        root.setAttribute('data-filled', '')
       } else if (root.hasAttribute('data-solid')) {
         root.removeAttribute('data-filled')
         const clear = () => {
           root.removeAttribute('data-solid')
-          root.removeAttribute('data-scrolled')
         }
         if (staged) then(clear)
         else clear()
-      } else {
-        // Back up before the surface had settled: nothing to unwind, the surface just fades.
-        root.removeAttribute('data-scrolled')
       }
     }
 
@@ -107,18 +103,53 @@ export function HeaderChrome({ children }: { children: ReactNode }) {
       for (const band of document.querySelectorAll('[data-theme="dark"]')) bands.observe(band)
     }
     watchBands()
+
+    // The section under the reader, for the ink dot under its link (app/_styles/header.css): the
+    // last linked section whose top has passed the middle of the viewport, so a band without a
+    // link of its own (the walkthrough, the comparison) keeps the link of the band before it.
+    // The dot's position is the link's centre, written as a custom property on the nav.
+    const nav = root.querySelector<HTMLElement>('nav[aria-label="Main"]')
+    const targets = [...(nav?.querySelectorAll<HTMLAnchorElement>('a[href*="#"]') ?? [])]
+      .map((link) => ({ link, section: document.getElementById(link.hash.slice(1)) }))
+      .filter((target): target is { link: HTMLAnchorElement; section: HTMLElement } => {
+        return target.section !== null
+      })
+    let current: HTMLAnchorElement | undefined
+    const placeDot = () => {
+      if (nav === null || current === undefined) return
+      const centre = current.offsetLeft + current.offsetWidth / 2 - DOT_PX / 2
+      nav.style.setProperty('--dot-x', `${String(Math.round(centre))}px`)
+    }
+    const spy = () => {
+      const line = window.innerHeight * SPY_LINE_SHARE
+      let next: (typeof targets)[number] | undefined
+      for (const target of targets) {
+        if (target.section.getBoundingClientRect().top <= line) next = target
+      }
+      if (next?.link === current) return
+      current = next?.link
+      if (next === undefined) root.removeAttribute('data-section')
+      else root.setAttribute('data-section', next.section.id)
+      placeDot()
+    }
+
     let resizeSettle: ReturnType<typeof setTimeout> | undefined
     const onResize = () => {
       clearTimeout(resizeSettle)
-      resizeSettle = setTimeout(watchBands, CONFIG.motion.choreo.resizeSettleMs)
+      resizeSettle = setTimeout(() => {
+        watchBands()
+        placeDot()
+      }, CONFIG.motion.choreo.resizeSettleMs)
     }
     window.addEventListener('resize', onResize)
 
     let scrolled = window.scrollY > CONFIG.motion.headerScrolledAtPx
     settle(scrolled, false)
     apply()
+    spy()
     const onScroll = () => {
       apply()
+      spy()
       const next = window.scrollY > CONFIG.motion.headerScrolledAtPx
       if (next === scrolled) return
       scrolled = next
@@ -150,12 +181,6 @@ export function HeaderChrome({ children }: { children: ReactNode }) {
       <header className="header-bar fixed inset-x-0 top-0 z-50 text-surface mix-blend-difference group-has-[[aria-expanded=true]]:text-on-surface group-has-[[aria-expanded=true]]:mix-blend-normal group-data-solid:mix-blend-normal">
         {children}
       </header>
-      {/* The surface, painted under the header and never inside it. Its colour follows the dark
-          scope, so over a dark band it is the foot at the same alpha, and the change fades. */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none fixed inset-x-0 top-0 z-40 h-16 bg-surface/92 opacity-0 shadow-header backdrop-blur-lg transition-[opacity,background-color] duration-(--motion-enter) ease-standard group-has-[[aria-expanded=true]]:opacity-100 group-data-scrolled:opacity-100"
-      />
     </div>
   )
 }

@@ -253,10 +253,12 @@ export const CONFIG = {
     // The header goes dark once this share of the hero, or less, is still below the bar.
     heroDarkFootShare: 0.35,
     // Lenis (ADR 0021): the share of the distance still to go that each frame covers, on the wheel
-    // and on a link to a section. Lower drifts further after the wheel stops; 0.1 is its default.
-    // scrubLag is how far, in seconds, a scrubbed tween (the rail fill, the footer wordmark) trails
-    // the scroll: enough to feel weighted, never so much that a flick leaves it visibly chasing.
-    scroll: { lerp: 0.1, scrubLag: 0.6 },
+    // and on a link to a section. Lower drifts further after the wheel stops; 0.1 is its default,
+    // and 0.075 is the weightier glide the owner asked for, still short of the chase that sets in
+    // around 0.05. scrubLag is how far, in seconds, a scrubbed tween (the rail fill, the footer
+    // wordmark) trails the scroll; it rises with the glide so those tweens keep trailing the page
+    // rather than leading it, which is what reads as weight.
+    scroll: { lerp: 0.075, scrubLag: 0.8 },
     // The scroll choreography below the hero (ADR 0034). Entrances are batch tweens on lists the
     // choreography owns; the numbers sit inside `caps`, which the ADR records and a reviewer can check.
     choreo: {
@@ -279,11 +281,37 @@ export const CONFIG = {
       // A resize refreshes every ScrollTrigger once the window has been still for this long, the
       // same settle the walkthrough uses for its rebuild.
       resizeSettleMs: 150,
+      // The pooled curve under the ink stretch (app/_components/motion/ink-pool.ts): a mass on a
+      // spring. The scroll's speed pulls it, deeper on the way down and flatter on the way up,
+      // and the spring carries it back with a wobble once the page stops. stretchMax is the pull
+      // at full speed, as a share of the resting depth; fullSpeedPxS is the speed at which the
+      // pull is three quarters of that (a wheel notch under Lenis peaks near 500, a hard flick
+      // near 2500), so lower makes a gentle scroll stir the curve too. frequencyHz is how fast
+      // it wobbles and dampingRatio how soon the wobble dies: under 1 it overshoots. Lenis lets
+      // the page down gently, so a spring that follows closely barely bounces (1.3 Hz at 0.35
+      // swung back 4 px on a six-notch flick, measured; 1.1 Hz at 0.2 swung back 18 px and the
+      // owner asked for more). 1 Hz at 0.1 lags the glide enough to swing back about half its
+      // stretch and ring through five or six visible swings over three seconds, which is the
+      // jiggle asked for; the loop then sleeps. Up to stretchKnee the curve is drawn as the
+      // spring has it; past the knee what is drawn eases toward stretchCap and never reaches
+      // it, so the top of a hard flick (the spring can swing to about 0.5) rounds off instead
+      // of hitting a wall, and the apex stays under the band over the walkthrough's heading:
+      // --spacing-band over --spacing-pool is 0.47 at its tightest, from 1943 px up, where both
+      // tokens are at their caps.
+      pool: {
+        stretchMax: 0.3,
+        stretchKnee: 0.25,
+        stretchCap: 0.42,
+        fullSpeedPxS: 1500,
+        frequencyHz: 1,
+        dampingRatio: 0.1,
+      },
     },
     // The caps (ADR 0034, D12) every choreography number stays inside: translate, scale, one tween,
     // one stagger and the parallax layers at md+. Never width, padding, margin, inset, font axes,
     // letter-spacing, box-shadow, filter, the H1, an .over-ink wrapper, or an ancestor of the
-    // walkthrough stage or of a sticky column.
+    // walkthrough stage or of a sticky column. The pool's scaleY is decoration, like the rail's,
+    // and is bounded by choreo.pool.stretchCap rather than by scaleFrom.
     caps: { translateRem: 2.5, scaleFrom: 0.94, tweenMs: 900, staggerMs: 80, parallaxRem: 6 },
   },
 } as const

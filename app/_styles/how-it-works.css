@@ -11,7 +11,7 @@
   background: linear-gradient(
     to bottom,
     var(--surface-wash-deep),
-    var(--surface-wash) calc(var(--spacing-band) + var(--seam) + 6rem)
+    var(--surface-wash) calc(var(--spacing-band) + var(--pool) + 6rem)
   );
 }
 
