@@ -29,7 +29,7 @@ export function ChoiceCard({ selected, onSelect, onPreview, title, detail, media
       onBlur={() => onPreview?.(false)}
       className={cn(
         'flex cursor-pointer items-center gap-3 rounded-xl border p-3 text-left transition-colors outline-none',
-        'focus-visible:ring-2 focus-visible:ring-brand-deeper focus-visible:ring-offset-2 focus-visible:ring-offset-surface',
+        'focus-visible:ring-2 focus-visible:ring-brand-ink focus-visible:ring-offset-2 focus-visible:ring-offset-surface',
         selected
           ? 'border-brand-deeper bg-brand-deeper/5'
           : 'border-border hover:border-on-surface-muted/40 hover:bg-accent',
@@ -43,7 +43,7 @@ export function ChoiceCard({ selected, onSelect, onPreview, title, detail, media
       <Check
         aria-hidden="true"
         className={cn(
-          'ml-auto size-4 shrink-0 text-brand-deeper transition-opacity',
+          'ml-auto size-4 shrink-0 text-brand-ink transition-opacity',
           selected ? 'opacity-100' : 'opacity-0',
         )}
       />

@@ -35,7 +35,7 @@ export function FilePicker({ accept, multiple = false, onFiles, className, child
         htmlFor={id}
         tabIndex={0}
         className={cn(
-          'flex cursor-pointer items-center rounded-xl border border-dashed border-border px-4 transition-colors outline-none hover:border-on-surface-muted/40 hover:bg-accent focus-visible:ring-2 focus-visible:ring-brand-deeper focus-visible:ring-offset-2 focus-visible:ring-offset-surface',
+          'flex cursor-pointer items-center rounded-xl border border-dashed border-border px-4 transition-colors outline-none hover:border-on-surface-muted/40 hover:bg-accent focus-visible:ring-2 focus-visible:ring-brand-ink focus-visible:ring-offset-2 focus-visible:ring-offset-surface',
           className,
         )}
         onKeyDown={(e) => {

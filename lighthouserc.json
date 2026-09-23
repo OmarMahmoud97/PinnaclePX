@@ -5,7 +5,7 @@
       "startServerCommand": "pnpm start",
       "startServerReadyPattern": "Ready",
       "numberOfRuns": 5,
-      "settings": { "preset": "mobile" }
+      "settings": { "formFactor": "mobile" }
     },
     "assert": {
       "assertions": {

@@ -1,8 +1,8 @@
 // Holds the built pages to their byte budgets. Run after `next build`; exits 1 over budget.
 //
 // It reads the prerendered HTML for each route, gzips every script and stylesheet the HTML
-// references, and compares the totals with the numbers in docs/home-page-design-plan.md,
-// section 8. It also fails if a chunk containing GSAP is referenced from the initial script tags
+// references, sums the fonts it preloads as served, and compares the totals with the numbers in
+// docs/home-page-design-plan.md, section 8, and ADR 0034. It also fails if a chunk containing GSAP is referenced from the initial script tags
 // of the home page, because GSAP must stay a lazy chunk (ADR 0005).
 import { readFileSync, statSync } from 'node:fs'
 import { join } from 'node:path'
@@ -45,10 +45,31 @@ const BUDGETS = {
   // band rules, and the hover, focus and active-step classes the work cells, the walkthrough's
   // five steps and the hero's field now carry (39,185 B measured). Re-measured when the journey
   // band ships.
-  '/': { scripts: 216_000, stylesheets: 16_000, html: 40_000 },
+  // Then to 18.5 KB on 23 September 2026 for the page below the hero (ADR 0034, plan 6.7): two
+  // @font-face rules, the dark scope and its tokens, the retuned scale and the section sheets
+  // (seven files under app/_styles, 3,339 B gzipped on their own) land in the shared sheet, and
+  // the hairline recipes went. The plan expected 17.0 to 17.4 KB before the section packages
+  // wrote their sheets; the closing commit's production build measures 18,271 B on both routes
+  // (the same two files), so the line is that plus the 70 B Windows-to-Linux margin, rounded up
+  // to the next 500 (18,341 up to 18,500). The foundation carried 18,000 B provisionally until
+  // the measure. Then to 19 KB the same afternoon for the PX mark (ADR 0034 amendment): the
+  // brand sheet took the measure to 18,430 B, which plus the margin sat exactly on the line.
+  // Scripts stayed on 216 KB at the closing commit: 212,832 B measured on 23 September 2026 with
+  // the choreography leaf in the initial bundle and GSAP, ScrollTrigger, Lenis and the ink
+  // simulation all lazy (the four guards below); the line would have moved to 218 KB only had
+  // the measure exceeded it. HTML measured 39,376 B the same day against the unchanged 40 KB,
+  // then 35,305 B once the mark's eleven inline SVG paths left the header, footer and About.
+  // Fonts (ADR 0034) are the raw bytes of every font the home page preloads, as served: woff2 is
+  // already compressed, so gzip would only muddle the number. The line is 64,000 B for the two
+  // files the redesign loads, Mona Sans wght-only (39,796 B) and Instrument Serif italic
+  // (15,684 B), 55,480 B together as next/font serves them: the same bytes in development
+  // (.next/dev/static/media) and in the closing commit's production build (.next/static/media,
+  // 23 September 2026); a Google-side re-cut that trips it is raised on the record, never by
+  // editing the subset.
+  '/': { scripts: 216_000, stylesheets: 19_000, html: 40_000, fonts: 64_000 },
   // Raised from 230 KB on 4 September 2026 for zod 4, whose core is about 13 KB gzipped heavier
   // on this page than zod 3 (ADR 0019); its locales are kept out by the namespace import form.
-  '/start': { scripts: 245_000, stylesheets: 16_000, html: 25_000 },
+  '/start': { scripts: 245_000, stylesheets: 19_000, html: 25_000 },
 }
 
 function gzipped(file) {
@@ -66,6 +87,17 @@ function referenced(html, pattern) {
     .filter((url) => url.startsWith('/_next/'))
 }
 
+// The fonts next/font preloads for the route: every <link ... as="font"> tag, whichever order
+// its attributes come in.
+function preloadedFonts(html) {
+  return [...html.matchAll(/<link\b[^>]*\bas="font"[^>]*>/g)]
+    .map((match) => /\bhref="([^"]+)"/.exec(match[0])?.[1])
+    .filter((url) => url !== undefined && url.startsWith('/_next/'))
+}
+
+// How the number is read: everything the wire compresses is counted gzipped; fonts as served.
+const UNITS = { fonts: 'B as served' }
+
 let failed = false
 for (const [route, budget] of Object.entries(BUDGETS)) {
   const file = join(NEXT, 'server', 'app', route === '/' ? 'index.html' : `${route.slice(1)}.html`)
@@ -82,13 +114,14 @@ for (const [route, budget] of Object.entries(BUDGETS)) {
     scripts: scripts.reduce((sum, url) => sum + gzipped(assetPath(url)), 0),
     stylesheets: stylesheets.reduce((sum, url) => sum + gzipped(assetPath(url)), 0),
     html: gzipSync(html, { level: 9 }).length,
+    fonts: preloadedFonts(html).reduce((sum, url) => sum + statSync(assetPath(url)).size, 0),
   }
   for (const [kind, limit] of Object.entries(budget)) {
     const actual = totals[kind]
     const ok = actual <= limit
     if (!ok) failed = true
     console.log(
-      `${ok ? 'ok  ' : 'OVER'} ${route.padEnd(7)} ${kind.padEnd(12)} ${String(actual).padStart(8)} B gzipped (budget ${limit})`,
+      `${ok ? 'ok  ' : 'OVER'} ${route.padEnd(7)} ${kind.padEnd(12)} ${String(actual).padStart(8)} ${UNITS[kind] ?? 'B gzipped'} (budget ${limit})`,
     )
   }
   // GSAP (ADR 0005) and Lenis (ADR 0021) are lazy chunks on every route, and so is the hero's
@@ -98,6 +131,8 @@ for (const [route, budget] of Object.entries(BUDGETS)) {
       gsap: { pattern: /gsap\.version|_gsap|GreenSock/, minBytes: 20_000 },
       lenis: { pattern: /lenis-smooth|lenisVersion/, minBytes: 5_000 },
       fluid: { pattern: /u_point_size/, minBytes: 3_000 },
+      // ScrollTrigger (ADR 0034) rides the same loader as the core and is never initial.
+      scrollTrigger: { pattern: /scrollerProxy|pinSpacing/, minBytes: 10_000 },
     }
     for (const [name, { pattern, minBytes }] of Object.entries(lazy)) {
       const inInitial = scripts.filter((url) => {

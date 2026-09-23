@@ -11,7 +11,6 @@ import { SKETCH_CAPTION } from '@/components/sketch/captions'
 import { SketchChips } from '@/components/sketch/sketch-chips'
 import { sketchModelFrom } from '@/components/sketch/sketch-model'
 import { captionStyles } from '@/components/ui/caption'
-import { CornerTicks } from '@/components/ui/corner-ticks'
 import { ProgressSteps } from '@/components/ui/progress-steps'
 import { answeredAt, FINAL_STAGE } from '@/lib/brief/example-brief'
 import { QUESTION_IDS } from '@/lib/brief/question-ids'
@@ -58,11 +57,18 @@ export function HowItWorksTrack({ heading, steps, actions }: Props) {
 
   const markBuiltReady = useCallback(() => {
     setBuiltReady(true)
+    // The finished page changes the stage's height, so every scroll line below it moves: the
+    // page choreography listens for this and refreshes its triggers (app/_components/motion).
+    window.dispatchEvent(new CustomEvent('walkthrough:ready'))
   }, [])
 
   // The scroll picks the stop: the furthest stage whose line has passed the reading line under
   // the frame. One read per frame, on a passive listener; Lenis scrolls the window, so its
-  // glides arrive here as ordinary scroll events.
+  // glides arrive here as ordinary scroll events. On a viewport too short to pin the stage
+  // (app/_styles/how-it-works.css unpins it, so the copy is never covered), the stage scrolls
+  // away and its bottom would drag the reading line above the screen, freezing the current
+  // step's mark; the line then sits at its share of the viewport instead, where it would be
+  // with the frame pinned.
   useEffect(() => {
     const stageElement = stageRef.current
     const column = stepsRef.current
@@ -71,10 +77,11 @@ export function HowItWorksTrack({ heading, steps, actions }: Props) {
     let frame: number | undefined
     const measure = () => {
       frame = undefined
-      const anchor = Math.min(
-        stageElement.getBoundingClientRect().bottom + walkthrough.anchorGapPx,
-        window.innerHeight * walkthrough.anchorShare,
-      )
+      const share = window.innerHeight * walkthrough.anchorShare
+      const anchor =
+        getComputedStyle(stageElement).position === 'sticky'
+          ? Math.min(stageElement.getBoundingClientRect().bottom + walkthrough.anchorGapPx, share)
+          : share
       const next = stageAt(
         anchor,
         stepElements.map((step) => {
@@ -164,20 +171,24 @@ export function HowItWorksTrack({ heading, steps, actions }: Props) {
 
   return (
     <div className="grid md:grid-cols-6 md:grid-rows-[auto_1fr]">
-      <div className="p-column max-md:pb-3 md:col-span-3">{heading}</div>
+      <div className="max-md:pb-3 md:col-span-3 md:pr-10 lg:pr-14">{heading}</div>
 
       <div
         ref={stageRef}
         data-phase={phase}
         style={MODEL.vars}
-        className="sticky top-16 z-10 md:top-24 md:col-span-3 md:col-start-4 md:row-span-2 md:self-start md:border-l md:border-border"
+        className="walkthrough-stage sticky top-16 z-10 md:top-24 md:col-span-3 md:col-start-4 md:row-span-2 md:self-start"
       >
-        {/* Isolated, so the dots and the glow (-z-1) paint over this block's own background
-            rather than under it. */}
-        <div className="relative isolate flex flex-col items-center gap-3 overflow-hidden border-y border-border bg-surface-muted px-6 pt-4 pb-3 md:min-h-[60vh] md:justify-center md:border-y-0 md:py-12">
+        {/* The panel: a white strip the width of the screen on a phone, where the shell's side
+            padding is given back so the frame keeps the room the mobile geometry is measured on,
+            and from md a rounded card with a still cyan halo (--shadow-panel), never animated.
+            Isolated, so the resting glow and the brand's glow (-z-1) paint over this block's own
+            background rather than under it. */}
+        <div className="relative isolate flex flex-col items-center gap-3 overflow-hidden bg-surface px-6 pt-4 pb-3 max-md:-mx-6 md:min-h-[60vh] md:justify-center md:rounded-(--radius-panel) md:py-12 md:shadow-panel">
+          {/* The resting glow, low under the frame, in place of the old dot grid. */}
           <div
             aria-hidden="true"
-            className="absolute inset-0 -z-1 bg-[radial-gradient(var(--border)_1px,transparent_1px)] mask-[radial-gradient(ellipse_at_center,black_30%,transparent_72%)] bg-[size:22px_22px]"
+            className="absolute inset-0 -z-1 bg-radial-[at_50%_75%] from-glow/14 to-transparent to-70%"
           />
           {/* The brand's glow, in from the colour stage. */}
           <div
@@ -195,7 +206,6 @@ export function HowItWorksTrack({ heading, steps, actions }: Props) {
             />
           </div>
           <div aria-hidden="true" className="relative">
-            <CornerTicks edges={['top', 'bottom']} />
             <WalkthroughFrame
               className="[zoom:1.1] md:[zoom:1.5]"
               built={motionAllowed ? <WalkthroughBuilt onReady={markBuiltReady} /> : undefined}
@@ -225,7 +235,7 @@ export function HowItWorksTrack({ heading, steps, actions }: Props) {
 
       <div
         ref={stepsRef}
-        className="flex flex-col gap-8 p-column max-md:pt-6 md:col-span-3 md:col-start-1"
+        className="flex flex-col gap-8 max-md:pt-6 md:col-span-3 md:col-start-1 md:pr-10 lg:pr-14"
       >
         {steps}
         {actions}

@@ -1,0 +1,38 @@
+/* the footer: this section's own rules, plain CSS only; tokens and utilities stay in app/globals.css. */
+
+/*
+ * The wordmark (ADR 0034, plan 7.10): the studio's name at the page's largest size, the heaviest
+ * weight, in a solid slate that sits 1.44:1 over the foot (measured with culori), so it
+ * whispers; it is decoration, aria-hidden and never read, so WCAG 1.4.3 does not apply to it.
+ * Its size is set so the whole name fits the shell at every width: at weight 800 with this
+ * tracking the name is 5.36 em wide, so 15.4vw gives 322 px in the 342 px shell at 390,
+ * 634 px in 688 at 768, and the 13.75rem cap gives 1181 px in the 1200 px shell from 1440 up.
+ * Only the page's bottom edge cuts it: it is pushed down by a share of its own height and the
+ * footer's clip takes the rest; a little more of it is hidden on narrower screens, where the
+ * letters are smaller and the cut would otherwise read as a gap. The share is a CSS translate
+ * on the p; the scrub from md up (app/_components/motion/footer.ts) writes its transform on
+ * the span inside, since GSAP folds an element's own translate into any transform it writes
+ * there, so the two add up.
+ */
+.wordmark {
+  font-size: clamp(3.75rem, 15.4vw, 13.75rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  white-space: nowrap;
+  color: var(--wordmark);
+  translate: 0 30%;
+  user-select: none;
+}
+
+@media (width < 64rem) {
+  .wordmark {
+    translate: 0 32%;
+  }
+}
+
+@media (width < 48rem) {
+  .wordmark {
+    translate: 0 35%;
+  }
+}

@@ -250,8 +250,40 @@ export const CONFIG = {
     // One step of the header's staged change (app/_components/header-chrome.tsx): the surface
     // fades in over --motion-enter, and the blend flips and the ask fills once it has.
     headerStepMs: 200,
+    // The header goes dark once this share of the hero, or less, is still below the bar.
+    heroDarkFootShare: 0.35,
     // Lenis (ADR 0021): the share of the distance still to go that each frame covers, on the wheel
     // and on a link to a section. Lower drifts further after the wheel stops; 0.1 is its default.
-    scroll: { lerp: 0.1 },
+    // scrubLag is how far, in seconds, a scrubbed tween (the rail fill, the footer wordmark) trails
+    // the scroll: enough to feel weighted, never so much that a flick leaves it visibly chasing.
+    scroll: { lerp: 0.1, scrubLag: 0.6 },
+    // The scroll choreography below the hero (ADR 0034). Entrances are batch tweens on lists the
+    // choreography owns; the numbers sit inside `caps`, which the ADR records and a reviewer can check.
+    choreo: {
+      enterStart: 'top 94%', // where an owned group's entrance fires, a few pixels above PageMotion's line
+      railStart: 'top 60%', // where the real-build rail fills and each numeral is reached
+      railEnd: 'bottom 60%', // where the rail's fill completes
+      tweenS: 0.8, // one entrance tween
+      staggerS: 0.08, // between the items of an owned group
+      riseRem: 2.5, // how far an item rises into place
+      scaleFrom: 0.96, // where an item's scale starts
+      tiltDeg: 1, // the straight-answer cards' one-degree lean, uprighting as they land
+      drawS: 0.9, // the included glyphs' draw-on
+      glyphStaggerS: 0.05, // between the paths of one glyph
+      parallaxRem: 2.5, // the footer wordmark's scrubbed rise
+      // The fail-safe clock, ticking from mount in PageMotion and from arming in the
+      // choreography: every tick shows what the viewport has reached (its top inside the
+      // viewport) and nothing has shown yet, so a list can never stay hidden where the visitor is
+      // looking, and never runs ahead of them: a group below the fold keeps its entrance.
+      settleFailSafeMs: 4000,
+      // A resize refreshes every ScrollTrigger once the window has been still for this long, the
+      // same settle the walkthrough uses for its rebuild.
+      resizeSettleMs: 150,
+    },
+    // The caps (ADR 0034, D12) every choreography number stays inside: translate, scale, one tween,
+    // one stagger and the parallax layers at md+. Never width, padding, margin, inset, font axes,
+    // letter-spacing, box-shadow, filter, the H1, an .over-ink wrapper, or an ancestor of the
+    // walkthrough stage or of a sticky column.
+    caps: { translateRem: 2.5, scaleFrom: 0.94, tweenMs: 900, staggerMs: 80, parallaxRem: 6 },
   },
 } as const

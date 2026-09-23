@@ -66,7 +66,7 @@ export function PhoneSketch({ model, zoom = 1, className, built }: Props) {
           </div>
           <div
             data-part="footer"
-            className="mt-auto flex items-center justify-between border-t border-(--sketch-line) pt-2 font-mono text-[6px] text-(--sketch-muted)"
+            className="mt-auto flex items-center justify-between border-t border-(--sketch-line) pt-2 text-[6px] text-(--sketch-muted) tabular-nums"
           >
             <span key={company} className="flex animate-sketch-in items-center gap-1">
               <span>© {YEAR}</span>

@@ -20,6 +20,7 @@ playwright-report/
 test-results/
 
 # local tooling state
+.lighthouseci/
 .claude/settings.local.json
 .impeccable/
 .compare

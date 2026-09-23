@@ -3,7 +3,7 @@ import type { ReactNode } from 'react'
 // Shared input styling so every field in the brief has the same focus ring as the buttons.
 // text-base at every size: anything smaller makes iOS Safari zoom the page on focus.
 export const fieldStyles =
-  'w-full rounded-lg border border-border bg-surface px-3 py-2 text-base outline-none transition-colors placeholder:text-on-surface-muted/70 focus-visible:border-brand-deeper focus-visible:ring-2 focus-visible:ring-brand-deeper/40 aria-[invalid=true]:border-danger'
+  'w-full rounded-lg border border-border bg-surface px-3 py-2 text-base outline-none transition-colors placeholder:text-on-surface-muted/70 focus-visible:border-brand-ink focus-visible:ring-2 focus-visible:ring-brand-ink/40 aria-[invalid=true]:border-danger'
 
 type Props = {
   id: string

@@ -52,7 +52,7 @@ export function LogoStep({ answers, errors, logo, onFile }: Props) {
           />
           <span className="min-w-0 flex-1 truncate text-sm font-medium">{chosen}</span>
           {logo?.status === 'uploading' && (
-            <span className="font-mono text-[11px] text-on-surface-muted">uploading</span>
+            <span className="text-[11px] text-on-surface-muted">uploading</span>
           )}
           <Button
             variant="ghost"

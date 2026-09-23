@@ -16,8 +16,24 @@ export function loadLenis(): Promise<LenisClass> {
 // starts and clears it when it is destroyed.
 let active: Lenis | undefined
 
+type Listener = (instance: Lenis | undefined) => void
+
+const listeners = new Set<Listener>()
+
 export function setActiveLenis(instance: Lenis | undefined): void {
   active = instance
+  for (const listener of listeners) listener(instance)
+}
+
+// Tells the caller which instance is driving the page, now and whenever that changes, so a
+// scroll library that arrives later (ScrollTrigger, ADR 0034) can follow Lenis's frames rather
+// than the browser's. Returns the unsubscribe function.
+export function onActiveLenis(listener: Listener): () => void {
+  listeners.add(listener)
+  listener(active)
+  return () => {
+    listeners.delete(listener)
+  }
 }
 
 // Takes the page to the top. Through Lenis while it runs, because a native scroll that lands

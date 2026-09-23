@@ -17,7 +17,7 @@ export function ProgressSteps({ current, total }: Props) {
             key={i}
             className={cn(
               'h-1 w-5 rounded-full transition-colors duration-(--motion-enter)',
-              i < current ? 'bg-brand-deeper' : 'bg-border',
+              i < current ? 'bg-brand-ink' : 'bg-on-surface/12',
             )}
           />
         ))}

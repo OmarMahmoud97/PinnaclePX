@@ -5,14 +5,21 @@ import type { CONFIG } from '@/lib/config'
 // their scenes) and the old Included cells, so one band answers "what would I actually get?"
 // instead of two saying it twice (docs/adr/0033). Each line is the owner's commitment or an
 // existing register row (docs/claims-register.md) in the visitor's words; the terms a founder
-// searches by (SEO, AEO, GEO, CMS, WCAG) appear once, in the caption. No load time is promised:
+// searches by stay out of the cells apart from "SEO and AI visibility" (the caption that listed
+// CMS, SEO, AEO, GEO and WCAG went at the owner's request, 23 September 2026). No load time is
+// promised:
 // the six live sites measured 27 to 64 on Lighthouse mobile
 // (docs/research/home-page-content/client-site-speed.md), so the Fast cell states the process.
 // The Answered scene carries "before they book" for copy.test.ts, which holds it identical to the
 // call agenda's second line, so the band sets up what the call pays off.
 type IncludedItem = Readonly<{ title: string; body: string }>
 
+// The job's key, which the band maps to its glyph and its hue (app/_components/included.tsx).
+// A key rather than the label, so the copy can change without the picture following it.
+export type IncludedJob = 'found' | 'trusted' | 'answered' | 'reachable'
+
 export type IncludedGroup = Readonly<{
+  job: IncludedJob
   label: string
   scene: string
   cells: readonly [IncludedItem, IncludedItem]
@@ -21,7 +28,6 @@ export type IncludedGroup = Readonly<{
 export const INCLUDED = {
   heading: 'Everything your site needs, built in.',
   lead: "Your site has four jobs. Here's what we put in to do them, on every site we build.",
-  caption: 'If you know the terms: a custom CMS, SEO, AEO, GEO and WCAG.',
 } as const
 
 // Hosting the studio watches is a monitoring promise, so it is sayable only once the care plan is
@@ -42,6 +48,7 @@ const WRITTEN_FOR_YOU: IncludedItem = {
 export function includedGroups(care: typeof CONFIG.care): readonly IncludedGroup[] {
   return [
     {
+      job: 'found',
       label: 'Found',
       scene: 'Being easy to find starts with being easy to read.',
       cells: [
@@ -59,6 +66,7 @@ export function includedGroups(care: typeof CONFIG.care): readonly IncludedGroup
       ],
     },
     {
+      job: 'trusted',
       label: 'Trusted',
       scene: 'People decide whether you look real before they read a word.',
       cells: [
@@ -73,6 +81,7 @@ export function includedGroups(care: typeof CONFIG.care): readonly IncludedGroup
       ],
     },
     {
+      job: 'answered',
       label: 'Answered',
       scene: 'Customers see your prices, your hours and how long a job takes, before they book.',
       cells: [
@@ -84,6 +93,7 @@ export function includedGroups(care: typeof CONFIG.care): readonly IncludedGroup
       ],
     },
     {
+      job: 'reachable',
       label: 'Reachable',
       scene: 'Someone ready to book can do it with one thumb.',
       cells: [
