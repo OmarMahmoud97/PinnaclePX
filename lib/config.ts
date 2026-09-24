@@ -262,9 +262,13 @@ export const CONFIG = {
     // (app/_components/header-chrome.tsx). The glass and the mark fade over --motion-enter and
     // the row unwinds over --motion-settle; this is --motion-settle's value (app/globals.css), so
     // the flip lands on a wide row with nothing left in the header to invert. Keep the two equal.
-    // The phone menu's close waits twice this at most for its sheet's own transitions to report
-    // their end (app/_components/mobile-nav.tsx), well past the 300 ms drain.
     headerStepMs: 300,
+    // The phone menu's pace: its open and close run on the page's clocks stretched by this, so the
+    // ink blooms over 900 ms (the owner, 24 September 2026). This is --menu-pace's value
+    // (app/globals.css); keep the two equal. The drain is the header's step at this pace, 450 ms,
+    // and the close waits twice that at most for the sheet's own transitions to report their end
+    // (app/_components/mobile-nav.tsx).
+    menuPace: 1.5,
     // The header goes dark once this share of the hero, or less, is still below the bar.
     heroDarkFootShare: 0.35,
     // Lenis (ADR 0021): the share of the distance still to go that each frame covers, on the wheel

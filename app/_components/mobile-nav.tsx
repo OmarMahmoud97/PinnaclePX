@@ -12,9 +12,9 @@ import { CONFIG } from '@/lib/config'
 const PANEL_ID = 'mobile-nav'
 
 // The longest a close waits for the sheet's own transitions before hiding it anyway: twice the
-// header's step (600 ms), well past the 300 ms drain, so it only ever catches a transition that
-// never reports its end.
-const CLOSE_FAIL_SAFE_MS = CONFIG.motion.headerStepMs * 2
+// drain, which is the header's step at the menu's pace (900 ms against 450), so it only ever
+// catches a transition that never reports its end.
+const CLOSE_FAIL_SAFE_MS = CONFIG.motion.headerStepMs * CONFIG.motion.menuPace * 2
 
 // Each row's place in the reveal; the delay itself is .menu-row in app/_styles/header.css.
 function rowDelay(index: number): CSSProperties {

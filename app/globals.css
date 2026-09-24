@@ -178,6 +178,11 @@
   /* The phone menu's drain (header.css): a held breath, then an accelerating pull, so the far
      corner is uncovered just after the rows have gone. */
   --ease-drain: cubic-bezier(0.5, 0, 0.75, 0);
+  /* The phone menu's pace (header.css): its open and close run on the page's clocks stretched by
+     this, so the ink blooms over 900 ms rather than the page's 600 and the rows, the cross and the
+     drain keep the same proportion (the owner, 24 September 2026: "more premium").
+     CONFIG.motion.menuPace is the same number; keep the two equal. */
+  --menu-pace: 1.5;
 }
 
 /*
@@ -574,6 +579,8 @@ html.lenis {
 @media (prefers-reduced-motion: reduce) {
   :root {
     --motion-stagger: 0ms;
+    /* The menu only fades here, and its fade keeps the page's own timing. */
+    --menu-pace: 1;
   }
 
   @keyframes question-in {

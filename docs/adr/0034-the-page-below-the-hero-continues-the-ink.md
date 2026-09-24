@@ -725,3 +725,45 @@ the day's files, Windows): `/` scripts 217,037 B of 218,000, stylesheets 17,851 
 the four lazy guards ok; the built `/start` carries one `id="main"`. The full Playwright suite
 passes in all five projects (114, one skipped for `E2E_SUBMIT`), with typecheck, lint, knip and the
 554 unit tests.
+
+## Amendment, 24 September 2026: the menu takes its time
+
+The owner, 24 September 2026: "make the opening and closing animation of the navigation bar to
+happen 30% slower to give a more premium feel", and, having seen that on a phone, "make it so that
+ink spreads over screen takes 0.9s and everything else scales in duration accordingly". This amends
+"the menu is ink" above: the durations in decision 1, the fail-safe in decision 2, the holds in
+decision 4, and the pace carried in decision 9.
+
+1. **One pace.** `--menu-pace`, 1.5, on `:root` in `app/globals.css`, stretches every clock the
+   menu's open and close use, so the page's 600 ms reveal becomes the 900 ms bloom asked for and
+   everything else keeps its proportion to it. `app/_styles/header.css` derives `--menu-tap`,
+   `--menu-enter`, `--menu-settle`, `--menu-reveal` and `--menu-stagger` from the page's own on
+   `.header-bar`, and every menu rule reads those. The page's tokens are untouched, so nothing
+   else on the site moves. The first request was built at 1.3, a 780 ms bloom, and replaced the
+   same day.
+2. **The numbers.** The bloom takes 900 ms (600 before). The rows rise over 900 ms, 180 ms plus
+   `--i` times 105 ms in, so the last lands at 1,500 ms (1,000). The cross meets in 180 ms and
+   turns over 450 ms after 135 (120, and 300 after 90). Closing, the rows lift away in 180 ms
+   (120), the ink drains over 450 ms (300), and the cross turns back over 300 ms and parts over 180
+   ms after 225 (200, and 120 after 150). Opened from the island, the row unwinds and its glass
+   fades over 450 ms (300); the row's draw-in back to the island once the sheet has gone is the
+   header's own, which every scroll plays, and stays at 300 ms.
+3. **The holds are shares of the paced clocks**, 4.5% of the bloom and 90% of the drain, so they
+   stay on the ink's edge at any pace: 40.5 ms in and 405 ms out (27 and 270).
+4. **The fail-safe stays twice the drain**, 900 ms (600). `CONFIG.motion.menuPace` is the token's
+   number for `app/_components/mobile-nav.tsx`; keep the two equal, as `headerStepMs` and
+   `--motion-settle` are kept.
+5. **Reduced motion keeps the page's pace.** `--menu-pace` is 1 there, so the sheet still fades
+   over 200 ms and both holds are still 40 ms.
+
+Measured on the dev server at 390 in Chromium, from every CSS transition the header started while
+the menu opened and closed, from the top and from the island: every one of the menu's is exactly
+1.5 times its duration and delay before, and under reduced motion every transition is as it was.
+`hidden` lands 472 to 506 ms after the close (354 to 365 before). Frame-sampled at 360, 390, 430
+and 744 from the top at both paces, the mark turns light and back in the frame the ink's edge
+reaches it and leaves it at 360 and 390; at 430 it turns light a frame early at either pace; at 744
+it keeps the miss each way that decision 8 records, which the longer drain stretches from 24 to 41
+ms on the way out (open, 36 ms at either pace). Read with care: `n1b/analyze2.mjs` from decision 8
+takes the page under the bar to be white, so from a dark band (`#included`) it scores the light
+mark as 1.18:1, at either pace. The phone header's specs, the reduced-motion fade, and the home and
+a11y specs pass (39), with the 554 unit tests, typecheck, lint and knip.
