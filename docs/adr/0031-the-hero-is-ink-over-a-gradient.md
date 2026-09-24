@@ -175,3 +175,33 @@ The owner has asked for it, and it is the design's whole point.
   mismatch as a warm cast on the letters, a very dark brown rather than black, growing to about
   25 levels of 255 by the time the last line passes under the header; the ink is invisible in the
   same seconds, and the rise can be reduced if the owner sees it.
+- 24 September 2026: the prompt box is rebuilt inside its own height, at the owner's request ("in
+  the hero the sizing of the input field and button needs readjusting and fixing as it doesnt look
+  good"; `fixes/hero-prompt-decision.md` in the session's scratchpad, section 16 of
+  `docs/start-page-redesign-plan.md`). Its anatomy, in `app/_components/hero-prompt.tsx`: a form
+  with `action="/start"`, so Enter with JavaScript off lands on question one rather than reloading
+  this page, narrowed to the subhead's 768 px column (`max-w-3xl`), white, rounded, on
+  `--shadow-card` rather than `--shadow-dialog`, and without the `ring-brand-deeper/40` it drew
+  round itself while the field had focus (ADR 0034, amended the same day). Inside it the field is a
+  48 px pill filled with the wash, the top stop of the hero's own ramp, so it reads as a field at
+  rest: a text input, as it was before, 16 px type and 20 px from `md`, the placeholder at full
+  `--on-surface-muted` ending in an ellipsis where it cannot fit, a `brand-ink` caret,
+  `enterKeyHint="go"`, and focus as the site's authored outline, 2 px `brand-ink` at a 2 px offset,
+  with a border under forced colours only. Under it, one row that wraps in reverse: on a phone the
+  button spans the column with 20 px either side and the caption balanced under it, and the arrow is
+  hidden under 22.4rem, where the label, the arrow and the padding no longer fit whole; from `md`
+  the caption, at 14 px, sits 16 px before the button as its fine print. `#hero-cta` keeps its id,
+  its link and its analytics. Measured on the dev server with the change in
+  (`hero-prompt-verify.mjs`, `h1-box.mjs`, `hero-lines.mjs`): the box's outer height did not change
+  by a pixel, 197.6 px at 320 and 360, 180.8 at 390 and 156 at 768, 1024 and 1440, and the H1's box
+  moved 0 at all six widths, so the headline fills above stand unmoved; the line counts are 3, 2, 2,
+  2, 2, 2; at 390 the pill runs from y 281 to 329, the button from 345 to 393 (its foot was at
+  421.8, so the header's hand-over now comes 28.8 px of scroll earlier) and the caption ends at
+  421.8; `scrollWidth` is the viewport's width at every width; axe finds no violation in `#hero` at
+  360, 390 and 1440. The fence this sets, restated: from `md` the box may not grow, nor shrink by
+  more than 8 px, without re-measuring the headline's fills, because the H1 is placed on its ground
+  by the box beneath it. Re-checked by package R on the finished tree the same day:
+  `hero-prompt-verify.mjs` passes all 222 of its checks, among them the heights above, the arrow
+  shown whole or not at all from 320 to 766 wide, the 2 px outline and the pill's edge under forced
+  colours, and Enter carrying the sentence with and without JavaScript. The one sentence of ADR 0034
+  this changes, its decision 4's exception for the prompt's ring, is amended there the same day.

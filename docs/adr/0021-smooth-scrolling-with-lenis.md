@@ -25,3 +25,17 @@ What had to stay true: a visitor who prefers reduced motion, or has JavaScript o
 - The initial script bytes of `/` and `/start` are unchanged; the budget script prints a `lenis stays a lazy chunk` line beside GSAP's.
 - Playwright's `scrollIntoViewIfNeeded` and the header's scroll listener see native scroll events as before, because Lenis scrolls the window; no existing test changed.
 - The design plan's "Not adopted" line for Lenis is superseded by this record; the plan is left as written, as a record of its day.
+
+## Amendment, 24 September 2026: a glide carries the focus with it
+
+Found at the review of the questionnaire and the phone pass (`docs/start-page-redesign-plan.md`, "Changed at review"). The glide prevents the browser's jump, and with it the jump's move of the Tab order's starting point to the target, so a keyboard visitor's next Tab started from the link, and a link in the phone menu had just left the page with its sheet. The leaf in `app/_components/smooth-scroll.tsx` now moves focus to the target itself, without a second scroll (`preventScroll`), so Tab carries on from there. A target that takes no focus of its own, a section, is made focusable just this once (`tabindex="-1"`, removed on blur) and draws no ring (`[data-glide-focus]:focus` in `app/globals.css`), because it is not a control. The open phone menu leaves the page inert and a menu link's click reaches the listener before React has let it go, so while the target is still inside an inert tree the focus waits a frame at a time, for at most three. The skip link still carries `data-lenis-ignore` and keeps the browser's own jump, so it lands on `#main` at once. Decision 4's reason, that only the native jump moves focus, no longer holds; its rule for the skip link stands.
+
+## Amendment, 24 September 2026: every scroll but Lenis's own is instant while it runs
+
+Amends decision 6. `html.lenis` is now `scroll-behavior: auto !important` for as long as Lenis runs, not only while it is moving the page (`lenis-smooth`). A focus scroll the browser eased by the root's `scroll-behavior: smooth` could stop short: ScrollTrigger's refresh records the position, scrolls to the top to measure and puts the position back, which cancels a native smooth scroll in flight, and its first refresh comes with the first sign of a scroll, which for a keyboard visitor is the focus scroll itself. So Tab from the hero into Work stopped below the fold, on a tile still at opacity 0. The rule is important because ScrollTrigger, if the root was smooth when it registered, writes an inline `scroll-behavior: smooth` back on `<html>` after each refresh. The smooth root under `prefers-reduced-motion: no-preference` now serves only a page without Lenis: before it has loaded, or after a failed load. Measured at the review on the dev server, tabbing with Lenis running:
+
+- Chromium: the focus scroll stopped short in 4 of 9 runs before, and the focused control was on screen in 12 of 12 after.
+- WebKit: short in 3 of 3 runs before, on screen in 3 of 3 after.
+- A fast Tab (keys pressed faster than a glide lasts): 9 and 8 stops off screen in two runs before, none after.
+
+The consequences above still hold: the wheel and the three nav links glide, and everything else is the browser's own.

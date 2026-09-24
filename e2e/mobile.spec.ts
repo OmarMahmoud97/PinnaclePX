@@ -38,10 +38,11 @@ test('the header takes the primary action once the hero button has scrolled away
 })
 
 // The four watched sections' height together, against the ten phone screens the content plan
-// set (docs/home-page-content-plan.md, decision 52). A report, never a failure: with Work one
-// column on phones (ADR 0034) the four measure about twelve screens, and the number is written
-// into the ADR each time it moves, so the cut order in the plan is applied on purpose, not by a
-// red build. The report lands on the test as an annotation and in the run's output.
+// set (docs/home-page-content-plan.md, decision 52). A report, never a failure: with Work a rail
+// on phones (ADR 0034, amendment 4) the four measure about eight screens (6,514 px at 390 on
+// 24 September 2026, 7.7 screens), and the number is written into the ADR each time it moves,
+// so the cut order in the plan is applied on purpose, not by a red build. The report lands on
+// the test as an annotation and in the run's output.
 test('the added sections report their height in phone screens', async ({ page }) => {
   await page.goto('/')
   const heights = await page.evaluate(() =>
@@ -61,8 +62,8 @@ test('the added sections report their height in phone screens', async ({ page })
   expect(total).toBeGreaterThan(0)
 })
 
-// The walkthrough's phone used to be masked to its top strip on a phone; now the whole frame
-// stays in view under the header while the beats scroll beneath it.
+// The walkthrough's phone stays whole in its card under the header, and each step docks under
+// the phone, one at a time, rather than scrolling beneath it (ADR 0036).
 test('the walkthrough shows the whole phone frame under the header', async ({ page }) => {
   await page.goto('/')
   await expect(page.locator('html')).toHaveAttribute('data-motion', '')

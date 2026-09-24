@@ -9,8 +9,15 @@ import { useMotionAllowed } from '@/lib/motion/use-motion-allowed'
 // The ink's colour is the `--ink` custom property (app/globals.css), read once from the canvas
 // so the grounds it sits on and the ink are tuned in one place. A six-digit hex, or the page is
 // misconfigured and the error says so.
-function inkColourOf(canvas: HTMLCanvasElement): InkColour {
+//
+// An empty string is the one exception: it means the property does not resolve yet, not that it
+// is wrong. whenIdle runs on the first scroll as well as on idle, and a scroll can land before
+// the stylesheet applies, so the canvas is asked for a colour the document cannot answer. That
+// is a moment in the page's life, not a misconfiguration, and the simulation waits for the next
+// one rather than throwing and taking the ink down for the visit.
+function inkColourOf(canvas: HTMLCanvasElement): InkColour | undefined {
   const hex = getComputedStyle(canvas).getPropertyValue('--ink').trim()
+  if (hex === '') return undefined
   const value = Number.parseInt(hex.slice(1), 16)
   if (!/^#[0-9a-f]{6}$/i.test(hex) || Number.isNaN(value)) {
     throw new Error(`--ink must be a six-digit hex colour, not "${hex}"`)
@@ -39,8 +46,8 @@ export function Ink() {
     if (!motionAllowed || canvas === null) return
     let cancelled = false
     let stop: (() => void) | undefined
-    const cancelIdle = whenIdle(() => {
-      const colour = inkColourOf(canvas)
+    let frame: number | undefined
+    const start = (colour: InkColour) => {
       import('@/lib/motion/fluid')
         .then(({ startFluid }) => {
           if (cancelled) return
@@ -50,10 +57,25 @@ export function Ink() {
           // The chunk never arrived: the ground stands on its own, as it does for everyone who
           // never loads it.
         })
+    }
+    const cancelIdle = whenIdle(() => {
+      const colour = inkColourOf(canvas)
+      if (colour !== undefined) {
+        start(colour)
+        return
+      }
+      // The stylesheet had not applied yet; a frame later it has, and the ink starts then. One
+      // retry is enough: a document that still cannot answer has no stylesheet to wait for.
+      frame = requestAnimationFrame(() => {
+        if (cancelled) return
+        const ready = inkColourOf(canvas)
+        if (ready !== undefined) start(ready)
+      })
     })
     return () => {
       cancelled = true
       cancelIdle()
+      if (frame !== undefined) cancelAnimationFrame(frame)
       stop?.()
     }
   }, [motionAllowed])

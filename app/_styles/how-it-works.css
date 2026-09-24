@@ -16,14 +16,90 @@
 }
 
 /*
- * The stage on a viewport too short to pin it. Below md the panel is 458px tall at every width,
- * so on a screen under 600px (a phone in landscape, a 1440x900 window at 200% zoom) a pinned
- * stage would cover every step's words while it is stuck (WCAG 1.4.4, 1.4.10); there the frame
- * scrolls with the copy instead, and the track's reading line falls back to its viewport share.
- * A 390x844 phone keeps the pin the mobile test measures. Unlayered, so it beats the utility.
+ * The walkthrough on a phone (ADR 0036). Below md the stage is in the flow above a plain list of
+ * the five steps, which is all a visitor sees under reduced motion, with JavaScript off, when
+ * GSAP never arrives or where no zoom fits the longest step (large text, a very short screen),
+ * so a pinned panel never covers the words (WCAG 1.4.4, 1.4.10). Once the track's fit docks
+ * (data-dock on the box round the stage and the steps, --walk-dock on the list, --walk-zoom on
+ * the stage), the stage is sticky under the header's island and its bottom padding is the slot
+ * the steps dock in: each step is sticky at the dock and shows only while it is the one being
+ * painted, rising into place from below on the way down and from above on the way back, after a
+ * 100 ms breath (--walk-breath), so a step current for less than that on a flick never starts to
+ * show. With no step current, the first one shows, so the words are there before the phone
+ * starts typing.
+ * Every --walk-rest of scroll is one stop; the list's ::after holds the last step through the
+ * colour and the build, and the stage and that step let go together because both boxes end at
+ * the slot's foot. The rise is on the steps' children, which the track never measures, and the
+ * colour restated in their transitions keeps the current title's (app/globals.css). Unlayered,
+ * so these beat the utilities.
  */
-@media (width < 48rem) and (max-height: 37.5rem) {
+@media (width < 48rem) {
   .walkthrough-stage {
     position: static;
+  }
+
+  [data-dock] {
+    --walk-rest: 9rem;
+    --walk-breath: 100ms;
+  }
+
+  [data-dock] .walkthrough-stage {
+    position: sticky;
+    top: 4.5rem;
+    /* 1rem is the reading line's gap under the panel, CONFIG.walkthrough.anchorGapPx. */
+    padding-bottom: calc(var(--walk-rest) + 1rem);
+    pointer-events: none;
+  }
+
+  [data-dock] .walkthrough-stage + div {
+    margin-top: calc(-1 * var(--walk-rest));
+    padding-top: 0;
+  }
+
+  [data-dock] ol {
+    gap: 0;
+  }
+
+  [data-dock] ol::after {
+    content: '';
+    height: calc(2 * var(--walk-rest));
+  }
+
+  [data-dock] [data-stages] {
+    position: sticky;
+    top: var(--walk-dock);
+    min-height: var(--walk-rest);
+    padding: 0;
+    opacity: 0;
+    transition: opacity var(--motion-tap);
+  }
+
+  [data-dock] [data-stages] > * {
+    translate: 0 0.75rem;
+    transition:
+      translate var(--motion-tap),
+      color var(--motion-settle);
+  }
+
+  [data-dock] [data-stages]:has(~ [data-current]) > * {
+    translate: 0 -0.75rem;
+  }
+
+  [data-dock] [data-current],
+  [data-dock] ol:not(:has([data-current])) > :first-child {
+    opacity: 1;
+    transition: opacity var(--motion-settle) var(--ease-enter) var(--walk-breath);
+  }
+
+  [data-dock] [data-current] > *,
+  [data-dock] ol:not(:has([data-current])) > :first-child > * {
+    translate: none;
+    transition:
+      translate var(--motion-settle) var(--ease-enter) var(--walk-breath),
+      color var(--motion-settle);
+  }
+
+  [data-dock] [data-current] > p {
+    transition-delay: calc(var(--walk-breath) + var(--motion-stagger)), 0s;
   }
 }

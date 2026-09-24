@@ -6,8 +6,10 @@ import { cn } from '@/lib/cn'
 // motion), which is the feedback a slow tap on 4G needs so the visitor does not tap twice.
 // Under forced colours the fill is flattened away and a filled button would read as link text,
 // so every button takes a border there and nowhere else (the border-box height is unchanged).
+// Forced colours drop the ring too, which is a box shadow, so focus-visible:outline-hidden hides
+// the browser's outline everywhere else but leaves a 2px outline in the system colour there.
 const BASE =
-  'inline-flex cursor-pointer items-center justify-center gap-2 rounded-full font-medium whitespace-nowrap transition-[color,background-color,border-color,transform,--tw-gradient-from,--tw-gradient-to] duration-(--motion-tap) ease-standard outline-none focus-visible:ring-2 focus-visible:ring-brand-ink focus-visible:ring-offset-2 focus-visible:ring-offset-surface motion-safe:active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60 forced-colors:border'
+  'inline-flex cursor-pointer items-center justify-center gap-2 rounded-full font-medium whitespace-nowrap transition-[color,background-color,border-color,transform,--tw-gradient-from,--tw-gradient-to] duration-(--motion-tap) ease-standard focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-brand-ink focus-visible:ring-offset-2 focus-visible:ring-offset-surface motion-safe:active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60 forced-colors:border'
 
 // Fills that carry white text start at --brand-deeper (5.93:1). --brand is decoration only.
 const VARIANTS = {

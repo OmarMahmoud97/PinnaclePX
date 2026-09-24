@@ -1,7 +1,5 @@
 import type { Metadata } from 'next'
-import { Suspense } from 'react'
 import { BriefFlow } from '@/app/start/_components/brief-flow'
-import { StartSkeleton } from '@/app/start/_components/start-skeleton'
 
 // A per-visitor form, so search engines have no business indexing it.
 export const metadata: Metadata = {
@@ -9,11 +7,11 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 }
 
-// BriefFlow reads the question from the URL, which needs a Suspense boundary on a static page.
+// No Suspense boundary. BriefFlow's server render is the skeleton, because it reads the URL only
+// after hydration, so nothing here suspends or bails out to the client (the build would fail if
+// that changed). A boundary would cost bytes as well: React streams a finished boundary larger
+// than 12,800 B as a hidden second copy that a script swaps in, and the skeleton, with the real
+// sketch and the island, is larger than that.
 export default function StartPage() {
-  return (
-    <Suspense fallback={<StartSkeleton />}>
-      <BriefFlow />
-    </Suspense>
-  )
+  return <BriefFlow />
 }

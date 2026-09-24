@@ -39,6 +39,11 @@ const SEGMENT =
 const TILE =
   'work-tile group/card relative isolate flex flex-col gap-4 p-4 transition-colors duration-(--motion-tap) focus-within:bg-surface-tint hover:bg-surface-tint max-md:rounded-2xl lg:p-7'
 
+// Each tile's view timeline, which its dot under the rail reads (app/_styles/work.css). The
+// section declares the names so the dots, outside the list, can see them.
+const timeline = (index: number) => `--work-${String(index)}`
+const TIMELINES = CLIENT_ITEMS.map((_, index) => timeline(index)).join(', ')
+
 function Picture({ picture, sizes }: { picture: WorkPicture; sizes: string }) {
   const [avif2x, avif3x] = picture.avif
   const [webp2x, webp3x] = picture.webp
@@ -73,10 +78,16 @@ function Picture({ picture, sizes }: { picture: WorkPicture; sizes: string }) {
 //
 // The heading block reveals by CSS, so the night with white type reads first; the tiles are a
 // group the scroll choreography owns from md up (app/_components/motion/work.ts), and below md,
-// or without the choreography, the same CSS reveal carries them.
+// or without the choreography, the same CSS reveal carries them. On a touch screen under 640 px
+// the tiles are one rail with a dot per site under it (app/_styles/work.css), pinned by
+// mobile-work.spec; Lenis's attribute leaves a sideways wheel or trackpad to the rail.
 export function Work() {
   return (
-    <section id="work" className="scroll-mt-16 pt-band-sm pb-band" style={NEUTRAL.vars}>
+    <section
+      id="work"
+      className="scroll-mt-16 pt-band-sm pb-band"
+      style={{ ...NEUTRAL.vars, timelineScope: TIMELINES }}
+    >
       <div className={shell}>
         <div data-reveal className={headingBlock}>
           <h2 className={titleHeading}>{WORK.heading}</h2>
@@ -86,7 +97,8 @@ export function Work() {
         <ul
           data-reveal
           data-choreo="tiles"
-          className="mt-10 grid grid-cols-1 gap-3 sm:grid-cols-2 md:mt-14 md:gap-5 lg:grid-cols-3"
+          data-lenis-prevent-horizontal
+          className="work-rail mt-10 grid grid-cols-1 gap-3 sm:grid-cols-2 md:mt-14 md:gap-5 lg:grid-cols-3"
         >
           {CLIENT_ITEMS.map((client, index) => {
             const image = WORK_IMAGES[client.slug]
@@ -94,7 +106,11 @@ export function Work() {
             const capture = captureFor(client.slug)
             const group = `view-${client.slug}`
             return (
-              <li key={client.slug} style={revealDelay(index)} className={`${cardInk} ${TILE}`}>
+              <li
+                key={client.slug}
+                style={{ ...revealDelay(index), viewTimelineName: timeline(index) }}
+                className={`${cardInk} ${TILE}`}
+              >
                 <fieldset className="inline-flex self-center rounded-full bg-surface p-1">
                   <legend className="sr-only">{WORK.viewLegend(client.name)}</legend>
                   <label className={SEGMENT}>
@@ -114,13 +130,10 @@ export function Work() {
                 </fieldset>
 
                 {/* The pool behind the frame. It sits under the frame in the tile's own stacking
-                    context, fades in with the tile's reveal and brightens under the pointer
-                    (app/_styles/work.css): colour and opacity only, so it runs under reduced
-                    motion too. */}
-                <div
-                  aria-hidden
-                  className="work-backlight pointer-events-none absolute inset-0 -z-1"
-                />
+                    context, fades in with the tile's reveal and brightens under the pointer; its
+                    place and its paint are in app/_styles/work.css. Colour and opacity only, so it
+                    runs under reduced motion too. */}
+                <div aria-hidden className="work-backlight pointer-events-none absolute -z-1" />
 
                 {/* The phone view fills its frame edge to edge: the frame takes the picture's own
                     height instead of the 9:19 the sketch draws, so nothing is cropped. */}
@@ -166,6 +179,18 @@ export function Work() {
             )
           })}
         </ul>
+
+        {/* Where the reader is on the rail, shown only where the rail is (app/_styles/work.css): one
+            dot per site, lit while its tile sits on the line. Decoration; the tiles are the list. */}
+        <div aria-hidden className="work-dots mt-6 hidden gap-2">
+          {CLIENT_ITEMS.map((client, index) => (
+            <span
+              key={client.slug}
+              className="size-2 rounded-full bg-brand-ink opacity-30"
+              style={{ animationTimeline: timeline(index) }}
+            />
+          ))}
+        </div>
 
         {/* On the band ground, never inside a tile: a filled button on the card colour would not
             clear 3:1 at its edge (plan 2.3). */}

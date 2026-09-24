@@ -425,3 +425,303 @@ stands.
    35,306 B against 40,000 (the SVG is one short element and Included's foot is one utility),
    fonts unchanged, every lazy guard ok. Typecheck, lint, prettier, knip, the 551 unit tests
    and the Playwright suite (45 passed, one skipped for the database) pass.
+
+## Amendment, 24 September 2026: Work is a rail on phones
+
+Amendment 4 of this record. The owner, 24 September 2026: "all of the websites I have built under
+eachother make it so that the user has to scroll for a really long time to get to the next section".
+At 390 wide `#work` was 4,682 px, 5.55 phone screens, under A2's one column. Decided in
+`fixes/work-phone-decision.md` (in the session's scratchpad) and built by section 17 of
+`docs/start-page-redesign-plan.md`.
+
+1. **A2 in decision 10 changes on touch screens.** Below 640 px on a coarse pointer the six tiles
+   are one rail; below 640 px on a fine pointer they stay one column; from `sm` two columns and from
+   `lg` three, as before. A mouse in a narrowed window, a zoomed desktop and print keep the column
+   on purpose, so the owner sees the rail on a phone, or in the browser's device mode with touch
+   turned on.
+2. **The mechanism** (`app/_styles/work.css`, under `(width < 40rem) and (pointer: coarse)`, and
+   `app/_components/work.tsx`). The list is a native horizontal scroller that bleeds to the
+   viewport's edges: `padding: 0 4.5rem 2rem 1.5rem`, `overflow: auto hidden`,
+   `overscroll-behavior-x: contain`, mandatory inline snap with `scroll-padding-inline: 1.5rem`, and
+   `data-lenis-prevent-horizontal`. Each tile is `flex: none; width: 100%`, snaps at its start edge
+   on the shell's 24 px line, and scales from that edge (`transform-origin: left`), so the snap
+   never parks off the line during the reveal; the reveal's rise runs inside the bottom padding the
+   negative margin gives back, and the hidden cross axis keeps the rail from ever scrolling
+   vertically. The next tile peeks 60 px at the right and the sixth rests on the line at the end.
+   Under the rail six `aria-hidden` 8 px dots in `--brand-ink` light from 30 per cent to full on
+   their own tile's view timeline, one tile wide at the line (`work-dot`, opacity only, so it runs
+   under reduced motion). The grid classes stay, so 768 and 1440 are unchanged.
+3. **The reading of decision 5.** The "scroll snapping" it refuses is ScrollTrigger snapping the
+   page. The browser's own snap inside a nested scroller is not that, just as `md:sticky` is not
+   pinning.
+4. **The reading of the content plan's ban** (`docs/home-page-content-plan.md`, lines 47, 358, 360
+   and 1008). Its evidence (Runyon, Baymard, NN/g) concerns carousels that rotate by themselves and
+   hide their slides. This rail rotates nothing and never moves without the reader's hand. It hides
+   nothing from the DOM or the accessibility tree, it peeks the next tile, and its six dots show the
+   count and the reader's place. If the owner holds the ban, the fallback is the content plan's own
+   two-column grid, about 3.0 screens.
+5. **The WCAG 1.4.10 reading.** Each tile reads whole at 320 px, with no sideways scroll needed to
+   read a line, and a zoomed desktop, on a fine pointer, keeps the column.
+6. **The pool behind each phone is restored.** It had painted nothing since commit 15d7721 dropped
+   the tile's classes without a record; this corrects that. `.work-backlight` paints
+   `radial-gradient(at 50% 40%, var(--backlight), transparent 70%)` from 3rem under the tile's top,
+   three fifths of its height, and fades in with the reveal.
+7. **Measured** on the dev server on 24 September 2026, with the build in: `#work` is 1,201 px at
+   390 (1.42 screens), 1,217 at 320 and 360, and 1,184 at 430; a tile is 294 px wide at 390 and 224
+   at 320; the rail's maximum scroll equals the sixth stop (1,530 at 390, 1,180 at 320); dot k+1
+   reads 1.00 at stop k and the others 0.30, under reduced motion too. All six links, images and
+   dated captions and the twelve Phone and Desktop radios stay in the DOM and the accessibility
+   tree, Tab parks every focused tile at x 24, and axe finds no violation in `#work` at 320, 390 or
+   430 px wide. At 768 and 1440 the tile boxes are identical to the page without the change. The
+   phone line, the four watched sections at 390 as `e2e/mobile.spec.ts` reports them, is 6,514 px on
+   the finished tree (Work 1,201, Included 2,296, Real build 1,491, Your options 1,526), 7.7 phone
+   screens against the ten the content plan set, from 10,071 px and 11.9 screens: under ten for the
+   first time. The whole page at 390 falls from 17,020 to 13,540 px. Work at 390 re-measured on the
+   finished tree (`judge2-probe.mjs`) reads the same: 1,201 px, six 294 px tiles, the rail's end at
+   1,530, dot k+1 lit at stop k and no sideways scroll.
+
+## Amendment, 24 September 2026: the header changes in layers
+
+The owner, 24 September 2026: "as the user scrolls between the top sections in the page the
+navigation bar animation looks non premium as the show me my three designs button doesnt apear and
+disapear smoothly if the user scrolls a little too fast". Decided in `fixes/header-ask-decision.md`
+and built by the plan's section 14 (`app/_components/header-chrome.tsx`, `app/_styles/header.css`,
+`app/_styles/brand.css`). It replaces the evening amendment's sentence "The way in is no longer
+staged; the way out still empties the ask before the flip."
+
+1. **Three attributes, in order.** `data-solid`: the blend is normal and the text reads `--bar-ink`.
+   `data-island`: the pill's geometry, its glass and the mark's artwork. `data-past-hero`, with
+   `data-filled` beside it: the hero's own button has left the top of the viewport. `data-over-dark`
+   and `data-section` are as before. On the way in `data-solid` and `data-island` land together past
+   24 px, over the hero's white top, where black becoming navy is nothing to see.
+2. **The dissolve comes before the flip.** On the way out `data-island` leaves at once: the glass
+   and the artwork fade over `--motion-enter` (200 ms) while the blend is still normal, and the row
+   unwinds over `--motion-settle` (300 ms). `data-solid` leaves `CONFIG.motion.headerStepMs` later,
+   300 ms, equal to `--motion-settle` (moved from 200 into `lib/config.ts` at integration), so the
+   flip lands on a wide row with nothing left in the header to invert, 100 ms after the glass has
+   gone. The blended state declares `transition: none` on the glass and the mark, so a stalled fade
+   is cancelled at the flip.
+3. **The hand-over is the hero's button, on every width.** The desktop ask fills, and on a phone the
+   ask takes the name's place, once `#hero-cta`'s bottom is at or above the top of the viewport,
+   read in the scroll handler in the frame the page moves (the observer it replaces reported a frame
+   late). A page without that button hands over with the island. This is the owner's decision,
+   reversible in one line in the chrome: the fill was the island's since the evening amendment.
+4. **The drop is `top`, never a transform.** The island's 8 px drop is `top`, with `top: 0` on the
+   base row, so the row is never the containing block of the phone menu's fixed sheet.
+5. **The name and the phone ask fold by grid track** (`minmax(0, 1fr)` to `minmax(0, 0fr)`), which
+   every engine interpolates; the outgoing label fades in the first 40 per cent of the clock and its
+   `visibility` leaves with its opacity. The row's gap is constant and out of the transition list.
+6. **The pill's width is measured, so every engine animates it.** The chrome clones the row into a
+   hidden `.header-measure` box carrying the two attributes that shape it, reads the width and
+   writes it on the row as `--pill-w` before the attributes land, so the draw-in runs from one
+   length to another. The width snap at 24 px outside Chromium, which the evening amendment
+   accepted, no longer happens, and `interpolate-size` is no longer set. The pill is measured again
+   once the brand face has loaded and on a change of the viewport's width, with its transitions off
+   for that one change so no link spills past the glass; a change of height alone, a phone's
+   toolbar, leaves a running draw-in alone. Added at review the same day: a hidden gauge, one line
+   of the row's own words at its natural width off the bar's left edge, is watched for its size, so
+   a reader's text spacing or own style sheet, which changes the words' widths without a resize, has
+   a standing island measured again (WCAG 1.4.12).
+7. **The phone pill under 22.5rem** (added at review). Past the hero the phone pill holds the mark,
+   the ask and Menu, 340 px at rest, which is wider than a 320 px screen: it met both edges, and the
+   ask's label ran to 6 px from its own rounded ends. Below 22.5rem the ask's own start margin takes
+   the gap beside it down to 8 px, on the ask's clock, and the pill's ends tighten, so the pill
+   rests at 304 px, 8 px in from each edge as it is 8 px down. Before the hand-over, and on the
+   questionnaire, which has no ask, nothing changes.
+8. **Reduced motion.** `header.css`'s own reduce block, which wins over the global allowlist by
+   specificity because the section sheets are imported before it, keeps `--bar-ink` on the bar and
+   opacity inside it, so the header's words flip with the blend in the same frame instead of fading
+   through white on white; width, height and the drop change at once, and the glass, the mark and
+   the fold's opacity keep their fades.
+9. **The questionnaire's island.** `HeaderChrome` takes `island` and `overDark`, rendered into the
+   server's HTML, so `/start` opens on the solid dark island and the scroll never dissolves it (ADR
+   0035).
+10. **Measured** by the build package with the decision's probe (`jh-frames.mjs` and its companions
+    in the session's scratchpad: eleven runs from 390 to 1440, 100 px wheel notches 16 ms apart,
+    steps normalised to 16.7 ms), against a baseline taken before the edit. No frame drew the glass,
+    the artwork, the fill or the phone ask while blended (the decision had counted one at 768 and
+    two at 1440 before). The row was its full width in the frame the blend flipped back (207 and 777
+    px before, at 390 and 768). The island left 304 to 327 ms before `data-solid`. At 390 the row's
+    largest step was 33 px a frame (160 before), the Menu button's right edge stayed at 366 px in
+    every frame (436 before, off the screen), and the phone ask held full opacity for two frames
+    after the hand-over cleared (13 before). The desktop ask travelled 0 px while its fill was
+    part-way at 768 and 1440 (76 and 193 before). Under reduced motion the header's colours were
+    final in the first frame after every flip, and the sheet opened from the island was the screen's
+    height in every frame. axe found no violation on the header in any state at any width. Re-run by
+    package R on the finished tree the same day: at 390 no blended frame, the row's largest step 33
+    px, Menu at 366 px at most, two frames of the ask at full opacity after the hand-over, 318 ms
+    from the island leaving to the flip, and the row's last movement 19 ms before the page came to
+    rest; the pill is 227 px at rest and 340 px past the hand-over, and at 320 it rests at 304 px, 8
+    px in from each edge; at 1440 no blended frame, the row at 1,258 to 1,271 of 1,280 px in the
+    flip frame and 327 ms from the island leaving to the flip, but the row's last movement came 120
+    ms after the page rested, over the decision's 60 ms line, in a run whose frames were 36 ms apart
+    (the ink draws in software there; the build package read 33 and 40 ms at a steadier frame rate,
+    and 84 ms on a busier machine).
+11. **Owner decisions carried**, each reversible in a line: the fill at the hand-over, and the 300
+    ms clock (the slower alternative, 420 ms, would need its own token). What stays as it was: the
+    phone ask is 32 px tall, the mark's mask still snaps its background at a dark band's edge, and a
+    reload below 24 px still plays the draw-in on load.
+
+## Amendment, 24 September 2026: the menu is ink
+
+The owner, 24 September 2026: "the menu in tablet and movile could do with a nice openeing and
+closing animation so it looks more premium". Decided in `fixes/menu-decision.md` and built by the
+plan's section 15 (`app/_components/mobile-nav.tsx`, `app/_styles/header.css`,
+`app/_styles/brand.css`).
+
+1. **The gesture.** Tapping Menu fills its ring with ink, which blooms over the screen from the
+   button's measured centre: `clip-path: circle()` on the sheet from 1.25rem, the ring, to 142 per
+   cent over `--motion-reveal` with `--ease-enter`, the centre written as `--menu-at` at every open
+   and close, so the bloom starts on the button whether the header is the full row or the island.
+   The rows then arrive as every list on the page arrives: a 2rem rise over 600 ms, `--motion-tap`
+   plus `--i` times `--motion-stagger`. Closing, the rows lift 8 px and fade in 120 ms, the ink
+   holds, then drains into the button over `--motion-settle` on `--ease-drain` (`cubic-bezier(0.5,
+0, 0.75, 0)`, a held breath and then an accelerating pull, on `:root` in `app/globals.css` since
+   the review), and only then is the sheet hidden and the header let go. A clip on the sheet is safe
+   for its fixed position because the island's drop is `top`, never a transform (the header
+   amendment above).
+2. **Three phases.** `closed`, `open` and `closing`, written as `data-menu` on the menu's root. The
+   sheet is `inert` from the first closing frame, so it leaves the Tab order and the accessibility
+   tree before the ink has drained, and `hidden` once `Promise.allSettled` over its own
+   `getAnimations({ subtree: true })` has settled, with a fail-safe of twice
+   `CONFIG.motion.headerStepMs`, 600 ms, for a transition that never ends. A tap during the drain
+   reopens it; a viewport that grows past `md` while it is open closes it; `data-lenis-prevent` and
+   `overscroll-behavior: contain` keep the page still behind it.
+3. **The blend is keyed on the sheet, the scope on the button.** The dark scope stays keyed on the
+   button's `aria-expanded`; the header's normal blend and its full-width, glassless row are keyed
+   on `[data-menu]`, which outlasts `aria-expanded` by the drain. The header's two
+   `group-has-[[aria-expanded=true]]` utilities are retired, and the band observer no longer counts
+   the sheet (`[data-theme="dark"]:not(#mobile-nav)`), so `data-over-dark` neither arrives nor
+   leaves a frame late.
+4. **The holds.** The header's words and mark hold their colour until the ink's edge crosses them:
+   27 ms in, as the bloom crosses the brand, and 270 ms out, as the drain uncovers it; 40 ms both
+   ways under reduced motion, when the sheet is about half dark.
+5. **Reduced motion.** No clip, no rise and no turn: the sheet fades in and out over 200 ms, and the
+   rules in `header.css`'s reduce block, which win by specificity, stop every element in the header
+   fading its own colour, the smear the old menu showed.
+6. **The page is inert under the open sheet** (added at review, WCAG 2.4.11). While the menu is open
+   every child of `body` but the one holding the header is `inert`, and so are the header's own
+   parts beside the menu that the sheet is drawn over (past the hero, the phone's ask), while the
+   mark and the button, above the sheet, stay; each is let go the moment the menu starts to close,
+   and a part that was inert already is left alone. Tab past the sheet's last action goes to the
+   browser and back to the header, never to a control drawn under the ink, Shift+Tab from the cross
+   past the hero reaches the mark rather than the ask under the sheet, and a screen reader stays on
+   the menu (`e2e/mobile-header.spec.ts`). A section link pressed in the menu glides once the page
+   is let go, and the focus follows it (ADR 0021, amended).
+7. **Touch and forced colours.** The header row's links are 40 px tall on a touch screen
+   (`pointer-coarse:h-10`), inside the 48 px island, since from `md` the row is the tablet's menu.
+   Added at review: under forced colours the Menu button's bars are `ButtonText` and the header's
+   mark is `LinkText`, where their own fills were forced away and left an empty ring and an empty
+   home link.
+8. **Measured** by the build package with the decision's probe (`menu-judge/run.mjs`, read through a
+   corrected analysis, `n1b/analyze2.mjs`, both in the session's scratchpad). The ink starts on the
+   button to the pixel: 346, 32 from the top and 337, 32 from the island at 390, and 700, 32 and
+   514, 32 at 744. At 390 the brand turns light in the 33 ms frame and the screen is covered by
+   about 133 ms. `inert` lands in the first closing frame with the focus on the button, and `hidden`
+   351 ms after the close from the top and 314 to 336 ms from the island (the decision's band was
+   290 to 360), or 214 to 231 ms under reduced motion (180 to 240). The sheet is the viewport's
+   height in every frame, with the row's translate `none` and the blend normal while it is shown. No
+   frame draws the mark, the name or the cross under 3:1 from the top or from the island at 390,
+   where the old menu drew three such frames on opening; a reopen 150 ms into the drain shows no
+   hidden frame; under 4x CPU throttling the opening drops no frame over 34 ms; and five wheel
+   notches and a 400 px swipe over the open sheet leave the page where it was, where the old menu
+   let it move 499 px. At 430 one opening frame from the top draws the mark at 1.18:1, and at 744
+   one frame each way, where the bloom crosses the brand between two frames at 60 Hz: no fixed hold
+   serves every width, and the decision had misread its own data at 430. axe finds nothing on the
+   open menu at 360, 390, 430 and 744. Re-run by package R on the finished tree at 390: the bloom
+   starts at 346, 32 from the top and 337, 32 from the island, `hidden` lands 326 and 336 ms after
+   the close began (235 ms under reduced motion), the sheet is 844 px tall in every shown frame with
+   the row's translate `none` and the blend normal, and no frame draws the mark, the name or the
+   cross under 3:1 (4.38:1 at the lowest, under reduced motion).
+9. **Owner decisions carried**, each reversible in a line (`fixes/menu-decision.md`, section 10):
+   the bloom and the drain; the drain's pace; the rows at the page's list pace, the last at 1,000
+   ms; the sheet on screens narrower than 768 only, since from 768 the row holds the four links and
+   the ask with room. Left for the owner's hand: ten opens and closes in Safari on a phone, from the
+   top and from the island, looking for the one frame at a high refresh rate where the words and the
+   ground disagree.
+
+## Amendment, 24 September 2026: the hero prompt joins brand-ink
+
+The owner, 24 September 2026: "in the hero the sizing of the input field and button needs
+readjusting and fixing as it doesnt look good". The prompt box is rebuilt inside its own height (ADR
+0031, amendment of the same date, which holds its anatomy and its measures). Two sentences of this
+record change with it.
+
+1. **Decision 4's one exception is closed.** The hero's prompt no longer keeps
+   `ring-brand-deeper/40`: the field is a pill of the wash focused by the site's authored outline, 2
+   px `brand-ink` at a 2 px offset, with a border under forced colours only, and the box lifts on
+   `--shadow-card`, not `--shadow-dialog`. The ring on `/start` (the colour picker) moved the same
+   day (ADR 0035). The last `ring-brand-deeper` on the site is the send button's in
+   `app/_components/send-page.tsx`, which still waits for its pass.
+2. **Decision 5's "textarea" is corrected to "input".** The hero's prompt is a text input; the
+   reason stands, that typing in it is not scroll intent, so its first character must not fetch GSAP
+   and ScrollTrigger. `lib/motion/idle.ts` has said "text input" since the review.
+
+## Amendment, 24 September 2026: the byte lines
+
+Measured on the production build of a clean copy of the finished tree (`pnpm build && pnpm budget`,
+Windows, 24 September 2026), with the questionnaire's redesign (ADR 0035) and the four amendments
+above in it, against 15d7721's own build the same day. The stylesheet line held at 19,000 B; the
+scripts lines moved. The shared stylesheet measures 17,298 B, from 18,819 B at 15d7721 (18,044 B
+plus the 775 B font sheet), where the plan (`docs/start-page-redesign-plan.md`, section 19) expected
+about 20,100 B and a move to 20,500: `app/globals.css` now keeps `docs/` out of class detection
+(`@source not '../docs'`), which on 15d7721's sheet was 3,132 B of utilities only a plan or a record
+named. On that same basis, the sheet compiled without docs, the day's rules add 1,647 B (14,914 B
+then, 16,561 B now): `header.css` the most (283 B to 964 B), then `start.css` (562 B, new),
+`work.css` (167 B to 346 B), `how-it-works.css` (55 B to 265 B) and `brand.css` (154 B to 241 B).
+next/font's faces now ride the same file, one request fewer. With docs read the sheet would be about
+20,700 B, which would have moved the line to 21,000. No utility the day retired survives in the
+sheet. `/` scripts measure 217,045 B against 216,000, from 214,075 B at 15d7721, so the line moves
+to 218,000 B by the plan's rule (a measure over 215,930 B moves it there, which also covers the
+measure plus the 70 B margin rounded up to the next 500, 217,115 B up to 217,500): the menu's open,
+closing and inert states, the header's steps on `CONFIG.motion.headerStepMs`, `HeaderChrome`'s
+island and over-dark props, its re-watch of the dark bands, its measured pill and its text gauge,
+the hero prompt, the walkthrough's dock and its hold on an arrival fragment, and the glide's move of
+focus. `/` HTML measures 35,738 B against 40,000 (35,530 B at 15d7721), and fonts 55,480 B as served
+against 64,000, unchanged. `/start`'s scripts line moves from 245,000 to 246,500 B and its reasons
+are ADR 0035's; the /start figure in this record's consequences, 240,946 B, predates the header's
+commit, and 15d7721 measures 243,073 B there. GSAP, Lenis, the fluid ink and ScrollTrigger each stay
+a lazy chunk. CI's Linux runner measures about 70 B heavier than Windows, and every line keeps that
+margin.
+
+## Amendment, 24 September 2026, evening: the header never passes through grey
+
+Frame sheets of fast wheel bursts showed the header's words and mark passing through low contrast
+in two moments, both already in the CSS at 15d7721: at the blend flip, where the words turned navy
+in the same frame the glass began to fade in from nothing, so over the hero's ink they read navy on
+dark, and the mark's two renderings cross-faded at half strength each; and at the edge of a dark
+band, where `--bar-ink` and the glass's colour faded over the same `--motion-enter` and met in the
+middle, grey on grey. Measured on compositor frames at 390, 768 and 1440, down and up, over 2, 5
+and 8 notch bursts with 150 and 400 ms pauses: the worst text frame was 1.08:1 and the worst mark
+frame 1.12:1.
+
+The dark crossing is now one registered number, `--bar-dark` (0 to 1), set by the over-dark and
+open-menu scopes and moved over `--motion-enter` on `--ease-bar`, which jumps from 0.35 to 0.75 in
+one frame. The glass's colour is computed from it and still fades; the ink and the mark's rendering
+snap on `--bar-snap`, a rounded copy that turns at 0.55, inside the jump, so a burst that reverses
+halfway turns the glass and the words together. The glass has a floor, `--glass-floor` (0.5): it
+arrives at the floor in the flip frame and eases on from there, and on the way out it eases down to
+the floor and goes only in the frame the blend flips back. The mark swaps its artwork and its light
+mask on the same snap instead of cross-fading (`app/_styles/brand.css`). `--ask-ink` is now a 0 to
+1 number that holds only the fill, so the ask's hold never delays the dark snap. Reduced motion
+keeps the colour fade and the glass's opacity only.
+
+After: the worst text frame is 3.25:1 (768, down, over the hero's ink at the flip, the glass at its
+floor), the worst mark frame 3.28:1, and every header text is 5.5:1 or better at rest. Left as it
+was: over the hero, before the flip, the difference-blended links read 1.07 to 2.9:1 where the ink's
+mid-greys sit under them, which is how the blend of ADR 0031 works on a mid-grey ground and is the
+owner's to decide; the name and the phone's ask fold in and out through a fade, which is how a label
+appears rather than a colour change.
+
+The phone menu's sheet, from 640 to 767 px wide and at least 40rem tall, is laid out for a small
+tablet in portrait: the four sections at `--text-display` with one column for the numerals, a
+34rem measure, the ask at its natural width, 56 px tall, with the call beside it, and the watermark
+larger and fainter, off the right edge. The open and close choreography, focus, Escape, inert and
+reduced motion are unchanged.
+
+Measured on the production build of the finished tree the same evening (a worktree of 15d7721 with
+the day's files, Windows): `/` scripts 217,037 B of 218,000, stylesheets 17,851 B of 19,000, HTML
+35,777 B of 40,000, fonts 55,480 B; `/start` scripts 246,213 B of 246,500, HTML 5,966 B of 25,000;
+the four lazy guards ok; the built `/start` carries one `id="main"`. The full Playwright suite
+passes in all five projects (114, one skipped for `E2E_SUBMIT`), with typecheck, lint, knip and the
+554 unit tests.
