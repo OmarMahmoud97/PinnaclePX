@@ -1,0 +1,273 @@
+/* /start: this page's own rules, plain CSS only; tokens and utilities stay in app/globals.css. */
+
+/*
+ * The region's dark scope (app/start/_components/sketch-pane.tsx) sits on its ground layer and
+ * its caption block, never on the section or anything around it. The sketch's variables are
+ * declared on the section, and the light style's resolve the page's surface where they are
+ * declared (components/sketch/sketch-model.ts): inside the scope that surface is the ink, so a
+ * scope on the section would paint every light sketch dark.
+ */
+
+/*
+ * The pool of light behind the frames. It is a colour of its own, registered so a change of
+ * palette is a transition and not a jump, and so /start never leans on the Work tiles' sheet. At
+ * rest it is the home page's cyan backlight. From question five it takes the visitor's colour,
+ * which the sketch model keeps transparent until a colour exists, and follows every hover, focus
+ * and tap on a palette; once the brief is sent it is at its brightest.
+ */
+@property --start-pool {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: transparent;
+}
+
+.start-stage {
+  position: relative;
+  --start-pool: var(--backlight);
+}
+
+[data-coloured] .start-stage {
+  --start-pool: color-mix(in oklab, var(--sketch-glow) 55%, transparent);
+}
+
+[data-coloured][data-done] .start-stage {
+  --start-pool: color-mix(in oklab, var(--sketch-glow) 75%, transparent);
+}
+
+/*
+ * The pool's brightness, which breathes in once per visit. It runs on html because html is the
+ * one element the page keeps while React swaps the server's skeleton for the flow: on the stage
+ * the breath would start again from nothing with each new stage, and the pool would dip mid-breath
+ * on every load. It is an animation rather than a starting style for the same reason: the swap
+ * cancels a transition on html that has only just begun (measured on the dev server), while an
+ * animation runs on for as long as a stage is on the page, whether the visit began here or on
+ * another page.
+ */
+@property --start-lit {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 1;
+}
+
+html:has(.start-stage) {
+  animation: start-lit var(--motion-reveal) var(--ease-standard);
+}
+
+@keyframes start-lit {
+  from {
+    --start-lit: 0;
+  }
+}
+
+/*
+ * The canvas. The body is white on every page and html sets no colour, so the body's colour is
+ * the canvas: Safari shows it past either end of the page when it is pulled (iPhone, iPad, a Mac
+ * trackpad) and beside the page on a landscape iPhone. Every question below lg opens on the
+ * region's ink and the done state is ink at every width, so on this page the body takes the ink.
+ * The grid covers the whole body at every width, so nothing on the page itself changes. The cost
+ * is a pull past the foot of a question, where the ink shows under the wash; the top is the first
+ * screen and where a pull to refresh starts, so it is the edge that matches.
+ */
+html:has(.start-stage) body {
+  background-color: var(--ink-foot);
+}
+
+/*
+ * The layer bleeds past the stage so it reads as light around the frames, not as a card behind
+ * them, and holds its full colour as far as the frames reach, because a pool that fades from its
+ * centre shows only its faint rim. Below lg the stage is the phone alone, which covers the pool
+ * out to about 42 per cent of its width (101 of 243 px): the full colour holds that far and is
+ * never seen flat. From there it falls away on a smoothstep curve, sampled at five stops, so it
+ * has no corner where it leaves the full colour or where it meets the ink; a straight fall-off's
+ * corner read as the rim of a disc at the done state's brightest share. The pool reaches well out
+ * to the sides and up under the island, and only 12% down, where the region ends in its curve
+ * 24 px under the phone (12 px on a short screen, below), so it is spent before the curve's edge
+ * and never cuts off in a line there. From lg the stage is the whole board, which covers the
+ * middle, so the full colour holds to half the radius; the section clips the layer at the seam,
+ * where the done state's ink on both sides would show the cut, so the pool reaches a tenth up and
+ * down and only 6% to the sides, which the pane's own padding holds at every desk width. A change
+ * of colour eases over --motion-reveal, the breath's own length, so the pool moves on one clock,
+ * inside the 900 ms cap in CONFIG.motion.caps.
+ */
+.start-stage::before {
+  content: '';
+  position: absolute;
+  inset: -35% -70% -12%;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(
+    closest-side,
+    var(--start-pool) 42%,
+    color-mix(in oklab, var(--start-pool) 94%, transparent) 51%,
+    color-mix(in oklab, var(--start-pool) 78%, transparent) 59%,
+    color-mix(in oklab, var(--start-pool) 50%, transparent) 71%,
+    color-mix(in oklab, var(--start-pool) 22%, transparent) 83%,
+    color-mix(in oklab, var(--start-pool) 6%, transparent) 91%,
+    transparent
+  );
+  opacity: var(--start-lit);
+  transition: --start-pool var(--motion-reveal) var(--ease-standard);
+
+  @media (width >= 64rem) {
+    inset: -10% -6%;
+    background: radial-gradient(closest-side, var(--start-pool) 50%, transparent);
+  }
+}
+
+/*
+ * A short phone's first screen: Safari leaves 664 px on the common iPhones with its bars showing.
+ * There the full region (309 px), its curve and the ask riding at the foot leave no room for a
+ * question's first control, so question one's box starts under the Next button. Below 760 tall
+ * the phone drops to half size, 152 px, about the height of the list of five chips beside it,
+ * and the region's padding tightens. That takes the region to 228 px, and at 390 by 664 every
+ * question's first control shows above the ask on arrival. The pool's reach down drops to 7.5%
+ * of the smaller phone, 11 px, inside the 12 px under it, so it is still spent before the curve.
+ * These rules are unlayered, so they beat the zoom utility in brief-sketch.tsx.
+ */
+@media (width < 64rem) and (height < 47.5rem) {
+  .start-region {
+    padding-top: 4rem;
+    padding-bottom: 0.75rem;
+  }
+
+  .start-region [data-frame='phone'] {
+    zoom: 0.5;
+  }
+
+  .start-region .start-stage::before {
+    bottom: -7.5%;
+  }
+}
+
+/*
+ * Below lg the ask rides at the foot of the screen, so the next step is never a scroll away on a
+ * long question. The question pane gives its actions no box of their own below lg, so the ask is
+ * one of the form's own items and sticks within the whole question; at the end of a scroll it
+ * settles into its place under the last control and covers nothing. It stands on a fade of the
+ * wash, so what scrolls under it goes quietly, and reaches out by the pane's gutter so the fade
+ * spans the column. While an ask is on the page the scroll padding keeps clear of it any control
+ * the browser scrolls to, but browsers scroll only a text field's caret line into view, so the
+ * question pane lifts the whole control on focus (question-pane.tsx). The foot measures 113 px at
+ * 390 (24 of fade, the 48 px button, 8, the reassurance's 21 and 12), so 7.5rem leaves air; at 320
+ * the reassurance takes two lines and the foot 134, and the 14 px it gains still falls inside the
+ * fade, above the button.
+ *
+ * All of this only on a screen at least 30rem tall. There the island's 56 px and the foot's 134 at
+ * 320 take no more than 40 per cent of the height and leave about 290 px for the question. A
+ * desktop at 400 per cent (320 by 200 to 480 by 270) or a phone on its side is shorter, and a
+ * stuck ask would leave a slit of 10 to 66 px under the island and sit over the heading (WCAG
+ * 1.4.10). So there the ask waits in its place at the end of the question, and the scroll padding
+ * goes with it. The rem follows the reader's default text size, so larger text reaches the
+ * in-flow ask sooner, and 30rem rather than more keeps small portrait phones on the sticky ask:
+ * an iPhone SE is about 375 by 548 in Safari.
+ */
+@media (width < 64rem) and (height >= 30rem) {
+  .start-ask {
+    position: sticky;
+    bottom: 0;
+    z-index: 1;
+    margin-inline: -1rem;
+    padding: 1.5rem 1rem max(0.75rem, env(safe-area-inset-bottom));
+    background: linear-gradient(to top, var(--surface-wash) 60%, transparent);
+  }
+
+  html:has(.start-ask) {
+    scroll-padding-bottom: 7.5rem;
+  }
+
+  /* Forced colours drop the fade's gradient, and the stuck ask would print over the question
+     scrolling under it; the system's own ground keeps it opaque. */
+  @media (forced-colors: active) {
+    .start-ask {
+      background: Canvas;
+    }
+  }
+}
+
+/* From sm the pane's gutter is 2rem, and the fade reaches as far. Gated on height with the sticky
+   ask above, so a short screen's in-flow ask carries no stray margin. */
+@media (40rem <= width < 64rem) and (height >= 30rem) {
+  .start-ask {
+    margin-inline: -2rem;
+    padding-inline: 2rem;
+  }
+}
+
+/*
+ * From lg the actions row rides at the foot in the same way on a desk window shorter than the
+ * question. At 1366 by 657, a common laptop window, questions two, four and five put the ask 19,
+ * 117 and 42 px below the fold, and question four hides it whole. From lg the row is a box of its
+ * own inside the form (Back and the ask), so it sticks within the question and settles in place
+ * at the end of a scroll. Its fade reaches out by main's gutter, 2.5rem from lg and 4rem from xl,
+ * matching start-layout.ts. The negative block margins take back the fade's padding (the top one
+ * equals the form's gap-6): at rest the row sits exactly where it did, a page that fits (1440 by
+ * 900) lays out as before, and the row only moves when the foot of the screen would cut it. The
+ * row measures 113 px at 1366 and 134 px at 1024, where the reassurance takes two lines, so
+ * 8.5rem of scroll padding keeps a control focused from the keyboard clear of it. Forced colours
+ * drop the gradient, so the row takes Canvas, as the ask does below lg.
+ */
+@media (width >= 64rem) {
+  .start-actions {
+    position: sticky;
+    bottom: 0;
+    z-index: 1;
+    margin-inline: -2.5rem;
+    margin-block: -1.5rem -0.75rem;
+    padding: 1.5rem 2.5rem 0.75rem;
+    background: linear-gradient(to top, var(--surface-wash) 60%, transparent);
+  }
+
+  html:has(.start-actions) {
+    scroll-padding-bottom: 8.5rem;
+  }
+
+  @media (width >= 80rem) {
+    .start-actions {
+      margin-inline: -4rem;
+      padding-inline: 4rem;
+    }
+  }
+
+  @media (forced-colors: active) {
+    .start-actions {
+      background: Canvas;
+    }
+  }
+}
+
+/*
+ * Back enters from the left, the way the visitor is going; Next keeps the entrance in globals.css
+ * from the right. The flow marks main with the direction whenever the question changes, the
+ * browser's own Back included, and only the keyframes swap: the form's entrance keeps its timing.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes question-back {
+    from {
+      opacity: 0;
+      translate: -0.5rem 0;
+    }
+  }
+}
+
+/*
+ * Reduced motion: Back fades only, as Next does. The global allowlist names colour properties,
+ * not registered ones, so it would snap the pool's colour, which is not movement and keeps its
+ * timing here (this wins over the allowlist by specificity). The allowlist's opacity must not come
+ * back with it: the layer's opacity follows the breath frame by frame, and a transition of its own
+ * would trail behind. The breath is an animation of a brightness, so it runs as it is.
+ */
+@media (prefers-reduced-motion: reduce) {
+  @keyframes question-back {
+    from {
+      opacity: 0;
+    }
+  }
+
+  .start-stage::before {
+    transition-property: --start-pool !important;
+  }
+}
+
+[data-dir='back'] .start-question {
+  animation-name: question-back;
+}

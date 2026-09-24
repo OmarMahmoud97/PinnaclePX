@@ -2,6 +2,8 @@
 
 Prepared 3 September 2026. Replaces the dialog from ADR 0003 with a full page at `/start`. The reducer, schemas, tests and copy from the dialog carry over; the shell around them changes.
 
+Status, 24 September 2026: the layout sections are superseded by ADR 0035 and its plan, `docs/start-page-redesign-plan.md`. That covers section 3 (the screen, desktop and mobile), the look of the controls in section 4, and the question change and the tints in section 5. The flow, the questions and their copy, the marketing devices and the technical design stand, with ADR 0004 as amended. This plan is left as written, as a record of its day.
+
 ## 1. Why a page, not a modal
 
 - A modal is a box inside someone else's page. It has to stay small, so it cannot show anything but the question. A page can give half the screen to something that makes answering feel worthwhile.

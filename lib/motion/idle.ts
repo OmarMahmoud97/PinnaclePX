@@ -30,7 +30,7 @@ export function whenIdle(callback: () => void): () => void {
 const INTENT_EVENTS = ['wheel', 'touchstart', 'keydown', 'scroll'] as const
 
 // The keys that scroll the page. Any other key is typing, and typing is not intent: the hero's
-// prompt is a textarea, and its first character must not fetch GSAP and ScrollTrigger.
+// prompt is a text input, and its first character must not fetch GSAP and ScrollTrigger.
 const SCROLL_KEYS = new Set(['ArrowDown', 'ArrowUp', 'PageDown', 'PageUp', 'Home', 'End', ' '])
 
 // A key counts as intent only when it is one that scrolls and it is not going into a field,

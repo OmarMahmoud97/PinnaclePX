@@ -54,11 +54,27 @@ const BUDGETS = {
   // to the next 500 (18,341 up to 18,500). The foundation carried 18,000 B provisionally until
   // the measure. Then to 19 KB the same afternoon for the PX mark (ADR 0034 amendment): the
   // brand sheet took the measure to 18,430 B, which plus the margin sat exactly on the line.
+  // It held at 19 KB on 24 September 2026 through the /start redesign and the five home fixes
+  // (docs/start-page-redesign-plan.md, which expected about 20,100 B and a move to 20,500):
+  // app/globals.css now keeps docs/ out of class detection (`@source not '../docs'`), which on
+  // 15d7721's sheet (18,044 B plus the 775 B font sheet, 18,819 B) was 3,132 B of utilities only
+  // a plan or record named. The day's rules add 1,647 B on the same basis (the sheet compiled
+  // without docs: 14,914 B at 15d7721, 16,561 B after), header.css the most (283 B to 964 B),
+  // and next/font's faces now ride the same file, so both routes measure 17,298 B in one sheet
+  // (about 20,700 B with docs read, which would have moved the line to 21 KB).
   // Scripts stayed on 216 KB at the closing commit: 212,832 B measured on 23 September 2026 with
   // the choreography leaf in the initial bundle and GSAP, ScrollTrigger, Lenis and the ink
   // simulation all lazy (the four guards below); the line would have moved to 218 KB only had
   // the measure exceeded it. HTML measured 39,376 B the same day against the unchanged 40 KB,
   // then 35,305 B once the mark's eleven inline SVG paths left the header, footer and About.
+  // Scripts then to 218 KB on 24 September 2026 (ADR 0034's amendment of that date, the byte
+  // lines): 217,045 B measured, against 214,075 B at 15d7721. The phone menu's open, closing and
+  // inert states, the header's steps on CONFIG.motion.headerStepMs, HeaderChrome's island and
+  // over-dark props, its re-watch of the dark bands, its measured pill and its text gauge, the hero
+  // prompt, the walkthrough's dock and its hold on an arrival fragment, and the glide's move of
+  // focus make the 2,970 B. The plan's rule (docs/start-page-redesign-plan.md, section 19) sends a
+  // measure over 215,930 B to 218 KB, which also covers the measure plus the 70 B margin rounded up
+  // to the next 500 (217,115 B up to 217,500).
   // Fonts (ADR 0034) are the raw bytes of every font the home page preloads, as served: woff2 is
   // already compressed, so gzip would only muddle the number. The line is 64,000 B for the two
   // files the redesign loads, Mona Sans wght-only (39,796 B) and Instrument Serif italic
@@ -66,10 +82,17 @@ const BUDGETS = {
   // (.next/dev/static/media) and in the closing commit's production build (.next/static/media,
   // 23 September 2026); a Google-side re-cut that trips it is raised on the record, never by
   // editing the subset.
-  '/': { scripts: 216_000, stylesheets: 19_000, html: 40_000, fonts: 64_000 },
+  '/': { scripts: 218_000, stylesheets: 19_000, html: 40_000, fonts: 64_000 },
   // Raised from 230 KB on 4 September 2026 for zod 4, whose core is about 13 KB gzipped heavier
   // on this page than zod 3 (ADR 0019); its locales are kept out by the namespace import form.
-  '/start': { scripts: 245_000, stylesheets: 19_000, html: 25_000 },
+  // Then to 246.5 KB on 24 September 2026 for the questionnaire's redesign (ADR 0035): 15d7721
+  // measures 243,073 B here, not the 240,946 B ADR 0034 recorded before the header's commit.
+  // HeaderChrome and its island joining the route, the X icon, the direction flag, and the
+  // review's focus moves, done-state status line and radio-group keys took it to 246,101 B once
+  // headerLink (app/_components/header-link.ts) stopped pulling SiteHeader and MobileNav in. The
+  // line is that measure plus the 70 B margin, rounded up to the next 500 (246,171 B up to
+  // 246,500).
+  '/start': { scripts: 246_500, stylesheets: 19_000, html: 25_000 },
 }
 
 function gzipped(file) {

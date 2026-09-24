@@ -125,7 +125,9 @@ const { choreo } = CONFIG.motion
 // the heading's CSS reveal and the active step's colour, and no trigger is ever made inside the
 // section (constraint 36), because the stage measures its own geometry from the scroll and a
 // tween on the steps would move the stop lines under it mid-entrance; its one contribution is
-// the `walkthrough:ready` event HowItWorksTrack dispatches, which becomes a refresh below. And
+// the `walkthrough:ready` event HowItWorksTrack dispatches, which becomes a refresh below.
+// Below md the docked step's words rise into place by CSS (app/_styles/how-it-works.css, ADR
+// 0036): nothing measures them, and the section still has no trigger and no GSAP tween. And
 // the FAQ (plan 7.8), whose entrance is the CSS reveal and whose light beat on an open card is
 // CSS. One shape has a module of its own: the ink stretch's pooled curve (ink-pool.ts), which
 // is not a section but the edge between two, and sits here where it sits in the DOM, after

@@ -1,4 +1,4 @@
-import { Check } from 'lucide-react'
+import { Check, Circle } from 'lucide-react'
 import { paletteFor } from '@/lib/brief/palettes'
 import { type QuestionId, QUESTION_IDS } from '@/lib/brief/question-ids'
 import type { Answers } from '@/lib/brief/schema'
@@ -35,8 +35,13 @@ function labelsFor(answers: Answers): Readonly<Record<QuestionId, string>> {
   }
 }
 
-// Which answers are in, as chips under the sketch, plus the sentence a screen reader gets in
-// place of the drawing.
+// Which answers are in, as chips beside or under the sketch, plus the sentence a screen reader
+// gets in place of the drawing. No edge on a chip: a given answer is a filled chip with the
+// product's blue tick; a pending one sits on a faint neutral fill with an open ring where the
+// tick goes, so the list reads as a checklist rather than a row of links, every word starts at
+// the same x in the column, and the two differ by mark, never by colour alone. The marks never
+// shrink, so a long answer wraps inside its chip rather than squeezing its tick or pushing the
+// list wider.
 export function SketchChips({
   answers,
   answered,
@@ -60,16 +65,17 @@ export function SketchChips({
           {QUESTION_IDS.map((id, index) => {
             const done = index < answered
             return (
+              // A plain template, not cn(): tailwind-merge reads text-label as a colour and would
+              // drop it for the chip's colour class, leaving the chips at body size.
               <li
                 key={id}
-                className={cn(
-                  'flex items-center gap-1 rounded-full border bg-surface px-2.5 py-0.5 text-[11px] transition-colors duration-(--motion-enter)',
-                  done
-                    ? 'border-border text-on-surface'
-                    : 'border-dashed border-border text-on-surface-muted',
-                )}
+                className={`flex items-center gap-1 rounded-full px-2.5 py-1 text-label wrap-anywhere transition-colors duration-(--motion-enter) ${done ? 'bg-surface-muted text-on-surface' : 'bg-on-surface/6 text-on-surface-muted'}`}
               >
-                {done && <Check className="size-3 text-success" />}
+                {done ? (
+                  <Check className="size-3 shrink-0 text-brand-ink" />
+                ) : (
+                  <Circle className="size-3 shrink-0 opacity-70" />
+                )}
                 {labels[id]}
               </li>
             )

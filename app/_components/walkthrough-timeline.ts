@@ -15,8 +15,11 @@ import { AppError } from '@/lib/errors'
 import type { Gsap } from '@/lib/motion/gsap'
 
 export type Walkthrough = Readonly<{
-  // Glides to a stop from wherever the frame is, forwards or back.
-  goTo: (stage: number) => void
+  // Glides to a stop from wherever the frame is, forwards or back, after an optional lead in ms:
+  // the phone's docked words (ADR 0036) show first and the frame answers them. The next call
+  // kills a glide still waiting out its lead, so on a flick the frame moves once, after the
+  // thumb settles.
+  goTo: (stage: number, leadMs?: number) => void
   // Measures the frame afresh and places it at a stop with no motion, after a resize.
   rebuild: (stage: number) => void
   // Removes everything the timeline wrote and stops it for good.
@@ -267,7 +270,7 @@ export function buildWalkthrough(gsap: Gsap, root: HTMLElement): Walkthrough {
   }
 
   return {
-    goTo: (stage) => {
+    goTo: (stage, leadMs = 0) => {
       const target = tl.labels[labelFor(stage)]
       if (target === undefined) return
       scrub?.kill()
@@ -282,7 +285,7 @@ export function buildWalkthrough(gsap: Gsap, root: HTMLElement): Walkthrough {
         Math.min(catchUp.maxMs, catchUp.firstMs + catchUp.perStageMs * (stops - 1)),
       )
       const duration = stops === 1 ? natural : Math.min(natural, cap)
-      scrub = tl.tweenTo(target, { duration, ease: 'none' })
+      scrub = tl.tweenTo(target, { duration, ease: 'none', delay: seconds(leadMs) })
     },
     rebuild: (stage) => {
       clear()

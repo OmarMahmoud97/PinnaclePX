@@ -21,25 +21,30 @@ import {
   validateQuestion,
 } from '@/app/start/_components/brief-reducer'
 import { type Preview, QuestionPane } from '@/app/start/_components/question-pane'
+import { SketchPane } from '@/app/start/_components/sketch-pane'
 import { StartChrome } from '@/app/start/_components/start-chrome'
+import {
+  startGrid,
+  startMain,
+  startMainAsking,
+  startMainDone,
+} from '@/app/start/_components/start-layout'
 import { StartSkeleton } from '@/app/start/_components/start-skeleton'
 import { usePictureUploads } from '@/app/start/_components/use-picture-uploads'
-import { BriefSketch } from '@/components/sketch/brief-sketch'
-import { SKETCH_CAPTION } from '@/components/sketch/captions'
-import { SketchChips } from '@/components/sketch/sketch-chips'
 import { sketchModelFrom } from '@/components/sketch/sketch-model'
-import { captionStyles } from '@/components/ui/caption'
 import { trackEvent } from '@/lib/analytics/events'
 import { clearDraft, writeDraft } from '@/lib/brief/draft'
 import { readDraft } from '@/lib/brief/read-draft'
 import { QUESTION_IDS } from '@/lib/brief/question-ids'
 import type { Answers } from '@/lib/brief/schema'
-import { cn } from '@/lib/cn'
 
 const DONE = 'done'
 const LAST = QUESTION_IDS.length - 1
 
 type Target = number | typeof DONE
+
+// Which way the visitor last moved between questions: Back enters from the left.
+type Direction = 'next' | 'back'
 
 // ?q=1..5 or ?q=done. Anything else is the first question.
 function requestedFrom(param: string | null): Target {
@@ -96,6 +101,18 @@ function Flow({ initialAnswers }: { initialAnswers: Answers | null }) {
   const current = Math.min(requested === DONE ? LAST : requested, firstInvalidIndex(answers))
   const questionId = questionAt(current)
   const busy = status.kind === 'submitting'
+
+  // The direction comes from the change of the question index, compared while rendering (React's
+  // pattern for a value drawn from the previous render), so the browser's own Back button enters
+  // from the left too, and the question arrives in the same commit as its direction. Nothing is
+  // set on the first question shown, which enters as it always has.
+  const [step, setStep] = useState<{ index: number; dir: Direction | undefined }>({
+    index: current,
+    dir: undefined,
+  })
+  if (step.index !== current) {
+    setStep({ index: current, dir: current < step.index ? 'back' : 'next' })
+  }
 
   useEffect(() => {
     if (!done) writeDraft(answers)
@@ -156,39 +173,20 @@ function Flow({ initialAnswers }: { initialAnswers: Answers | null }) {
     photos: photos.map((photo) => photo.url),
   })
 
+  // main comes first in the DOM and the region second (start-layout.ts). Once the brief is sent
+  // main joins the ink, so the whole page is the foot, as the home page ends: its ground
+  // crossfades from the wash, and the island reads the new dark scope as it appears. main also
+  // drops the curve's clearance below lg then, because the region no longer hangs its curve.
   return (
-    <div className="flex min-h-dvh flex-col">
-      <StartChrome current={stage} total={QUESTION_IDS.length} />
+    <>
+      <StartChrome current={stage} total={QUESTION_IDS.length} done={showDone} />
 
-      <div className="grid flex-1 lg:grid-cols-[46fr_54fr]">
-        <section
-          aria-label="Your brief so far"
-          style={model.vars}
-          className="relative isolate order-first flex flex-col items-center gap-3 overflow-hidden border-b border-border bg-surface-muted px-4 pt-4 pb-3 lg:order-last lg:justify-center lg:border-b-0 lg:border-l lg:px-12 lg:py-16"
-        >
-          <div
-            aria-hidden="true"
-            className="absolute inset-0 -z-1 bg-[radial-gradient(var(--border)_1px,transparent_1px)] mask-[radial-gradient(ellipse_at_center,black_30%,transparent_72%)] bg-[size:22px_22px]"
-          />
-          <div
-            aria-hidden="true"
-            className="absolute inset-0 -z-1 bg-radial-[at_50%_85%] from-(--sketch-glow) to-transparent to-65% transition-colors duration-700"
-          />
-          <div className="max-h-52 w-full max-w-2xl overflow-hidden mask-[linear-gradient(to_bottom,black_80%,transparent)] lg:max-h-none lg:overflow-visible lg:mask-none">
-            <BriefSketch model={model} />
-          </div>
-          <p className={cn('hidden text-center lg:block', captionStyles)}>{SKETCH_CAPTION.yours}</p>
-          {showDone && (
-            <p className="hidden max-w-sm text-center text-sm font-medium text-balance lg:block">
-              This is a sketch from five answers. Imagine what an hour does.
-            </p>
-          )}
-          <SketchChips answers={answers} answered={answered} />
-        </section>
-
+      <div className={startGrid}>
         <main
           id="main"
-          className="flex flex-col items-center px-4 py-8 sm:px-8 lg:items-start lg:justify-center lg:px-16 lg:py-16"
+          data-theme={showDone ? 'dark' : undefined}
+          data-dir={step.dir}
+          className={`${startMain} ${showDone ? startMainDone : startMainAsking}`}
         >
           {showDone ? (
             <BriefDone name={answers.name} email={answers.email} submitted={status} />
@@ -218,7 +216,9 @@ function Flow({ initialAnswers }: { initialAnswers: Answers | null }) {
             />
           )}
         </main>
+
+        <SketchPane model={model} answers={answers} answered={answered} done={showDone} />
       </div>
-    </div>
+    </>
   )
 }

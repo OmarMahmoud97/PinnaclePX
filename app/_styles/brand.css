@@ -4,9 +4,9 @@
  * ground: the pages' headers, the About tile and card, the solid light bar. The mask (a span
  * filled through the mark's alpha) takes over where the artwork cannot work: over the hero,
  * where the header is blended by difference and the fill is the current colour so it flips
- * with the text; and on dark grounds (the footer, the solid bar over a dark band), where the
- * fill is the ramp's light gradient. The rules run from the default to the most specific
- * state, so each later rule wins by source order where the specificity is equal.
+ * with the text; and on dark grounds (the footer, the bar over a dark band, the open menu),
+ * where the fill is the ramp's light gradient. The rules run from the default to the most
+ * specific state, so each later rule wins by source order where the specificity is equal.
  */
 .brand-mark-mask {
   display: none;
@@ -14,34 +14,95 @@
   mask: url('/brand/px-mark-240.webp?v=2026-09-23') center / contain no-repeat;
 }
 
-/* Over the hero: the silhouette in the header's own colour, so the difference blend flips it. */
-.header-bar .brand-mark-image {
-  display: none;
-}
-
+/* In the header both renderings are laid out and take turns by opacity, one or the other and
+   never a cross-fade: two copies of one shape at half strength each cover only three quarters
+   of it, and the mark went grey in the middle of every change. */
 .header-bar .brand-mark-mask {
   display: block;
 }
 
-/* The solid light bar, and the bar behind an open menu, show the artwork again. */
-[data-solid]:not([data-over-dark]) .header-bar .brand-mark-image,
-.group:has([aria-expanded='true']):not([data-over-dark]) .header-bar .brand-mark-image {
-  display: block;
+.header-bar :is(.brand-mark-image, .brand-mark-mask) {
+  transition: none;
 }
 
-[data-solid]:not([data-over-dark]) .header-bar .brand-mark-mask,
-.group:has([aria-expanded='true']):not([data-over-dark]) .header-bar .brand-mark-mask {
-  display: none;
+.header-bar .brand-mark-image {
+  opacity: 0;
 }
 
-/* Dark grounds: the footer, and the solid bar over a dark band, take the light gradient. */
-[data-theme='dark'] .brand-mark-image,
-[data-solid][data-over-dark] .header-bar .brand-mark-image {
+/* The island shows the artwork on a light glass and the light gradient on a dark one, turning in
+   the frame the header's words turn (--bar-snap, app/globals.css), where the glass under it is
+   halfway between the two and either reads. Outside the island the mask is the words' colour. */
+[data-island] .header-bar .brand-mark-image {
+  opacity: calc(1 - var(--bar-snap));
+}
+
+[data-island] .header-bar .brand-mark-mask {
+  opacity: var(--bar-snap);
+  background: linear-gradient(135deg, var(--on-ink) 20%, var(--glow));
+}
+
+/* The sheet is always dark, so over an open menu the mark is always the light mask. */
+.group:has([aria-expanded='true']) .header-bar .brand-mark-image {
+  opacity: 0;
+}
+
+.group:has([aria-expanded='true']) .header-bar .brand-mark-mask {
+  opacity: 1;
+}
+
+/* Dark grounds: the footer, the solid bar over a dark band and the open menu take the gradient. */
+[data-theme='dark'] .brand-mark-image {
   display: none;
 }
 
 [data-theme='dark'] .brand-mark-mask,
-[data-solid][data-over-dark] .header-bar .brand-mark-mask {
+[data-solid][data-over-dark] .header-bar .brand-mark-mask,
+.group:has([aria-expanded='true']) .header-bar .brand-mark-mask {
   display: block;
   background: linear-gradient(135deg, var(--on-ink) 20%, var(--glow));
+}
+
+/*
+ * The phone menu: the mark changes with the header's words, at the ink's edge (header.css).
+ * Opening over the hero, the mask keeps the header's colour until the bloom has reached it, then
+ * takes the gradient; opening from the island, the artwork and the mask swap at once, as the
+ * words do, over a glass that turns dark in the same frame. Closing, whichever rendering the page
+ * under the bar wants arrives in one step as the drain uncovers it. The gradient is an image, not
+ * a colour, so its hold is a discrete transition. These come last, at the dark list's weight.
+ */
+.group:has([data-menu='open']) .header-bar :is(.brand-mark-image, .brand-mark-mask) {
+  transition: none;
+}
+
+.group:not([data-solid]):has([data-menu='open']) .header-bar .brand-mark-mask {
+  transition: background 0s var(--menu-hold-in) allow-discrete;
+}
+
+.group:has([data-menu='closing']) .header-bar :is(.brand-mark-image, .brand-mark-mask) {
+  transition:
+    opacity 0s var(--menu-hold-out),
+    background 0s var(--menu-hold-out) allow-discrete;
+}
+
+/* In the island the turn back already waits on --bar-dark's own hold (header.css), and the mask
+   keeps its gradient there, so a second hold here would double the wait. */
+[data-island]:has([data-menu='closing']) .header-bar :is(.brand-mark-image, .brand-mark-mask) {
+  transition: none;
+}
+
+/*
+ * Forced colours strip both of the mask's fills: a colour is forced to the ground and the
+ * gradient is dropped. The header shows the mask wherever it is over the ink, the hero or the
+ * open menu, so the mark would vanish there. On a phone the home link has dropped the name, so
+ * it would be left an empty target with a focus ring round nothing. A system colour survives
+ * forced colours, so the header's mask takes the link colour the name beside it has. This list
+ * repeats the heavier header selectors above so that it wins at the same weight by coming later.
+ */
+@media (forced-colors: active) {
+  .header-bar .brand-mark-mask,
+  [data-island] .header-bar .brand-mark-mask,
+  [data-solid][data-over-dark] .header-bar .brand-mark-mask,
+  .group:has([aria-expanded='true']) .header-bar .brand-mark-mask {
+    background: LinkText;
+  }
 }

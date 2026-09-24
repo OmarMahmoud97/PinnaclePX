@@ -204,6 +204,25 @@ test('the page scrolls smoothly and a section link glides into view', async ({ p
   expect(top).toBeGreaterThanOrEqual(64)
 })
 
+// While Lenis runs, the browser's own scrolls are instant (app/globals.css, ADR 0021): a smooth
+// focus scroll was cancelled by ScrollTrigger's first refresh, which the focus scroll itself
+// starts, and Tab from the hero into Work stopped below the fold on a tile still at opacity 0.
+// The behaviour check alone catches that about half the time, so the computed style is checked
+// too, which fails on every run without the rule.
+test('a keyboard focus below the fold lands on screen with its tile shown', async ({ page }) => {
+  await page.goto('/')
+  await expect(page.locator('html')).toHaveClass(/(^|\s)lenis(\s|$)/)
+  expect(await page.evaluate(() => getComputedStyle(document.documentElement).scrollBehavior)).toBe(
+    'auto',
+  )
+  await page.getByRole('link', { name: 'Scroll to the next section' }).focus()
+  await page.keyboard.press('Tab')
+  const tile = page.locator('#work ul[data-choreo="tiles"]').getByRole('listitem').first()
+  await expect(tile.getByRole('radio', { name: 'Phone' })).toBeFocused()
+  await expect(tile.getByText('Phone', { exact: true })).toBeInViewport()
+  await expect(tile).toHaveCSS('opacity', '1')
+})
+
 // The closing's button and phone rise in by GSAP from md up (ADR 0034). Their fail-safe plays
 // only what the viewport has reached, so a visitor who paused long enough for its clock to tick
 // before scrolling down must still find both: the tween is played by a plain trigger and never

@@ -16,6 +16,23 @@ export function stageAt(anchorY: number, beats: readonly Beat[]): number {
   return stop
 }
 
+// The beats of a list whose steps dock in one place (the walkthrough on a phone, ADR 0036): a
+// docked step's own box sits at the dock, so its beat comes from where it lies in the list,
+// below the steps before it, and it holds one step's height of scroll for each stage it paints.
+// Only the last step paints more than one stage; the list's ::after
+// (app/_styles/how-it-works.css) gives it the room.
+export function stackedBeats(
+  top: number,
+  steps: readonly Readonly<{ height: number; stages: readonly number[] }>[],
+): Beat[] {
+  let y = top
+  return steps.map(({ height, stages }) => {
+    const beat = { top: y, height: height * stages.length, stages }
+    y += height
+    return beat
+  })
+}
+
 // The stages a beat paints, from its data-stages attribute ("4 5 6").
 export function stagesFrom(attribute: string | undefined): number[] {
   return (attribute ?? '')

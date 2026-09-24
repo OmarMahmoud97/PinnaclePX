@@ -206,6 +206,17 @@ export const CONFIG = {
     loadAheadViewports: 1,
     // A window resize rebuilds the timeline once it has been still for this long.
     resizeSettleMs: 150,
+    // The dock on a phone (ADR 0036, app/_components/how-it-works-track.tsx), where the steps run
+    // under the phone rather than beside it. zooms: what the fit tries for the phone, largest
+    // first; 1.5 is the desktop's own phone, and 0.5 still docks a 320 by 568 screen. airPx: the
+    // air left under the longest step, the size of the words' rise (0.75rem in
+    // app/_styles/how-it-works.css), so a rising body never dips under the fold. leadMs: the
+    // phone answers the docked words this long after the stop, so a flick moves it only once the
+    // stops have been still this long. arrivalSlackPx: how far a fragment the visitor arrived on
+    // may have drifted from its line (a font landing above it moved it 25 px in Firefox) and
+    // still be put back when the dock grows the section; further than that, the visitor has
+    // scrolled.
+    dock: { zooms: [1.5, 1.25, 1, 0.8, 0.65, 0.5], airPx: 12, leadMs: 150, arrivalSlackPx: 48 },
     // The transitions, in ms. Nothing here is a hard cap: a stop the visitor reaches on its own
     // plays at these speeds; a jump over several plays faster (catchUp).
     beats: {
@@ -247,9 +258,13 @@ export const CONFIG = {
   motion: {
     staggerMax: 4, // items that wait their turn in a list reveal; the rest arrive with the fourth
     headerScrolledAtPx: 24, // scroll depth at which the header takes its scrolled state
-    // One step of the header's staged change (app/_components/header-chrome.tsx): the surface
-    // fades in over --motion-enter, and the blend flips and the ask fills once it has.
-    headerStepMs: 200,
+    // How long the header's blend waits, once the island has gone, before it flips back
+    // (app/_components/header-chrome.tsx). The glass and the mark fade over --motion-enter and
+    // the row unwinds over --motion-settle; this is --motion-settle's value (app/globals.css), so
+    // the flip lands on a wide row with nothing left in the header to invert. Keep the two equal.
+    // The phone menu's close waits twice this at most for its sheet's own transitions to report
+    // their end (app/_components/mobile-nav.tsx), well past the 300 ms drain.
+    headerStepMs: 300,
     // The header goes dark once this share of the hero, or less, is still below the bar.
     heroDarkFootShare: 0.35,
     // Lenis (ADR 0021): the share of the distance still to go that each frame covers, on the wheel
@@ -257,8 +272,11 @@ export const CONFIG = {
     // and 0.075 is the weightier glide the owner asked for, still short of the chase that sets in
     // around 0.05. scrubLag is how far, in seconds, a scrubbed tween (the rail fill, the footer
     // wordmark) trails the scroll; it rises with the glide so those tweens keep trailing the page
-    // rather than leading it, which is what reads as weight.
-    scroll: { lerp: 0.075, scrubLag: 0.8 },
+    // rather than leading it, which is what reads as weight. focusFrames is how many frames a
+    // glide to a section waits for the open phone menu to let the page go before it gives up
+    // moving focus to the section (app/_components/smooth-scroll.tsx); the menu lets go in the
+    // click's own effect flush, so one frame is enough and three is the margin.
+    scroll: { lerp: 0.075, scrubLag: 0.8, focusFrames: 3 },
     // The scroll choreography below the hero (ADR 0034). Entrances are batch tweens on lists the
     // choreography owns; the numbers sit inside `caps`, which the ADR records and a reviewer can check.
     choreo: {

@@ -184,7 +184,8 @@ test('the page fits a phone', async ({ page }) => {
   const sketch = page.getByRole('region', { name: 'Your brief so far' })
   await expect(sketch).toBeVisible()
   const box = await sketch.boundingBox()
-  // The clipped sketch, its caption and the chips. The heading must still be on the first screen.
+  // The whole phone and, beside it, the brief as a list of chips; the browser frame and the
+  // caption show from lg only (ADR 0035). The heading must still be on the first screen.
   expect(box?.height ?? 0).toBeLessThanOrEqual(320)
   await expect(page.getByRole('heading', { level: 1 })).toBeInViewport()
 })

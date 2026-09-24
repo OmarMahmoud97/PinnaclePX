@@ -9,6 +9,12 @@
 @source not '../templates';
 
 /*
+ * docs/ holds plans and records that name classes in prose. Nothing there renders, but automatic
+ * source detection reads it, so every class a document mentions would ship to every visitor.
+ */
+@source not '../docs';
+
+/*
  * Site-only utilities. This block is deliberately NOT in app/tokens.css: that file is imported
  * by reference into templates/tailwind.css (ADR 0024), so a mapping there would let a template
  * write `bg-surface-tint` and get the marketing site's ground on a client's preview, where
@@ -169,6 +175,9 @@
   --shadow-panel: var(--shadow-card), 0 0 120px -30px rgb(44 213 255 / 0.35);
   --glow-corner: color-mix(in oklab, var(--glow) 12%, transparent);
   --motion-reveal: 600ms;
+  /* The phone menu's drain (header.css): a held breath, then an accelerating pull, so the far
+     corner is uncovered just after the rows have gone. */
+  --ease-drain: cubic-bezier(0.5, 0, 0.75, 0);
 }
 
 /*
@@ -234,9 +243,16 @@ body {
  * and read as a line: after the ground's rise the foot is #020a12 across the whole width, and at
  * rest it is #020a12 at the centre, so the flat foot joins invisibly wherever the eye lands and
  * only the outer edges at rest, under reduced motion, keep a step of a few levels.
+ *
+ * The stretch is tucked 1px up under the hero. Once the ground's rise has finished, its edge lies
+ * on the hero's own foot, and where that foot falls on a fractional pixel (887.875 tall at 390 by
+ * 844) the two anti-aliased edges share one row and the white page shows between them as a light
+ * line under the header. The stretch paints over the hero's last pixel, because both are
+ * positioned with no z-index and the stretch comes later.
  */
 .ink-stretch {
   position: relative;
+  margin-top: -1px;
   background: var(--ink-foot);
 }
 
@@ -307,37 +323,50 @@ body {
 @import './_styles/footer.css';
 @import './_styles/brand.css';
 @import './_styles/header.css';
+@import './_styles/start.css';
 
 /* The fixed header is 4rem tall; keep every fragment jump and focus scroll clear of it. */
 html {
   scroll-padding-top: 4rem;
 }
 
-/*
- * The header's ask (app/_components/site-header.tsx): a text link that fills to the primary
- * button once the header is solid, and empties again on the way back. The fill fades over
- * --motion-enter. The ink must not fade with it, which would pass through grey on half a fill,
- * and it cannot switch the moment the fill starts either, which would put white words on a bare
- * surface for the first frames: it holds, then snaps between the header's colour and white at
- * the point where both read alike against the blue, which is 85% of a fill. --ease-standard is
- * front-loaded, so arriving blue is 85% there at 0.46 of the time and leaving blue is 85% still
- * there at 0.1; each direction's rule carries its own hold. The ink is a registered property of
- * its own, and the ask reads it only while the header is solid, so the fill is the one thing
- * that moves it: over the hero the ask inherits the header's colour like every other link, and
- * the flip between the two, which is instant, never starts a hold. (currentColor is no use as
- * the held value: Chrome resolves it in a registered property when the style is computed, so
- * the flip would move the property too.) Under reduced motion the ask changes in one go, ink
- * and fill together (the rule is with the others below), since a timed fill is only readable
- * with the hold.
- */
-@property --ask-ink {
-  syntax: '<color>';
-  inherits: false;
-  initial-value: transparent;
+/* A section a glide has landed on (app/_components/smooth-scroll.tsx) holds focus only so that the
+   next Tab starts there. It is not a control, and without this Chrome draws its focus ring round
+   the whole section after keyboard use, a hairline the standards forbid. */
+[data-glide-focus]:focus {
+  outline: none;
 }
 
+/*
+ * The header's ask (app/_components/site-header.tsx): a text link that fills to the primary
+ * button once the hero's own button has left the top of the viewport
+ * (app/_components/header-chrome.tsx sets data-filled together with data-past-hero, and with the
+ * island itself on a page that has no hero button), and empties again on the way back. The fill
+ * fades over --motion-enter. The ink must not fade with it, which would pass through grey on
+ * half a fill, and it cannot switch the moment the fill starts either, which would put white
+ * words on a bare surface for the first frames: it holds, then snaps between the header's colour
+ * and white at the point where both read alike against the blue, which is 85% of a fill.
+ * --ease-standard is front-loaded, so arriving blue is 85% there at 0.46 of the time and leaving
+ * blue is 85% still there at 0.1; each direction's rule carries its own hold. The hold is a
+ * registered number of its own, and the ask reads it only while the header is solid, so the
+ * fill is the one thing that moves it: over the hero the ask inherits the header's colour like
+ * every other link, and the flip between the two, which is instant, never starts a hold.
+ * (currentColor is no use as the held value: Chrome resolves it in a registered property when the
+ * style is computed, so the flip would move the property too.) Under reduced motion the ask
+ * changes in one go, ink and fill together (the rule is with the others below), since a timed
+ * fill is only readable with the hold.
+ */
+@property --ask-ink {
+  syntax: '<number>';
+  inherits: false;
+  initial-value: 0;
+}
+
+/* --ask-ink is the share of white in the ask's words, 0 or 1, and the hold moves only that: the
+   header's own ink, which the ask reads beside it, snaps with the glass under it in the same
+   frame (--bar-ink below), so a dark band's edge never waits on the fill's hold. */
 .header-ask {
-  --ask-ink: var(--on-surface);
+  --ask-ink: 0;
   transition:
     --ask-ink 0s var(--ease-standard) calc(var(--motion-enter) * 0.1),
     background-color var(--motion-enter) var(--ease-standard),
@@ -347,53 +376,109 @@ html {
 }
 
 [data-solid] .header-ask {
-  color: var(--ask-ink);
+  color: color-mix(in srgb, var(--on-brand) calc(var(--ask-ink) * 100%), var(--bar-ink));
 }
 
 [data-filled] .header-ask {
-  --ask-ink: var(--on-brand);
+  --ask-ink: 1;
   transition-delay: calc(var(--motion-enter) * 0.46), 0s, 0s, 0s, 0s;
 }
 
 /*
  * The header's own ink (app/_components/header-chrome.tsx), held apart from the blend flip the
- * same way. Once solid the text reads this property rather than --on-surface directly: the flip
+ * same way. Once solid the text reads --bar-ink rather than --on-surface directly: the flip
  * changes which value `color` reads, which snaps, since a fade there would pass through white on
- * a white bar; the bar arriving over a dark band (data-over-dark, ADR 0034) changes only what
- * --on-surface resolves to, which this property carries over --motion-enter beside the surface's
- * own fade. Where @property is unsupported the value still resolves and the change snaps.
+ * a white bar.
+ *
+ * The bar arriving over a dark band (data-over-dark, ADR 0034), or the phone menu's ink, moves
+ * one number, --bar-dark, from 0 to 1, and everything that differs between the two sets is read
+ * from it in the same frame: the glass's colour fades with it (app/_styles/header.css), and the
+ * words and the mark (app/_styles/brand.css) snap between the two inks where both read alike on
+ * that glass, the way the ask's ink snaps on its fill. A fade of the words beside the fade of the
+ * glass met in the middle, grey on grey, for a frame or four. Being one number, a change of
+ * direction halfway turns both round together, where two timed holds would drift apart. Its
+ * easing leaps across the middle of the glass's fade, from 35% to 75% in one frame, and the ink
+ * turns inside that leap (--bar-turn), so the words never sit on a mid grey glass whichever
+ * ground shows through the other 16%. Each of the four colours is read at the root, outside any
+ * dark scope, so the header holds both sets whatever scope it is in. Where round() or @property
+ * is unsupported the ink resolves to one set and the change snaps.
  */
+@property --bar-dark {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --bar-snap {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
 @property --bar-ink {
   syntax: '<color>';
-  inherits: false;
+  inherits: true;
   initial-value: transparent;
 }
 
+:root {
+  --bar-light-ground: var(--surface);
+  --bar-light-ink: var(--on-surface);
+  --bar-dark-ground: var(--ink-foot);
+  --bar-dark-ink: var(--on-ink);
+  --bar-turn: 0.55;
+  --ease-bar: linear(0, 0.03 5%, 0.16 10%, 0.35 15%, 0.75 15%, 0.85 25%, 0.93 40%, 0.98 65%, 1);
+}
+
 .header-bar {
-  --bar-ink: var(--on-surface);
-  transition: --bar-ink var(--motion-enter) var(--ease-standard);
+  --bar-dark: 0;
+  --bar-snap: clamp(0, round(down, var(--bar-dark) + 1 - var(--bar-turn), 1), 1);
+  --bar-ink: color-mix(
+    in srgb,
+    var(--bar-dark-ink) calc(var(--bar-snap) * 100%),
+    var(--bar-light-ink)
+  );
+  transition: --bar-dark var(--motion-enter) var(--ease-bar);
+}
+
+[data-solid][data-over-dark] > .header-bar,
+.group:has([aria-expanded='true']) > .header-bar {
+  --bar-dark: 1;
 }
 
 [data-solid] .header-bar {
   color: var(--bar-ink);
 }
 
-/* The corner ticks reach past the column on purpose; clip (not hidden) keeps sticky working. */
+/*
+ * A guard, not a bleed: nothing on the site is meant to reach past the column, so this only keeps
+ * a stray overflow from giving a phone a sideways scroll. Clip, not hidden, keeps sticky working.
+ */
 body {
   overflow-x: clip;
 }
 
 /*
- * Lenis (ADR 0021) marks <html> while it runs, and `lenis-smooth` while it is moving the page.
- * Its own frames are instant scrolls, but any other scroll landing mid-glide must not be eased
- * by the browser as well; and a wrapper with a set height would trap the page, so none is set.
+ * Lenis (ADR 0021) marks <html> while it runs. A wrapper with a set height would trap the page,
+ * so none is set.
+ *
+ * While Lenis runs, every scroll that is not its own is instant. Its own frames are instant
+ * scrolls anyway, and a native glide landing mid-Lenis would be eased twice. More than that,
+ * ScrollTrigger's refresh records the position, scrolls to the top to measure and puts the
+ * position back, which cancels a native smooth scroll in flight; the first refresh comes with the
+ * first sign of a scroll, which for a keyboard visitor is the focus scroll itself, so Tab from the
+ * hero into Work stopped short, below the fold, on a tile still at opacity 0. The rule is
+ * important because ScrollTrigger, if the root was smooth when it registered, writes an inline
+ * `scroll-behavior: smooth` back on <html> after each refresh. The smooth root under
+ * `prefers-reduced-motion: no-preference` below now serves only a page without Lenis: before it
+ * has loaded, or after a failed load.
  */
 html.lenis,
 html.lenis body {
   height: auto;
 }
 
-html.lenis.lenis-smooth {
+html.lenis {
   scroll-behavior: auto !important;
 }
 
@@ -520,10 +605,12 @@ html.lenis.lenis-smooth {
 
 /*
  * The walkthrough's active step. The driver marks one step data-current as the scroll picks the
- * stop it paints (app/_components/how-it-works-track.tsx); its title takes the colour, the body
- * keeps its own, and the inactive steps are never dimmed, so the only thing that changes is the
- * line the visitor is being answered on. Colour survives reduced motion, which is why this is a
- * colour change and not a movement.
+ * stop it paints (app/_components/how-it-works-track.tsx); its title takes the colour and the
+ * body keeps its own. Beside the phone, from md, and in a phone's plain undocked list, the
+ * inactive steps are never dimmed, so the only thing that changes is the line the visitor is
+ * being answered on; docked on a phone (app/_styles/how-it-works.css, ADR 0036) the current step
+ * is also the one step showing, the others at opacity 0, where a screen reader still reads them.
+ * Colour survives reduced motion, which is why this is a colour change and not a movement.
  *
  * It lives here rather than as utilities on each step because the five steps are serialised into
  * HowItWorksTrack's props as a client component's children: repeating the classes there grew

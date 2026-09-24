@@ -3,7 +3,9 @@
 /*
  * The pool behind each phone. It is registered as a colour so the hover step is a transition and
  * not a jump; the value at rest is the token in globals.css, and inheritance carries it into the
- * layer, where the tile's hover raises it.
+ * layer, where the tile's hover raises it. The pool is painted by the .work-backlight rule below
+ * it: 3rem under the tile's top and three fifths of its height, as the tile's classes drew it
+ * before 15d7721 dropped them unrecorded (ADR 0034, amendment 4).
  */
 @property --backlight {
   syntax: '<color>';
@@ -12,6 +14,9 @@
 }
 
 .work-backlight {
+  inset: 3rem 0 auto;
+  height: 60%;
+  background: radial-gradient(at 50% 40%, var(--backlight), transparent 70%);
   transition:
     opacity var(--motion-reveal) var(--ease-enter),
     --backlight var(--motion-tap) var(--ease-standard);
@@ -40,6 +45,53 @@ html[data-motion] [data-reveal]:not([data-inview]) .work-backlight {
 @media (width >= 48rem) {
   html[data-choreo] [data-choreo='tiles'] .work-backlight {
     transition: --backlight var(--motion-tap) var(--ease-standard);
+  }
+}
+
+/*
+ * Phones: the six tiles on one rail, swiped a tile at a time (ADR 0034, amendment 4). Touch
+ * screens only, so a mouse or a zoomed desktop keeps the column, and every device that gets the
+ * rail draws overlay scrollbars. The rail bleeds to the viewport's edges; its padding puts the
+ * first and the sixth tile on the shell's line and leaves the next one peeking at the right. The
+ * reveal's rise runs inside the bottom padding that the negative margin gives back, and the cross
+ * axis is hidden, so the rail never scrolls vertically; the tiles scale from their start edge, the
+ * edge the snap aligns, so the rail never parks off the line mid-entrance. Each tile is a view
+ * timeline one tile wide at the line, and its dot under the rail is lit while it is there.
+ */
+@media (width < 40rem) and (pointer: coarse) {
+  .work-rail {
+    display: flex;
+    margin-inline: -1.5rem;
+    margin-bottom: -2rem;
+    padding: 0 4.5rem 2rem 1.5rem;
+    overflow: auto hidden;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: 1.5rem;
+  }
+
+  .work-rail > li {
+    flex: none;
+    width: 100%;
+    scroll-snap-align: start;
+    transform-origin: left;
+    view-timeline-axis: inline;
+    view-timeline-inset: 1.5rem 4.5rem;
+  }
+
+  .work-dots {
+    display: flex;
+  }
+
+  .work-dots > span {
+    animation: work-dot linear both;
+  }
+}
+
+/* Opacity alone, driven by the reader's own scroll, so it runs under reduced motion too. */
+@keyframes work-dot {
+  50% {
+    opacity: 1;
   }
 }
 

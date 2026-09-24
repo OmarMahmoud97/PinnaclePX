@@ -4,26 +4,59 @@
  * (ADR 0031). Once the page has scrolled the row draws in to a floating pill in the middle of
  * the bar: the same elements, the same order, half the height, on a glass of the page's own
  * surface, so it reads as one of the page's cards rather than a strip across it. The glass is
- * a pseudo-element, not a background on the row, because a backdrop filter on the row would
- * make it the containing block of the phone sheet, which is fixed to the viewport.
+ * a pseudo-element, not a background on the row, and the pill's 8px drop is `top`, not a
+ * translate: a backdrop filter or a translate on the row would make it the containing block of
+ * the phone sheet, which is fixed to the viewport, and clip the sheet to the bar.
  *
- * The width moves from the column to fit-content, which interpolate-size lets Chromium animate;
- * elsewhere it snaps, which is still the right shape. Only the way in is eased: the glass and
- * its shadow appear once the blend is normal, and on the way out they go in the same instant
- * the blend flips back to difference, because a white glass fading inside a blended header
- * would show as black over the hero. Reduced motion keeps opacity and colour only.
+ * The pill's width is a length the chrome measures (header-chrome.tsx), so the draw-in is a
+ * change between two lengths, which every engine animates; the gap never moves. The glass
+ * fades in over the draw-in from its floor and down to the floor over --motion-enter while the
+ * blend is still normal, and leaves in the frame the blend flips back (header-chrome.tsx). The
+ * blended state declares no transition at all, so the flip cancels any remainder of a fade a busy
+ * frame left behind; a list that still named opacity would not. Reduced motion keeps opacity and
+ * colour only.
  */
 .header-row {
   position: relative;
+  top: 0;
   isolation: isolate;
-  interpolate-size: allow-keywords;
-  max-width: 80rem;
+  max-width: min(80rem, 100%);
+  gap: 1.25rem;
   transition:
     max-width var(--motion-settle) var(--ease-standard),
     height var(--motion-settle) var(--ease-standard),
-    translate var(--motion-settle) var(--ease-standard),
-    padding var(--motion-settle) var(--ease-standard),
-    gap var(--motion-settle) var(--ease-standard);
+    top var(--motion-settle) var(--ease-standard),
+    padding var(--motion-settle) var(--ease-standard);
+}
+
+/*
+ * The glass's colour is read from --bar-dark (app/globals.css), the one number the words and the
+ * mark snap on, so its fade over a dark band's edge and theirs are the same clock.
+ *
+ * Its opacity has a floor. The flip to the normal blend puts the words in navy at once, and the
+ * hero's ink can be under the bar at that moment: a glass fading in from nothing left navy on the
+ * dark ink for its first frames (1.2:1 at 390, where the ink sits under the mark), and on the way
+ * out the glass was gone a step before the blend flipped back, navy on the ink again. At half
+ * strength the glass alone holds navy above 3:1 on the darkest ink, so it arrives at the floor in
+ * the flip's frame and eases on from there, and on the way out it eases down to the floor and
+ * leaves only in the frame the blend flips. Over the hero's white top the floor is white on white.
+ */
+:root {
+  --glass-floor: 0.5;
+  --ease-glass-in: linear(
+    0,
+    0.5 0%,
+    0.515 5%,
+    0.578 10%,
+    0.676 15%,
+    0.75 20%,
+    0.844 30%,
+    0.901 40%,
+    0.939 50%,
+    0.965 60%,
+    0.993 80%,
+    1
+  );
 }
 
 .header-row::before {
@@ -32,47 +65,418 @@
   inset: 0;
   z-index: -1;
   border-radius: 9999px;
-  background: color-mix(in srgb, var(--surface) 84%, transparent);
+  background: color-mix(
+    in srgb,
+    color-mix(in srgb, var(--bar-dark-ground) calc(var(--bar-dark) * 100%), var(--bar-light-ground))
+      84%,
+    transparent
+  );
   box-shadow:
     var(--shadow-card),
     inset 0 0 0 1px color-mix(in srgb, var(--on-surface) 9%, transparent);
   backdrop-filter: blur(20px);
   opacity: 0;
-  transition: opacity 0s;
+  transition: none;
 }
 
-[data-solid] .header-row {
-  max-width: fit-content;
-  height: 3rem;
-  translate: 0 0.5rem;
-  padding-inline: 0.75rem 0.5rem;
-  gap: 1.25rem;
-}
-
+/* The dissolve: the glass eases down to its floor while the blend is still normal. */
 [data-solid] .header-row::before {
+  opacity: var(--glass-floor);
+  transition: opacity var(--motion-enter) var(--ease-standard);
+}
+
+[data-island] .header-row {
+  max-width: var(--pill-w, fit-content);
+  height: 3rem;
+  top: 0.5rem;
+  padding-inline: 0.75rem 0.5rem;
+}
+
+[data-island] .header-row::before {
   opacity: 1;
-  transition: opacity var(--motion-settle) var(--ease-standard);
+  transition: opacity var(--motion-settle) var(--ease-glass-in);
 }
 
 @media (width >= 48rem) {
-  [data-solid] .header-row {
-    padding-inline: 1.25rem 0.5rem;
+  .header-row {
     gap: 2rem;
+  }
+
+  [data-island] .header-row {
+    padding-inline: 1.25rem 0.5rem;
   }
 }
 
-/* Behind the open phone sheet the row is the sheet's own top edge: no glass, full width. The
-   translate must be none, not zero: any translate makes the row the containing block of the
-   sheet, which is fixed to the viewport, and the sheet would be clipped to the bar. */
-.group:has([aria-expanded='true']) .header-row {
-  max-width: 80rem;
+/* Below 22.5rem the phone's pill past the hero (the mark, the ask and Menu, 340px at rest) is
+   wider than the screen: at 320 it met both edges and the ask's label ran to 6px from its own
+   rounded ends. Here the ask's own start margin takes the gap beside it down to 8px, on the
+   ask's clock as the fold's margins are, so the row's gap still never moves; the ask and the
+   pill's ends tighten, with Menu's ring 4px in as it is top and bottom. The pill rests at
+   304px, 8px in from each edge as it is 8px down. Before the hand-over, and on the
+   questionnaire, which has no ask, nothing changes. It sits above the menu's rules, which win
+   over the open sheet by order. */
+@media (width < 22.5rem) {
+  [data-past-hero] .header-row:has(.header-ask-phone) {
+    padding-inline: 0.5rem 0.25rem;
+  }
+
+  [data-past-hero] .header-ask-phone {
+    margin-inline-start: -0.75rem;
+    padding-inline: 0.5rem;
+  }
+}
+
+/* The chrome's measure of the pill at rest: a clone of the row under the attributes about to
+   land, laid out and removed in the same task, so it is never painted. */
+.header-measure {
+  position: fixed;
+  inset: 0 0 auto;
+  visibility: hidden;
+}
+
+.header-measure .header-row {
+  max-width: fit-content;
+}
+
+/* The chrome's gauge of the words' widths (header-chrome.tsx): one line at its natural width,
+   off the left edge of the fixed bar, so it is never seen and never widens the page. */
+.header-gauge {
+  position: absolute;
+  top: 0;
+  right: 100%;
+  visibility: hidden;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+/*
+ * The name beside the mark and the phone's ask take turns in the same place. Each folds by its
+ * grid track, which every engine interpolates, so the pill breathes out as the ask opens rather
+ * than jumping; the outgoing label fades in the first 40% of the clock and leaves the tree with
+ * its opacity, and the incoming one waits a quarter. The -0.25rem margins cancel the gap beside
+ * a folded box. The list's order matters: under reduced motion the header's rule below maps the
+ * durations by position.
+ */
+.header-name,
+.header-ask-phone {
+  grid-template-columns: minmax(0, 1fr);
+  overflow: clip;
+  white-space: nowrap;
+  transition:
+    grid-template-columns var(--motion-settle) var(--ease-standard),
+    padding var(--motion-settle) var(--ease-standard),
+    margin var(--motion-settle) var(--ease-standard),
+    opacity calc(var(--motion-settle) * 0.75) var(--ease-standard) calc(var(--motion-settle) * 0.25),
+    visibility var(--motion-settle);
+}
+
+.header-name {
+  display: inline-grid;
+}
+
+@media (width < 48rem) {
+  /* From md the utility `hidden` on the element holds; below it this wins, being unlayered. */
+  .header-ask-phone {
+    display: inline-grid;
+    place-items: center;
+  }
+
+  .group:not([data-past-hero]) .header-ask-phone,
+  [data-past-hero] .header-name {
+    grid-template-columns: minmax(0, 0fr);
+    margin-inline: -0.25rem;
+    padding-inline: 0;
+    opacity: 0;
+    visibility: hidden;
+    transition-duration:
+      var(--motion-settle), var(--motion-settle), var(--motion-settle),
+      calc(var(--motion-settle) * 0.4), calc(var(--motion-settle) * 0.4);
+    transition-delay: 0s;
+  }
+}
+
+/* Between md and lg the island drops the name: the four links and the ask fill it on their own. */
+@media (48rem <= width < 64rem) {
+  [data-island] .header-name {
+    grid-template-columns: minmax(0, 0fr);
+    margin-inline: -0.25rem;
+    padding-inline: 0;
+    opacity: 0;
+    visibility: hidden;
+    transition-duration:
+      var(--motion-settle), var(--motion-settle), var(--motion-settle),
+      calc(var(--motion-settle) * 0.4), calc(var(--motion-settle) * 0.4);
+    transition-delay: 0s;
+  }
+}
+
+/*
+ * The phone menu (mobile-nav.tsx) is the page's ink. The button's ring fills and the ink blooms
+ * over the screen from the button's centre; the rows then arrive as every list on the page does.
+ * Closing, the rows lift away, the ink holds and then drains back into the button, and only then
+ * is the sheet hidden. The bloom is a clip on the sheet itself, which makes no containing block,
+ * so the sheet stays fixed to the viewport while the row above it moves.
+ *
+ * The menu's root carries data-menu while the sheet is shown, which outlasts the button's
+ * aria-expanded by the drain. The dark scope (app/globals.css) follows the button; the header
+ * keeps its normal blend and its full-width row, glassless and back at the bar's top, until the
+ * sheet is hidden, since blended by difference the dark sheet would read as the page itself. Its
+ * words and mark hold their colour until the ink's edge reaches them: in, as the bloom crosses
+ * the brand; out, as the drain uncovers it (the mark's holds are in brand.css).
+ */
+.group:has([data-menu]) .header-row {
+  max-width: min(80rem, 100%);
   height: 4rem;
-  translate: none;
+  top: 0;
   padding-inline: 1.5rem;
 }
 
-.group:has([aria-expanded='true']) .header-row::before {
+/* The glass leaves over the bloom, but takes the dark set at once: from the island the words and
+   the mark turn light in the first frame (brand.css), and the glass's own colour fade, there for
+   a dark band's edge, would draw them light on white for its first frames. */
+.group:has([data-menu]) .header-row::before {
+  background: color-mix(in srgb, var(--surface) 84%, transparent);
   opacity: 0;
+  transition: opacity var(--motion-settle) var(--ease-standard);
+}
+
+.group:has([data-menu]) > .header-bar {
+  mix-blend-mode: normal;
+}
+
+/* Over the hero the bar's words are the blended white; on the sheet they read the held ink. */
+.group:not([data-solid]):has([data-menu]) > .header-bar {
+  color: var(--bar-ink);
+}
+
+/* The holds: 4.5% of the bloom, when its edge is crossing the brand at 360 to 430 px wide, and
+   90% of the drain, when its edge uncovers it again. */
+.header-bar {
+  --menu-hold-in: calc(var(--motion-reveal) * 0.045);
+  --menu-hold-out: calc(var(--motion-settle) * 0.9);
+}
+
+.group:has([data-menu='open']) > .header-bar {
+  transition: --bar-dark 0s linear var(--menu-hold-in);
+}
+
+.group:has([data-menu='closing']) > .header-bar {
+  transition: --bar-dark 0s linear var(--menu-hold-out);
+}
+
+/* The ink's centre defaults to the full bar's button; the menu writes the measured one. */
+.menu-sheet {
+  --menu-at: calc(100% - 2.75rem) 2rem;
+  overscroll-behavior: contain;
+  opacity: 0;
+  transition: opacity var(--motion-enter) var(--ease-standard);
+}
+
+[data-menu='open'] > .menu-sheet {
+  opacity: 1;
+}
+
+/* The rows rise 2rem into place as the page's lists do, a stagger apart once the ink is on its
+   way, and leave together, lifting as they fade, before the drain reaches them. */
+.menu-row {
+  opacity: 0;
+  translate: 0 -0.5rem;
+  transition:
+    opacity var(--motion-tap) var(--ease-standard),
+    translate var(--motion-tap) var(--ease-standard);
+}
+
+[data-menu='open'] .menu-row {
+  opacity: 1;
+  translate: none;
+  transition:
+    opacity var(--motion-reveal) var(--ease-enter),
+    translate var(--motion-reveal) var(--ease-enter);
+  transition-delay: calc(var(--motion-tap) + var(--i) * var(--motion-stagger));
+}
+
+@starting-style {
+  [data-menu='open'] > .menu-sheet {
+    opacity: 0;
+  }
+
+  [data-menu='open'] .menu-row {
+    opacity: 0;
+    translate: 0 2rem;
+  }
+}
+
+/*
+ * The sheet on a tablet held upright, 640 to 767 px wide, where the phone's rows sat in the top
+ * third and left a tall empty field. The sections take the display size on a column of hairline
+ * rules the width of a comfortable line, the numerals keep one column, and the actions stand in a
+ * row under it rather than a bar across the screen; the watermark grows into the field and bleeds
+ * off the right edge, as the ink bands' marks do. A landscape phone of the same width is too short
+ * for display type and keeps the phone's layout. Only size and place change here, so the bloom,
+ * the rows' rise and the drain are the phone's own.
+ */
+@media (40rem <= width < 48rem) and (height >= 40rem) {
+  .menu-sheet {
+    padding-top: 9rem;
+    padding-bottom: 3rem;
+  }
+
+  .menu-list {
+    max-width: 34rem;
+  }
+
+  .menu-link {
+    gap: 1.5rem;
+    padding-block: 1.25rem;
+    border-bottom: 1px solid var(--border);
+    border-radius: 0;
+    font-size: var(--text-display);
+  }
+
+  .menu-numeral {
+    min-width: 1.5rem;
+    font-size: var(--text-small);
+  }
+
+  .menu-foot {
+    max-width: 34rem;
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 2rem;
+  }
+
+  .menu-cta {
+    width: auto;
+    height: 3.5rem;
+    padding-inline: 2.5rem;
+    font-size: var(--text-lead);
+  }
+
+  .menu-foot > :last-child {
+    font-size: var(--text-body);
+  }
+
+  .menu-watermark {
+    right: -2.5rem;
+    bottom: 11rem;
+    scale: 2.25;
+    transform-origin: bottom right;
+    opacity: 0.12;
+  }
+}
+
+/* The cross: in, the bars meet, then turn; out, they turn back, then part. */
+.menu-bar {
+  translate: 0 -0.25rem;
+  transition:
+    rotate var(--motion-enter) var(--ease-standard),
+    translate var(--motion-tap) var(--ease-standard) calc(var(--motion-enter) * 0.75);
+}
+
+.menu-bar + .menu-bar {
+  translate: 0 0.25rem;
+}
+
+[aria-expanded='true'] .menu-bar {
+  translate: none;
+  rotate: 45deg;
+  transition:
+    translate var(--motion-tap) var(--ease-standard),
+    rotate var(--motion-settle) var(--ease-enter) calc(var(--motion-tap) * 0.75);
+}
+
+[aria-expanded='true'] .menu-bar + .menu-bar {
+  rotate: -45deg;
+}
+
+/* Forced colours force the bars' current-colour fill to the ground, which leaves the Menu button
+   an empty ring. A system colour survives, and ButtonText is the ring's own colour. Over the hero
+   the header still blends by difference, where a black bar on a light theme shows only the page
+   behind it, so the button takes ButtonFace behind its bars, the backplate forced colours give
+   text: a disc and two bars of opposite colours, which read against each other in either blend. */
+@media (forced-colors: active) {
+  .menu-bar {
+    background-color: ButtonText;
+  }
+
+  [aria-controls='mobile-nav'] {
+    background-color: ButtonFace;
+  }
+}
+
+/* The bloom and the drain. The clip lives only here: reduced motion would keep its value and
+   drop its transition, and a disc the size of the button is not a menu. The disc at rest is the
+   button's ring (1.25rem); 142% of the sheet's normalised diagonal reaches every corner from any
+   centre inside it. */
+@media (prefers-reduced-motion: no-preference) {
+  /* The ink is under the cross from the first frame to the last. */
+  [data-menu] > button {
+    color: var(--on-ink);
+  }
+
+  .menu-sheet {
+    opacity: 1;
+    clip-path: circle(1.25rem at var(--menu-at));
+    transition: clip-path var(--motion-settle) var(--ease-drain);
+  }
+
+  [data-menu='open'] > .menu-sheet {
+    clip-path: circle(142% at var(--menu-at));
+    transition: clip-path var(--motion-reveal) var(--ease-enter);
+  }
+
+  @starting-style {
+    [data-menu='open'] > .menu-sheet {
+      clip-path: circle(1.25rem at var(--menu-at));
+    }
+  }
+}
+
+/*
+ * Reduced motion. The global allowlist would keep `color` moving on every part of the header,
+ * which fades the text across the blend flip (white words on the white glass going in, a grey
+ * ghost under the blend coming out) and turns the row's geometry list into a 300 ms colour fade
+ * of every word, the mark and the cross over the phone sheet. Here the header itself keeps only
+ * its --bar-dark, which fades the glass at a dark band's edge (the words still snap on it) and
+ * holds at the sheet, its parts keep only
+ * their fades, and the mark's mask keeps its held background. The sheet fades rather than
+ * blooms, so both holds end at 40 ms, where it is about half dark. The section sheets load
+ * before that allowlist, so these win by specificity, not by order.
+ */
+@media (prefers-reduced-motion: reduce) {
+  .header-bar {
+    --menu-hold-in: calc(var(--motion-enter) * 0.2);
+    --menu-hold-out: calc(var(--motion-enter) * 0.2);
+    transition-property: --bar-dark !important;
+  }
+
+  .header-bar * {
+    transition-property: opacity !important;
+  }
+
+  /* The glass's colour follows --bar-dark frame by frame; a colour fade of its own, which the
+     allowlist would give it, would trail behind the words' snap. */
+  .header-row::before {
+    transition-property: opacity !important;
+  }
+
+  .header-bar .brand-mark-mask {
+    transition-property: opacity, background !important;
+  }
+
+  /* The questionnaire's progress (start-chrome.tsx) sets its own muted colour, so it cannot ride
+     the held ink; it keeps its colour fade here, or at the ink's edge on a phone it would turn
+     navy on the still dark glass while everything around it fades. The header's blend never
+     flips on that page, which is what the rule above guards against. */
+  .header-bar [aria-live] * {
+    transition-property: color, background-color !important;
+  }
+
+  /* The allowlist would give the glass's colour the fade's duration; it changes at once here too. */
+  .group:has([data-menu]) .header-row::before {
+    transition-property: opacity, background-color !important;
+    transition-duration: var(--motion-settle), 0s;
+  }
 }
 
 /*

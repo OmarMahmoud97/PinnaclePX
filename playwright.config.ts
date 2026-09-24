@@ -2,7 +2,9 @@ import { defineConfig, devices } from '@playwright/test'
 
 // Five ways of looking at the page. The desktop project runs the behaviour suites; the others
 // hold the page to its promises on a phone, on a tablet, under reduced motion, and with
-// JavaScript off.
+// JavaScript off. Each project takes its files by prefix, so a new spec joins the right project
+// by its name alone (mobile-work.spec.ts runs on the phone, brief-shell.spec.ts on the desktop)
+// and the axe scans in every a11y*.spec.ts run at all three widths.
 // Submitting the form writes to the database and starts the pipeline, which needs a real
 // DATABASE_URL and the Inngest dev server. Set E2E_SUBMIT=1 where both exist (locally, with
 // .env.local); elsewhere the tests that submit skip themselves.
@@ -34,12 +36,12 @@ export default defineConfig({
   projects: [
     {
       name: 'desktop',
-      testMatch: ['home.spec.ts', 'brief.spec.ts', 'a11y.spec.ts'],
+      testMatch: ['home*.spec.ts', 'brief*.spec.ts', 'a11y*.spec.ts'],
       use: { ...devices['Desktop Chrome'], viewport: { width: 1440, height: 900 } },
     },
     {
       name: 'mobile',
-      testMatch: ['mobile.spec.ts', 'a11y.spec.ts'],
+      testMatch: ['mobile*.spec.ts', 'a11y*.spec.ts'],
       use: {
         ...devices['Desktop Chrome'],
         viewport: { width: 390, height: 844 },
@@ -49,7 +51,7 @@ export default defineConfig({
     },
     {
       name: 'tablet',
-      testMatch: ['tablet.spec.ts', 'a11y.spec.ts'],
+      testMatch: ['tablet*.spec.ts', 'a11y*.spec.ts'],
       use: {
         ...devices['Desktop Chrome'],
         viewport: { width: 768, height: 1024 },
@@ -59,7 +61,7 @@ export default defineConfig({
     },
     {
       name: 'reduced-motion',
-      testMatch: 'reduced-motion.spec.ts',
+      testMatch: 'reduced-motion*.spec.ts',
       use: {
         ...devices['Desktop Chrome'],
         viewport: { width: 1440, height: 900 },
@@ -68,7 +70,7 @@ export default defineConfig({
     },
     {
       name: 'no-script',
-      testMatch: 'no-script.spec.ts',
+      testMatch: 'no-script*.spec.ts',
       use: {
         ...devices['Desktop Chrome'],
         viewport: { width: 1440, height: 900 },

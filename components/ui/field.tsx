@@ -1,9 +1,29 @@
-import type { ReactNode } from 'react'
+import { CircleAlert } from 'lucide-react'
+import type { ComponentProps, ReactNode } from 'react'
 
-// Shared input styling so every field in the brief has the same focus ring as the buttons.
-// text-base at every size: anything smaller makes iOS Safari zoom the page on focus.
+// A field on /start is a white card floating on the wash, the way the hero's prompt box floats
+// on the ink: no border, the card's shadow for its edge, and a placeholder at the full muted
+// colour (7.58:1 on white). Against the wash its boundary is 1.18:1, so the control is known by
+// its label, its fill, its shadow and its placeholder, a judgement ADR 0035 records by hand.
+// Focus is the site's authored outline rather than a box-shadow ring, because forced colours
+// drop box-shadows and would leave the focused field with no indicator; for the same reason the
+// card takes a border there and nowhere else. An invalid field keeps a red ring, which clears the
+// 3:1 a mark needs where red as text would not. text-base at every size: anything smaller makes
+// iOS Safari zoom the page on focus. One line is 48px, the height of the ask beside it.
 export const fieldStyles =
-  'w-full rounded-lg border border-border bg-surface px-3 py-2 text-base outline-none transition-colors placeholder:text-on-surface-muted/70 focus-visible:border-brand-ink focus-visible:ring-2 focus-visible:ring-brand-ink/40 aria-[invalid=true]:border-danger'
+  'w-full rounded-2xl bg-surface px-4 py-3 text-base shadow-card caret-brand-ink transition-colors placeholder:text-on-surface-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-ink aria-[invalid=true]:ring-2 aria-[invalid=true]:ring-danger forced-colors:border'
+
+// A message about an answer. --danger is 3.76:1 on white and 3.17:1 on the wash, so it fails as
+// text and passes as a mark: the words are dark and the red is the icon that leads them. Passed
+// through to the paragraph, so the submit error can be the page's alert with the same look.
+export function FieldError({ children, ...rest }: Omit<ComponentProps<'p'>, 'className'>) {
+  return (
+    <p {...rest} className="flex items-start gap-1.5 text-sm font-medium text-on-surface">
+      <CircleAlert aria-hidden="true" className="mt-0.5 size-4 shrink-0 text-danger" />
+      {children}
+    </p>
+  )
+}
 
 type Props = {
   id: string
@@ -38,11 +58,7 @@ export function Field({ id, label, hint, error, children }: Props) {
         </p>
       )}
       {children({ id, 'aria-describedby': describedBy, 'aria-invalid': error !== undefined })}
-      {error !== undefined && (
-        <p id={errorId} className="text-sm font-medium text-danger">
-          {error}
-        </p>
-      )}
+      {error !== undefined && <FieldError id={errorId}>{error}</FieldError>}
     </div>
   )
 }

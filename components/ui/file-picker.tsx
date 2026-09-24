@@ -1,6 +1,6 @@
 'use client'
 
-import { type ReactNode, useId, useRef } from 'react'
+import type { ReactNode } from 'react'
 import { cn } from '@/lib/cn'
 
 type Props = {
@@ -11,43 +11,36 @@ type Props = {
   children: ReactNode
 }
 
-// A hidden file input behind a large, dashed label that works as the button. The input is
-// cleared after every pick so the same file can be chosen again after being removed.
+// The native file input is the one tab stop and the button a screen reader hears, and it opens
+// the dialog on Enter and Space by itself. It lies transparent over the whole card, so a Tab
+// scrolls the card clear of the ask; a 1 px sr-only input would sit at the top of its parent's
+// flex column, which can leave the card behind the ask on a small phone. Pointer events pass
+// through it to the label, which opens the dialog and keeps the hover. The card draws the
+// authored outline while the input inside has keyboard focus. The input is cleared after every
+// pick so the same file can be chosen again after being removed.
+//
+// The label is a white card on the wash, as every control on /start is: no dashed edge, the
+// card's shadow instead, a tinted fill on hover, the authored focus outline, and a border under
+// forced colours only (components/ui/field.tsx says why).
 export function FilePicker({ accept, multiple = false, onFiles, className, children }: Props) {
-  const id = useId()
-  const inputRef = useRef<HTMLInputElement>(null)
-
   return (
-    <>
+    <label
+      className={cn(
+        'relative flex cursor-pointer items-center rounded-2xl bg-surface px-4 shadow-card transition-colors hover:bg-surface-tint has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-brand-ink forced-colors:border',
+        className,
+      )}
+    >
       <input
-        ref={inputRef}
-        id={id}
         type="file"
         accept={accept}
         multiple={multiple}
-        className="sr-only"
+        className="pointer-events-none absolute inset-0 size-full opacity-0"
         onChange={(e) => {
           onFiles([...(e.target.files ?? [])])
           e.target.value = ''
         }}
       />
-      <label
-        htmlFor={id}
-        tabIndex={0}
-        className={cn(
-          'flex cursor-pointer items-center rounded-xl border border-dashed border-border px-4 transition-colors outline-none hover:border-on-surface-muted/40 hover:bg-accent focus-visible:ring-2 focus-visible:ring-brand-ink focus-visible:ring-offset-2 focus-visible:ring-offset-surface',
-          className,
-        )}
-        onKeyDown={(e) => {
-          // A label is not a button, so Enter and Space have to be wired up by hand.
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault()
-            inputRef.current?.click()
-          }
-        }}
-      >
-        {children}
-      </label>
-    </>
+      {children}
+    </label>
   )
 }

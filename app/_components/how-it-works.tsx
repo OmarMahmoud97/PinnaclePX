@@ -20,6 +20,8 @@ import { TrackedLink } from '@/components/ui/tracked-link'
 // whatever the copy runs to and whatever the screen — and the ask sits on that rhythm too. The
 // last step paints two stages rather than one; they share its height, so the build lands halfway
 // down it, with the frame still whole on screen and still in view as it leaves the sticky.
+// This is the room of the list as it stands: on a phone with the steps docked under the phone
+// (ADR 0036) a step takes --walk-rest of scroll instead (app/_styles/how-it-works.css).
 const STEP_ROOM = 'pb-[7vh] md:pb-[14vh]'
 
 // One question at a time. Five steps, one per answer, each saying what the answer does to the
