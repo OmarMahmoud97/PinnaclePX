@@ -109,7 +109,10 @@ export function HeroPrompt() {
               the phone's full-width button (24 September 2026: 202.3 + 8 + 20 + 40 = 270.3px
               against the viewport less 88px). Change the label and re-measure;
               e2e/mobile-hero.spec.ts pins it. */}
-          <ArrowRight aria-hidden="true" className="size-5 max-[22.4rem]:hidden" />
+          {/* shrink-0 so it is 20px or nothing: without it a label wider than the button's room
+              squeezes the arrow to a sliver instead of the rule above taking it away, which is
+              what the label's own measurement is for. */}
+          <ArrowRight aria-hidden="true" className="size-5 shrink-0 max-[22.4rem]:hidden" />
         </TrackedLink>
       </div>
     </form>

@@ -22,7 +22,15 @@ test('the hero field, its button and its caption stack on a phone', async ({ pag
   expect(field?.width ?? 0).toBeCloseTo(box?.width ?? 0, 0)
   expect((field?.y ?? 0) + (field?.height ?? 0)).toBeLessThanOrEqual(box?.y ?? 0)
   expect(triggerBox?.y ?? 0).toBeGreaterThanOrEqual((box?.y ?? 0) + (box?.height ?? 0))
-  expect((await page.locator('#hero form').boundingBox())?.height ?? 0).toBeCloseTo(180.8, 0)
+  // One of the two heights the fills were measured against (ADR 0031): 180.8 with the fine print
+  // on one line, 197.6 with it on two. The line has about 13px of slack at this width, so which
+  // one a browser lands on depends on its text rasterisation — CI wraps where this machine does
+  // not. Both are measured states the H1 sits still above; a third would mean the box has grown.
+  const formHeight = (await page.locator('#hero form').boundingBox())?.height ?? 0
+  expect(
+    [180.8, 197.6].some((measured) => Math.abs(formHeight - measured) < 0.5),
+    `the prompt box at ${String(formHeight)}px is neither measured height`,
+  ).toBe(true)
 })
 
 // The phone's button spans the column with 20px each side, and under 22.4rem the label and the

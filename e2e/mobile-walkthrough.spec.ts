@@ -102,6 +102,11 @@ test('the walkthrough hands over to its button in the clear', async ({ page }) =
 for (const id of ['real-build', 'faq']) {
   test(`arriving on /#${id} lands on its line`, async ({ page }) => {
     await page.goto(`/#${id}`)
+    // The fit puts the arrival back on its line only while the arrival has landed, within the
+    // dock's arrival slack. Under a loaded machine the motion layer can still be settling when
+    // the dock first appears, so wait for it as the other tests here do: without this the poll
+    // can start mid-settle and see the pre-fit 262.
+    await expect(page.locator('html')).toHaveAttribute('data-motion', '')
     await expect(page.locator('#how-it-works [data-dock]')).toHaveCount(1)
     const section = page.locator(`#${id}`)
     await expect
