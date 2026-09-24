@@ -1,12 +1,25 @@
+import { networkInterfaces } from 'node:os'
 import type { NextConfig } from 'next'
 
 // Importing env here validates every variable at build time, so a missing value fails the build
 // instead of surfacing at runtime.
 import './lib/env'
 
+// This machine's own IPv4 addresses on the networks it has joined. A phone or tablet on the same
+// Wi-Fi opens the dev server at one of them, and the dev server refuses its dev resources to any
+// host but localhost unless it is listed: the HMR socket is turned away, the page renders from the
+// server but never hydrates, and nothing on it answers a tap (the phone menu stayed shut on real
+// devices, 24 September 2026). Only `next dev` reads the list. It holds this machine's addresses
+// and no range, so no other device on the network is let in; a new network needs a restart.
+const lanAddresses = Object.values(networkInterfaces())
+  .flatMap((addresses) => addresses ?? [])
+  .filter((address) => address.family === 'IPv4' && !address.internal)
+  .map((address) => address.address)
+
 const nextConfig: NextConfig = {
   typedRoutes: true,
   serverExternalPackages: ['sharp'],
+  allowedDevOrigins: lanAddresses,
   // The visitor's logo raster and the re-hosted photographs live on the project's Blob store.
   images: {
     remotePatterns: [{ protocol: 'https', hostname: '*.public.blob.vercel-storage.com' }],
