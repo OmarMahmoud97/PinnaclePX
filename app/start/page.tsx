@@ -1,5 +1,12 @@
 import type { Metadata } from 'next'
 import { BriefFlow } from '@/app/start/_components/brief-flow'
+// The questionnaire's own rules, imported by its route rather than by app/globals.css, so they
+// load here alone and the stylesheet every other page shares never carries them
+// (docs/start-page-journey-plan.md, D26): the questions, the live draft beside them and the done
+// view, in that order, so a later sheet can build on the tokens and hooks of the first.
+import '../_styles/start.css'
+import '../_styles/start-draft.css'
+import '../_styles/start-done.css'
 
 // A per-visitor form, so search engines have no business indexing it.
 export const metadata: Metadata = {

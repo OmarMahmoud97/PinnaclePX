@@ -1,12 +1,12 @@
 import { describe, expect, it } from 'vitest'
 import {
+  brandSchema,
   briefSchema,
   coloursSchema,
   describeSchema,
   detailsSchema,
   draftSchema,
-  imagerySchema,
-  logoSchema,
+  lookSchema,
 } from '@/lib/brief/schema'
 import { CONFIG } from '@/lib/config'
 
@@ -47,86 +47,64 @@ describe('describeSchema', () => {
 })
 
 describe('detailsSchema', () => {
-  it('accepts a name, company and email', () => {
-    const parsed = detailsSchema.parse({
-      name: ' Sam ',
-      company: 'Ashgrove Physio',
-      email: 'sam@ashgrove.example',
-    })
+  it('accepts an email and a name', () => {
+    const parsed = detailsSchema.parse({ email: 'sam@ashgrove.example', name: ' Sam ' })
     expect(parsed.name).toBe('Sam')
   })
 
   it.each(['sam', 'sam@', '@ashgrove.example', ''])('rejects the address %j', (email) => {
-    expect(detailsSchema.safeParse({ name: 'Sam', company: 'Ashgrove', email }).success).toBe(false)
+    expect(detailsSchema.safeParse({ email, name: 'Sam' }).success).toBe(false)
   })
 
   it('rejects a blank name even when it contains spaces', () => {
-    const result = detailsSchema.safeParse({
-      name: '   ',
-      company: 'Ashgrove',
-      email: 'sam@ashgrove.example',
-    })
-    expect(result.success).toBe(false)
+    expect(detailsSchema.safeParse({ email: 'sam@ashgrove.example', name: '   ' }).success).toBe(
+      false,
+    )
+  })
+
+  // Every place a name is shown is sized for these limits (plan 7.7), and the Server Action
+  // parses the brief with these schemas, so a longer name never reaches the pipeline either.
+  it('takes a name up to its limit, and no longer', () => {
+    const { personMax } = CONFIG.start.names
+    const details = (name: string) =>
+      detailsSchema.safeParse({ email: 'sam@ashgrove.example', name }).success
+    expect(details('b'.repeat(personMax))).toBe(true)
+    expect(details('b'.repeat(personMax + 1))).toBe(false)
   })
 })
 
-const UPLOADED = {
-  kind: 'file',
-  id: 'l1',
-  fileName: 'logo.svg',
-  url: 'https://x.public.blob.vercel-storage.com/logos/abc.svg',
-}
-const PHOTO = {
-  id: 'p1',
-  fileName: 'shop.jpg',
-  url: 'https://x.public.blob.vercel-storage.com/photos/abc.jpg',
-}
-
-describe('logoSchema', () => {
-  it('accepts the wordmark fallback', () => {
-    expect(logoSchema.safeParse({ kind: 'wordmark' }).success).toBe(true)
+describe('brandSchema', () => {
+  it('takes a business name up to its limit, measured after trimming, and no longer', () => {
+    const { companyMax } = CONFIG.start.names
+    const brand = (company: string) =>
+      brandSchema.safeParse({ company, logo: { kind: 'wordmark' } }).success
+    expect(brand('a'.repeat(companyMax))).toBe(true)
+    expect(brand(`  ${'a'.repeat(companyMax)}  `)).toBe(true)
+    expect(brand('a'.repeat(companyMax + 1))).toBe(false)
   })
 
-  it('accepts an uploaded logo', () => {
-    expect(logoSchema.safeParse(UPLOADED).success).toBe(true)
-  })
-
-  it('rejects a logo that is still uploading, with a message that says so', () => {
-    const result = logoSchema.safeParse({ ...UPLOADED, url: null })
+  it('asks for the business name by that name', () => {
+    const result = brandSchema.safeParse({ company: ' ', logo: { kind: 'wordmark' } })
     expect(result.success).toBe(false)
-    if (!result.success) expect(result.error.issues[0]?.message).toMatch(/not finished uploading/)
+    if (!result.success) expect(result.error.issues[0]?.message).toBe('Tell us your business name.')
   })
 
-  it('rejects a file choice with no file', () => {
-    expect(logoSchema.safeParse({ ...UPLOADED, fileName: '' }).success).toBe(false)
+  // An upload never holds up Next (plan D14): the send waits for it instead.
+  it('takes a logo that is still uploading', () => {
+    const logo = { kind: 'file', id: 'l1', fileName: 'logo.svg', url: null }
+    expect(brandSchema.safeParse({ company: 'Ashgrove', logo }).success).toBe(true)
   })
 })
 
-describe('imagerySchema', () => {
-  it('accepts a style with no photos', () => {
-    expect(imagerySchema.safeParse({ style: 'warm', photos: [] }).success).toBe(true)
-  })
-
-  it('accepts a style with photos alongside it', () => {
-    expect(imagerySchema.safeParse({ style: 'dark', photos: [PHOTO] }).success).toBe(true)
-  })
-
-  it('rejects a photo that is still uploading', () => {
-    expect(
-      imagerySchema.safeParse({ style: 'dark', photos: [{ ...PHOTO, url: null }] }).success,
-    ).toBe(false)
-  })
-
-  it('rejects a style we do not offer', () => {
-    expect(imagerySchema.safeParse({ style: 'neon', photos: [] }).success).toBe(false)
-  })
-
-  it('rejects more photos than the limit', () => {
+describe('lookSchema', () => {
+  it('takes photos that are still uploading, up to the limit', () => {
+    const photo = { id: 'p1', fileName: 'shop.jpg', url: null }
+    expect(lookSchema.safeParse({ style: 'warm', photos: [photo] }).success).toBe(true)
     const photos = Array.from({ length: CONFIG.form.maxPhotos + 1 }, (_, i) => ({
-      ...PHOTO,
+      ...photo,
       id: `p${String(i)}`,
     }))
-    expect(imagerySchema.safeParse({ style: 'warm', photos }).success).toBe(false)
+    expect(lookSchema.safeParse({ style: 'warm', photos }).success).toBe(false)
   })
 })
 
@@ -164,7 +142,27 @@ describe('draftSchema', () => {
   it('rejects a draft with the wrong shape', () => {
     expect(draftSchema.safeParse({ ...VALID_BRIEF, logo: { kind: 'sticker' } }).success).toBe(false)
   })
+
+  it('keeps what the browser read in a logo, and drops a reading it cannot read', () => {
+    const logo = { kind: 'file', id: 'l1', fileName: 'logo.svg', url: null }
+    const read = { ...logo, polarity: 'light-artwork', accent: '#2f6f4e' }
+    expect(draftSchema.safeParse({ ...VALID_BRIEF, logo: read }).data?.logo).toEqual(read)
+    const odd = { ...logo, polarity: 'glossy', accent: 'green' }
+    expect(draftSchema.safeParse({ ...VALID_BRIEF, logo: odd }).data?.logo).toEqual(logo)
+  })
 })
+
+const UPLOADED = {
+  kind: 'file',
+  id: 'l1',
+  fileName: 'logo.svg',
+  url: 'https://x.public.blob.vercel-storage.com/logos/abc.svg',
+}
+const PHOTO = {
+  id: 'p1',
+  fileName: 'shop.jpg',
+  url: 'https://x.public.blob.vercel-storage.com/photos/abc.jpg',
+}
 
 describe('briefSchema', () => {
   it('accepts a complete brief', () => {
@@ -178,5 +176,36 @@ describe('briefSchema', () => {
 
   it('rejects a brief whose description failed the first question', () => {
     expect(briefSchema.safeParse({ ...VALID_BRIEF, description: 'Short' }).success).toBe(false)
+  })
+
+  it('takes the wordmark or an uploaded logo, and photos alongside the look', () => {
+    const brief = { ...VALID_BRIEF, logo: UPLOADED, imagery: { style: 'dark', photos: [PHOTO] } }
+    expect(briefSchema.safeParse(brief).success).toBe(true)
+  })
+
+  // The page never sends one (app/start/_components/picture-holds.ts); a brief that does was not
+  // sent by the page.
+  it('rejects a brief with a picture still uploading', () => {
+    expect(
+      briefSchema.safeParse({ ...VALID_BRIEF, logo: { ...UPLOADED, url: null } }).success,
+    ).toBe(false)
+    const photos = [{ ...PHOTO, url: null }]
+    expect(
+      briefSchema.safeParse({ ...VALID_BRIEF, imagery: { style: 'dark', photos } }).success,
+    ).toBe(false)
+  })
+
+  it('rejects a file choice with no file, a look we do not offer, and too many photos', () => {
+    expect(
+      briefSchema.safeParse({ ...VALID_BRIEF, logo: { ...UPLOADED, fileName: '' } }).success,
+    ).toBe(false)
+    const look = (style: string, photos: readonly (typeof PHOTO)[]) =>
+      briefSchema.safeParse({ ...VALID_BRIEF, imagery: { style, photos } }).success
+    expect(look('neon', [])).toBe(false)
+    const photos = Array.from({ length: CONFIG.form.maxPhotos + 1 }, (_, i) => ({
+      ...PHOTO,
+      id: `p${String(i)}`,
+    }))
+    expect(look('warm', photos)).toBe(false)
   })
 })

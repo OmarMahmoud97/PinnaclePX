@@ -5,6 +5,7 @@ import { footer } from '@/app/_components/motion/footer'
 import { included } from '@/app/_components/motion/included'
 import { inkPool } from '@/app/_components/motion/ink-pool'
 import { realBuild } from '@/app/_components/motion/real-build'
+import { sheetLip } from '@/app/_components/motion/sheet-lip'
 import { straightAnswers } from '@/app/_components/motion/straight-answers'
 import { work } from '@/app/_components/motion/work'
 import { yourOptions } from '@/app/_components/motion/your-options'
@@ -129,9 +130,11 @@ const { choreo } = CONFIG.motion
 // Below md the docked step's words rise into place by CSS (app/_styles/how-it-works.css, ADR
 // 0036): nothing measures them, and the section still has no trigger and no GSAP tween. And
 // the FAQ (plan 7.8), whose entrance is the CSS reveal and whose light beat on an open card is
-// CSS. One shape has a module of its own: the ink stretch's pooled curve (ink-pool.ts), which
-// is not a section but the edge between two, and sits here where it sits in the DOM, after
-// Included. A section that gains choreography gets a module here and nowhere else.
+// CSS. Two shapes have modules of their own: the ink stretch's pooled curve (ink-pool.ts) and
+// the footer sheet's lip (sheet-lip.ts), each not a section but the edge between two, sitting
+// here where it sits in the DOM, after Included and after the footer; both drive one loop
+// (liquid.ts) on the chain in lib/motion/chain.ts. A section that gains choreography gets a
+// module here and nowhere else.
 const MODULES: readonly SectionModule[] = [
   work,
   included,
@@ -142,6 +145,7 @@ const MODULES: readonly SectionModule[] = [
   about,
   closing,
   footer,
+  sheetLip,
 ]
 
 // The finished state is the server markup; these are the properties an entrance may have moved.

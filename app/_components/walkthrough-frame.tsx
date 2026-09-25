@@ -4,7 +4,6 @@ import { WALKTHROUGH_ANSWERS, WIRE_COPY } from '@/app/_components/walkthrough-br
 import { WALKTHROUGH_FILES } from '@/app/_components/walkthrough-photos'
 import { PhoneFrame } from '@/components/sketch/phone-frame'
 import { Bar, HATCH, PHOTO_STYLE, SLOT_STYLES } from '@/components/sketch/sketch-parts'
-import { initialsFrom } from '@/lib/brief/sketch'
 import { styleFor } from '@/lib/brief/styles'
 import { cn } from '@/lib/cn'
 import { AppError } from '@/lib/errors'
@@ -13,7 +12,6 @@ import { AppError } from '@/lib/errors'
 const YEAR = new Date().getFullYear()
 
 const { company, description, imagery } = WALKTHROUGH_ANSWERS
-const INITIALS = initialsFrom(company)
 const STYLE_LABEL = styleFor(imagery.style).label
 const TREATMENT = PHOTO_STYLE[imagery.style]
 
@@ -81,14 +79,14 @@ export function WalkthroughFrame({ className, built }: Props) {
                     'absolute inset-0 rounded border border-dashed border-(--sketch-dash)',
                   )}
                 />
+                {/* Between the name and the logo, a point beside the name: the sketch's
+                    stand-in for a mark, as on /start, never initials. The wire keeps its name:
+                    the timeline finds it by it (walkthrough-timeline.ts). */}
                 <span
                   data-wire="mark-initials"
-                  className={cn(
-                    BETWEEN,
-                    'absolute inset-0 flex items-center justify-center rounded bg-on-surface-muted text-[6px] font-semibold text-on-brand',
-                  )}
+                  className={`${BETWEEN} absolute inset-0 flex items-center justify-center`}
                 >
-                  {INITIALS}
+                  <span className="size-1.5 rounded-full bg-on-surface-muted" />
                 </span>
                 <Leaf
                   data-wire="mark-logo"

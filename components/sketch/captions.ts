@@ -5,7 +5,6 @@
 // says "a client's" until then. The How it works walkthrough paints an invented brand
 // (app/_components/walkthrough-brand.ts), so its two captions say so and never say "client".
 export const SKETCH_CAPTION = {
-  yours: 'Live sketch. Not one of your designs, just your answers taking shape.',
   // Each fits two lines under the frame at every size, so the swap never moves the frame.
   walkthrough: 'An example brief. A sketch, not one of the designs.',
   walkthroughBuilt: 'Built as an illustration. Not a client, not one of the designs.',

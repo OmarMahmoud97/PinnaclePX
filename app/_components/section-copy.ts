@@ -24,10 +24,15 @@ export const HOW_IT_WORKS = {
   // A constant like HERO.emphasis, not a visitor sentence: the heading string is unchanged.
   emphasis: 'look',
   lead: `Nothing to prepare. We'll ask for your email, and your link stays live for ${String(CONFIG.retention.days)} days.`,
-  // Five steps beside the phone frame, one per answer. A step paints the stages it names as the
-  // visitor scrolls it past the frame, spread evenly down its height (walkthrough-stops.ts); the
-  // last paints the colour, then the finished page, so the build lands while the frame is still
-  // whole on screen. None is headed "Question N": the frame's progress line already counts.
+  // Five steps beside the phone frame, one per question and in /start's order, each titled with
+  // /start's own heading for it. A step paints the stages it names as the visitor scrolls it past
+  // the frame, spread evenly down its height (walkthrough-stops.ts); the last, the send, holds the
+  // finished sketch and then builds the page, so the build lands while the frame is still whole
+  // on screen. None is headed "Question N": the frame's progress line already counts. The stages
+  // are written out, not computed from walkthrough-steps.ts: the hero's client code imports HERO
+  // from here, and a computed list kept these words in its chunk (about 500 B of script on `/`,
+  // measured 25 September 2026). walkthrough-steps.test.ts holds the stages to the steps' own and
+  // the titles to /start's.
   steps: [
     {
       stages: [1],
@@ -37,22 +42,22 @@ export const HOW_IT_WORKS = {
     {
       stages: [2],
       title: 'Put your name on it.',
-      body: 'Your company name becomes the headline and the wordmark. Your email is only where the link goes. No phone number, no budget question.',
+      body: 'Your business name becomes the headline and the wordmark. Add a logo, or your name stands in.',
     },
     {
       stages: [3],
-      title: 'Add your logo, or skip it.',
-      body: 'A logo sits beside the name. Without one, your initials stand in until you send it.',
+      title: 'Pick a look.',
+      body: "Warm, clean, bold or dark. Your photos go in if you have them; we find photos to match if you don't.",
     },
     {
       stages: [4],
-      title: 'Pick a look.',
-      body: "Warm, clean, bold or dark. Your photos go in if you have them; ours stand in if you don't.",
+      title: 'Choose a colour.',
+      body: 'Your colour runs through the buttons and accents, and the sketch is finished.',
     },
     {
       stages: [5, 6],
-      title: 'Choose a colour.',
-      body: 'Your colour runs through every button and heading, and the sketch is finished. About five minutes later, three designs are on screen, yours to judge.',
+      title: 'Where should we send them?',
+      body: 'Your email is only where the link goes. No phone number, no budget question. About five minutes later, three designs are on screen, yours to judge.',
     },
   ],
   // After the button: the only "what happens next" line in the band, and the only place the

@@ -1,12 +1,15 @@
 import type { CSSProperties } from 'react'
+import { QUESTION_IDS } from '@/lib/brief/question-ids'
 import type { Answers } from '@/lib/brief/schema'
-import { brandHexFrom, initialsFrom, tintsFrom } from '@/lib/brief/sketch'
+import { brandHexFrom, tintsFrom } from '@/lib/brief/sketch'
 import { styleFor, type VisualStyle } from '@/lib/brief/styles'
 
-// Which questions have been reached. The style paints in from question 4 and the colour from
-// question 5, so a default answer never shows before the visitor has seen its question.
-const STYLE_STAGE = 4
-const COLOUR_STAGE = 5
+// Which questions have been reached, counted from 1. The style paints in from the look's
+// question and the colour from the colour's, wherever the order puts them
+// (lib/brief/question-ids.ts), so a default answer never shows before the visitor has seen its
+// question.
+const STYLE_STAGE = QUESTION_IDS.indexOf('imagery') + 1
+const COLOUR_STAGE = QUESTION_IDS.indexOf('colours') + 1
 
 // The sketch's own surfaces. The dark style swaps them, so choosing it turns the page dark.
 const LIGHT_SCHEME = {
@@ -32,7 +35,6 @@ export type SketchFiles = Readonly<{ logo: string | null; photos: readonly strin
 export type SketchModel = Readonly<{
   company: string
   description: string
-  initials: string
   logo: string | null
   imageStyle: VisualStyle | null
   imageLabel: string | null
@@ -56,7 +58,6 @@ export function sketchModelFrom(answers: Answers, stage: number, files: SketchFi
   return {
     company,
     description: answers.description.trim(),
-    initials: initialsFrom(company),
     logo: files.logo,
     imageStyle,
     imageLabel: imageStyle === null ? null : styleFor(imageStyle).label,

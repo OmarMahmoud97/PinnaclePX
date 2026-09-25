@@ -81,3 +81,9 @@ solves it by blending the headline by difference (ADR 0031, decision 4).
 - Measured after `next build` on 21 September 2026, with the other work in the tree that day:
   initial scripts on `/` 211,788 B gzipped (budget 216,000), stylesheet 15,410 B (16,000), HTML
   38,713 B (40,000); the fluid chunk stays lazy. Every line stands.
+- 25 September 2026: the closing canvas is feathered at its top edge (`fadeTop` on `Ink`,
+  `.ink-fade-top` in `app/globals.css`). The hero's edges are the screen's and its foot is
+  near-black, but this band's top sits mid-page against the white band above, and ink carried up
+  to it ended in a flat line where the section's overflow clipped the canvas. The mask fades the
+  ink out over the top of the band in an eased ramp, on the canvas itself: on a wrapper it would
+  isolate the multiply from the ground.

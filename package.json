@@ -22,6 +22,8 @@
     "db:migrate": "drizzle-kit migrate",
     "prepare": "lefthook install",
     "budget": "node scripts/bundle-budget.mjs",
+    "measure:colour": "python scripts/imgstats.py",
+    "measure:ground": "node scripts/pool.mjs",
     "capture:work": "node scripts/capture-work.mjs",
     "template:compare": "node scripts/template-compare.mjs"
   },

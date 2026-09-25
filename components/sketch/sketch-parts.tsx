@@ -1,6 +1,11 @@
+import { Bar } from '@/components/sketch/phone-frame'
 import type { SketchModel } from '@/components/sketch/sketch-model'
 import type { VisualStyle } from '@/lib/brief/styles'
 import { cn } from '@/lib/cn'
+
+// The grey bar is the phone frame's, which draws it as its speaker; the parts use it, and the
+// walkthrough's frame takes it from here with the rest of its parts.
+export { Bar }
 
 // The browser frame and the phone frame draw the same parts at two sizes. Each part keeps its
 // two sizes in a table so a change to the part reaches both frames. Parts carry a data-part name
@@ -35,15 +40,6 @@ export const HATCH =
 export const SLOT_STYLES =
   'flex items-center rounded-md border border-dashed border-(--sketch-dash) px-2 text-[9px] tracking-wide text-(--sketch-muted)'
 
-type BarProps = { className: string; part?: string | undefined }
-
-// A grey bar: copy we will write later.
-export function Bar({ className, part }: BarProps) {
-  return (
-    <span data-part={part} className={cn('block rounded-full bg-(--sketch-line)', className)} />
-  )
-}
-
 type SlotProps = { label: string; className: string; part: string }
 
 // A dashed slot, labelled the way a wireframe labels what goes there: an answer not given yet.
@@ -55,31 +51,29 @@ function Slot({ label, className, part }: SlotProps) {
   )
 }
 
-const MARK = { browser: 'size-5 text-[8px]', phone: 'size-3.5 text-[6px]' }
+const MARK = { browser: 'size-5', phone: 'size-3.5' }
+const POINT = { browser: 'size-2', phone: 'size-1.5' }
 
-// The logo slot: the uploaded logo, else initials once the company is known, else a dashed square.
+// The logo slot: the uploaded logo; else, once the company is known, a point of their colour
+// beside the name, the sketch's stand-in for a mark (grey until the colour question), since each
+// design sets a name without a logo in its own way; else a dashed square.
 function Mark({ model, frame }: FrameProps) {
   if (model.logo !== null) {
     return (
       <span
         style={{ backgroundImage: `url(${model.logo})` }}
-        className={cn('rounded bg-contain bg-center bg-no-repeat', MARK[frame])}
+        className={`rounded bg-contain bg-center bg-no-repeat ${MARK[frame]}`}
       />
     )
   }
-  if (model.initials === '') {
-    return (
-      <span className={cn('rounded border border-dashed border-(--sketch-dash)', MARK[frame])} />
-    )
+  if (model.company === '') {
+    return <span className={`rounded border border-dashed border-(--sketch-dash) ${MARK[frame]}`} />
   }
   return (
-    <span
-      className={cn(
-        'flex items-center justify-center rounded bg-(--sketch-strong) font-semibold text-(--sketch-on-strong) transition-colors duration-400',
-        MARK[frame],
-      )}
-    >
-      {model.initials}
+    <span className={`flex items-center justify-center ${MARK[frame]}`}>
+      <span
+        className={`rounded-full bg-(--sketch-strong) transition-colors duration-400 ${POINT[frame]}`}
+      />
     </span>
   )
 }

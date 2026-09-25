@@ -1,0 +1,401 @@
+/*
+ * A design in miniature (app/preview/_components/design-poster.tsx): a light page tinted by the
+ * build's fill, or by the studio's quiet blue before the tokens stage has one. It is its own
+ * container, so its type and shapes scale with it; below 10rem wide, as in a phone's row, its
+ * words would be too small to read and give way to the plain shapes that stand for them. Its
+ * parts sit on the named areas of one grid, so a template's layout (data-layout, from
+ * lib/preview/descriptors.ts) can place the same parts as that template places them from the
+ * moment the select stage names it, and the headline and the picture land inside it. A sheet of
+ * its own, imported by each route that draws a poster (D26), so a page can show posters without
+ * taking the rest of the designs page's rules.
+ */
+.design-poster {
+  --poster-fill: var(--job-answered);
+  --poster-surface: color-mix(in oklab, var(--poster-fill) 6%, #fff);
+  --poster-ink: color-mix(in oklab, var(--poster-fill) 30%, var(--ink-foot));
+
+  container: poster / inline-size;
+  display: block;
+  aspect-ratio: 196 / 260;
+  overflow: hidden;
+  border-radius: 0.875rem;
+  background: var(--poster-surface);
+  color: var(--poster-ink);
+}
+
+/* The page inside, sized by the poster it sits in: the bar, the picture, the words and the
+   button, in the plain page's order until a layout places them. */
+.design-poster-page {
+  display: grid;
+  grid-template-areas:
+    'bar'
+    'photo'
+    'words'
+    'button';
+  grid-template-rows: auto minmax(0, 1fr) auto auto;
+  gap: 7cqi;
+  height: 100%;
+  padding: 8cqi;
+}
+
+.design-poster-bar {
+  grid-area: bar;
+  display: flex;
+  align-items: center;
+  gap: 3cqi;
+  min-width: 0;
+  font-size: 5.5cqi;
+  font-weight: 600;
+}
+
+.design-poster-mark {
+  flex-shrink: 0;
+  width: 4cqi;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--poster-fill);
+}
+
+.design-poster-name {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.design-poster-photo {
+  grid-area: photo;
+  position: relative;
+  overflow: hidden;
+  border-radius: 5cqi;
+  background: color-mix(in oklab, var(--poster-fill) 32%, var(--poster-surface));
+
+  & img {
+    object-fit: cover;
+  }
+}
+
+.design-poster-headline {
+  grid-area: words;
+  display: -webkit-box;
+  overflow: hidden;
+  font-size: max(8cqi, 11px);
+  font-weight: 700;
+  line-height: 1.15;
+  text-wrap: balance;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+/* Two bars where the headline will land, and where it cannot be read. */
+.design-poster-lines {
+  grid-area: words;
+  height: 12cqi;
+  opacity: 0.2;
+  background:
+    linear-gradient(currentColor 0 0) 0 0 / 80% 4cqi no-repeat,
+    linear-gradient(currentColor 0 0) 0 100% / 55% 4cqi no-repeat;
+}
+
+.design-poster-headline + .design-poster-lines {
+  display: none;
+}
+
+.design-poster-button {
+  grid-area: button;
+  width: 42%;
+  height: 6cqi;
+  border-radius: 999px;
+  background: var(--poster-fill);
+}
+
+/*
+ * The layouts, one per ready template (lib/preview/descriptors.ts): each the arrangement of that
+ * template's own first screen and nothing it does not have, the same parts placed as it places
+ * them, plus at most a block drawn in gradient. Each must still read as a page of its own at
+ * 84 px, a phone's row, where the shapes are all a poster shows.
+ */
+
+/* Words before the picture: Aurora, Meridian and Monolith set the headline and the buttons over
+   what follows them. */
+.design-poster:is([data-layout='centred'], [data-layout='pool'], [data-layout='cards'])
+  .design-poster-page {
+  grid-template-areas:
+    'bar'
+    'words'
+    'button'
+    'photo';
+  grid-template-rows: auto auto auto minmax(0, 1fr);
+}
+
+/* Centred words: Aurora, Meridian and Ember centre the headline and the buttons. */
+.design-poster:is([data-layout='centred'], [data-layout='pool'], [data-layout='photo']) {
+  & .design-poster-headline {
+    text-align: center;
+  }
+
+  & .design-poster-lines {
+    background-position:
+      50% 0,
+      50% 100%;
+  }
+
+  & .design-poster-button {
+    justify-self: center;
+  }
+}
+
+/* Aurora, "Glowing centre": the product frame rises out of a horizon of light at its top edge,
+   translucent so the light shows through it, and is clipped at the foot as the hero clips it
+   (t01-aurora/sections/hero.tsx, aurora-field.tsx, product-frame.tsx). */
+.design-poster[data-layout='centred'] .design-poster-photo {
+  margin-bottom: -8cqi;
+  border-radius: 5cqi 5cqi 0 0;
+  background:
+    radial-gradient(
+      70% 50% at 50% 0,
+      color-mix(in oklab, var(--poster-fill) 50%, transparent),
+      transparent
+    ),
+    color-mix(in oklab, var(--poster-fill) 14%, var(--poster-surface));
+  box-shadow: 0 -3cqi 14cqi -2cqi color-mix(in oklab, var(--poster-fill) 40%, transparent);
+}
+
+/* Meridian, "Colour pool": its bar a floating pill; under the words, the wide picture with a
+   pool of the brand colour blurred behind its top edge and its foot fading into the page
+   (t03-meridian/sections/nav.tsx, hero.tsx). */
+.design-poster[data-layout='pool'] .design-poster-bar {
+  justify-self: center;
+  width: 80%;
+  padding: 1.5cqi 3cqi;
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--poster-fill) 10%, #fff);
+}
+
+.design-poster[data-layout='pool'] .design-poster-photo {
+  border-radius: 3cqi;
+  box-shadow: 0 -4cqi 12cqi color-mix(in oklab, var(--poster-fill) 55%, transparent);
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 45% 0 0;
+    background: linear-gradient(transparent, var(--poster-surface));
+  }
+}
+
+/* Monolith, "Card-led": under the words, the hero's four cards two by two, the poster's picture
+   landing in the first (t02-monolith/sections/hero.tsx, hero-cards.tsx). One box draws all
+   four: its shadows are the other three. */
+.design-poster[data-layout='cards'] .design-poster-photo {
+  --card: color-mix(in oklab, var(--poster-fill) 16%, #fff);
+
+  width: 39.5cqi;
+  height: 25cqi;
+  border-radius: 3cqi;
+  box-shadow:
+    44.5cqi 0 var(--card),
+    0 30cqi var(--card),
+    44.5cqi 30cqi var(--card);
+}
+
+/* Atlas, "Split layout": the words and the button at the left, the picture at the right
+   (t04-atlas/sections/hero.tsx sets them half and half). The poster gives the words three fifths:
+   at 196 px a true half is 77 px, where "Physiotherapy" broke in two at any readable size. */
+.design-poster[data-layout='split'] .design-poster-page {
+  grid-template-areas:
+    'bar bar'
+    'words photo'
+    'button photo'
+    '. photo';
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  grid-template-rows: auto auto auto minmax(0, 1fr);
+  column-gap: 5cqi;
+}
+
+/* Sized so a 13-letter word fits the words column of a 196 px poster; longer ones may still
+   break rather than clip. */
+.design-poster[data-layout='split'] .design-poster-headline {
+  font-size: max(6cqi, 11px);
+  overflow-wrap: anywhere;
+  -webkit-line-clamp: 4;
+}
+
+/* Under 11rem the split's words column is narrower than that word at the 11 px floor (the 136 px
+   posters of a 1024 desk, the 164 px ones of a tablet), so the headline gives way to the lines
+   there, as every layout's does under 8.5rem. */
+@container poster (width < 11rem) {
+  .design-poster[data-layout='split'] .design-poster-headline {
+    display: none;
+  }
+
+  .design-poster[data-layout='split'] .design-poster-lines {
+    display: block;
+  }
+}
+
+.design-poster[data-layout='split'] .design-poster-lines {
+  background-size:
+    100% 4cqi,
+    70% 4cqi;
+}
+
+.design-poster[data-layout='split'] .design-poster-button {
+  width: 80%;
+}
+
+/* A photograph under the whole first screen and the bar over it: Ember, Harbor and Summit. The
+   picture takes the poster's every edge, the rest sits over it, and the words and the button sit
+   half way down, as the three heroes centre them. */
+.design-poster:is([data-layout='photo'], [data-layout='type'], [data-layout='airy']) {
+  & .design-poster-page {
+    grid-template-areas:
+      'bar'
+      '.'
+      'words'
+      'button'
+      '.';
+    grid-template-rows: auto minmax(0, 1fr) auto auto minmax(0, 1fr);
+  }
+
+  & .design-poster-photo {
+    grid-area: 1 / 1 / -1 / -1;
+    z-index: 0;
+    margin: -8cqi;
+    border-radius: 0;
+  }
+
+  & .design-poster-page > :not(.design-poster-photo) {
+    z-index: 1;
+  }
+
+  & .design-poster-lines {
+    opacity: 0.3;
+  }
+}
+
+/* Ember, "Photo-led", needs nothing more: its headline and its round button sit centred on the
+   photograph (t05-ember/sections/hero.tsx). */
+
+/* Harbor, "Type-led": three heavy rows of type at the left, the second in the brand colour,
+   over a photograph dimmed to two fifths and faded out from the left
+   (t06-harbor/sections/hero.tsx). */
+.design-poster[data-layout='type'] .design-poster-photo {
+  opacity: 0.4;
+  mask-image: linear-gradient(90deg, transparent, #000);
+}
+
+.design-poster[data-layout='type'] .design-poster-lines {
+  height: 33cqi;
+  opacity: 1;
+  background:
+    linear-gradient(color-mix(in oklab, currentColor 22%, transparent) 0 0) 0 0 / 92% 9cqi no-repeat,
+    linear-gradient(var(--poster-fill) 0 0) 0 50% / 76% 9cqi no-repeat,
+    linear-gradient(color-mix(in oklab, currentColor 22%, transparent) 0 0) 0 100% / 60% 9cqi
+      no-repeat;
+}
+
+.design-poster[data-layout='type'] .design-poster-headline {
+  font-size: max(9.5cqi, 11px);
+  font-weight: 900;
+  line-height: 0.95;
+  text-transform: uppercase;
+}
+
+/* Summit, "Quiet and airy": thin lines at the left with air between them and a small square
+   button, the photograph behind (t07-summit/sections/hero.tsx). */
+.design-poster[data-layout='airy'] .design-poster-page {
+  row-gap: 10cqi;
+}
+
+.design-poster[data-layout='airy'] .design-poster-lines {
+  height: 15cqi;
+  background:
+    linear-gradient(currentColor 0 0) 0 0 / 74% 2.5cqi no-repeat,
+    linear-gradient(currentColor 0 0) 0 50% / 62% 2.5cqi no-repeat,
+    linear-gradient(currentColor 0 0) 0 100% / 44% 2.5cqi no-repeat;
+}
+
+.design-poster[data-layout='airy'] .design-poster-headline {
+  font-weight: 500;
+}
+
+.design-poster[data-layout='airy'] .design-poster-button {
+  width: 30%;
+  height: 5.5cqi;
+  border-radius: 1cqi;
+}
+
+/* Vector, "Bold and editorial": a dark glass pill for its bar, three rows of type as tall as its
+   headline with the paragraph under them, no button on its first screen, a band of its colour
+   behind, and its picture the about block's wide pill (t08-vector/sections/header.tsx, hero.tsx,
+   waves.tsx, about.tsx). */
+.design-poster[data-layout='editorial'] {
+  background:
+    linear-gradient(
+      -55deg,
+      transparent 30%,
+      color-mix(in oklab, var(--poster-fill) 18%, transparent) 46%,
+      transparent 62%
+    ),
+    var(--poster-surface);
+}
+
+.design-poster[data-layout='editorial'] .design-poster-page {
+  grid-template-areas:
+    'bar'
+    'words'
+    'photo';
+  grid-template-rows: auto auto minmax(0, 1fr);
+}
+
+.design-poster[data-layout='editorial'] .design-poster-bar {
+  width: fit-content;
+  max-width: 100%;
+  padding: 1.5cqi 3cqi;
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--ink-foot) 70%, transparent);
+  color: #fff;
+}
+
+.design-poster[data-layout='editorial'] .design-poster-lines {
+  height: 46cqi;
+  background:
+    linear-gradient(currentColor 0 0) 0 0 / 94% 11cqi no-repeat,
+    linear-gradient(currentColor 0 0) 0 13.5cqi / 80% 11cqi no-repeat,
+    linear-gradient(currentColor 0 0) 0 27cqi / 66% 11cqi no-repeat,
+    linear-gradient(currentColor 0 0) 0 100% / 56% 2.5cqi no-repeat;
+}
+
+.design-poster[data-layout='editorial'] .design-poster-headline {
+  font-size: max(10.5cqi, 11px);
+  font-weight: 400;
+  line-height: 1.05;
+}
+
+.design-poster[data-layout='editorial'] .design-poster-photo {
+  align-self: end;
+  aspect-ratio: 3 / 1;
+  border-radius: 999px;
+}
+
+.design-poster[data-layout='editorial'] .design-poster-button {
+  display: none;
+}
+
+/* The name goes first, under 10rem; the headline, at 11 px or more, holds on to 8.5rem, the
+   smallest desk's posters, so a headline landing there is seen to land. */
+@container poster (width < 10rem) {
+  .design-poster .design-poster-name {
+    display: none;
+  }
+}
+
+@container poster (width < 8.5rem) {
+  .design-poster .design-poster-headline {
+    display: none;
+  }
+
+  .design-poster .design-poster-lines {
+    display: block;
+  }
+}

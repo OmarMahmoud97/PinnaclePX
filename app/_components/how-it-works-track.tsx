@@ -5,6 +5,13 @@ import { type ReactNode, useCallback, useEffect, useRef, useState } from 'react'
 import { BUILT_STAGE, EMPTY_STAGE, WALKTHROUGH_ANSWERS } from '@/app/_components/walkthrough-brand'
 import { HIDDEN_WHEN_EMPTY, WalkthroughFrame } from '@/app/_components/walkthrough-frame'
 import { WALKTHROUGH_FILES } from '@/app/_components/walkthrough-photos'
+import {
+  answeredAt,
+  questionNumberAt,
+  SKETCHED_STAGE,
+  WALKTHROUGH_LABELS,
+  WALKTHROUGH_STEPS,
+} from '@/app/_components/walkthrough-steps'
 import { stackedBeats, stageAt, stagesFrom } from '@/app/_components/walkthrough-stops'
 import { buildWalkthrough, type Walkthrough } from '@/app/_components/walkthrough-timeline'
 import { SKETCH_CAPTION } from '@/components/sketch/captions'
@@ -12,8 +19,7 @@ import { SketchChips } from '@/components/sketch/sketch-chips'
 import { sketchModelFrom } from '@/components/sketch/sketch-model'
 import { captionStyles } from '@/components/ui/caption'
 import { ProgressSteps } from '@/components/ui/progress-steps'
-import { answeredAt, FINAL_STAGE } from '@/lib/brief/example-brief'
-import { QUESTION_IDS } from '@/lib/brief/question-ids'
+import { FINAL_STAGE } from '@/lib/brief/example-brief'
 import { cn } from '@/lib/cn'
 import { CONFIG } from '@/lib/config'
 import { loadGsap } from '@/lib/motion/gsap'
@@ -342,7 +348,7 @@ export function HowItWorksTrack({ heading, steps, actions }: Props) {
 
   // What is shown: the stop the scroll has reached, or the finished sketch for a visitor whose
   // frame never moves.
-  const shown = !motionAllowed || unavailable ? FINAL_STAGE : stage
+  const shown = !motionAllowed || unavailable ? SKETCHED_STAGE : stage
   const captionKey = shown === BUILT_STAGE ? 'walkthroughBuilt' : 'walkthrough'
   const phase = motionAllowed && status === 'waiting' ? 'empty' : undefined
 
@@ -382,10 +388,7 @@ export function HowItWorksTrack({ heading, steps, actions }: Props) {
               )}
             />
             <div className="w-full max-w-64">
-              <ProgressSteps
-                current={Math.min(Math.max(shown, 1), FINAL_STAGE)}
-                total={QUESTION_IDS.length}
-              />
+              <ProgressSteps current={questionNumberAt(shown)} total={WALKTHROUGH_STEPS.length} />
             </div>
             {/* The dock's fit sets --walk-zoom on the stage; undocked on a phone it is 1.1. */}
             <div aria-hidden="true" className="relative">
@@ -403,11 +406,13 @@ export function HowItWorksTrack({ heading, steps, actions }: Props) {
             >
               {SKETCH_CAPTION[captionKey]}
             </p>
-            {/* The brief in words for a screen reader, in place of the drawing; the chips
-                themselves stay out, since the progress line already counts. */}
+            {/* The brief in words for a screen reader, in place of the drawing, in the
+                walkthrough's own steps; the chips themselves stay out, since the progress line
+                already counts. */}
             <SketchChips
               answers={WALKTHROUGH_ANSWERS}
               answered={answeredAt(shown)}
+              labels={WALKTHROUGH_LABELS}
               prefix="An example brief so far"
               chipsClassName="hidden"
             />

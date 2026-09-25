@@ -26,9 +26,12 @@ function shareUrl(): string {
 //
 // The hero's ink comes back under it all (ADR 0032). The section paints its own surface, so the
 // canvas has an opaque ground to multiply onto, and the content is positioned so it paints over
-// the canvas rather than under it. Every run of text on the ground flips by difference
-// (`over-ink`, app/globals.css), as the hero's headline does, because built-up ink goes black
-// and would swallow dark letters; the button and the phone are opaque and need nothing.
+// the canvas rather than under it. The canvas is feathered at its top edge (`fadeTop`): the
+// hero's edges are the screen's, but this band's top sits mid-page against the white band
+// above, and ink carried up to it ended in a flat line. Every run of text on the ground flips
+// by difference (`over-ink`, app/globals.css), as the hero's headline does, because built-up
+// ink goes black and would swallow dark letters; the button and the phone are opaque and need
+// nothing.
 //
 // The heading's em takes the serif italic through `emphasis` (a font rule, so no stacking
 // context comes between the heading and the section). The band ends in `before-sheet`: the
@@ -43,7 +46,7 @@ export function ClosingCta() {
       className="before-sheet relative isolate overflow-hidden bg-surface px-6 pt-band"
     >
       <GlowBackdrop />
-      <Ink />
+      <Ink fadeTop />
       <div className="relative mx-auto grid max-w-5xl items-center gap-10 md:grid-cols-[1fr_auto] md:gap-16">
         <div className="flex flex-col items-center gap-6 text-center md:items-start md:text-left">
           <h2 className={`${displayHeading} emphasis over-ink text-on-surface`}>

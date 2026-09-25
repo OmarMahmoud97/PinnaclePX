@@ -1,0 +1,860 @@
+/*
+ * /start's done view (docs/start-page-journey-plan.md, 4.4, 4.5, 4.9, 6.2 and 9): the send's ink
+ * running on into it, its column in main, the time, the ring and the log, the designs as rows and
+ * as posters, ready's colours and words, and the phone's sticky ask. It loads with the view's
+ * chunk (brief-done.tsx), never with /start's first paint, so a visitor who never sends never
+ * downloads it (plan 9.6); the ground under it, which a refreshed done page needs before any
+ * script, is app/_styles/start-done.css's. Plain CSS on the site's tokens and on /start's own
+ * (start.css, start-done.css).
+ */
+
+/*
+ * The send's run-on (plan 6.2, send-bloom.tsx): the ink from its hold, 38 per cent of the path, on
+ * to the whole page, in the rest of the 900 ms, the done view waiting under it (start-done.css,
+ * data-arriving). Under reduced motion it fills by its colour in 300 ms. Its hold and its drain
+ * are start-done.css's, since a send that fails never needs this sheet.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  .send-bloom[data-phase='complete'] {
+    animation: send-run calc(var(--draft-glow) * (1 - var(--send-hold))) var(--ease-enter) both;
+  }
+
+  @keyframes send-run {
+    from {
+      clip-path: var(--bloom-hold);
+    }
+
+    to {
+      clip-path: circle(142% at var(--press-at));
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .send-bloom[data-phase='complete'] {
+    animation: send-run-fade var(--motion-settle) var(--ease-standard) both;
+  }
+
+  @keyframes send-run-fade {
+    from {
+      background-color: var(--bloom-held);
+    }
+
+    to {
+      background-color: var(--ink-foot);
+    }
+  }
+}
+
+/* The column, as wide as the stand-in it replaces (done-boundary.tsx): the heading, then each part
+   a step apart. */
+.done-view {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 32rem;
+  animation: question-in var(--motion-settle) var(--ease-standard) backwards;
+}
+
+/*
+ * Ready's flip (plan 6.2): what stays on screen changes colour with the ground under it, not ahead
+ * of it. The dark scope lets go of main as the flip starts, so from there the tokens of main and
+ * of the posters' captions are mixed from their values on the ink to their light ones by
+ * --done-ground, which rises over the flip's middle 300 ms: the heading, the page link, the rows
+ * and the captions turn with the ground, main's own transition standing aside. The cards start
+ * from --ink-card, the colour they have on the ink.
+ */
+.start-flow[data-lit] {
+  --lit-on-surface: var(--on-surface);
+  --lit-on-surface-muted: var(--on-surface-muted);
+  --lit-brand-ink: var(--brand-ink);
+  --lit-surface: var(--surface);
+}
+
+.start-flow[data-lit] :is(#main, .done-slot) {
+  --on-surface: color-mix(
+    in oklab,
+    var(--lit-on-surface) calc(var(--done-ground) * 100%),
+    var(--on-ink)
+  );
+  --on-surface-muted: color-mix(
+    in oklab,
+    var(--lit-on-surface-muted) calc(var(--done-ground) * 100%),
+    var(--on-ink-muted)
+  );
+  --brand-ink: color-mix(
+    in oklab,
+    var(--lit-brand-ink) calc(var(--done-ground) * 100%),
+    var(--brand)
+  );
+  --surface: color-mix(
+    in oklab,
+    var(--lit-surface) calc(var(--done-ground) * 100%),
+    var(--ink-card)
+  );
+  color: var(--on-surface);
+  transition: none;
+}
+
+/*
+ * Ready's words rise in as the page turns to light (plan 6.2): after the ground has risen, in the
+ * last 150 ms of the 600 ms flip. The heading never fades, and its phrase swaps in place; the
+ * primary and the design links are there from the first ready answer.
+ */
+.done-lead {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.done-lead[data-flip] {
+  animation: done-words var(--done-fade) var(--ease-standard)
+    calc(var(--done-fade) + var(--done-rise)) backwards;
+}
+
+@keyframes done-words {
+  from {
+    opacity: 0;
+  }
+}
+
+/* An early finish, with its check drawn once (plan 6.2); under reduced motion the check appears. */
+.done-early {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--brand-ink);
+  font-size: var(--text-small);
+  font-weight: 500;
+}
+
+.done-check {
+  flex: none;
+  width: 1.25rem;
+  height: 1.25rem;
+  padding: 0.25rem;
+  border-radius: 999px;
+  background: var(--brand-ink);
+  color: var(--on-brand);
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.done-check path {
+  stroke-dasharray: 1;
+  animation: done-check var(--draft-glow) var(--ease-enter) var(--done-flip) backwards;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes done-check {
+    from {
+      stroke-dashoffset: 1;
+    }
+  }
+}
+
+/*
+ * The page link and its share, a card of the page's own ground: white with the card's shadow on
+ * the light, one step up from the ink while the designs build (plan 5.7, no hairline).
+ */
+.done-page {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+  min-width: 0;
+  padding: 0.75rem 1.25rem;
+  border-radius: 1.25rem;
+  background: var(--surface);
+  box-shadow: var(--shadow-card);
+}
+
+[data-theme='dark'] .done-page {
+  background: var(--ink-card);
+  box-shadow: var(--shadow-card-ink);
+}
+
+.done-page > p {
+  min-width: 0;
+}
+
+@media (forced-colors: active) {
+  .done-page {
+    border: 1px solid CanvasText;
+  }
+}
+
+/* The link gone to the clipboard, said by the status line and shown in the card. */
+.done-copied {
+  flex-basis: 100%;
+  color: var(--on-surface-muted);
+  font-size: var(--text-small);
+}
+
+/*
+ * The time beside the ring, then the log (plan 4.4): the time in the heading's voice, the ring a
+ * quiet track with its arc in the product's blue growing a share as each stage lands, the log a
+ * plain list whose lines rise in as their stages land. The block goes as the page turns to light.
+ * Under forced colours the ring keeps its shape in the system's colours (plan 9.4).
+ */
+.done-progress {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.done-time {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: var(--on-surface);
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.stage-ring {
+  position: relative;
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 3.5rem;
+  height: 3.5rem;
+}
+
+.stage-ring svg {
+  position: absolute;
+  inset: 0;
+  rotate: -90deg;
+  fill: none;
+  stroke-width: 4;
+}
+
+.stage-ring-track {
+  stroke: color-mix(in oklab, var(--on-surface) 14%, transparent);
+}
+
+.stage-ring-arc {
+  stroke: var(--brand-ink);
+  stroke-linecap: round;
+  stroke-dashoffset: var(--ring-left);
+  transition: stroke-dashoffset var(--draft-glow) var(--ease-enter);
+}
+
+.stage-ring-count {
+  font-size: var(--text-label);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (forced-colors: active) {
+  .stage-ring-track {
+    stroke: GrayText;
+  }
+
+  .stage-ring-arc {
+    stroke: Highlight;
+  }
+}
+
+/* The log's three columns, the mark, the stamp and the words, are the list's, and every line lays
+   its parts on them (a subgrid), so the stamp column is as wide as the widest stamp on every
+   line and a running line, which has no stamp (plan 9.2), keeps its words in the third column:
+   the log's text edge holds straight. A grid per line put the running line's words in the stamp
+   column, 40 px left of the rest. */
+.done-log {
+  display: grid;
+  grid-template-columns: 1.25rem auto minmax(0, 1fr);
+  row-gap: 0.625rem;
+  column-gap: 0.75rem;
+  color: var(--on-surface);
+  font-size: var(--text-small);
+}
+
+.done-log li {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: subgrid;
+  align-items: baseline;
+  animation: done-line var(--draft-each) var(--ease-enter) backwards;
+}
+
+/* The mark sits on the line's first row, level with the stamp and the first word, so a wrapped
+   line never drops it under its stamp: 20 px on a 21 px line, one pixel down. */
+.done-log-mark {
+  display: grid;
+  align-self: start;
+  place-items: center;
+  margin-top: 0.0625rem;
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--brand-ink) 22%, transparent);
+  color: var(--brand-ink);
+}
+
+/* A stage still being made: an open ring with the blue at its heart, which never turns. */
+.done-log li[data-running] .done-log-mark {
+  background: radial-gradient(circle, var(--brand-ink) 0 0.1875rem, transparent 0.1875rem);
+  box-shadow: inset 0 0 0 1.5px var(--brand-ink);
+}
+
+.done-log-stamp {
+  color: var(--on-surface-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.done-log-words {
+  grid-column: 3;
+  overflow-wrap: anywhere;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes done-line {
+    from {
+      opacity: 0;
+      translate: 0 0.75rem;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  @keyframes done-line {
+    from {
+      opacity: 0;
+    }
+  }
+}
+
+@media (forced-colors: active) {
+  .done-log-mark {
+    forced-color-adjust: none;
+    background: Canvas;
+    color: CanvasText;
+    box-shadow: inset 0 0 0 1px CanvasText;
+  }
+}
+
+/* The call, leading a build that ended without designs, with its promise under it. */
+.done-call {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+/* The call as the wait's aside, and ready's link to it. */
+.done-aside {
+  font-size: var(--text-small);
+  text-wrap: pretty;
+}
+
+/*
+ * The designs (plan D18 and 9.1): rows in main below lg, posters in the region from lg, exactly
+ * one of the two lists displayed at a width, so one is ever in the accessibility tree. A row is a
+ * card of the ground's step up; a design still building says so beside a still dot in the
+ * product's blue, and one that opens shows the arrow of a link. Under forced colours each takes a
+ * border (plan 9.4).
+ */
+.design-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.design-list[data-variant='posters'] {
+  display: none;
+}
+
+.design-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  min-width: 0;
+  padding: 0.75rem 1rem;
+  border-radius: 1rem;
+  background: var(--surface-muted);
+  color: var(--on-surface);
+  text-decoration: none;
+}
+
+.start-flow[data-lit] .design-list[data-variant='rows'] .design-item {
+  background: var(--surface);
+  box-shadow: var(--shadow-card);
+}
+
+a.design-item:hover .design-name {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+a.design-item:focus-visible {
+  outline: 2px solid var(--brand-ink);
+  outline-offset: 2px;
+}
+
+/*
+ * The caption: the design's name over its descriptor, and beside them its state or the arrow.
+ * The name keeps its words whole and never shrinks (its words are the site's own, never the
+ * visitor's, so nothing here need break inside a word); where the state has no room beside it,
+ * the state drops under it instead, as the designs page's rows do (preview.css).
+ */
+.design-caption {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.375rem 0.75rem;
+  min-width: 0;
+}
+
+.design-name {
+  display: flex;
+  flex: 1 0 auto;
+  flex-direction: column;
+  min-width: 0;
+  max-width: 100%;
+  font-size: var(--text-small);
+  font-weight: 600;
+}
+
+.design-descriptor {
+  color: var(--on-surface-muted);
+  font-size: var(--text-label);
+  font-weight: 400;
+}
+
+.design-state {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--on-surface-muted);
+  font-size: var(--text-label);
+}
+
+.design-dot {
+  width: 0.375rem;
+  height: 0.375rem;
+  border-radius: 999px;
+  background: var(--brand-ink);
+}
+
+.design-arrow {
+  flex: none;
+  width: 1rem;
+  height: 1rem;
+  color: var(--brand-ink);
+}
+
+@media (forced-colors: active) {
+  .design-item {
+    border: 1px solid ButtonText;
+  }
+}
+
+/*
+ * The region at done (plan 4.2 and 5.8): the draft makes way for the designs, which rise from its
+ * place, the lamp still behind them. Stage and designs share one cell, so the lamp keeps its
+ * anchor, and the caption stays under them. Below lg the region itself is that grid; from lg the
+ * board is, stuck to the screen as it is while the visitor answers (start.css), so the posters,
+ * the page card and the caption hold one composition however tall the column beside them runs.
+ * The draft goes once the designs are drawn, and never takes a pointer from their links.
+ */
+@media (width < 64rem) {
+  .start-flow[data-state='done'] .start-region {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.start-flow[data-state='done'] .start-stage,
+.done-slot {
+  grid-area: 1 / 1;
+}
+
+.start-flow[data-state='done'] .start-stage {
+  pointer-events: none;
+}
+
+/* From lg, once the designs are drawn, the hidden draft no longer sets the cell's height: the
+   stage takes the slot's box, so the lamp centres on the posters and the caption follows the page
+   card rather than the draft's foot, 180 px under it at 1440. While the slot is empty (the poll's
+   first answer still on its way, or a build that ended without designs, which draws none) the
+   stage stays in flow at the draft's height: the lamp keeps its area through an arrival, and
+   dimmed over a stopped build (plan 4.9), and the caption its place under the frame; an absolutely
+   placed stage in an empty cell was 0 px tall, with no lamp at all. Both end lines are named: an
+   auto end line puts an absolutely placed item's edge at the board's padding edge, not the
+   cell's. */
+@media (width >= 64rem) {
+  .start-region:has(.done-slot:not(:empty)) .start-stage {
+    position: absolute;
+    grid-area: 1 / 1 / 2 / 2;
+    inset: 0;
+  }
+}
+
+/* The payoff phrase keeps to one line, so it swaps in place at ready and never leaves a word of
+   itself on the line above (plan 6.2): "on their way." is the longest and fits every width. */
+.done-view .start-heading em {
+  white-space: nowrap;
+}
+
+.start-region:has(.done-slot:not(:empty)) .draft {
+  opacity: 0;
+  transition: opacity var(--draft-each) var(--ease-standard);
+}
+
+.done-slot {
+  position: relative;
+  container-type: inline-size;
+  align-self: center;
+  width: 100%;
+}
+
+/*
+ * From lg the slot holds the posters and, under them, the page card (plan 4.1, desk-wait): the
+ * card is drawn twice, in main's column and here, and exactly one shows at a width, so the
+ * column keeps the ring and the log in a laptop's first screen. The slot sits at the top of its
+ * cell, level with the heading as the draft's frame is level with a question's title.
+ */
+.done-page[data-place='region'] {
+  display: none;
+}
+
+@media (width >= 64rem) {
+  .done-slot {
+    --poster-w: min(196px, (100cqi - 3rem) / 3);
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    align-items: center;
+    align-self: start;
+  }
+
+  .done-page[data-place='column'] {
+    display: none;
+  }
+
+  /* The card rises with the posters, on the same wait. */
+  .done-page[data-place='region'] {
+    display: flex;
+    width: min(100%, calc(3 * var(--poster-w) + 3rem));
+    animation: done-line var(--draft-glow) var(--ease-enter) var(--split-after, 0s) backwards;
+  }
+}
+
+/*
+ * The posters: a strip of three below lg, decoration over the rows in main (plan 4.5), 110 px at
+ * 390 wide and 84 at 320; from lg the list itself, 196 by 260 where the pane has the room, each
+ * poster over its caption, and the strip gone. They split from the draft's place as the view
+ * opens, from the middle out with a degree of tilt, and wait under a veil until the build is
+ * ready, when the veils lift in turn and each is lit from behind by the studio's glow (plan 6.2).
+ */
+.done-strip {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  --poster-w: min(110px, (100cqi - 1.5rem) / 3);
+}
+
+/* A tablet's strip has the room for posters whose words can be read (design-poster.css shows
+   them from 10rem), sized as the desk sizes its own. */
+@media (40rem <= width < 64rem) {
+  .done-strip {
+    gap: 1.5rem;
+    --poster-w: min(164px, (100cqi - 3rem) / 3);
+  }
+}
+
+.done-poster {
+  position: relative;
+  isolation: isolate;
+  display: block;
+  width: var(--poster-w);
+  scale: var(--start-rise-scale);
+  transition: scale var(--done-veil) var(--ease-enter) calc(var(--i) * var(--start-stagger));
+  animation: done-split var(--draft-glow) var(--ease-enter)
+    calc(var(--split-after, 0s) + var(--i) * var(--start-stagger)) backwards;
+}
+
+/* The split's wait: on this tab's own send the draft fades first, so nothing of the slot (the
+   posters, their captions, the page card and the board's caption) stands over its frames while
+   they go; a done view opened from a link draws no draft and waits for nothing. It is set on the
+   region so every part inherits it. */
+.start-region:not([data-restored]) {
+  --split-after: var(--draft-each);
+}
+
+/* The board's caption follows the page card once the designs are drawn (above): it comes in
+   with the card, on the same wait, rather than standing over the fading draft. */
+.done-slot:not(:empty) ~ div > p {
+  animation: done-line var(--draft-glow) var(--ease-enter) var(--split-after, 0s) backwards;
+}
+
+.done-poster::after,
+.done-poster::before {
+  content: '';
+  position: absolute;
+  pointer-events: none;
+  transition: opacity var(--done-veil) var(--ease-enter) calc(var(--i) * var(--start-stagger));
+}
+
+/* The veil, the ink over the poster while its design is made. */
+.done-poster::after {
+  inset: 0;
+  border-radius: 0.875rem;
+  background: var(--ink-foot);
+  opacity: 0.35;
+}
+
+/* The backlight, the studio's glow at 32 per cent. */
+.done-poster::before {
+  inset: -12%;
+  z-index: -1;
+  background: radial-gradient(
+    closest-side,
+    color-mix(in oklab, var(--glow) 32%, transparent),
+    transparent
+  );
+  opacity: 0;
+}
+
+.start-flow[data-lit] .done-poster {
+  scale: 1;
+}
+
+.start-flow[data-lit] .done-poster::after {
+  opacity: 0;
+}
+
+.start-flow[data-lit] .done-poster::before {
+  opacity: 1;
+}
+
+/*
+ * What lands on a poster as its stage settles (plan 6.2): the colour pours through it in the
+ * draft's order, 70 ms apart; the headline sets in from its start; the photo fades up. Under
+ * reduced motion the colour changes together and the headline only fades.
+ */
+.done-poster :is(.design-poster, .design-poster-mark, .design-poster-photo, .design-poster-button) {
+  transition: background-color var(--draft-each) var(--ease-standard)
+    calc(var(--pour, 0) * var(--draft-step));
+}
+
+.done-poster .design-poster-mark {
+  --pour: 1;
+}
+
+.done-poster .design-poster-photo {
+  --pour: 2;
+}
+
+.done-poster .design-poster-button {
+  --pour: 3;
+}
+
+.done-poster .design-poster-headline {
+  animation: done-set var(--draft-glow) var(--ease-enter) backwards;
+}
+
+.done-poster .design-poster-photo img {
+  animation: done-words var(--draft-glow) var(--ease-standard) backwards;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes done-set {
+    from {
+      opacity: 0;
+      clip-path: inset(0 100% 0 0);
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .done-poster * {
+    transition-delay: 0s !important;
+  }
+
+  @keyframes done-set {
+    from {
+      opacity: 0;
+    }
+  }
+}
+
+/* The outer posters travel 2.25rem across and 1rem down, 2.46rem in all, inside the 2.5rem cap
+   (plan 6.3); the middle one only drops. */
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes done-split {
+    from {
+      opacity: 0;
+      translate: calc((1 - var(--i)) * 2.25rem) 1rem;
+      rotate: calc((var(--i) - 1) * 1deg);
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  @keyframes done-split {
+    from {
+      opacity: 0;
+    }
+  }
+}
+
+@media (width >= 64rem) {
+  .design-list[data-variant='rows'],
+  .done-strip {
+    display: none;
+  }
+
+  .design-list[data-variant='posters'] {
+    display: grid;
+    grid-auto-columns: var(--poster-w);
+    grid-auto-flow: column;
+    justify-content: center;
+    gap: 1.5rem;
+  }
+
+  /* Each item fills its row, so the three captions end at one height: their names at the top,
+     their states at the foot, whatever their descriptors' lengths. Here a poster and its caption
+     are one card, so the item splits from the draft's place on the poster's turn (design-list.tsx
+     sets it on both), and the poster alone does not: its caption's bar would otherwise stand
+     over the fading draft, waiting for the poster to land on it. */
+  .design-list[data-variant='posters'] li {
+    display: grid;
+    animation: done-split var(--draft-glow) var(--ease-enter)
+      calc(var(--split-after, 0s) + var(--i) * var(--start-stagger)) backwards;
+  }
+
+  .design-list[data-variant='posters'] .done-poster {
+    animation: none;
+  }
+
+  .design-list[data-variant='posters'] .design-item {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    padding: 0;
+    background: none;
+  }
+
+  .design-list[data-variant='posters'] .design-caption {
+    align-content: space-between;
+    padding: 0.625rem 0.875rem;
+    border-radius: 0 0 0.875rem 0.875rem;
+    background: var(--ink-card);
+    color: var(--on-ink);
+  }
+
+  /* Under a poster the state has a line of its own: no poster is wide enough for "Design three"
+     and "Being built" side by side. */
+  .design-list[data-variant='posters'] .design-state {
+    flex-basis: 100%;
+  }
+
+  .design-list[data-variant='posters'] :is(.design-descriptor, .design-state) {
+    color: var(--on-ink-muted);
+  }
+
+  .design-list[data-variant='posters'] .design-dot {
+    background: var(--brand);
+  }
+
+  .design-list[data-variant='posters'] .done-poster .design-poster {
+    border-radius: 0.875rem 0.875rem 0 0;
+  }
+
+  .design-list[data-variant='posters'] .done-poster::after {
+    border-radius: 0.875rem 0.875rem 0 0;
+  }
+
+  .start-flow[data-lit] .design-list[data-variant='posters'] .design-caption {
+    background: var(--surface);
+    color: var(--on-surface);
+  }
+
+  .start-flow[data-lit]
+    .design-list[data-variant='posters']
+    :is(.design-descriptor, .design-state) {
+    color: var(--on-surface-muted);
+  }
+
+  .design-list[data-variant='posters'] a.design-item:focus-visible {
+    outline-color: var(--brand);
+    border-radius: 0.875rem;
+  }
+}
+
+/*
+ * Ready's ask on a phone takes the question's ask's rules (plan 9.1 and start.css): on a screen at
+ * least 30rem tall its well rides the foot, on a fade of the page's light so what scrolls under it
+ * goes quietly, with the room under the column and the scroll padding to keep a row reached by Tab
+ * clear of it; on a shorter one it stands in its place. The ask comes early in the column, after
+ * the lead, so the well is fixed to the screen rather than stuck, which would hold it there. Under
+ * forced colours the fade is the system's ground. From lg it keeps its own width, in its place.
+ */
+.start-done-ask {
+  gap: 0.5rem;
+}
+
+.done-ask-label {
+  animation: done-words var(--motion-settle) var(--ease-standard) backwards;
+}
+
+@media (width < 64rem) {
+  .start-done-ask {
+    width: 100%;
+  }
+}
+
+@media (width < 64rem) and (height >= 30rem) {
+  .done-ask {
+    position: fixed;
+    inset: auto 0 0;
+    z-index: 2;
+    padding: 1.5rem 1rem max(0.75rem, env(safe-area-inset-bottom));
+    background: linear-gradient(to top, var(--surface-wash) 60%, transparent);
+  }
+
+  .done-view:has(.done-ask) {
+    padding-bottom: 5.5rem;
+  }
+
+  html:has(.done-ask) {
+    scroll-padding-bottom: 6rem;
+  }
+
+  @media (forced-colors: active) {
+    .done-ask {
+      background: Canvas;
+    }
+  }
+}
+
+@media (40rem <= width < 64rem) and (height >= 30rem) {
+  .done-ask {
+    padding-inline: max(2rem, (100% - 32rem) / 2);
+  }
+}
+
+@media (width >= 64rem) {
+  .done-ask {
+    align-self: flex-start;
+  }
+}
+
+/* On a phone on its side the stage is gone (start.css), so the strip stands on flat ink: it
+   keeps a step of air under the island rather than butting against it. */
+@media (width < 64rem) and (height < 30rem) {
+  .start-flow[data-state='done'] .start-region {
+    padding-top: 5rem;
+  }
+}

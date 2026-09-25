@@ -1,9 +1,8 @@
-import { Analytics } from '@vercel/analytics/next'
-import { SpeedInsights } from '@vercel/speed-insights/next'
 import type { Metadata } from 'next'
 import { Instrument_Serif, Mona_Sans } from 'next/font/google'
 import type { ReactNode } from 'react'
 import { SmoothScroll } from '@/app/_components/smooth-scroll'
+import { Telemetry } from '@/app/_components/telemetry'
 import { env } from '@/lib/env'
 import { SITE } from '@/lib/site'
 import './globals.css'
@@ -60,8 +59,7 @@ export default function RootLayout({ children }: Props) {
         </a>
         {children}
         <SmoothScroll />
-        <Analytics />
-        <SpeedInsights />
+        <Telemetry />
       </body>
     </html>
   )

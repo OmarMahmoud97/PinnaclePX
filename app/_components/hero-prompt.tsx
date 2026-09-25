@@ -9,8 +9,7 @@ import { buttonStyles } from '@/components/ui/button'
 import { captionStyles } from '@/components/ui/caption'
 import { TrackedLink } from '@/components/ui/tracked-link'
 import { trackEvent } from '@/lib/analytics/events'
-import { BLANK_ANSWERS } from '@/lib/brief/answers'
-import { writeDraft } from '@/lib/brief/draft'
+import { writeCarried } from '@/lib/brief/draft'
 import { isSentenceComplete } from '@/lib/brief/sentence'
 import { CONFIG } from '@/lib/config'
 import { SITE } from '@/lib/site'
@@ -42,11 +41,15 @@ export function HeroPrompt() {
     setSentence(value)
   }
 
+  // The sentence goes to /start in a key of its own, never over a draft the visitor may already
+  // have (docs/start-page-journey-plan.md, D4): /start merges it into the draft and counts the
+  // hand-off as it lands (sentence_carried). A sentence long enough to brief from opens the name
+  // question; a shorter one opens the first question with it filled in.
   function carry() {
     if (own === '') return
-    writeDraft({ ...BLANK_ANSWERS, description: own })
-    if (valid) trackEvent('brief_step', { step: 1, location: 'hero' })
+    writeCarried(own)
   }
+  const href = valid ? '/start?q=2' : own === '' ? CTA.href : '/start?q=1'
 
   // The action is for a visitor without JavaScript: Enter then lands on question one instead of
   // reloading this page. With JavaScript, onSubmit prevents it and clicks the button, which
@@ -93,7 +96,7 @@ export function HeroPrompt() {
           {SITE.reassurance}
         </p>
         <TrackedLink
-          href={valid ? '/start?q=2' : CTA.href}
+          href={href}
           event="cta_click"
           location="hero"
           id="hero-cta"

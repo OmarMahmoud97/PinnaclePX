@@ -1,0 +1,196 @@
+/*
+ * The designs page (app/preview/[slug]/page.tsx, and its example at app/examples/hub/page.tsx):
+ * the ink, the words, and the designs' rows and cards (docs/start-page-journey-plan.md, 8.4); the
+ * posters inside them are design-poster.css. Plain CSS on the site's tokens, imported by those two
+ * routes alone, so no other page downloads it and the shared sheet gains no utility (D26). Nothing
+ * here draws a line: every separation is a ground or air, and the one border is forced colours'
+ * own.
+ */
+
+/* Past the page's edges, as Safari's rubber band shows them, the body is the ink too. */
+body:has(.hub) {
+  background: var(--ink-foot);
+}
+
+/* The designs' light spreads past the page's sides, and is clipped there rather than scrolled to. */
+.hub {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  overflow-x: clip;
+  background: var(--surface);
+  color: var(--on-surface);
+}
+
+/* The bar and the page below it share one column, so the mark stands over the heading. */
+.hub-bar,
+.hub-main {
+  width: 100%;
+  max-width: 80rem;
+  margin-inline: auto;
+  padding-inline: 1rem;
+
+  @media (min-width: 40rem) {
+    padding-inline: 1.5rem;
+  }
+}
+
+.hub-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  height: 4rem;
+}
+
+/* Words above the designs, side by side once there is room for both at their full size. */
+.hub-main {
+  display: grid;
+  gap: 3rem;
+  padding-block: 2.5rem 4rem;
+
+  @media (min-width: 80rem) {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: start;
+    gap: 4rem;
+    padding-top: 4rem;
+  }
+}
+
+.hub-words {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-width: 0;
+  max-width: 36rem;
+}
+
+/* The time line keeps its height before the browser has read the visitor's clock, so the page
+   does not move when the time arrives. */
+.hub-time {
+  min-height: 1lh;
+  font-weight: 600;
+}
+
+/* The share and the status line beside it, which shows only to say the link was copied. */
+.hub-share {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem 1rem;
+}
+
+.hub-said {
+  font-size: var(--text-label);
+  font-variant-numeric: tabular-nums;
+  color: var(--on-surface-muted);
+}
+
+/* Rows with a small poster on a phone; from 40rem, three posters side by side. */
+.hub-designs {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  gap: 0.75rem;
+
+  @media (min-width: 40rem) {
+    grid-template-columns: repeat(3, minmax(0, 12.25rem));
+    gap: 1rem;
+  }
+}
+
+/* The build's colour, once the tokens have it, as a low light behind the designs: never more than
+   a fifth of it over the ink, so every caption keeps its contrast, and never behind the words. */
+.hub-designs::before {
+  content: '';
+  position: absolute;
+  inset: -3rem;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(
+    closest-side,
+    color-mix(in oklab, var(--hub-fill, var(--glow)) 20%, transparent),
+    transparent
+  );
+}
+
+.hub-design {
+  display: grid;
+  grid-template-columns: 5.25rem minmax(0, 1fr);
+  align-items: center;
+  gap: 1rem;
+  height: 100%;
+  padding: 0.5rem;
+  border-radius: var(--radius-card);
+  background: var(--surface-muted);
+  box-shadow: var(--shadow-card-ink);
+  color: var(--on-surface);
+  transition: background-color var(--motion-settle) var(--ease-standard);
+
+  @media (min-width: 40rem) {
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+    gap: 0.5rem;
+  }
+
+  @media (forced-colors: active) {
+    border: 1px solid ButtonText;
+  }
+}
+
+a.hub-design:hover {
+  background: var(--surface-tint);
+}
+
+a.hub-design:focus-visible {
+  outline: 2px solid var(--brand-ink);
+  outline-offset: 3px;
+}
+
+/* The name keeps its words together; where the state beside it has no room, it drops below. */
+.hub-design-caption {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.25rem 0.75rem;
+  min-width: 0;
+  padding-inline-end: 0.5rem;
+  font-size: var(--text-small);
+  line-height: var(--text-small--line-height);
+
+  @media (min-width: 40rem) {
+    padding: 0.25rem 0.5rem 0.375rem;
+  }
+}
+
+.hub-design-name {
+  display: flex;
+  flex: 1 0 auto;
+  flex-direction: column;
+  min-width: 0;
+  max-width: 100%;
+  font-weight: 600;
+}
+
+.hub-design-state {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: var(--text-label);
+  color: var(--on-surface-muted);
+
+  /* Under a poster, where the card is narrow, it has a line of its own; so on the narrowest
+     phone, where it fitted beside one name in three and the rows read unevenly. */
+  @media (min-width: 40rem), (width < 22.5rem) {
+    flex-basis: 100%;
+  }
+}
+
+.hub-design-dot {
+  width: 0.375rem;
+  height: 0.375rem;
+  border-radius: 50%;
+  background: var(--brand-ink);
+}

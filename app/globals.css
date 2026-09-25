@@ -236,13 +236,15 @@ body {
  * closing's foot the same way, with its own rounded corners.
  *
  * The pool is its own element so the scroll can move it (app/_components/motion/ink-pool.ts):
- * from md up, with motion allowed, it stretches with the scroll's speed and springs back, by a
- * scaleY about its flat top edge, which the compositor does on the pool's own layer; a
- * border-radius on the stretch itself would repaint the whole dark band on every frame. The
- * path starts two units above its top edge, so the join with the stretch never shows a hairline
- * where two layers meet on a fractional pixel; overflow is visible so that strip is drawn. The
- * layer is kept up only where the scroll drives it. Phones and reduced motion get the resting
- * segment, which is the server markup.
+ * from md up, with motion allowed, it deepens with the scroll's speed and swings back as liquid,
+ * by rewriting its one path each frame (lib/motion/pool-curve.ts), which repaints the pool's own
+ * layer, a strip --pool deep that will-change keeps up where the scroll drives it, and nothing
+ * else; a border-radius on the stretch itself would repaint the whole dark band on every frame.
+ * The path starts two units above its top edge, so the join with the stretch never shows a
+ * hairline where two layers meet on a fractional pixel; overflow is visible so that strip is
+ * drawn. The transform-origin is /start's, whose curve is kicked by a scaleY about the flat top
+ * edge (lib/motion/start-curve.ts). Phones and reduced motion get the resting segment, which is
+ * the server markup.
  *
  * The stretch is the hero's foot, flat. A feather from the hero's rest edge (#02111e) was tried
  * and read as a line: after the ground's rise the foot is #020a12 across the whole width, and at
@@ -294,6 +296,43 @@ body {
 }
 
 /*
+ * The sheet's lip (app/_components/motion/sheet-lip.ts): from md up, with motion allowed, the
+ * choreography marks the sheet data-lip and its rounded top becomes one SVG path it moves with
+ * the scroll as liquid (lib/motion/lip-curve.ts). Marked, the sheet drops its CSS corners and
+ * leaves its top strip unpainted, --lip-room corner radii deep (keep equal to LIP_ROOM in
+ * lib/motion/lip-curve.ts), which is where the lip paints the corners, the flat top and any
+ * trough the scroll sags into it; a swell rises above the strip, over the closing's foot, which
+ * is why the sheet's clip sits on the box inside it and not on the sheet; that box is also
+ * positioned, so it paints over the lip's foot, which reaches under the column headings (a
+ * positioned lip would otherwise paint over in-flow text whatever the DOM order). The lip is
+ * --seam tall so the driver can measure the corners' radius from it, and its will-change keeps
+ * it on its own layer, so each frame's path repaints the lip and nothing else. Unmarked (phones,
+ * reduced motion, before the choreography loads) the lip is not drawn and the CSS corners
+ * stand, which is the server markup.
+ */
+.sheet-lip {
+  display: none;
+}
+
+.sheet[data-lip] {
+  --lip-room: 1.3;
+  border-radius: 0;
+  background: linear-gradient(transparent calc(var(--seam) * var(--lip-room)), var(--surface) 0);
+}
+
+.sheet[data-lip] > .sheet-lip {
+  position: absolute;
+  inset: 0 0 auto;
+  display: block;
+  width: 100%;
+  height: var(--seam);
+  overflow: visible;
+  fill: var(--surface);
+  pointer-events: none;
+  will-change: transform;
+}
+
+/*
  * The one corner glow a light card may carry, placed by the list's --i so neighbours differ: the
  * even cards light their top-right corner, the odd ones their top-left (cos of a half turn per
  * step swings the centre between 85% and 15%), so it is always a corner and never the same one
@@ -318,7 +357,11 @@ body {
   isolation: isolate;
 }
 
-/* Each section's own rules live in its own file, so parallel builders never share a line. */
+/*
+ * Each section's own rules live in its own file, so parallel builders never share a line. /start's
+ * sheet is not one of them: its route imports it (app/start/page.tsx), so the home page never
+ * downloads the questionnaire's rules.
+ */
 @import './_styles/work.css';
 @import './_styles/how-it-works.css';
 @import './_styles/your-options.css';
@@ -328,7 +371,6 @@ body {
 @import './_styles/footer.css';
 @import './_styles/brand.css';
 @import './_styles/header.css';
-@import './_styles/start.css';
 
 /* The fixed header is 4rem tall; keep every fragment jump and focus scroll clear of it. */
 html {
@@ -488,20 +530,21 @@ html.lenis {
 }
 
 /*
- * Entrances. A question slides in as the previous one leaves; a sketch element rises as it is
- * painted. Both are keyed remounts, so a plain animation is enough. Under reduced motion the
- * same keyframes fade only.
+ * Entrances. A question fades in as the previous one leaves, by its opacity alone at every
+ * setting, since it holds the heading and the ask that rides the foot, which never move
+ * (docs/start-page-journey-plan.md, 6.3); what rises inside it is /start's own
+ * (app/_styles/start.css). A sketch element rises as it is painted. Both are keyed remounts, so a
+ * plain animation is enough. Under reduced motion the sketch's keyframes fade only.
  */
+@keyframes question-in {
+  from {
+    opacity: 0;
+  }
+}
+
 @media (prefers-reduced-motion: no-preference) {
   html {
     scroll-behavior: smooth;
-  }
-
-  @keyframes question-in {
-    from {
-      opacity: 0;
-      translate: 0.5rem 0;
-    }
   }
 
   @keyframes sketch-in {
@@ -581,12 +624,6 @@ html.lenis {
     --motion-stagger: 0ms;
     /* The menu only fades here, and its fade keeps the page's own timing. */
     --menu-pace: 1;
-  }
-
-  @keyframes question-in {
-    from {
-      opacity: 0;
-    }
   }
 
   @keyframes sketch-in {
@@ -741,6 +778,29 @@ details.faq[open]::details-content {
   pointer-events: none;
   mix-blend-mode: multiply;
   filter: blur(8px);
+}
+
+/*
+ * The closing section's canvas has a top edge in the middle of the page, against the white band
+ * above, where the hero's edges are the screen's and its foot is near-black. The dye is clamped
+ * to its texture's edge, so ink carried up there ended in a flat line where the section's
+ * overflow clipped the canvas. The mask feathers the ink out over the top of the band in an
+ * eased ramp (a straight one ends in a crease on the black core), over three tenths of the band
+ * held between eight and sixteen rem. A masked-out pixel is transparent, which the multiply
+ * leaves alone. The mask must sit on the canvas itself: on a wrapper it would isolate the
+ * canvas's blend from the section's ground, and the ink would paint unmultiplied.
+ */
+.ink-fade-top {
+  --feather: clamp(8rem, 30%, 16rem);
+  mask-image: linear-gradient(
+    to bottom,
+    transparent,
+    rgb(0 0 0 / 0.1) calc(var(--feather) * 0.2),
+    rgb(0 0 0 / 0.35) calc(var(--feather) * 0.4),
+    rgb(0 0 0 / 0.65) calc(var(--feather) * 0.6),
+    rgb(0 0 0 / 0.9) calc(var(--feather) * 0.8),
+    black var(--feather)
+  );
 }
 
 /*

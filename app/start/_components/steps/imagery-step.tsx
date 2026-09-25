@@ -1,45 +1,45 @@
 'use client'
 
 import { Images, X } from 'lucide-react'
+import Link from 'next/link'
+import { IMAGERY, PICTURES_LINK, TRY_AGAIN } from '@/app/start/_components/start-copy'
 import type { LocalImage, StepProps } from '@/app/start/_components/step-props'
 import { Button } from '@/components/ui/button'
-import { captionStyles } from '@/components/ui/caption'
 import { ChoiceCard } from '@/components/ui/choice-card'
 import { FieldError } from '@/components/ui/field'
 import { FilePicker } from '@/components/ui/file-picker'
+import { textLinkStyles } from '@/components/ui/text-link'
 import type { DraftImagery } from '@/lib/brief/schema'
-import { STYLES, type VisualStyle } from '@/lib/brief/styles'
+import { STYLES } from '@/lib/brief/styles'
 import { acceptFor } from '@/lib/brief/uploads'
 import { CONFIG } from '@/lib/config'
+import { SITE } from '@/lib/site'
 
 const ACCEPT = acceptFor('photos')
-
-// A swatch per style. Literal classes so Tailwind can see them.
-const SWATCH: Readonly<Record<VisualStyle, string>> = {
-  warm: 'bg-linear-to-br from-warning/70 to-danger/50',
-  minimal: 'bg-linear-to-br from-surface-muted to-border',
-  bold: 'bg-linear-to-br from-brand to-glow-secondary',
-  dark: 'bg-linear-to-br from-on-surface-muted to-scrim',
-}
 
 type Props = StepProps & {
   photos: readonly LocalImage[]
   onFiles: (files: readonly File[]) => void
   onRemovePhoto: (id: string) => void
+  onRetry: (id: string) => void
   onPreview: (value: DraftImagery | null) => void
 }
 
-// A style is always chosen and photos are optional. The two sit side by side: the style is
-// applied to the photos as a treatment, and without photos it guides the ones we find.
+// The third question: a look is always chosen and photos are optional
+// (docs/start-page-journey-plan.md, 4.6). The two sit side by side: the look is applied to the
+// photos as a treatment, and without photos it guides the ones we find. With a fine pointer the
+// digits 1 to 4 choose a look while the group has the focus (components/ui/choice-card.tsx).
 //
-// The styles sit two to a row only once the question's column is 30rem wide, because a card
-// narrower than about 240 px breaks its title and detail word by word. The column decides, not
-// the screen, since from lg the question has under half the screen.
+// The looks sit two to a row wherever a card can be 14rem wide, which keeps each look's name on
+// one line beside its picture; the column decides, not the screen, since from lg the question has
+// under half the screen (app/_styles/start.css, .start-looks). Each look shows its mood art, the
+// picture the draft draws for it until photos arrive, with "Aa" in its display face once that has
+// loaded (.mood-art), and its check on the picture's corner.
 //
-// Nothing here is ruled off: the photos are introduced by a quiet caption line with air above
-// it, and the swatches and thumbnails sit on the badge shadow rather than a border. A photo's
-// upload tag is dark words on a white band over the picture, a red dot marking a failure, since
-// white on red at that size would fall under 4.5:1.
+// Nothing here is ruled off: the thumbnails sit on the badge shadow rather than a border. A
+// photo's upload tag is dark words on a white band over the picture, a red dot marking a failure,
+// since white on red at that size would fall under 4.5:1; a failed photo offers "Try again"
+// beside its "Remove".
 export function ImageryStep({
   answers,
   errors,
@@ -47,19 +47,15 @@ export function ImageryStep({
   photos,
   onFiles,
   onRemovePhoto,
+  onRetry,
   onPreview,
 }: Props) {
   const { imagery } = answers
-  const max = CONFIG.form.maxPhotos
-  const full = photos.length >= max
+  const full = photos.length >= CONFIG.form.maxPhotos
 
   return (
-    <div className="@container flex flex-col gap-4">
-      <div
-        role="radiogroup"
-        aria-label="Visual style"
-        className="grid gap-2 @min-[30rem]:grid-cols-2"
-      >
+    <div className="flex flex-col gap-4">
+      <div role="radiogroup" aria-label={IMAGERY.group} className="start-looks">
         {STYLES.map(({ id, label, detail }) => (
           <ChoiceCard
             key={id}
@@ -77,14 +73,15 @@ export function ImageryStep({
             media={
               <span
                 aria-hidden="true"
-                className={`size-10 shrink-0 rounded-xl shadow-badge ${SWATCH[id]}`}
-              />
+                data-style={id}
+                className="mood-art size-14 shrink-0 rounded-xl"
+              >
+                <span className="start-specimen">Aa</span>
+              </span>
             }
           />
         ))}
       </div>
-
-      <p className={`${captionStyles} pt-2`}>and your own photos, if you have them</p>
 
       {!full && (
         <FilePicker
@@ -94,7 +91,7 @@ export function ImageryStep({
           className="justify-center gap-2 py-4 text-sm font-medium"
         >
           <Images aria-hidden="true" className="size-4 text-brand-ink" />
-          {photos.length === 0 ? 'Add your own photos' : 'Add more photos'}
+          {photos.length === 0 ? IMAGERY.addPhotos : IMAGERY.addMorePhotos}
         </FilePicker>
       )}
 
@@ -111,14 +108,27 @@ export function ImageryStep({
                 style={{ backgroundImage: `url(${photo.url})` }}
                 className="absolute inset-0 bg-cover bg-center"
               />
-              {photo.status !== 'done' && (
-                <span
-                  className={`absolute inset-x-0 bottom-0 flex items-center justify-center gap-1 bg-surface/90 px-1.5 py-0.5 text-label ${photo.status === 'failed' ? 'text-on-surface' : 'text-on-surface-muted'}`}
-                >
-                  {photo.status === 'failed' && (
+              {photo.status === 'uploading' && (
+                <span className="absolute inset-x-0 bottom-0 bg-surface/90 px-1.5 py-0.5 text-center text-label text-on-surface-muted">
+                  {IMAGERY.uploading}
+                </span>
+              )}
+              {photo.status === 'failed' && (
+                <span className="absolute inset-x-0 bottom-0 flex flex-col items-center bg-surface/90 px-1.5 py-0.5 text-center text-label text-on-surface">
+                  <span className="flex items-center gap-1">
                     <span aria-hidden="true" className="size-1.5 shrink-0 rounded-full bg-danger" />
-                  )}
-                  {photo.status === 'failed' ? 'failed' : 'uploading'}
+                    {IMAGERY.failed}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onRetry(photo.id)
+                    }}
+                    aria-label={`${TRY_AGAIN}: ${photo.name}`}
+                    className={`${textLinkStyles} cursor-pointer`}
+                  >
+                    {TRY_AGAIN}
+                  </button>
                 </span>
               )}
               <Button
@@ -128,7 +138,7 @@ export function ImageryStep({
                 onClick={() => {
                   onRemovePhoto(photo.id)
                 }}
-                aria-label={`Remove ${photo.name}`}
+                aria-label={`${IMAGERY.remove} ${photo.name}`}
               >
                 <X aria-hidden="true" className="size-4" />
               </Button>
@@ -137,15 +147,17 @@ export function ImageryStep({
         </ul>
       )}
 
-      {/* Question four has no control that carries aria-invalid, so after a failed Next or a
+      {/* The look question has no control that carries aria-invalid, so after a failed Next or a
           refused photo the message announces itself. On the other questions the question pane
           moves focus to the first invalid control instead. */}
       {errors.imagery !== undefined && <FieldError role="alert">{errors.imagery}</FieldError>}
 
       <p className="text-sm text-on-surface-muted">
-        {full ? `That is the full ${String(max)}.` : `Up to ${String(max)} photos.`} Your style is
-        applied to them. Without any, we find photos to match your style and credit every
-        photographer.
+        {IMAGERY.caption}{' '}
+        <Link href="/privacy" target="_blank" className={textLinkStyles}>
+          {PICTURES_LINK}
+          <span className="sr-only"> {SITE.newTab}</span>
+        </Link>
       </p>
     </div>
   )

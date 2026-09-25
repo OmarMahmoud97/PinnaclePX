@@ -35,12 +35,14 @@ async function load(slug: string) {
   return { ...found, status: statusOf(found.submission) }
 }
 
-// The visitor's email, once. Sent only when every stage finished: a page the sweeper had to
-// settle with a fallback is opened from the screen but not announced, and the log says so.
-// Nothing is sent for an exhausted or failed submission either: there is no page to link to.
+// The visitor's email, once, whenever there is a page to open: every stage finished, or the
+// sweeper settled one with its fallback at the deadline, which the email then says (ADR 0015 D5,
+// amended by docs/start-page-journey-plan.md, OD9a). The done page promises the email for both.
+// Nothing is sent for an exhausted or failed submission: there is no page to link to, and the
+// log says it was withheld.
 async function sendToVisitor(slug: string): Promise<Outcome> {
   const { submission, lead, status } = await load(slug)
-  if (status.status !== 'ready') {
+  if (status.status !== 'ready' && status.status !== 'partial') {
     log.warn('email.withheld', { slug, status: status.status })
     return { sent: false, reason: status.status }
   }
@@ -52,6 +54,7 @@ async function sendToVisitor(slug: string): Promise<Outcome> {
     previewUrl: `${env.NEXT_PUBLIC_APP_URL}/preview/${slug}`,
     bookingUrl: SITE.bookingUrl,
     conceptCount: submission.conceptCount,
+    partial: status.status === 'partial',
   })
   const id = await sendEmail(lead.email, email)
   await markEmailSent(slug)

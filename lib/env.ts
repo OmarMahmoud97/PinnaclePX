@@ -15,8 +15,16 @@ export const env = createEnv({
     INNGEST_SIGNING_KEY: z.string().min(1),
     RESEND_API_KEY: z.string().min(1),
     // The sender, "Name <address>", on a domain verified in Resend. Unset, Resend's test sender
-    // is used, which reaches only the account owner's own address.
-    RESEND_FROM: z.string().min(1).optional(),
+    // is used, which reaches only the account owner's own address. So the production deployment
+    // refuses to build without it: the pages promise the visitor an email that would never arrive
+    // (docs/start-page-journey-plan.md, D23). A local build and a preview deployment still build.
+    RESEND_FROM: z
+      .string()
+      .min(1)
+      .optional()
+      .refine((value) => value !== undefined || process.env.VERCEL_ENV !== 'production', {
+        error: 'RESEND_FROM must name a verified sender on the production deployment',
+      }),
     // Where the notice of every build goes: the links, the client's answers and the tokens the
     // model calls cost (lib/email/owner-notice.ts).
     OWNER_EMAIL: z.email(),

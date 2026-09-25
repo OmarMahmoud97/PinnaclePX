@@ -3,6 +3,7 @@
 - Status: accepted
 - Date: 4 September 2026
 - Amends: ADR 0009 (decision 1), ADR 0013 (decision 1)
+- Amended by: ADR 0037 (decision 5, 24 September 2026)
 
 ## Context
 
@@ -14,7 +15,7 @@ Under ADR 0009 a stage that failed fell back at once: a model call that returned
 2. **The brief is the one bounded stage.** It is only the raw material for the copy and the searches, so it is tried `CONFIG.brief.attempts` times within its step, with the same pause between, and then its deterministic fallback is written and the pipeline moves on. Otherwise a failing brief would starve the imagery stage until the deadline, which the first gate of this change showed: a page with no pictures at all.
 3. **Copy that breaks its limits is asked for again a bounded number of times.** An answer that still breaks a limit after the in-call retry is asked for again on the next attempt of the step; after `CONFIG.copy.attempts` the template's fallback stands. An API failure is retried like any other stage.
 4. **The imagery stage keeps what it filled.** A run whose plan left a slot empty writes the filled slots to the row while it retries; the sweeper's imagery fallback keeps the column as it is.
-5. **Ready means every stage finished.** `statusOf` returns `ready` only when select, tokens, copy and imagery are all `done`; when any was settled by the sweeper it returns `partial`. The done page and the preview open a partial page like a ready one, because at that point the deadline is the guarantee the visitor was given. The email is sent only for `ready`, and `email.withheld` is logged otherwise.
+5. **Ready means every stage finished.** `statusOf` returns `ready` only when select, tokens, copy and imagery are all `done`; when any was settled by the sweeper it returns `partial`. The done page and the preview open a partial page like a ready one, because at that point the deadline is the guarantee the visitor was given. The email is sent only for `ready`, and `email.withheld` is logged otherwise. Amended 24 September 2026 (ADR 0037, decision 10): a `partial` page is emailed too, with a line saying a few parts were set simply to finish on time, because the done page promises the email while the designs build, before anyone knows whether a stage will be settled; `email.withheld` is logged for `failed` and `exhausted` only.
 6. **Upload limit raised.** `CONFIG.rateLimit.uploadsPerIp.max` is 100 an hour: a shared office address uploading six photographs and a logo per submission must not run out.
 
 ## Consequences

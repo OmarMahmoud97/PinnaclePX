@@ -1,24 +1,11 @@
 import { expect, type Page, type Route, test } from '@playwright/test'
 
 // The questionnaire's shell (app/start/_components/brief-flow.tsx, sketch-pane.tsx and
-// start-layout.ts): the question first in the DOM and the sketch first on a phone's screen, the
-// dark scope kept off the region that declares the sketch's colours, a desk page at 1440 by 900
-// that never scrolls at any question, and a hydration that moves nothing.
-
-// The flow restores a saved draft and allows any question up to the first unanswered one, so a
-// draft written before the page's own scripts run opens the later questions directly. The key
-// and the shape are lib/brief/draft.ts's and lib/brief/schema.ts's draftSchema.
-const DRAFT_KEY = 'pinnaclepx.brief'
-const ANSWERED = {
-  description:
-    'Physiotherapy clinic in Sheffield. Sports injuries, post-op rehab and same-week appointments.',
-  name: 'Sam',
-  company: 'Ashgrove Physio',
-  email: 'sam@ashgrove.example',
-  logo: { kind: 'wordmark' },
-  imagery: { style: 'minimal', photos: [] },
-  colours: { kind: 'palette', paletteId: 'forest' },
-}
+// start-layout.ts): the question first in the DOM and the draft first on a phone's screen, and a
+// hydration that moves nothing. On a phone the window is the draft's phone frame, restyled at its
+// own size (docs/start-page-journey-plan.md, D8), so its box is the one the phone reading holds
+// still. brief-ground.spec.ts holds the desk page at 1440 by 900, which never scrolls at any
+// question, and keeps the dark scope off the region that declares the draft's colours.
 
 // The most a box may move, in CSS pixels, between the server's skeleton and the mounted flow.
 // The island's row settles 0.97 px wider at 1440, which is sub-pixel; anything the swap really
@@ -30,15 +17,6 @@ const MAX_HYDRATION_DRIFT = 1.5
 // How long after the question shows before the flow's boxes are read: the island's first
 // reading, the fonts and the entrance all land well inside it.
 const SETTLE_MS = 1_000
-
-async function withDraft(page: Page, draft: object) {
-  await page.addInitScript(
-    ({ key, value }) => {
-      sessionStorage.setItem(key, value)
-    },
-    { key: DRAFT_KEY, value: JSON.stringify(draft) },
-  )
-}
 
 // Sending the brief runs the paid pipeline, writes a lead and emails the owner. Nothing here
 // sends one, and this makes sure: every POST to /start, which is how the Server Action travels,
@@ -57,8 +35,9 @@ function region(page: Page) {
 type Box = { x: number; y: number; width: number; height: number }
 
 // The shell's boxes once the brand fonts have landed, so both readings share them: main, the
-// region, its two frames and the island's row. The browser frame is hidden below lg, so it reads
-// 0 by 0 there in both, which compares like any other box.
+// region, the draft's two frames and the island's row. Below 36rem the browser frame is hidden and
+// the phone frame is the window; a hidden frame reads 0 by 0 in both readings, which compares like
+// any other box.
 function shellBoxes(page: Page) {
   return page.evaluate(async () => {
     await document.fonts.ready
@@ -82,7 +61,7 @@ function shellBoxes(page: Page) {
 test('the question comes first in the DOM and the sketch first on a phone', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 })
   await page.goto('/start')
-  await expect(page.getByRole('heading', { level: 1, name: 'First, your business.' })).toBeVisible()
+  await expect(page.locator('main#main h1')).toBeVisible()
 
   // A screen reader hears the question, its control and the ask before the drawing.
   const mainFirst = await page.evaluate(() => {
@@ -96,7 +75,7 @@ test('the question comes first in the DOM and the sketch first on a phone', asyn
   })
   expect(mainFirst).toBe(true)
 
-  // On screen the sketch is on top and the question under it.
+  // On screen the draft is on top and the question under it.
   const sketchBox = await region(page).boundingBox()
   const mainBox = await page.locator('main#main').boundingBox()
   expect(sketchBox).not.toBeNull()
@@ -110,41 +89,6 @@ test('the question comes first in the DOM and the sketch first on a phone', asyn
   const wideMain = await page.locator('main#main').boundingBox()
   if (wideSketch === null || wideMain === null) throw new Error('the shell lost a pane at 1440')
   expect(wideMain.x + wideMain.width).toBeLessThanOrEqual(wideSketch.x + 1)
-})
-
-test('the dark scope sits on the ground layer, never on the region', async ({ page }) => {
-  await withDraft(page, ANSWERED)
-  await page.goto('/start?q=4')
-  await expect(
-    page.getByRole('heading', { level: 1, name: 'How should Ashgrove Physio look?' }),
-  ).toBeVisible()
-  const sketch = region(page)
-
-  // Neither the region, which declares the sketch's colours, nor anything around it is a scope.
-  expect(await sketch.evaluate((element) => element.closest('[data-theme]') === null)).toBe(true)
-
-  // Its ground is, and paints the ink.
-  const ground = sketch.locator(':scope > div[aria-hidden="true"][data-theme="dark"]')
-  await expect(ground).toHaveCount(1)
-  await expect(ground).toHaveCSS('background-color', 'rgb(2, 10, 18)')
-
-  // So a light-style sketch keeps its white page on the ink. A scope on the region would turn it
-  // the ink too, since the light scheme reads the surface where the region declares it.
-  await expect(sketch.locator('[data-frame="browser"]')).toHaveCSS(
-    'background-color',
-    'rgb(255, 255, 255)',
-  )
-})
-
-test('at 1440 by 900 no question scrolls', async ({ page }) => {
-  await withDraft(page, ANSWERED)
-  for (const question of [1, 2, 3, 4, 5]) {
-    await page.goto(`/start?q=${String(question)}`)
-    await expect(page).toHaveURL(new RegExp(`q=${String(question)}$`))
-    await expect(page.locator('main#main h1')).toBeVisible()
-    const height = await page.evaluate(() => document.documentElement.scrollHeight)
-    expect(height, `question ${String(question)}`).toBe(900)
-  }
 })
 
 for (const [width, height] of [
@@ -168,9 +112,7 @@ for (const [width, height] of [
     // The same page with its scripts, once the flow has mounted over the skeleton and settled.
     await page.unroute('**/*', refuseScripts)
     await page.goto('/start')
-    await expect(
-      page.getByRole('heading', { level: 1, name: 'First, your business.' }),
-    ).toBeVisible()
+    await expect(page.locator('main#main h1')).toBeVisible()
     await page.waitForTimeout(SETTLE_MS)
     const flow = await shellBoxes(page)
 

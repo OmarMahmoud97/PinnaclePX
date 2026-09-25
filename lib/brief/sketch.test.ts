@@ -1,34 +1,31 @@
 import { describe, expect, it } from 'vitest'
-import {
-  brandHexFrom,
-  builtTintsFrom,
-  initialsFrom,
-  tabLabelFrom,
-  tintsFrom,
-} from '@/lib/brief/sketch'
-
-describe('initialsFrom', () => {
-  it('takes the first letter of the first two words', () => {
-    expect(initialsFrom('Ashgrove Physio Clinic')).toBe('AP')
-  })
-
-  it('handles one word and empty input', () => {
-    expect(initialsFrom('mvmnt')).toBe('M')
-    expect(initialsFrom('')).toBe('')
-  })
-})
+import { brandHexFrom, builtTintsFrom, tabLabelFrom, tintsFrom } from '@/lib/brief/sketch'
+import { CONFIG } from '@/lib/config'
 
 describe('tabLabelFrom', () => {
   it('lowercases and hyphenates', () => {
     expect(tabLabelFrom('Go Wild Dog Walking')).toBe('go-wild-dog-walking')
   })
 
-  it('strips punctuation and trims stray hyphens', () => {
-    expect(tabLabelFrom("  Sam's Café & Bar! ")).toBe('sam-s-caf-bar')
+  it('drops accents and apostrophes, strips punctuation and trims stray hyphens', () => {
+    expect(tabLabelFrom("  Sam's Café & Bar! ")).toBe('sams-cafe-bar')
+    expect(tabLabelFrom('Crème Brûlée Co.')).toBe('creme-brulee-co')
+  })
+
+  it('keeps letters and digits of any script', () => {
+    expect(tabLabelFrom('Кафе Пушкин 24')).toBe('кафе-пушкин-24')
+  })
+
+  it('cuts a long name with an ellipsis, never past the limit', () => {
+    const label = tabLabelFrom('Ashgrove Physiotherapy and Sports Injury Clinic')
+    expect(label).toBe('ashgrove-physiotherapy-and…')
+    expect(Array.from(label)).toHaveLength(CONFIG.start.names.slugMax - 1)
+    expect(Array.from(tabLabelFrom('a'.repeat(80)))).toHaveLength(CONFIG.start.names.slugMax)
   })
 
   it('falls back before a company name exists', () => {
     expect(tabLabelFrom('')).toBe('your-company')
+    expect(tabLabelFrom('&&&')).toBe('your-company')
   })
 })
 

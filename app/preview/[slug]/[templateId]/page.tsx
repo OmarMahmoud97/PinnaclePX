@@ -9,7 +9,6 @@ import { readSubmissionWithLead } from '@/lib/db/submissions'
 import { type PreviewRow, readPreview } from '@/lib/preview/read'
 import { statusOf } from '@/lib/preview/status'
 import { tokenStyle } from '@/lib/tokens/css'
-import { TEMPLATES } from '@/templates/registry'
 import { renderConcept } from '@/templates/render'
 
 type Params = Promise<{ slug: string; templateId: string }>
@@ -52,13 +51,12 @@ export default async function ConceptPage({ params }: { params: Params }) {
   const templateId = row.templateIds?.[index] ?? null
   const concept =
     status.status === 'ready' || status.status === 'partial' ? status.concepts[index] : undefined
-  const name = TEMPLATES.find((t) => t.id === templateId)?.name ?? 'Your design'
 
   return (
     <div className="flex min-h-dvh flex-col">
       <StudioBar slug={row.slug} index={index} count={row.conceptCount} company={answers.company} />
       {concept?.ready !== true || templateId === null ? (
-        <ConceptPending slug={row.slug} initial={status} name={name} />
+        <ConceptPending slug={row.slug} initial={status} index={index} />
       ) : (
         <ConceptBody row={row} answers={answers} templateId={templateId} />
       )}

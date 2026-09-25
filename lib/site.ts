@@ -1,6 +1,6 @@
 import { CONFIG } from '@/lib/config'
 
-// Marketing site identity, and the lines the home page and the five questions both repeat.
+// Marketing site identity, and the lines more than one page, or a page and the email, repeat.
 export const SITE = {
   name: 'PinnaclePX',
   legalName: 'Pinnacle PX',
@@ -18,12 +18,22 @@ export const SITE = {
   description:
     'A UK web design studio. Websites designed by hand, written for you and tested on a phone before launch. Three designs in your colours first, free.',
   reassurance: 'Free. No sign-up. Nobody calls you unless you book.',
+  // The same under the last ask, where the email has just been given: no longer "No sign-up",
+  // which would read as a promise the address breaks.
+  reassuranceSend: 'Free. Nobody calls you unless you book.',
   // What the call ends with is the agenda's last line, said here so the button's caption carries
   // the risk reversal: the quote is the visitor's to walk away from.
   callPromise:
     'No pitch. We look at your designs together, and you leave with a fixed quote. Go ahead only if you want to.',
-  // One promise about colour, shared by the home page and question five.
+  // One promise about colour, shared by the home page and the colour question.
   colourPromise: 'Your colour stays. We only adjust it if text would be hard to read on it.',
+  // A build the deadline sweeper finished with a fallback (a headline set from the sentence, a
+  // photo space left plain) still opens and is still emailed; the done page and the email both
+  // say so in these words.
+  partialNote: 'A few parts were set simply, to finish on time.',
+  // Said after the name of every link that opens a new tab, for a screen reader, so leaving the
+  // page is never a surprise.
+  newTab: '(opens in a new tab)',
   // The studio's place and inbox. Null until the owner supplies them, and nothing names a place
   // until then.
   town: null as string | null,
@@ -44,11 +54,16 @@ export function printedPrice(net: number, price: VatState = CONFIG.price): strin
   return price.vatRegistered ? `${figure} including VAT` : figure
 }
 
-// The words in words: "five-page", so the scope reads as the page's other counts do.
-const PAGE_WORDS = ['', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine']
+const NUMBER_WORDS = ['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine']
+
+// A small count in words, "five-page" or "Design two", as the site writes its counts; figures
+// from ten.
+export function numberWord(count: number): string {
+  return NUMBER_WORDS[count - 1] ?? String(count)
+}
 
 // A count word that opens a sentence.
-function capitalise(word: string): string {
+export function capitalise(word: string): string {
   return word.charAt(0).toUpperCase() + word.slice(1)
 }
 
@@ -64,10 +79,10 @@ const EXAMPLE_PAGES = 5
 // Every figure is derived from CONFIG.price, so one edit moves all of them, and the count of
 // pages in a sentence moves with the figure it describes.
 export const PRICE = {
-  scope: `A ${PAGE_WORDS[CONFIG.price.pages] ?? String(CONFIG.price.pages)}-page site with a contact form is ${printedPrice(CONFIG.price.from)}.`,
+  scope: `A ${numberWord(CONFIG.price.pages)}-page site with a contact form is ${printedPrice(CONFIG.price.from)}.`,
   basis: 'One fixed quote on the call, worked out from pages and what has to connect.',
   extras: `Extra pages are ${printedPrice(CONFIG.price.perPage)} each. Bookings, payments and other tools are quoted by what they are.`,
-  worked: `${capitalise(PAGE_WORDS[EXAMPLE_PAGES] ?? String(EXAMPLE_PAGES))} pages, for example, come to ${printedPrice(CONFIG.price.from + Math.max(0, EXAMPLE_PAGES - CONFIG.price.pages) * CONFIG.price.perPage)}.`,
+  worked: `${capitalise(numberWord(EXAMPLE_PAGES))} pages, for example, come to ${printedPrice(CONFIG.price.from + Math.max(0, EXAMPLE_PAGES - CONFIG.price.pages) * CONFIG.price.perPage)}.`,
   // The qualification the law wants in the same breath as the figure (CRA 2015 s.50), and what
   // the figure does not include, said where the figure is rather than left to be discovered.
   cra: 'It does not change unless you ask for more, and then we quote that in writing first.',
@@ -90,3 +105,15 @@ export const CALL_AGENDA: readonly CallAgendaItem[] = [
   },
   { from: 15, to: CONFIG.call.minutes, what: 'A fixed quote and a timeline.' },
 ]
+
+// What /start says where the questions would be to a visitor without JavaScript (plan 4.6). It
+// offers an inbox only once the studio has one (SITE.contactEmail); until then it promises
+// nothing it cannot keep and says only how to go on.
+export function noScriptLine(contactEmail: string | null = SITE.contactEmail): string {
+  return contactEmail === null
+    ? 'The five questions need JavaScript. Turn it on to see your three designs.'
+    : `The five questions need JavaScript. Turn it on, or email us at ${contactEmail}.`
+}
+
+// The other way on, beside the inbox: a link to the booking page.
+export const NO_SCRIPT_CALL = `You can also book a ${String(CONFIG.call.minutes)}-minute call.`

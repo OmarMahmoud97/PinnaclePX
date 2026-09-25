@@ -1,6 +1,12 @@
 # The questionnaire continues the ink
 
-- Status: accepted
+- Status: accepted; amended by ADR 0037. Its first release (24 September 2026) amends decision 21
+  (the partial lead, the time-up line, the designs' names, the call in a new tab) and corrects
+  decision 23's claim about `lib/motion`; its second (25 September 2026) amends decisions 1 (the
+  titles are fixed), 13 (the mark, the look and the colour are radio groups) and 17 (the
+  `enterKeyHint` chain, and Enter on question one for a fine pointer); its third, also of 25
+  September 2026, supersedes decisions 9 (the chips), 19, 20, 21, 23, 24 and 25 and amends 1, 2,
+  11, 15 and 16, each noted below
 - Date: 24 September 2026
 - Supersedes: ADR 0004's decisions on the page's look (the chrome's hairline bar in decision 7 and
   the frames' arrangement below `lg` in decision 8), and the layout sections of
@@ -40,14 +46,21 @@ the build's fence.
 1. **Direction A, grafted.** The sketch sits on the hero's ink with a pool of light behind it, the
    question sits on the wash, and every control is a white card. B's rooms in the visitor's own
    colour are refused because they sit outside the colour grammar; C's sticky board on a phone is
-   the pinned panel over copy the owner rejected in the walkthrough the same day.
+   the pinned panel over copy the owner rejected in the walkthrough the same day. Amended 25
+   September 2026 (ADR 0037, Release 3): from `lg` the hero's ramp runs under both panes, so the
+   question stands in the hero's light and the draft on its dark band; the card is white from
+   `sm`, its fields wells of the wash; and from the colour question the visitor's colour re-hues
+   the dark band, never a room.
 2. **Below `lg` the sketch is the whole phone.** `BriefSketch` shows `PhoneSketch` at every width
    and the browser frame from `lg` only. Below `lg` the phone stands in the flow at CSS zoom 0.7
    (101 by 213 px) beside the brief as a list, and the region is 309 px against the 320 px
    `e2e/brief.spec.ts` allows; no crop, no fade and no growth by stage. At review: on a screen under
    760 px tall, which is Safari's 664 px on the common iPhones with its bars showing, the phone
    drops to half size (72 by 152) and the region to 228 px, so every question's first control shows
-   above the ask on arrival (`app/_styles/start.css`).
+   above the ask on arrival (`app/_styles/start.css`). Amended 25 September 2026 (ADR 0037,
+   Release 3): `BriefSketch` is deleted. Below 36rem the live draft's phone frame is a window onto
+   its page at the page's own size, 212 px tall under a "Live draft" bar; from 36rem to `lg` the
+   region shows a 300 px crop of the desk's page; under 47.5rem tall either crop is 150 px.
 3. **One region, one sketch, one list.** "Your brief so far" is one section holding one
    `BriefSketch`, with both frames in the DOM at every width, and one `SketchChips`. Two regions of
    one name would put the empty brief's sentence in the DOM twice.
@@ -85,6 +98,9 @@ the build's fence.
    one string, so one text node, because WebKit set a lone digit in proportional figures and the
    island, measured once, was too short from question two; and at the done state the island says
    "Brief received" over five lit segments, said once; the done pane carries no eyebrow of its own.
+   Superseded in part 25 September 2026 (ADR 0037, Release 3): the chips beside the sketch retire,
+   leaving the sentence a screen reader hears, and the draft's tags are the visible progress
+   beside the island, which gains the home page's dot sliding along its segments.
 10. **One way out.** The exit is one link named "Back to site": below `md` an X in a 40 px ring, the
     hamburger's, and from `md` the words in the header's link style, `headerLink`, which at review
     moved to `app/_components/header-link.ts`, a module with no imports, so `/start` stops shipping
@@ -94,6 +110,10 @@ the build's fence.
     caret, and focus as the site's authored outline, 2 px `brand-ink` at a 2 px offset, because
     forced colours drop a box-shadow ring. Every card control takes a border under forced colours
     only; at review buttons also keep a 2 px outline there (`components/ui/button.tsx`, one token).
+    Amended 25 September 2026 (ADR 0037, Release 3): from `sm` the controls sit in one white card
+    and each field is a well of the wash with a soft inset edge, no hairline; below `sm` the card
+    is flat and the wells are white on the wash. The owner re-signs the judgement below against
+    the inset edge.
 12. **Errors keep a red mark, not red text.** A message is `--on-surface` text led by a
     `CircleAlert` icon in `--danger`, and the invalid control takes a 2 px `--danger` ring:
     `--danger` is 3.76:1 on white and 3.17:1 on the wash, under 4.5 as text and over 3 as a mark. No
@@ -105,12 +125,18 @@ the build's fence.
     sit two to a row only once the question's column is 30rem wide (a container query), because the
     column, not the screen, decides whether a card's words break; and every card group follows the
     radio group's keyboard pattern, one Tab stop on the chosen card or the first, the arrows moving
-    the choice.
+    the choice. Amended 25 September 2026 (ADR 0037, Release 2): the mark ("Use my name" or "Use
+    my logo"), the look and the colour are radio groups; "My own colour" is the fifth colour card
+    and shows the hex field after the group without moving the focus, "Your logo's colour" comes
+    sixth when the logo has a colour of its own, and with a fine pointer the digits choose a look
+    or a colour.
 14. **No rule anywhere in the form.** The two dividers lose their hairlines and become caption lines
     with air; swatches and photo thumbnails lose their borders for a rounded shadow.
 15. **Back is a text button.** A native `button type="button"` named "Back", styled as a text link
     with an arrow, at least 40 px tall (48 from `lg`), hidden at question one. Never the ghost
-    variant, whose hover draws a hairline.
+    variant, whose hover draws a hairline. Amended 25 September 2026 (ADR 0037, Release 3): below
+    `lg` Back is a 48 px round icon button named "Back", beside the ask and under it below 22.5rem
+    wide; from `lg` it keeps the text button.
 16. **The ask is in reach.** Below `lg` the ask, Next and its reassurance, rides sticky at the foot
     of the screen over a fade of the wash and settles into its place at the end of the question. At
     review: it rides only on a screen at least 30rem tall, because on a landscape phone or a desktop
@@ -118,11 +144,16 @@ the build's fence.
     and the ask ride the same way at the foot of a desk window shorter than the question, with
     margins matching `main`'s gutter; and while either rides, the pane lifts a control focused from
     the keyboard whole, by the box that draws its ring, because browsers scroll only a text field's
-    caret line into view.
+    caret line into view. Amended 25 September 2026 (ADR 0037, Release 3): Back's round button
+    rides beside the ask; and at ready the first design's link is the phone's primary, in a well
+    fixed to the foot of a screen at least 30rem tall, under the ask's rules.
 17. **Question one's field is a card.** The textarea sits in a white card with its counter at the
     foot, the card focused by `focus-within`, three rows at every width. The textarea takes no
     `enterKeyHint`, since Enter is a newline there; the inputs take "next" on name and company and
-    "go" on email and the hex field.
+    "go" on email and the hex field. Amended 25 September 2026 (ADR 0037, Release 2): the counter
+    is a meter, its words in the textarea's description; with a fine pointer Enter there is Next,
+    and Shift and Enter a new line; the business name and the email take "next", your name "send"
+    and the hex field "done", where Enter checks the code and never sends.
 18. **Small accessibility repairs in the steps.** The photo thumbnail's "failed" tag is dark text on
     a white band led by a red dot. At review: question three's error and its status line share one
     polite region, so each is heard once, and question five's hex placeholder is the chosen
@@ -133,10 +164,17 @@ the build's fence.
     on a palette. Its colour keeps its timing under reduced motion by an explicit rule, because the
     global allowlist names only built-in colour properties. At review: it eases over
     `--motion-reveal`, 600 ms, the breath's own clock, and below `lg` it falls away on a smoothstep
-    curve from the phone's edge, because a straight fall-off read as the rim of a disc.
+    curve from the phone's edge, because a straight fall-off read as the rim of a disc. Superseded
+    25 September 2026 (ADR 0037, Release 3): the pool is the lamp, the region's only ambient light
+    at every question. It walks the studio's cyan and indigo, then the visitor's colour from the
+    colour question, brightens with each answer, swells once per answer, and sits at or under 0.2
+    alpha behind any text; a grey colour keeps the studio's light.
 20. **The pooled curve on `/start` is the static segment.** Below `lg` the region ends in the home
     page's circle segment, copied from `app/page.tsx` with a comment naming the source, with its own
-    `data-theme="dark"`. No GSAP and no spring on `/start`.
+    `data-theme="dark"`. No GSAP and no spring on `/start`. Superseded 25 September 2026 (ADR
+    0037, Release 3): the curve springs on each Next and Back (`lib/motion/start-curve.ts`, a
+    0.25 kick at 1 Hz and damping 0.2, capped at 0.3, asleep after 2.5 s) under the pool's recorded
+    exemption, and never under reduced motion. Still no GSAP.
 21. **The done state turns the page to the ink.** Once the brief is sent, `main` takes
     `data-theme="dark"` and the ink ground over a 300 ms crossfade, so the whole page is the foot at
     every width, and the call, the one filled button, sits above the countdown. At review: below
@@ -150,17 +188,36 @@ the build's fence.
     at 1280 by 800, 598 to 630 at 1366 by 657, 699 to 741 at 1440 by 900; axe clean in all 56 done
     states). The sentence under the heading follows each result: ready says the designs are built
     and the links are below and in the email; partial says they are built and to keep the page's
-    link, because a partial page sends no email.
+    link, because a partial page sends no email. Amended 24 September 2026 (ADR 0037, decisions
+    10 and 12): a partial build is emailed too, so partial reads as ready with a note of what was
+    set simply; while building, the sentence says the email follows once the designs are done, and
+    the time-up line promises no email; the slots name each design by its place and a descriptor,
+    never a code name; the call and the designs open in new tabs. Superseded 25 September 2026
+    (ADR 0037, Release 3): the send blooms ink from the ask; while the designs build the draft
+    splits into three posters that fill as the stages land, beside a stage ring, a log stamped by
+    the server and "Usually done by"; ready rises to light in 600 ms; the call is secondary until a
+    design has been opened and the visitor comes back. The countdown is gone.
 22. **One hue.** The countdown's fill and ready check, the chips' checks
     and the building dot are `brand-ink`; no green on `/start` or on the preview's pending ring.
 23. **Motion is CSS only.** Next keeps `question-in` from the right; Back enters from the left
     (`question-back` in `start.css`), the direction read from the change of question, so the
     browser's own Back does the same. Both fade only under reduced motion. `/start` imports nothing
     from `lib/motion` and carries no `data-reveal`, so the four lazy guards and the caps are
-    untouched.
-24. **No fourth italic, no numeral, no thread.** ADR 0034 decision 3 stands.
+    untouched. Corrected 24 September 2026 (ADR 0037, decision 17): `/start` has imported
+    `scrollToTop` from `lib/motion/lenis.ts` since 5 September 2026, through
+    `use-focus-on-mount.ts`; the Lenis library itself stays a lazy chunk. Superseded 25 September
+    2026 (ADR 0037, Release 3): a question moves at a scoped pace of 1.5 (900 ms), its lead rising
+    2rem and its controls 0.5rem on a `linear()` spring, after a 200 ms exit that keeps the focus;
+    `question-in` is opacity only. Still CSS but for the curve's spring, and nothing loops.
+24. **No fourth italic, no numeral, no thread.** ADR 0034 decision 3 stands. Superseded 25
+    September 2026 (ADR 0037, Release 3): each question's title carries one fixed italic payoff
+    word, and the draft at most two italic notes (ADR 0034 decision 3, amended); numerals appear
+    only as the draft's tags; still no thread.
 25. **The dark style stays separate on the ink.** Under "Dark and moody" the pool and the frame's
-    own edge lift the sketch off the foot; no border is added.
+    own edge lift the sketch off the foot; no border is added. Superseded 25 September 2026 (ADR
+    0037, Release 3): the draft follows `schemeFor(style, polarity)` as the templates do, so the
+    dark style draws its page on the colour engine's hue-tinted dark surface, lit by the lamp;
+    still no border.
 26. **Tests landed first.** The Playwright projects pick up every spec by its prefix, and the
     `/start` axe scans and the reduced-motion guard landed before any control changed.
 27. **Dead parts went with their consumers.** `components/ui/corner-ticks.tsx` is deleted, and

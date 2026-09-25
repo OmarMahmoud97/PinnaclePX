@@ -25,6 +25,8 @@ function inkColourOf(canvas: HTMLCanvasElement): InkColour | undefined {
   return { r: ((value >> 16) & 255) / 255, g: ((value >> 8) & 255) / 255, b: (value & 255) / 255 }
 }
 
+type Props = { fadeTop?: boolean | undefined }
+
 // Ink over a section's ground: a small fluid simulation on the GPU (lib/motion/fluid.ts,
 // explained in docs/fluid-hero-guide.md), in the hero (ADR 0031) and the closing section (ADR
 // 0032). The canvas multiplies onto the ground, so it is invisible until the simulation draws,
@@ -37,7 +39,10 @@ function inkColourOf(canvas: HTMLCanvasElement): InkColour | undefined {
 // work, spent here before the visitor does anything instead of in the middle of a scroll. What
 // it holds while off screen is a few megabytes of quarter-resolution textures, since the
 // simulation itself requests frames only while its canvas is on screen.
-export function Ink() {
+//
+// `fadeTop` feathers the canvas's top edge (app/globals.css, .ink-fade-top), for a section whose
+// top sits mid-page: ink carried up to a clipped edge ends in a flat line.
+export function Ink({ fadeTop = false }: Props) {
   const ref = useRef<HTMLCanvasElement>(null)
   const motionAllowed = useMotionAllowed()
 
@@ -80,5 +85,5 @@ export function Ink() {
     }
   }, [motionAllowed])
 
-  return <canvas ref={ref} aria-hidden="true" className="ink" />
+  return <canvas ref={ref} aria-hidden="true" className={fadeTop ? 'ink ink-fade-top' : 'ink'} />
 }

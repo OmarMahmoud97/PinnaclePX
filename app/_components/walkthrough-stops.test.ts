@@ -43,7 +43,7 @@ describe('stageAt', () => {
 
 describe('stackedBeats', () => {
   // Five steps docked one after another, as the phone lays them: 144 px each (9rem), the last
-  // painting the colour and then the build.
+  // holding the finished sketch and then building the page.
   const DOCKED = stackedBeats(
     0,
     [[1], [2], [3], [4], [5, 6]].map((stages) => ({ height: 144, stages })),

@@ -1,31 +1,35 @@
 import { toSixDigitHex } from '@/lib/brief/hex'
 import { paletteFor } from '@/lib/brief/palettes'
 import type { ColoursAnswer } from '@/lib/brief/schema'
+import { CONFIG } from '@/lib/config'
 
 // Everything the live sketch shows is computed here from the visitor's own answers. Nothing is
 // invented: an empty answer produces an empty string, and the sketch draws a grey bar instead.
 // The description needs no helper. It goes into the sketch's paragraph exactly as typed and CSS
-// clamps it to three lines, because a paragraph of any length never fits a headline slot.
+// clamps it to three lines, because a paragraph of any length never fits a headline slot. The
+// mark beside the name is their logo or a point of their colour, the sketch's stand-in for a
+// mark, and never initials: the designs set a name in their own way (plan 8.1).
 
-// Up to two initials for the placeholder mark next to the wordmark.
-export function initialsFrom(company: string): string {
-  return company
-    .trim()
-    .split(/\s+/)
-    .filter((word) => word.length > 0)
-    .slice(0, 2)
-    .map((word) => word.charAt(0).toUpperCase())
-    .join('')
-}
-
-// A browser-tab style label: lowercase, hyphenated, ASCII letters and digits only.
+// A browser-tab style label: lowercase and hyphenated, accents and apostrophes dropped
+// ("Sam's Café" is sams-cafe), letters and digits of any script kept, and cut with an ellipsis
+// so the tab never outgrows the frame (plan 7.7). Counted in code points, so a cut never splits
+// a character.
 export function tabLabelFrom(company: string): string {
   const label = company
-    .trim()
+    .normalize('NFKD')
+    .replace(/\p{M}/gu, '')
     .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/['’]/g, '')
+    .replace(/[^\p{L}\p{N}]+/gu, '-')
     .replace(/^-+|-+$/g, '')
-  return label === '' ? 'your-company' : label
+  if (label === '') return 'your-company'
+  const characters = Array.from(label)
+  const max = CONFIG.start.names.slugMax
+  if (characters.length <= max) return label
+  return `${characters
+    .slice(0, max - 1)
+    .join('')
+    .replace(/-+$/, '')}…`
 }
 
 // The brand colour the visitor has chosen, as six-digit hex, or null before they choose one.
