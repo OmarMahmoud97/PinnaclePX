@@ -4,7 +4,7 @@ import type { LogoPolarity } from '@/lib/logo/types'
 import { mulberry32, seedFrom, shuffle } from '@/lib/select/prng'
 
 // How many concepts a submission builds: the configured number, or fewer while fewer templates
-// are ready. When ten are ready this is the configured number and the min is removed.
+// are ready. With all eight ready this is the configured number.
 export function conceptCountFor(readyCount: number): number {
   return Math.min(CONFIG.templates.conceptsShown, readyCount)
 }
