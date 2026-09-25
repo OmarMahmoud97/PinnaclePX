@@ -73,16 +73,15 @@ describe('visitor-facing copy', () => {
     expect(COPY.filter((text) => /from £/i.test(text))).toEqual([])
   })
 
-  // The second-visit answer promises unseen templates only once enough are ready.
-  it('promises a second visit only from six ready templates, and nine only from nine', () => {
+  // The second-visit answer promises unseen templates only once enough are ready, and never a
+  // third visit: two of three is the owner's cap (ADR 0038).
+  it('promises a second visit only from six ready templates, and never a third', () => {
     const answerAt = (ready: number) =>
       straightAnswerItems(ready).find((item) => item.question.startsWith('What if I'))?.answer
     expect(answerAt(1)).toBe(SECOND_VISIT.untilSix)
     expect(answerAt(5)).toBe(SECOND_VISIT.untilSix)
     expect(answerAt(6)).toBe(SECOND_VISIT.fromSix)
     expect(answerAt(8)).toBe(SECOND_VISIT.fromSix)
-    expect(answerAt(9)).toBe(SECOND_VISIT.fromNine)
-    expect(SECOND_VISIT.untilSix).not.toContain('nine')
-    expect(SECOND_VISIT.fromSix).not.toContain('nine')
+    for (const answer of Object.values(SECOND_VISIT)) expect(answer).not.toMatch(/nine|in all/i)
   })
 })

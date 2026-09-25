@@ -4,26 +4,24 @@ import { CONFIG } from '@/lib/config'
 type StraightAnswerItem = Readonly<{ question: string; answer: string; Icon: LucideIcon }>
 
 // What happens if the visitor likes none of the three. A second visit shows three unseen
-// templates, so the offer is true only once six are ready, and "up to nine" only once nine are.
-// Below six the cell promises nothing about a second visit. All three are exported so the copy
-// test checks every branch, not only the one that renders today.
+// templates, so the offer is true only once six are ready. There is no third: two visits of
+// three is all the owner gives before a call (ADR 0038), so the cell never counts past the
+// second. Below six it promises nothing about a second visit. Both are exported so the copy
+// test checks each branch, not only the one that renders today.
 export const SECOND_VISIT = {
   untilSix: `Book the call and tell us what's wrong. Or book nothing. Your link works for ${String(CONFIG.retention.days)} days, and nobody follows up.`,
   fromSix:
     "Come back with the same email and we'll show you three you haven't seen. Or book the call and tell us what's wrong.",
-  fromNine:
-    "Come back with the same email and we'll show you three you haven't seen. Up to nine in all. Or book the call and tell us what's wrong.",
 } as const
 
 function secondVisitAnswer(readyCount: number): string {
-  const { conceptsShown } = CONFIG.templates
-  if (readyCount >= 3 * conceptsShown) return SECOND_VISIT.fromNine
-  if (readyCount >= 2 * conceptsShown) return SECOND_VISIT.fromSix
+  if (readyCount >= 2 * CONFIG.templates.conceptsShown) return SECOND_VISIT.fromSix
   return SECOND_VISIT.untilSix
 }
 
 // The fears a burned buyer has, in the order they have them. "Will it look like everyone
-// else's?" joins this list once the ten templates render. "AI" appears in the question and once
+// else's?" is not asked: the designs are samples of what the studio can do, and the real site
+// is designed from scratch for the brand (ADR 0038). "AI" appears in the question and once
 // in its answer, and nowhere else on the page; copy.test.ts pins the count. The answer states
 // what the model calls actually carry (lib/ai/prompts.ts: the company name, the sentence and the
 // chosen look; lib/images/stage.ts: only stock candidates are ranked, the visitor's own

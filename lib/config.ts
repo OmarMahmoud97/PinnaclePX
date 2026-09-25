@@ -100,7 +100,7 @@ export const CONFIG = {
     // which drift by two degrees rather than eight.
     fillMaxC: 0.15,
   },
-  templates: { count: 10, conceptsShown: 3 },
+  templates: { count: 8, conceptsShown: 3 },
   // The model calls (lib/ai). The guide's models: Sonnet 5 writes, Haiku 4.5 ranks pictures.
   // Thinking is off on every call: the answers are shapes judged by code afterwards, and
   // thinking tokens are billed as output, which on the copy call was most of the bill.
