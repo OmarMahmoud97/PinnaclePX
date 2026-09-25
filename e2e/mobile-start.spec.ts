@@ -33,7 +33,9 @@ test('the first screen holds the sketch, the question and the ask', async ({ pag
   const sketch = page.getByRole('region', { name: 'Your brief so far' })
   await expect(sketch).toBeVisible()
   await settle(page)
-  expect((await sketch.boundingBox())?.height ?? Infinity).toBeLessThanOrEqual(320)
+  // The region's most (plan 9.6, as ADR 0037's seventh amendment moves it): the desk's frame
+  // whole at the screen's width, inside the island's and the curve's clearance.
+  expect((await sketch.boundingBox())?.height ?? Infinity).toBeLessThanOrEqual(400)
   await expect(page.locator('main#main h1')).toBeInViewport()
   await expect(page.getByRole('button', { name: /^Next/ })).toBeInViewport({ ratio: 1 })
   await expect(page.locator('main').getByText(REASSURANCE)).toBeInViewport({ ratio: 1 })

@@ -228,7 +228,7 @@ export function Foot({ company }: { company: string }) {
 }
 
 // The visitor's first name, signing the finished draft in its corner.
-export function Signature({ first }: { first: string }) {
+function Signature({ first }: { first: string }) {
   if (first === '') return null
   return (
     <em className="draft-note draft-sign absolute rounded-full px-3 py-0.5 font-normal italic">

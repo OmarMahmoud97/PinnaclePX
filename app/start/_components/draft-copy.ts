@@ -44,10 +44,9 @@ export const DRAFT_TAGS: Readonly<Record<QuestionId, string>> = {
   details: '05 Send',
 }
 
-// The draft's own chrome: the phone window's bar, the browser tab before a business name, and
-// the footer's line, which carries the year it is drawn in.
+// The draft's own chrome: the browser tab before a business name, and the footer's line, which
+// carries the year it is drawn in.
 export const DRAFT_CHROME = {
-  windowBar: 'Live draft',
   blankTab: 'your-business',
 } as const
 

@@ -54,9 +54,9 @@ test('the page fits a phone', async ({ page }) => {
   const sketch = page.getByRole('region', { name: 'Your brief so far' })
   await expect(sketch).toBeVisible()
   const box = await sketch.boundingBox()
-  // The island's clearance, the window onto the draft (its phone frame at its own size, 212 px
-  // under its bar) and the pooled curve; the browser frame and the caption show from lg only
-  // (ADR 0037). The heading must still be on the first screen.
-  expect(box?.height ?? 0).toBeLessThanOrEqual(320)
+  // The island's clearance, the desk's frame whole at the screen's width (about 300 px at 390,
+  // ADR 0037's seventh amendment) and the pooled curve; the caption shows from lg only. The
+  // heading must still be on the first screen.
+  expect(box?.height ?? 0).toBeLessThanOrEqual(400)
   await expect(page.getByRole('heading', { level: 1 })).toBeInViewport()
 })

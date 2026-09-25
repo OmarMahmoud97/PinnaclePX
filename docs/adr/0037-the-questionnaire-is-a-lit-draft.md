@@ -8,7 +8,9 @@
   gated the same afternoon, the fifth fits the send and done side after a second QA, re-shot and
   gated the same evening, and the sixth records the owner's decisions on everything the build
   had left open, the package that carried them, and the `/start` byte lines moved once by
-  decision 24's rule, gated the same night
+  decision 24's rule, gated the same night; the seventh, at the owner's call late that night,
+  replaces the phone's window onto the draft with the desk's frame whole, zoomed to the screen
+  and capped on short screens, gated on a clean copy
 - Date: 24 September 2026
 - Supersedes: accepted on 24 September 2026, ADR 0035 decision 23's claim that `/start` imports
   nothing from `lib/motion` (decision 17), and the copy freeze of
@@ -1160,3 +1162,108 @@ every line held; `/start`'s HTML is 5,817 B. The main repository's hooks are unt
 copy is removed. Seen on the way and not this package's: three React hydration warnings on `/`
 in the axe runs, where `data-inview` and the FAQ's `open` land before hydration finishes;
 pre-existing, for a later look. Nothing is committed.
+
+## Amendment, 25 September 2026: the phone shows the desk's frame whole
+
+Late on 25 September 2026, after committing the package above as e5436be on
+`feat/start-lit-draft`, the owner sent a screenshot of the questionnaire on an Android phone: the
+"Live draft" window at question one, the phone page cut off at its foot with the "01 Sentence"
+box sliced through, and asked that the drawing be the desktop one, "exactly like the one on a
+desktop screen size but smaller so it fits within the screen", without guessing. This amendment
+records what that withdrew, what replaced it, the numbers it was built to, and its gate.
+
+**Withdrawn.** Plan D8 (the phone frame restyled as a 358 by 212 window onto the phone page, its
+crop offsets per question and its 450 ms crossfade, the stacked band's 300 and 150 px crops of the
+desk page) and the polish amendment's four offset lists. With them: `CONFIG.start.window`, the
+window's tokens in `start-draft.css`, the `draft-turn` keyframes, the `data-turn` hooks and the
+`at` prop of `Draft`, the "Live draft" bar and `DRAFT_CHROME.windowBar`, the phone frame's own
+signature and whole-page box (never shown at any width the phone frame has), and the unit test
+that held the window's numbers to the sheet. The plan's D8 line, its 4.2 rows for 768 by 1024,
+the split views, 390 by 844, 390 by 664, 320 by 640 and the short screens, its 6.2 window row,
+its 9.6 region row and its fence row for the frames are amended in place.
+
+**Built.** Below `lg` the region shows the browser frame at its 640 px layout, the whole draft
+zoomed to the region's content width and never past 1: `--draft-zoom-wide: min(calc((100cqi -
+2rem) / 640px), 1)`, the gutter 4rem from 40rem, so the frame is 358 px across at 390 wide, 380 at
+412, 398 at 430, 614 at 678 and 640 from 44rem, centred; the region measures 396 px at 390 by 844
+(the island's 72 px above, 24 below) and 628 at 768 by 1024. `--draft-zoom` stays the zoom in
+force, so the tag reads 11 px on screen and the box's line 1.5 px at every width (the tag's box
+measures 15.4 px at every size shot). The phone frame waits for 80rem, where it sits over the
+corner as before; `sketch-pane.tsx` now watches `lg` and 80rem, the widths at which a part of the
+region first shows. A dark page below `lg` sits on the ink where the desk's ramp is lighter, so
+the owner's halo for the dark window moves to the frame there: its foot's luminance step was 13
+without it against the desk's 41, and is 29 with it. The whole-page box sits against the page
+inside the frame, 16 px under its chrome, as the desk draws it. The frame's own edge, its panel
+shadow and the chrome bar's transparent rule now apply at every width.
+
+**Engines.** A length over a length is CSS typed arithmetic: Chromium and WebKit compute the
+fit (358 px at 390), Firefox does not and would draw 640 (`fit-support.mjs`, 25 September), nor
+does any Safari before 26. Under `@supports not (zoom: calc(1px / 1px))` the fit is stepped by
+width, each step the fit of the width it opens at, 2.5rem apart (0.4, then 0.45 from 20rem, 0.51,
+0.57, 0.63, 0.7, 0.76, 0.82, 0.88 from 37.5rem, 0.9 from 40rem where the gutter widens, 0.95
+from 42rem, 1 from 44rem), so the frame is never more than 40 px short of the gutters: Firefox at
+390 by 844 shows 326 px in a 370 px region, at 390 by 664 the same 192 as the others, at 768 the
+same 640.
+
+**Short screens.** The whole frame at the width's zoom would carry the first control under the
+ask riding at the foot, or the title off the first screen, so the zoom is capped there, the
+frame smaller and still whole. The caps were measured (`scratchpad/fit/caps.mjs`, every cap from
+0.3 to 0.9 at every question) as the largest round steps that keep the plan's arrival rule (4.2;
+`mobile-start-ask.spec.ts` and `mobile-order.spec.ts`: the title in the first screen and every
+question's first control at least 24 px, the fade's own depth, above the ask on arrival):
+
+| Screen                                                   | Cap  | Frame      | Region | First control above the ask, q1 to q5                            |
+| -------------------------------------------------------- | ---- | ---------- | ------ | ---------------------------------------------------------------- |
+| 390 by 844 (52rem or taller: the width's zoom, as asked) | none | 358 by 300 | 396    | 17 (its box 33), 74, 100, 100, 23                                |
+| 375 by 812; 390 by 800; 360 by 780 (under 52rem)         | 0.4  | 256 by 216 | 312    | 72 and 54; 57 and 63; 1 (its box 17) and 24                      |
+| 360 by 740                                               | 0.4  | 256 by 216 | 292    | 33, 101, 127, 127, 36                                            |
+| 390 by 664; 375 by 667 (under 43.75rem)                  | 0.3  | 192 by 163 | 239    | 26 (its box 42), 73, 99, 99, 32                                  |
+| 320 by 640 (the ask in its place)                        | 0.3  | 192 by 163 | 239    | in flow; the description's whole box in the first screen         |
+| 640 by 800 (the band under 52rem)                        | 0.4  | 256 by 216 | 292    | 39, then whole above the ask: 101, 154, 154, 102                 |
+| 700 by 500                                               | 0.4  | 256 by 216 | 292    | the title in the first screen at every question, two lines at q5 |
+| 768 by 1024                                              | none | 640 by 532 | 628    |                                                                  |
+
+The rule holds at every screen the plan names. It is bent at two it does not: at 390 by 844 the
+description's field starts 17 px above the ask's box (its well 33, the label and hint whole) and
+the email field 23, since the owner asked for the whole drawing at the width there; and at 360 by
+780 the description's field meets the ask's top with its box 17 px clear, where the plan's own
+212 px window left it 4 px lower. A cap of 0.45 under 52rem, the first tried, left 375 by 812 at
+45 and 360 by 780 at minus 25; 0.35 under 43.75rem left the email field 6 px clear at 390 by 664
+and put the description's box under the ask at 320 by 640. The band's cap could not be higher:
+at 0.5, 640 by 800's second and fifth questions end under the ask, and 700 by 500's two-line
+title leaves the first screen. Under 30rem tall the draft and the curve give way as before.
+
+**Fences moved.** The region's line at 390 by 844 moves from 320 to 400 px (`mobile-questions-lit`,
+`brief.spec`, `mobile-start`: the desk's frame at the width's zoom is 300 px where the window was
+212). `mobile-draft.spec.ts` is rewritten for the frame: whole at 358 with nothing clipped at
+every question, the phone hidden, the tag 15.4 px on screen, the caps at 320 by 640, 390 by 664,
+360 by 740, 375 by 812, 768 by 1024 and 700 by 500, the curve as before. Its measure of a draft
+that answers back keeps a tenth of the frame for the sentence, the look and the send and takes
+the desk frame's own share for the two answers that are type and tint: the name 0.087 and the
+colour 0.058 at 390 (0.072 and 0.049 at 1440), held above 0.07 and 0.045. `mobile-short.spec.ts`
+holds the caps and, at 390 by 664, the field's edge and label clear of the ask; its window-offset
+tests are gone. Its 12 px floor is gone with the window: the frame is the desk's picture, whose
+15 px type the desk already shows at 10.8 px at 1024.
+
+**Forced colours.** Once the frame showed below `lg`, axe found the footer's line at 1.14:1: the
+desk had filed the same node as inconclusive behind a pseudo-element, so the fault was never
+seen. Chromium forces `color` and leaves `-webkit-text-fill-color` at the author's, as
+`start.css` notes for the caption; the draft's type now takes `CanvasText` as its fill under
+forced colours, and the four axe tests on the mobile and tablet projects pass.
+
+**Shot** (GET only, `scratchpad/fit/shots/`): 320 by 640, 360 by 740, 375 by 667, 390 by 664,
+390 by 844, 412 by 915, 430 by 932, 640 by 800, 700 by 500, 768 by 1024 and 1024 by 768 in
+Chromium at the blank first question, the warm look's colour question and the dark look's last;
+390 by 664, 390 by 844 and 768 by 1024 in WebKit and Firefox; the dark look's frame with and
+without its halo.
+
+**The gate** (plan 11.6, on a clean copy at `C:/t/px`, a frozen install with no scripts, 25
+September 2026, night): typecheck (after the copy's build, which writes the route types), lint,
+format:check, knip and the unit tests (92 files, 839 tests) pass; `pnpm build` passes with both
+routes prerendered; `pnpm budget` measures `/start` at 253,367 B of scripts (393 B under the
+sixth amendment's measure, the window's code gone) and 24,582 B across its two sheets (150 B
+under), both lines held, every lazy guard ok. Against the main tree's own dev server, every
+questionnaire spec in the five projects passes, 343 of 343 (desktop 202, mobile 94, tablet 33,
+reduced motion 11, no script 3), no retries; the unit tests pass there too, and typecheck, lint,
+format:check and knip. The main repository's hooks are untouched and the copy is removed. Nothing
+is committed or submitted.

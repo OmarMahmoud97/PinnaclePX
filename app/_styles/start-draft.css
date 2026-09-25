@@ -1,21 +1,14 @@
 /*
  * /start: the live draft beside the questions (docs/start-page-journey-plan.md, 5.8): its frames,
- * its colour engine, its parts landing and its faces, the phone window below lg, and the curve.
+ * its colour engine, its parts landing and its faces, its zoom at every width, and the curve.
  * Plain CSS only, on the hooks and tokens app/_styles/start.css declares; the route imports this
  * sheet after that one (app/start/page.tsx), so no other page downloads it. The parts' plain
  * layout (flex, gaps, rounding) is utilities the site's sheet already carries (draft-parts.tsx);
  * what is here is the draft's own.
  */
 
-/*
- * The region's tokens: the window's crop, its short-screen crop, and the crossfade it plays when a
- * question moves it (CONFIG.start.window, which draft-model.test.ts holds these to). The lamp
- * takes the visitor's colour as its glow (start.css reads --sketch-glow).
- */
+/* The lamp takes the visitor's colour as its glow (start.css reads --sketch-glow). */
 .start-region {
-  --window-crop: 212px;
-  --window-crop-short: 150px;
-  --window-fade: 450ms;
   --sketch-glow: var(--draft-hex);
 }
 
@@ -45,15 +38,12 @@
 }
 
 /*
- * The phone's page, as the window shows it at its own size and the desk shows it zoomed over the
- * browser's corner: the headline across, then the call and the sentence beside the picture, the
- * cards as rows, and the footer's ink filling whatever screen is left under them, as a real
- * phone page ends. Each row is a fixed height, so no answer moves the layout and the window's
- * offsets (CONFIG.start.window) land on the part each question feeds: the call and the picture
- * start 130 px down, where the window's first screen already shows the picture's top, and the
- * headline's lines start 72 and 96 px down, so the look's offset opens on a whole line. The
- * desk's page is authored at 640 px, the words and the call beside the picture, its text 15 px so
- * it still reads at the smallest desk zoom, and its paragraph's row holds three of those lines.
+ * The phone's page, as the desk shows it zoomed over the browser's corner: the headline across,
+ * then the call and the sentence beside the picture, the cards as rows, and the footer's ink
+ * filling whatever screen is left under them, as a real phone page ends. Each row is a fixed
+ * height, so no answer moves the layout. The desk's page is authored at 640 px, the words and
+ * the call beside the picture, its text 15 px so it still reads at the smallest desk zoom, and
+ * its paragraph's row holds three of those lines.
  */
 .draft-phone .draft-page {
   grid-template:
@@ -145,9 +135,8 @@
 }
 
 /*
- * The phone's headline keeps a 24 px line at every size, so a name's lines always fill 72 to 96
- * and 96 to 120 and the look's window opens on a whole one; the note that holds its place breaks
- * as two short lines, the width of a name.
+ * The phone's headline keeps a 24 px line at every size, so a name's two lines fill its row; the
+ * note that holds its place breaks as two short lines, the width of a name.
  */
 .draft-head {
   grid-area: head;
@@ -182,7 +171,7 @@
   color: var(--d-muted);
 }
 
-/* Five lines end 263 px down the phone's page, inside the look's window at every phone width. */
+/* The phone's paragraph holds five lines. */
 .draft-phone .draft-para {
   -webkit-line-clamp: 5;
 }
@@ -343,8 +332,7 @@
 /*
  * The studio's notes (plan 5.2): the serif italic in the page's muted colour. On the picture a
  * note sits in a chip of the page's surface; the signature is a pill of ink in the finished
- * draft's corner: on a phone the window's, at a desk the picture's, on the side the phone over
- * the frame's corner leaves clear.
+ * draft's corner, the picture's.
  */
 .draft-note {
   color: var(--d-muted);
@@ -372,22 +360,13 @@
   font-size: 20px;
 }
 
-.draft-phone > .draft-sign {
-  right: 10px;
-  left: auto;
-}
-
-.draft-phone .draft-art .draft-sign {
-  display: none;
-}
-
 /*
  * The part the question showing feeds (plan 5.8): a box with a handle at each corner, and the
  * question's numbered tag on its top edge, ticked once the answer is complete. At the last
  * question the whole page is selected. The handles are one 5 px square, the top-left quarter of a
  * conic gradient, drawn on tiles sized so that exactly one falls in each corner. The line, the
- * handles and the tag are sized against the desk's zoom (below), so they read the same at every
- * desk width: 11 px of tag on screen, never 7.
+ * handles and the tag are sized against the zoom in force (below), so they read the same at every
+ * width: 11 px of tag on screen, never 7.
  */
 .draft {
   --draft-zoom: 1;
@@ -410,18 +389,10 @@
   animation: draft-box var(--draft-each) var(--ease-enter) calc(var(--draft-step) * 2) both;
 }
 
-/*
- * The whole page's box: on the phone against the window, so its foot sits inside the window's
- * at every crop; on the desk against the page inside the browser's frame, so its tag clears the
- * frame's chrome and a crop cuts the box where it cuts the page. The phone's tag sits inside the
- * box's bottom-left corner, as the mockup draws it, where the window's bar does not reach.
- */
+/* The whole page's box, against the page inside the browser's frame, so its tag clears the
+   frame's chrome. */
 .draft-whole {
-  inset: 40px 12px 12px;
-}
-
-.draft-browser .draft-whole {
-  top: 16px;
+  inset: 16px 12px 12px;
 }
 
 .draft-tag {
@@ -438,16 +409,8 @@
   animation: draft-pop var(--motion-settle) var(--ease-spring) both;
 }
 
-.draft-phone .draft-whole > .draft-tag {
-  top: auto;
-  bottom: -6px;
-  translate: 0 0;
-}
-
-/* The look's tag rises less on the phone, clear of a two-line headline's descenders 10 px above
-   the picture; so does the colour's, on the call to action, whose full rise reached the tail of
-   the paragraph above it at the desk's smallest zoom. */
-.draft-phone .draft-art > .draft-tag,
+/* The colour's tag rises less on the call to action, whose full rise reached the tail of the
+   paragraph above it at the desk's smallest zoom. */
 .draft-cta > .draft-tag {
   translate: 0 -30%;
 }
@@ -518,7 +481,7 @@
  * What lands (plan 6.2): the business name in each place it shows, one after another, and the
  * sentence the headline gives up; a face re-sets the headline the same way. A tag springs in, its
  * box drawn open after it; a logo drops into the mark; a new picture fades in over the last.
- * Under reduced motion each only fades, all together, and the window jumps. Only what an answer
+ * Under reduced motion each only fades, all together. Only what an answer
  * brings lands, so a load or a refresh replays nothing (plan 3.1): the server's skeleton paints
  * its draft still, over every landing whatever its selector (hence !important), and the flow
  * finishes what it draws at its first commit (sketch-pane.tsx).
@@ -586,18 +549,6 @@
       clip-path: inset(0 100% 100% 0);
     }
   }
-
-  @keyframes draft-turn-0 {
-    50% {
-      opacity: 0;
-    }
-  }
-
-  @keyframes draft-turn-1 {
-    50% {
-      opacity: 0;
-    }
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -650,19 +601,40 @@
 }
 
 /*
- * Below 36rem the phone frame is the window (plan D8): the page at its own size, min(the screen
- * less 2rem, 30rem) wide and 212 px tall under its bar, 150 px on a screen under 47.5rem tall,
- * each crop with offsets of its own (CONFIG.start.window) so the part being answered is whole in
- * it. An offset jumps while a crossfade hides it; the jump is a transition held to the
- * crossfade's middle, which reduced motion drops, so there it is instant. The crossfade plays
- * only for the crop showing: the screen carries a turn for each, and the height picks one. Under
- * the full crop the window's foot is a short fade to the page's surface, so a line the crop meets
- * fades rather than cuts; the short crop keeps a hard foot, since its part being answered runs
- * to the edge. Below lg the lamp around the window reaches past the screen's sides, so the region
- * clips them, sideways only, so the curve still hangs below it.
+ * Below lg the region shows the desk's browser frame whole, as a desk shows it and smaller: the
+ * owner's call of 25 September 2026 (ADR 0037's seventh amendment) over plan D8's window onto a
+ * phone page and the stacked band's crop, so nothing of the drawing is ever cut off. The frame
+ * keeps its 640 px layout and the draft is zoomed to the region's content width (the screen less
+ * the gutters, 1rem each side and 2rem from sm), never past 1, so from 44rem it sits at its own
+ * size, centred; at 390 wide it is 358 px across. --draft-zoom-wide is the width's zoom and
+ * --draft-zoom the zoom in force, which the tag, the box's line and its handles read, so they
+ * hold their size on screen here as they do on a desk. The phone frame waits for 80rem, where it
+ * sits over the frame's corner (below); its tags, notes and box are never shown, so the draft
+ * never shows more than the browser's (plan 5.2). Below lg the lamp around the frame reaches
+ * past the screen's sides, so the region clips them, sideways only, so the curve still hangs
+ * below it.
  */
-.draft-browser,
-.draft-bar {
+.draft {
+  --draft-zoom: var(--draft-zoom-wide);
+  width: 40rem;
+  zoom: var(--draft-zoom);
+}
+
+.draft-browser {
+  width: 40rem;
+  box-shadow: var(--shadow-panel);
+}
+
+.draft-browser > :first-child {
+  border-color: transparent;
+}
+
+.start-region .draft-phone {
+  display: none;
+}
+
+.draft-phone :is(.draft-tag, .draft-note, .draft-whole),
+.draft-phone [data-now]::after {
   display: none;
 }
 
@@ -670,208 +642,159 @@
   .start-region {
     overflow-x: clip;
   }
-}
 
-@media (width < 36rem) {
-  .start-region .draft-phone {
-    width: min(100cqi - 2rem, 30rem);
-    height: var(--window-crop);
-    aspect-ratio: auto;
-    zoom: 1;
-    border: 0;
-    border-radius: 1rem;
-    box-shadow: var(--shadow-panel);
+  .draft {
+    --draft-zoom-wide: min(calc((100cqi - 2rem) / 640px), 1);
   }
 
   /*
-   * A dark page sits on the ink, so the panel's shadow says nothing and the window's foot ran
-   * into the ground. It is lifted by light, never by a line (ADR 0034 D2): a halo in the page's
-   * own glow hugs the frame, and the shadow stays for a light page's sake.
+   * A dark page sits on the ink here, where the desk's ramp is lighter under it, so the panel's
+   * shadow says little and the frame's foot ran into the ground (a step of 13 in luminance
+   * against the desk's 41). It is lifted by light, never by a line (ADR 0034 D2, the owner's
+   * call for the window it replaces): a halo in the page's own glow hugs the frame, a step of
+   * 29, and the shadow stays for a light page's sake.
    */
-  .start-region .draft[data-scheme='dark'] .draft-phone {
+  .draft[data-scheme='dark'] .draft-browser {
     box-shadow:
       var(--shadow-panel),
       0 0 2.5rem -0.25rem color-mix(in oklab, var(--d-glow) 45%, transparent);
   }
-
-  .draft-phone [data-speaker] {
-    display: none;
-  }
-
-  .draft-bar {
-    display: flex;
-  }
-
-  .draft-bar::before {
-    content: '';
-    width: 7px;
-    height: 7px;
-    border-radius: 9px;
-    background: var(--glow);
-  }
-
-  .draft-tab {
-    margin-inline-start: auto;
-  }
-
-  .draft-screen {
-    overflow: hidden;
-  }
-
-  .draft-screen > .draft-page {
-    translate: 0 calc(var(--window-y) * -1);
-    transition: translate 0s calc(var(--window-fade) / 2);
-  }
-
-  @media (height >= 47.5rem) {
-    .draft-screen::after {
-      content: '';
-      position: absolute;
-      inset: auto 0 0;
-      height: 12px;
-      background: linear-gradient(transparent, var(--d-surface));
-      pointer-events: none;
-    }
-
-    .draft-screen[data-turn] {
-      animation: draft-turn-0 var(--window-fade);
-    }
-
-    .draft-screen[data-turn='1'] {
-      animation-name: draft-turn-1;
-    }
-  }
-
-  @media (height < 47.5rem) {
-    .draft-screen > .draft-page {
-      translate: 0 calc(var(--window-y-short) * -1);
-    }
-
-    .draft-screen[data-turn-short] {
-      animation: draft-turn-0 var(--window-fade);
-    }
-
-    .draft-screen[data-turn-short='1'] {
-      animation-name: draft-turn-1;
-    }
-  }
 }
 
-/*
- * From 36rem to lg the region shows the desk's page instead, cropped at 300 px, or at 150 px on
- * a screen under 52rem tall (700 by 500 among them, plan 4.2; and 640 by 800, where the taller
- * crop left the first control under the ask). The page keeps its 640 px layout and is zoomed to
- * the region in steps, 0.8 from 36rem and 0.9 from 40rem, rather than reflowing as a narrow
- * browser; the zoom is the zoom in force (--draft-zoom), so the tag, the box's line and its
- * handles hold their size on screen here as they do from lg; the crop's foot fades over its last
- * 24 px so it never ends mid-glyph; and the page moves under the crop to the part each question
- * feeds, crossfading as the window does.
- */
-@media (36rem <= width < 64rem) {
-  .start-region .draft-phone {
-    display: none;
-  }
-
+@media (40rem <= width < 64rem) {
   .draft {
-    --draft-zoom: 0.8;
-  }
-
-  .draft-browser {
-    display: block;
-    width: min(100cqi - 4rem, 44rem);
-    max-height: 300px;
-    mask-image: linear-gradient(#000 calc(100% - 24px), transparent);
-  }
-
-  .draft-crop {
-    zoom: var(--draft-zoom);
-    translate: 0 calc(var(--crop-y) * -1);
-    transition: translate 0s calc(var(--window-fade) / 2);
-  }
-
-  @media (width >= 40rem) {
-    .draft {
-      --draft-zoom: 0.9;
-    }
-  }
-
-  @media (width >= 44rem) {
-    .draft {
-      --draft-zoom: 1;
-    }
-  }
-
-  @media (height >= 52rem) {
-    .draft-crop[data-turn] {
-      animation: draft-turn-0 var(--window-fade);
-    }
-
-    .draft-crop[data-turn='1'] {
-      animation-name: draft-turn-1;
-    }
-  }
-
-  @media (height < 52rem) {
-    .draft-browser {
-      max-height: var(--window-crop-short);
-    }
-
-    .draft-crop {
-      translate: 0 calc(var(--crop-y-short) * -1);
-    }
-
-    .draft-crop[data-turn-short] {
-      animation: draft-turn-0 var(--window-fade);
-    }
-
-    .draft-crop[data-turn-short='1'] {
-      animation-name: draft-turn-1;
-    }
-  }
-}
-
-/* A phone under 47.5rem tall takes the window's short crop, so this comes after the crop it
-   shortens. */
-@media (width < 36rem) and (height < 47.5rem) {
-  .start-region .draft-phone {
-    height: var(--window-crop-short);
+    --draft-zoom-wide: min(calc((100cqi - 4rem) / 640px), 1);
   }
 }
 
 /*
- * From lg the board: the browser frame, 640 px, zoomed as a whole to the pane (0.72 at 1024 wide,
- * 1 at 1440, 1.25 from 1760) and never past 0.78 on a desk under 47.5rem tall, the frame lit by
- * its panel glow (plan 5.5). From 80rem the phone sits at 0.4 over its corner; under 80rem the
- * mirror would be under 115 px wide with a 4 px headline, so it goes and the frame takes its
- * room. The window's chrome, tags and signature are the window's alone, and the phone's notes
- * stay with the browser's, so the draft never shows more than two (plan 5.2). --draft-zoom-wide
- * is the width's zoom and --draft-zoom the zoom in force, which the tag and the box's line read.
+ * A length over a length is CSS typed arithmetic, which Chromium and WebKit compute and Firefox
+ * does not (the engine test of 25 September 2026), nor does any Safari before 26; an engine that
+ * refuses the zoom would draw the frame at 640 px, past the screen. There the fit is stepped by
+ * width instead, each step the fit of the width it opens at, 2.5rem apart so the frame is never
+ * more than 40 px short of the gutters, 0.9 where the gutter widens at 40rem and 1 from 44rem.
+ */
+@supports not (zoom: calc(1px / 1px)) {
+  @media (width < 64rem) {
+    .draft {
+      --draft-zoom-wide: 0.4;
+    }
+  }
+
+  @media (20rem <= width < 64rem) {
+    .draft {
+      --draft-zoom-wide: 0.45;
+    }
+  }
+
+  @media (22.5rem <= width < 64rem) {
+    .draft {
+      --draft-zoom-wide: 0.51;
+    }
+  }
+
+  @media (25rem <= width < 64rem) {
+    .draft {
+      --draft-zoom-wide: 0.57;
+    }
+  }
+
+  @media (27.5rem <= width < 64rem) {
+    .draft {
+      --draft-zoom-wide: 0.63;
+    }
+  }
+
+  @media (30rem <= width < 64rem) {
+    .draft {
+      --draft-zoom-wide: 0.7;
+    }
+  }
+
+  @media (32.5rem <= width < 64rem) {
+    .draft {
+      --draft-zoom-wide: 0.76;
+    }
+  }
+
+  @media (35rem <= width < 64rem) {
+    .draft {
+      --draft-zoom-wide: 0.82;
+    }
+  }
+
+  @media (37.5rem <= width < 64rem) {
+    .draft {
+      --draft-zoom-wide: 0.88;
+    }
+  }
+
+  @media (40rem <= width < 64rem) {
+    .draft {
+      --draft-zoom-wide: 0.9;
+    }
+  }
+
+  @media (42rem <= width < 64rem) {
+    .draft {
+      --draft-zoom-wide: 0.95;
+    }
+  }
+
+  @media (44rem <= width < 64rem) {
+    .draft {
+      --draft-zoom-wide: 1;
+    }
+  }
+}
+
+/*
+ * A short screen below lg, a phone under 52rem tall or the stacked band under 52rem (start.css
+ * tightens the region under 47.5rem and 52rem): the whole frame at the width's zoom would carry
+ * the first control under the ask riding at the foot, or the title off the first screen, so the
+ * zoom is held to a cap instead, the frame smaller and still whole. The caps were measured on 25
+ * September 2026 (ADR 0037's seventh amendment) as the largest round steps that keep the plan's
+ * arrival rule (4.2, mobile-start-ask and mobile-order): the title in the first screen and every
+ * question's first control at least 24 px, the fade's own depth, above the ask riding at the
+ * foot. On a phone: 0.4 under 52rem (a 256 px frame; the description's box clears the ask by 72
+ * px at 375 by 812, 57 at 390 by 800 and 33 at 360 by 740, where 0.45 left it 45, 31 and 7, and
+ * at 360 by 780 its edge is 17 px clear and the field itself 1, as the plan's window left it)
+ * and 0.3 under 43.75rem (192 by 163 at 390 by 664, the common iPhones with Safari's bars
+ * showing, where the description's box clears the ask by 26 px and the email field by 32, and
+ * at 320 by 640 the description's whole box stays in the first screen with the ask in its place;
+ * 0.35 would leave the email field 6 px clear). In the band 0.4 (256 px), where 640 by 800 shows
+ * every first control whole above the ask from the second question and 700 by 500 keeps a
+ * two-line title in the first screen. The plan's window there was 150 px tall; the frame at
+ * these caps is 163 to 216. A phone of 52rem or taller takes the width's zoom as the owner
+ * asked, the description's box then 17 px above the ask at 390 by 844 and its well 33.
+ */
+@media (width < 36rem) and (height < 52rem) {
+  .draft {
+    --draft-zoom: min(var(--draft-zoom-wide), 0.4);
+  }
+}
+
+@media (width < 36rem) and (height < 43.75rem) {
+  .draft {
+    --draft-zoom: min(var(--draft-zoom-wide), 0.3);
+  }
+}
+
+@media (36rem <= width < 64rem) and (height < 52rem) {
+  .draft {
+    --draft-zoom: min(var(--draft-zoom-wide), 0.4);
+  }
+}
+
+/*
+ * From lg the board: the frame zoomed as a whole to the pane (0.72 at 1024 wide, 1 at 1440, 1.25
+ * from 1760) and never past 0.78 on a desk under 47.5rem tall, lit by its panel glow (plan 5.5).
+ * From 80rem the phone sits at 0.4 over its corner; under 80rem the mirror would be under 115 px
+ * wide with a 4 px headline, so it goes and the frame takes its room.
  */
 @media (width >= 64rem) {
   .draft {
     --draft-zoom-wide: 0.72;
-    --draft-zoom: var(--draft-zoom-wide);
-    width: 40rem;
-    zoom: var(--draft-zoom);
-  }
-
-  .draft-browser {
-    display: block;
-    width: 40rem;
-    box-shadow: var(--shadow-panel);
-  }
-
-  .draft-browser > :first-child {
-    border-color: transparent;
-  }
-
-  .start-region .draft-phone {
-    display: none;
-  }
-
-  .draft-phone :is(.draft-tag, .draft-note, .draft-whole),
-  .draft-phone [data-now]::after {
-    display: none;
   }
 }
 
@@ -955,9 +878,16 @@
  * Forced colours (plan 9.4): the page's fills go to Canvas, so the pill, the call to action, the
  * eyebrow, the cards and their glyphs and the tag take a border to keep their shapes, the mood
  * art keeps its own colours as decoration, and the veil goes, since Canvas over Canvas only
- * greys the notes.
+ * greys the notes. The draft's type takes the system's text colour as its fill as well as its
+ * colour: Chromium forces `color` but leaves `-webkit-text-fill-color` at the author's (as
+ * start.css notes for the caption), so the footer's pale line measured 1.14:1 on the Canvas its
+ * ink becomes once the frame showed below lg.
  */
 @media (forced-colors: active) {
+  .draft {
+    -webkit-text-fill-color: CanvasText;
+  }
+
   .draft-pill,
   .draft-cta,
   .draft-eyebrow > span,

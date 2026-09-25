@@ -20,14 +20,14 @@ import { QUESTION_IDS } from '@/lib/brief/question-ids'
 import type { Answers } from '@/lib/brief/schema'
 import { startCurve } from '@/lib/motion/start-curve'
 
-// The widths at which one frame gives way to another (app/_styles/start-draft.css): the window
-// to the cropped desk page at 36rem, and the crop to the board at lg.
-const FRAME_BOUNDARIES = ['(width >= 36rem)', '(width >= 64rem)'] as const
+// The widths at which a part of the region first shows (app/_styles/start-draft.css): the board
+// and the whisper at lg, and the phone frame over the browser's corner at 80rem.
+const FRAME_BOUNDARIES = ['(width >= 64rem)', '(width >= 80rem)'] as const
 
 type Props = {
   answers: Answers
-  // The question showing, 0-based, or all five once this tab's brief is sent: the chips' count,
-  // the question whose part the draft marks, and the window's offset.
+  // The question showing, 0-based, or all five once this tab's brief is sent: the chips' count
+  // and the question whose part the draft marks.
   answered: number
   // The brief is sent: the lamp brightens, the caption turns to the call and the curve goes.
   done: boolean
@@ -96,8 +96,8 @@ function PoolCurve({ step }: { step: number }) {
 // technology, and the sentence under it says the brief in words (SketchChips, its visible chips
 // retired, plan 5.6).
 //
-// Below lg it comes first on screen: the window onto the draft, then the pooled curve over the
-// wash while the visitor answers. From lg it is the right-hand pane on the ramp's dark band: the
+// Below lg it comes first on screen: the draft's frame zoomed whole to the screen, then the
+// pooled curve over the wash while the visitor answers. From lg it is the right-hand pane on the ramp's dark band: the
 // board, which holds the browser frame with the phone over its corner, the caption, and the
 // business name set large at the foot, and which keeps its own screen while a long question
 // scrolls (start-board, app/_styles/start.css); below lg and at done the board is no box, so the
@@ -188,7 +188,7 @@ export function SketchPane({
       <div className="start-board">
         {/* The lamp's anchor (app/_styles/start.css). */}
         <div className="start-stage">
-          <Draft model={draft} at={answered} focus={focus} face={face} still={still} />
+          <Draft model={draft} focus={focus} face={face} still={still} />
         </div>
 
         {whisper !== null && (

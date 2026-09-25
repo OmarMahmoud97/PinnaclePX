@@ -1,21 +1,19 @@
 import { expect, type Locator, type Page, test } from '@playwright/test'
-import { QUESTION_IDS } from '@/lib/brief/question-ids'
-import { CONFIG } from '@/lib/config'
 import { settle } from './helpers/draft'
-import { EDGE_NAMES, refuseSends, withDraft } from './helpers/start'
+import { refuseSends, withDraft } from './helpers/start'
 
 // The short screens (docs/start-page-journey-plan.md, 4.2; ADR 0037's polish of 25 September
-// 2026): at 320 by 640 the ask waits in its place, so every question's first control shows above
-// it on arrival, the description's whole box among them; on a short phone the window's crop has
-// offsets of its own, so the part each question feeds is whole in it, its selection box included,
-// whether the headline takes one line or two; and in the stacked band under 52rem tall the desk
-// page takes its short crop and the region tightens, so the first control clears the ask.
-// Nothing here sends a brief.
+// 2026 and its seventh amendment): at 320 by 640 the ask waits in its place, so every question's
+// first control shows above it on arrival, the description's whole box among them; on a phone
+// under 43.75rem tall the draft's frame is capped at 0.3, so at 390 by 664 every question's
+// title, its first field's own top edge and, on the typed questions, the label above it are
+// clear of the ask's fade on arrival (mobile-start-ask.spec.ts and mobile-order.spec.ts hold the
+// control itself 24 px clear); and in the stacked band under 52rem tall the frame is capped at 0.4 and the region
+// tightens, so at 640 by 800 every first control starts clear of the ask and, from the second
+// question, sits whole above it. Nothing here sends a brief.
 
 // How far above the ask's top a first control must start: the fade's own 24 px (plan 4.2).
 const FADE_PX = 24
-// A part may meet the crop's edge, never cross it by more than the rounding of a line box.
-const EDGE_PX = 1
 
 test.beforeEach(async ({ page }) => {
   await refuseSends(page)
@@ -29,30 +27,35 @@ function region(page: Page) {
   return page.getByRole('region', { name: 'Your brief so far' })
 }
 
-function draftWindow(page: Page) {
-  return region(page).locator('[data-frame="phone"]')
+function frame(page: Page) {
+  return region(page).locator('[data-frame="browser"]')
+}
+
+function controls(page: Page) {
+  return page.locator('main#main form [data-rise="controls"]')
 }
 
 function firstControl(page: Page) {
-  return page
-    .locator('main#main form [data-rise="controls"]')
-    .locator('textarea, input:not([type="hidden"]), [role="radio"]')
-    .first()
+  return controls(page).locator('textarea, input:not([type="hidden"]), [role="radio"]').first()
+}
+
+// What the eye takes for the first field: the edge of its well or its first tile, and on the
+// typed questions the label above it (the look and the colour name their tiles for a screen
+// reader alone).
+function firstField(page: Page) {
+  return controls(page).locator('.start-well, [role="radio"]').first()
+}
+
+const LABELLED = [1, 2, 5]
+
+function firstLabel(page: Page) {
+  return controls(page).locator('label').first()
 }
 
 async function box(locator: Locator) {
   const found = await locator.boundingBox()
   if (found === null) throw new Error('nothing to measure')
   return found
-}
-
-// How far the selection box drawn on a part reaches past it (start-draft.css, [data-now]::after,
-// 6 px on every side); nothing, for a part that carries no box.
-function boxReach(part: Locator) {
-  return part.evaluate((element) => {
-    const reach = -parseFloat(getComputedStyle(element, '::after').top)
-    return Number.isFinite(reach) ? reach : 0
-  })
 }
 
 async function open(page: Page, question: number, draft: Parameters<typeof withDraft>[1] = {}) {
@@ -83,66 +86,25 @@ test.describe('at 320 by 640', () => {
   })
 })
 
-// The part each question feeds, in the window: the headline's words, the wordmark and its tag,
-// the picture's tag, the call to action, and the whole-page box with its tag.
-const PARTS = [
-  ['.draft-head [data-now]'],
-  ['.draft-mark', '.draft-mark .draft-tag'],
-  ['.draft-art .draft-tag'],
-  ['.draft-cta', '.draft-cta .draft-tag'],
-  [':scope > .draft-whole', ':scope > .draft-whole .draft-tag'],
-] as const
-
-// The window's page sits at the question's short offset, and the question's parts, each with
-// the box drawn on it, are whole in the window.
-async function partsWhole(page: Page, index: number) {
-  const id = QUESTION_IDS[index] ?? ''
-  const phone = draftWindow(page)
-  const shift = await phone.evaluate((element) => {
-    const screen = element.querySelector('.draft-screen')
-    const page = screen?.querySelector('.draft-page')
-    if (!screen || !page) throw new Error('no window')
-    return screen.getBoundingClientRect().top - page.getBoundingClientRect().top
-  })
-  expect(shift, id).toBe(CONFIG.start.window.shortOffsetsPx[index])
-  // The whole-page box sits against the window; every other part against its screen.
-  const inside = await box(index === 4 ? phone : phone.locator('.draft-screen'))
-  for (const selector of PARTS[index] ?? []) {
-    const part = phone.locator(selector)
-    const [found, reach] = await Promise.all([box(part), boxReach(part)])
-    expect(found.y - reach, `${id}: ${selector}`).toBeGreaterThanOrEqual(inside.y - EDGE_PX)
-    expect(found.y + found.height + reach, `${id}: ${selector}`).toBeLessThanOrEqual(
-      inside.y + inside.height + EDGE_PX,
-    )
-  }
-}
-
 test.describe('at 390 by 664', () => {
   test.use({ viewport: { width: 390, height: 664 } })
 
-  test('the short crop opens on the part each question feeds, whole', async ({ page }) => {
-    for (const index of QUESTION_IDS.keys()) {
-      await open(page, index + 1)
-      await partsWhole(page, index)
-    }
-  })
-
-  test('a two-line headline is whole: the blank note, a sentence, a long name', async ({
+  test('the frame is capped at 0.3, and each first field’s label and edge are clear of the ask', async ({
     page,
   }) => {
-    const headlines = [
-      // Every new visitor's arrival: the note that holds the sentence's place.
-      { reached: 0, description: '' },
-      // The sentence, set small, before the name takes the headline.
-      { reached: 0 },
-      // A name at the clamp.
-      { company: EDGE_NAMES.longestCompany },
-    ]
-    for (const headline of headlines) {
-      await open(page, 1, headline)
-      const words = draftWindow(page).locator('.draft-head [data-now]')
-      expect((await box(words)).height, JSON.stringify(headline)).toBeGreaterThan(24)
-      await partsWhole(page, 0)
+    for (const question of [1, 2, 3, 4, 5]) {
+      await open(page, question)
+      expect((await box(frame(page))).width, `question ${String(question)}`).toBe(192)
+      await expect(heading(page)).toBeInViewport({ ratio: 1 })
+      const [field, ask] = await Promise.all([
+        box(firstField(page)),
+        box(page.locator('main .start-ask')),
+      ])
+      expect(field.y, `question ${String(question)}`).toBeLessThanOrEqual(ask.y)
+      if (LABELLED.includes(question)) {
+        const label = await box(firstLabel(page))
+        expect(label.y + label.height, `question ${String(question)}`).toBeLessThanOrEqual(ask.y)
+      }
     }
   })
 })
@@ -150,19 +112,22 @@ test.describe('at 390 by 664', () => {
 test.describe('at 640 by 800', () => {
   test.use({ viewport: { width: 640, height: 800 } })
 
-  test('the desk page takes its short crop and every first control is whole above the ask', async ({
+  test('the frame is capped at 0.4, and every first control starts clear of the ask, whole from the second question', async ({
     page,
   }) => {
     for (const question of [1, 2, 3, 4, 5]) {
       await open(page, question)
-      const browser = region(page).locator('[data-frame="browser"]')
-      expect((await box(browser)).height).toBe(CONFIG.start.window.shortCropPx)
+      expect((await box(frame(page))).width, `question ${String(question)}`).toBe(256)
       const [control, ask] = await Promise.all([
         box(firstControl(page)),
         box(page.locator('main .start-ask')),
       ])
-      expect(control.y + control.height, `question ${String(question)}`).toBeLessThanOrEqual(ask.y)
       expect(ask.y - control.y, `question ${String(question)}`).toBeGreaterThanOrEqual(FADE_PX)
+      if (question > 1) {
+        expect(control.y + control.height, `question ${String(question)}`).toBeLessThanOrEqual(
+          ask.y,
+        )
+      }
     }
   })
 })

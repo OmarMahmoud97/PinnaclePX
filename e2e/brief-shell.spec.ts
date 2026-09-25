@@ -2,8 +2,8 @@ import { expect, type Page, type Route, test } from '@playwright/test'
 
 // The questionnaire's shell (app/start/_components/brief-flow.tsx, sketch-pane.tsx and
 // start-layout.ts): the question first in the DOM and the draft first on a phone's screen, and a
-// hydration that moves nothing. On a phone the window is the draft's phone frame, restyled at its
-// own size (docs/start-page-journey-plan.md, D8), so its box is the one the phone reading holds
+// hydration that moves nothing. On a phone the draft is the desk's browser frame zoomed whole to
+// the screen (ADR 0037's seventh amendment), so its box is the one the phone reading holds
 // still. brief-ground.spec.ts holds the desk page at 1440 by 900, which never scrolls at any
 // question, and keeps the dark scope off the region that declares the draft's colours.
 
@@ -35,9 +35,8 @@ function region(page: Page) {
 type Box = { x: number; y: number; width: number; height: number }
 
 // The shell's boxes once the brand fonts have landed, so both readings share them: main, the
-// region, the draft's two frames and the island's row. Below 36rem the browser frame is hidden and
-// the phone frame is the window; a hidden frame reads 0 by 0 in both readings, which compares like
-// any other box.
+// region, the draft's two frames and the island's row. Below 80rem the phone frame is hidden; a
+// hidden frame reads 0 by 0 in both readings, which compares like any other box.
 function shellBoxes(page: Page) {
   return page.evaluate(async () => {
     await document.fonts.ready

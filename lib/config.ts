@@ -199,18 +199,6 @@ export const CONFIG = {
     lamp: { lit: [0.45, 0.6, 0.75, 0.9, 1], swell: 1.3, doneLit: 0.75, textMaxAlpha: 0.2 },
     typing: { capChars: 120 },
     fonts: { timeoutMs: 3_000 },
-    // Where each frame's window opens on the draft, by question, so the part the question feeds
-    // is whole in it: the phone page under its full and its short crop, and the desk page under
-    // the 300 px and the 150 px crops of the stacked layouts (app/_styles/start-draft.css).
-    window: {
-      cropPx: 212,
-      shortCropPx: 150,
-      crossfadeMs: 450,
-      offsetsPx: [0, 0, 96, 48, 0],
-      shortOffsetsPx: [12, 4, 96, 56, 60],
-      cropOffsetsPx: [0, 0, 20, 200, 0],
-      shortCropOffsetsPx: [84, 20, 60, 286, 0],
-    },
     names: { companyMax: 80, personMax: 60, slugMax: 28, clauseMax: 42, clauseMinWords: 3 },
     done: { restoreHours: 24 },
     send: { pendingMs: 120_000, holdShare: 0.38, timeoutMs: 20_000 },
