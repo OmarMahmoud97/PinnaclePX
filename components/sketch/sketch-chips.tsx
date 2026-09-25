@@ -1,13 +1,16 @@
 import { Check, Circle } from 'lucide-react'
 import { paletteFor } from '@/lib/brief/palettes'
-import { type QuestionId, QUESTION_IDS } from '@/lib/brief/question-ids'
+import { QUESTION_IDS } from '@/lib/brief/question-ids'
 import type { Answers } from '@/lib/brief/schema'
 import { styleFor } from '@/lib/brief/styles'
-import { cn } from '@/lib/cn'
 
 type Props = {
   answers: Answers
   answered: number
+  // One short label per step, in order, where the steps are not the questionnaire's own: the home
+  // page's walkthrough keeps a step list of its own. By default, the questionnaire's labels, drawn
+  // from the answers.
+  labels?: readonly string[] | undefined
   // Whose brief the screen reader hears about: "Your brief so far" or "A client's brief so far".
   prefix?: string | undefined
   chipsClassName?: string | undefined
@@ -16,23 +19,26 @@ type Props = {
   chips?: boolean
 }
 
-// One short label per question: the answer itself where it is short enough to show.
-function labelsFor(answers: Answers): Readonly<Record<QuestionId, string>> {
+// One short label per question, in the questionnaire's order: the answer itself where it is short
+// enough to show.
+function questionLabels(answers: Answers): readonly string[] {
   const { imagery, colours } = answers
   const company = answers.company.trim()
+  const name = company === '' ? 'Business name' : company
   const photos = imagery.photos.length
   const style = styleFor(imagery.style).label
-  return {
+  const labels = {
     describe: 'Sentence',
-    details: company === '' ? 'Company' : company,
-    logo: answers.logo.kind === 'file' ? 'Logo' : 'Wordmark',
+    brand: answers.logo.kind === 'file' ? `${name}, logo` : name,
     imagery:
       photos === 0 ? style : `${style}, ${String(photos)} ${photos === 1 ? 'photo' : 'photos'}`,
     colours:
       colours.kind === 'palette'
         ? paletteFor(colours.paletteId).label
         : colours.hex.trim() || 'Colours',
-  }
+    details: 'Your details',
+  } as const
+  return QUESTION_IDS.map((id) => labels[id])
 }
 
 // Which answers are in, as chips beside or under the sketch, plus the sentence a screen reader
@@ -45,12 +51,12 @@ function labelsFor(answers: Answers): Readonly<Record<QuestionId, string>> {
 export function SketchChips({
   answers,
   answered,
+  labels = questionLabels(answers),
   prefix = 'Your brief so far',
-  chipsClassName,
+  chipsClassName = '',
   chips = true,
 }: Props) {
-  const labels = labelsFor(answers)
-  const given = QUESTION_IDS.slice(0, answered).map((id) => labels[id])
+  const given = labels.slice(0, answered)
 
   return (
     <>
@@ -60,15 +66,15 @@ export function SketchChips({
       {chips && (
         <ul
           aria-hidden="true"
-          className={cn('flex flex-wrap justify-center gap-1.5', chipsClassName)}
+          className={`flex flex-wrap justify-center gap-1.5 ${chipsClassName}`}
         >
-          {QUESTION_IDS.map((id, index) => {
+          {labels.map((label, index) => {
             const done = index < answered
             return (
               // A plain template, not cn(): tailwind-merge reads text-label as a colour and would
               // drop it for the chip's colour class, leaving the chips at body size.
               <li
-                key={id}
+                key={index}
                 className={`flex items-center gap-1 rounded-full px-2.5 py-1 text-label wrap-anywhere transition-colors duration-(--motion-enter) ${done ? 'bg-surface-muted text-on-surface' : 'bg-on-surface/6 text-on-surface-muted'}`}
               >
                 {done ? (
@@ -76,7 +82,7 @@ export function SketchChips({
                 ) : (
                   <Circle className="size-3 shrink-0 opacity-70" />
                 )}
-                {labels[id]}
+                {label}
               </li>
             )
           })}

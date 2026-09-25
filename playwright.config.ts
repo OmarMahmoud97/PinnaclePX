@@ -5,33 +5,17 @@ import { defineConfig, devices } from '@playwright/test'
 // JavaScript off. Each project takes its files by prefix, so a new spec joins the right project
 // by its name alone (mobile-work.spec.ts runs on the phone, brief-shell.spec.ts on the desktop)
 // and the axe scans in every a11y*.spec.ts run at all three widths.
-// Submitting the form writes to the database and starts the pipeline, which needs a real
-// DATABASE_URL and the Inngest dev server. Set E2E_SUBMIT=1 where both exist (locally, with
-// .env.local); elsewhere the tests that submit skip themselves.
-const canSubmit = process.env.E2E_SUBMIT === '1'
-
+// No spec sends a brief: a send runs the paid pipeline, writes the database and emails the
+// owner. The done state is reached through its address with the status poll intercepted
+// (e2e/helpers/start.ts, ADR 0037).
 export default defineConfig({
   testDir: './e2e',
-  metadata: { canSubmit },
-  webServer: [
-    {
-      command: 'pnpm dev',
-      url: 'http://localhost:3000',
-      reuseExistingServer: !process.env.CI,
-      timeout: 120_000,
-    },
-    ...(canSubmit
-      ? [
-          {
-            command:
-              'npx inngest-cli@latest dev -u http://localhost:3000/api/inngest --no-discovery',
-            url: 'http://localhost:8288',
-            reuseExistingServer: true,
-            timeout: 120_000,
-          },
-        ]
-      : []),
-  ],
+  webServer: {
+    command: 'pnpm dev',
+    url: 'http://localhost:3000',
+    reuseExistingServer: !process.env.CI,
+    timeout: 120_000,
+  },
   use: { baseURL: process.env.PLAYWRIGHT_BASE_URL ?? 'http://localhost:3000' },
   projects: [
     {

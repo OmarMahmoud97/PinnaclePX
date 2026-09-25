@@ -25,8 +25,8 @@ import { TrackedLink } from '@/components/ui/tracked-link'
 const STEP_ROOM = 'pb-[7vh] md:pb-[14vh]'
 
 // One question at a time. Five steps, one per answer, each saying what the answer does to the
-// design and painting it into the frame beside it as it scrolls past; the last paints the colour
-// and then the finished page. The questions themselves are never headed "Question N": the
+// design and painting it into the frame beside it as it scrolls past; the last, the send, holds
+// the finished sketch and then builds the page. The questions themselves are never headed "Question N": the
 // frame's progress line already counts.
 //
 // The band is the first light ground after the hero's ink (ADR 0034): the dark stretch above

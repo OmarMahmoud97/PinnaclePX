@@ -8,7 +8,8 @@ import {
   type Timeline,
   WRITTEN,
 } from '@/app/_components/sketch-build'
-import { BUILT_STAGE, EMPTY_STAGE, WALKTHROUGH_ANSWERS } from '@/app/_components/walkthrough-brand'
+import { EMPTY_STAGE, WALKTHROUGH_ANSWERS } from '@/app/_components/walkthrough-brand'
+import { type Beat, WALKTHROUGH_STOPS } from '@/app/_components/walkthrough-steps'
 import { typingOffsets } from '@/lib/brief/typing'
 import { CONFIG } from '@/lib/config'
 import { AppError } from '@/lib/errors'
@@ -61,9 +62,9 @@ function rewind(gsap: Gsap, root: HTMLElement, typed: HTMLElement): void {
   typed.textContent = ''
 }
 
-// 0 to 1, the sentence. The slot gives way to a caret, and the sentence types at the hand's
-// rhythm the hero uses, one tween per character on a counter, so scrubbing back deletes it at
-// the same rhythm.
+// The sentence. The slot gives way to a caret, and the sentence types at the hand's rhythm the
+// hero uses, one tween per character on a counter, so scrubbing back deletes it at the same
+// rhythm.
 function sentence(tl: Timeline, root: HTMLElement, typed: HTMLElement, at: number): number {
   const lead = seconds(beats.sentence.lead)
   const caret = wire(root, 'caret')
@@ -97,8 +98,8 @@ function sentence(tl: Timeline, root: HTMLElement, typed: HTMLElement, at: numbe
   return end + seconds(beats.sentence.tail)
 }
 
-// 1 to 2, the name. Each slot gives way to its answer, one part after another, the headline
-// first; the sentence steps back from full ink.
+// The name. Each slot gives way to its answer, one part after another, the headline first, with
+// a point standing in for the mark; the sentence steps back from full ink.
 function name(tl: Timeline, root: HTMLElement, at: number): number {
   const { step, arrive, mutedOpacity } = beats.name
   const rise = seconds(arrive)
@@ -131,7 +132,7 @@ function name(tl: Timeline, root: HTMLElement, at: number): number {
   return at + seconds(beats.name.for)
 }
 
-// 2 to 3, the logo. The initials shrink away as the mark scales up out of the tile.
+// The logo, after the name. The point shrinks away as the mark scales up out of the tile.
 function logo(tl: Timeline, root: HTMLElement, at: number): number {
   const arrive = seconds(beats.logo.arrive)
   tl.to(
@@ -148,8 +149,8 @@ function logo(tl: Timeline, root: HTMLElement, at: number): number {
   return at + seconds(beats.logo.for)
 }
 
-// 3 to 4, the look. The photograph settles in over the hatch, the ground warms, the style's chip
-// rises, and the cards take their pictures one after another.
+// The look. The photograph settles in over the hatch, the ground warms, the style's chip rises,
+// and the cards take their pictures one after another.
 function look(tl: Timeline, root: HTMLElement, at: number): number {
   const { photo, chipAt, cardsAt, step, arrive } = beats.look
   const settle = seconds(photo)
@@ -183,8 +184,8 @@ function look(tl: Timeline, root: HTMLElement, at: number): number {
   return at + seconds(beats.look.for)
 }
 
-// 4 to 5, the colour. The coloured twins fade in over their grey bases, top to bottom, and the
-// glow behind the phone breathes in.
+// The colour. The coloured twins fade in over their grey bases, top to bottom, and the glow
+// behind the phone breathes in.
 function colour(tl: Timeline, root: HTMLElement, at: number): number {
   const { each, step, glow } = beats.colour
   tl.to(
@@ -196,8 +197,8 @@ function colour(tl: Timeline, root: HTMLElement, at: number): number {
   return at + seconds(beats.colour.for)
 }
 
-// 5 to 6, the build: the hero's, on this frame (sketch-build.ts), as one nested timeline so it
-// scrubs and reverses with the rest. The warm ground goes with the sketch.
+// The build: the hero's, on this frame (sketch-build.ts), as one nested timeline so it scrubs and
+// reverses with the rest. The warm ground goes with the sketch.
 function build(gsap: Gsap, tl: Timeline, root: HTMLElement, layers: Layers, at: number): number {
   const plan = beats.build
   const inner = gsap.timeline({ defaults: { lazy: false } })
@@ -214,34 +215,54 @@ function build(gsap: Gsap, tl: Timeline, root: HTMLElement, layers: Layers, at: 
 // The whole story as one paused timeline with a label per stop. Nothing in it is a callback, so
 // it plays the same forwards and backwards. Built with the frame rewound to empty, and every
 // tween's start recorded on its first render, in order, so a scrub back restores what was there.
+// Each stop's label follows the beats a glide to it plays (walkthrough-steps.ts); a stop with
+// none shares the label's time with the stop before, so the frame holds there.
 function make(gsap: Gsap, root: HTMLElement, layers: Layers, typed: HTMLElement): Timeline {
   const tl = gsap.timeline({ paused: true, defaults: { lazy: false } })
   rewind(gsap, root, typed)
+  // Each beat is placed at a time and returns the time the next may start.
+  const play: Readonly<Record<Beat, (start: number) => number>> = {
+    sentence: (start) => sentence(tl, root, typed, start),
+    name: (start) => name(tl, root, start),
+    logo: (start) => logo(tl, root, start),
+    look: (start) => look(tl, root, start),
+    colour: (start) => colour(tl, root, start),
+    build: (start) => build(gsap, tl, root, layers, start),
+  }
   let at = 0
   tl.addLabel(labelFor(EMPTY_STAGE), at)
-  at = sentence(tl, root, typed, at)
-  tl.addLabel(labelFor(1), at)
-  at = name(tl, root, at)
-  tl.addLabel(labelFor(2), at)
-  at = logo(tl, root, at)
-  tl.addLabel(labelFor(3), at)
-  at = look(tl, root, at)
-  tl.addLabel(labelFor(4), at)
-  at = colour(tl, root, at)
-  tl.addLabel(labelFor(5), at)
-  at = build(gsap, tl, root, layers, at)
-  tl.addLabel(labelFor(BUILT_STAGE), at)
+  for (const [index, stop] of WALKTHROUGH_STOPS.entries()) {
+    for (const beat of stop) at = play[beat](at)
+    tl.addLabel(labelFor(index + 1), at)
+  }
   return tl
 }
 
-// How many stops a glide from `from` to `to` passes, counting the one it lands on.
-function stopsBetween(labels: Record<string, number>, from: number, to: number): number {
-  const times = Object.values(labels)
+// How many stops a glide from `from` to `to` passes, counting the one it lands on. A stop with no
+// beats shares its time with the stop before, so each time counts once: the send's hold is no
+// stop to cross, and the build plays back at the speed it plays forwards.
+function stopsBetween(labels: Readonly<Record<string, number>>, from: number, to: number): number {
+  const times = [...new Set(Object.values(labels))]
   const crossed =
     from < to
       ? times.filter((time) => time > from && time <= to)
       : times.filter((time) => time >= to && time < from)
   return Math.max(1, crossed.length)
+}
+
+// How long a glide between two times on the timeline takes, in seconds. The next stop plays at its
+// own speed; a jump over several is capped, so a flick to the bottom watches the page assemble in
+// one pass.
+export function glideSeconds(
+  labels: Readonly<Record<string, number>>,
+  from: number,
+  to: number,
+): number {
+  const stops = stopsBetween(labels, from, to)
+  const natural = Math.abs(to - from)
+  if (stops === 1) return natural
+  const cap = Math.min(catchUp.maxMs, catchUp.firstMs + catchUp.perStageMs * (stops - 1))
+  return Math.min(natural, seconds(cap))
 }
 
 // The walkthrough on one stage: the element holding the phone (with the finished page under its
@@ -277,15 +298,11 @@ export function buildWalkthrough(gsap: Gsap, root: HTMLElement): Walkthrough {
       scrub = null
       const now = tl.time()
       if (target === now) return
-      // The next stop plays at its own speed; a jump over several is capped, so a flick to the
-      // bottom watches the page assemble in one pass.
-      const stops = stopsBetween(tl.labels, now, target)
-      const natural = Math.abs(target - now)
-      const cap = seconds(
-        Math.min(catchUp.maxMs, catchUp.firstMs + catchUp.perStageMs * (stops - 1)),
-      )
-      const duration = stops === 1 ? natural : Math.min(natural, cap)
-      scrub = tl.tweenTo(target, { duration, ease: 'none', delay: seconds(leadMs) })
+      scrub = tl.tweenTo(target, {
+        duration: glideSeconds(tl.labels, now, target),
+        ease: 'none',
+        delay: seconds(leadMs),
+      })
     },
     rebuild: (stage) => {
       clear()

@@ -124,7 +124,8 @@ export const buildConcepts = inngest.createFunction(
             throw new Error(`Slots still empty: ${unfilled.join(', ')}`)
           }
           // A slot the search quota left empty settles now, as the fallback it is: the page
-          // opens as partial and the email waits, the same as if the sweeper had settled it.
+          // opens as partial and the email goes with its partial note (ADR 0037), the same as if
+          // the sweeper had settled it.
           return { state: exhausted ? 'fallback' : 'done', patch: { imagery } }
         }),
       ),

@@ -29,35 +29,6 @@ test('how it works never lists the questions', async ({ page }) => {
   await expect(section.getByText(/Question \d of 5/)).toHaveCount(1)
 })
 
-// The frame starts empty, builds the example brand into a finished page by the button, and
-// unpaints on the way back up. The stop is read from the scroll, so the assertions on the
-// progress line hold before GSAP arrives and the ones on the frame hold once it has.
-test('the walkthrough paints the example brand stop by stop, and unpaints on the way back', async ({
-  page,
-}) => {
-  test.setTimeout(60_000)
-  await page.goto('/')
-  await expect(page.locator('html')).toHaveAttribute('data-motion', '')
-  const section = page.locator('#how-it-works')
-  const slot = section.locator('[data-wire="headline-slot"]')
-  const headline = section.getByText('Gardens that grow with you.')
-  await expect(section.getByText('Question 1 of 5')).toBeVisible()
-  await expect(slot).toBeVisible()
-
-  await page.locator('#real-build').scrollIntoViewIfNeeded()
-  await expect(section.getByText('Question 5 of 5')).toBeVisible()
-  await expect(
-    section.getByText('Built as an illustration. Not a client, not one of the designs.'),
-  ).toBeVisible()
-  await expect(headline).toBeVisible({ timeout: 15_000 })
-  await expect(slot).toBeHidden()
-
-  await page.locator('#included').scrollIntoViewIfNeeded()
-  await expect(section.getByText('Question 1 of 5')).toBeVisible()
-  await expect(slot).toBeVisible({ timeout: 15_000 })
-  await expect(headline).toBeHidden()
-})
-
 // The headline is the largest contentful paint: it is server-rendered, its colour flip is a
 // blend rather than a transparency, and the ink canvas paints nothing the metric counts.
 test('the headline is the largest contentful paint', async ({ page }) => {
@@ -76,19 +47,6 @@ test('the headline is the largest contentful paint', async ({ page }) => {
       }),
   )
   expect(lcp).toBe('H1')
-})
-
-test('a sentence typed in the hero reaches question one on the start page', async ({ page }) => {
-  await page.goto('/')
-  const sentence =
-    'Family-run cafe by Whitby harbour. Breakfasts, cakes, dog-friendly, open from seven.'
-  await page.getByLabel('What does your business do?').fill(sentence)
-  // The closing frame redraws with the visitor's own words as they type.
-  await expect(page.locator('#cta').getByText(sentence).first()).toBeVisible()
-  await page.locator('#hero-cta').click()
-  await expect(page).toHaveURL(/\/start\?q=2$/)
-  await page.getByRole('button', { name: 'Back' }).click()
-  await expect(page.getByLabel('What does your business do?')).toHaveValue(sentence)
 })
 
 test('the build section says who does what and carries the call', async ({ page }) => {

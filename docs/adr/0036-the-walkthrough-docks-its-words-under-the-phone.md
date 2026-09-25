@@ -5,6 +5,7 @@
 - Amends: ADR 0025 (decision 2, the reading line and the beats below `md`; decision 6, the phone's
   zoom and the stage below `md`), ADR 0034 (decision 9, the panel's chrome on a phone and a CSS
   rise inside `#how-it-works` below `md`)
+- Amended by: ADR 0037 (decisions 3 and 10, the steps' order, 25 September 2026)
 - Keeps: ADR 0025 decisions 1, 3, 4 and 5 whole; ADR 0034 decisions 5, 8 and 12 and constraint 36
   in `app/_components/motion/index.ts`; the walkthrough from `md` up as it was
 - Plan: `docs/start-page-redesign-plan.md`, section 18 (package K1)
@@ -58,7 +59,8 @@ was closed, a walk test, and reading the small viewport.
    stop; the list's `::after` holds the last step through the colour and the build, and the
    stage and that step let go together, because both boxes end at the slot's foot, so the
    button arrives in the clear. The title's colour change (`app/globals.css`) is restated in the
-   docked transitions so it survives them.
+   docked transitions so it survives them. Amended 25 September 2026 (ADR 0037, Release 2): the
+   last step is now the send, which the `::after` holds through the finished sketch and the build.
 4. **Docked, the reading line is the dock and the beats come from the list's layout.** A docked
    step's own box sits at the dock, so the last one's second stage would never pass the line;
    `stackedBeats` in `app/_components/walkthrough-stops.ts` lays each step below the ones before
@@ -105,6 +107,8 @@ was closed, a walk test, and reading the small viewport.
     transform. Blue is still only the current title's; no border, no new token, no italic. The
     steps, their copy, their order, the progress line and the one `aria-hidden` frame are
     unchanged, and hidden steps are opacity 0, so a screen reader still reads all five in order.
+    Amended 25 September 2026 (ADR 0037, Release 2): the steps' copy and order now follow
+    `/start`'s questions; the dock, the stops and the progress line are unchanged.
 
 ## Consequences
 

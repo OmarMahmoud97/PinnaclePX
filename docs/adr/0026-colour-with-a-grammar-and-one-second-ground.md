@@ -3,6 +3,7 @@
 - Status: accepted
 - Date: 6 September 2026
 - Amends: ADR 0005 (item 6, motion on the glow's layers)
+- Amended by: ADR 0037 (decision 1, the visitor's colour on `/start`, 25 September 2026)
 
 ## Context
 
@@ -26,7 +27,10 @@ headroom on `/`.
 1. **A grammar, not a palette**, written beside the tokens in `app/globals.css`: blue is the
    product (the counters, the progress, the icons, the links, the ask, the step you are on, the
    answer you opened); the glows are light, and never carry ink; everything else stays greyscale.
-   An element that falls into none of those three sentences does not get a colour.
+   An element that falls into none of those three sentences does not get a colour. Amended 25
+   September 2026 (ADR 0037, Release 3): on `/start` the visitor's chosen colour is a fourth
+   sentence. From the colour question on it retints their draft, becomes the lamp's light and
+   re-hues the region's dark band; a grey colour keeps the studio's light.
 
 2. **One second ground.** `--surface-tint`, white with 6% brand mixed in oklab (`#f4fafe`), on
    Included, Real build and Your options — the three bands where the page turns from proof to

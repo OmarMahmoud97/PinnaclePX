@@ -2,6 +2,7 @@ import { serve } from 'inngest/next'
 import { inngest } from '@/lib/inngest/client'
 import { buildConcepts } from '@/lib/inngest/functions/build-concepts'
 import { eraseIdentity } from '@/lib/inngest/functions/erase-identity'
+import { orphanUploadSweep } from '@/lib/inngest/functions/orphan-upload-sweep'
 import { retentionSweep } from '@/lib/inngest/functions/retention-sweep'
 import { sendPreviewLink } from '@/lib/inngest/functions/send-preview-link'
 import { sweepDeadline } from '@/lib/inngest/functions/sweep-deadline'
@@ -12,6 +13,13 @@ export const maxDuration = 300
 
 export const { GET, POST, PUT } = serve({
   client: inngest,
-  functions: [buildConcepts, sweepDeadline, sendPreviewLink, retentionSweep, eraseIdentity],
+  functions: [
+    buildConcepts,
+    sweepDeadline,
+    sendPreviewLink,
+    retentionSweep,
+    orphanUploadSweep,
+    eraseIdentity,
+  ],
   streaming: true,
 })

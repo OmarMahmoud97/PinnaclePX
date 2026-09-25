@@ -21,20 +21,6 @@ export const EXAMPLE_ANSWERS: Answers = {
   colours: { kind: 'custom', hex: '#2e8c9c' },
 }
 
+// The sketch's stage with every question answered, which the finished sketches are drawn at
+// (components/sketch/sketch-model.ts gates the look and the colour by stage).
 export const FINAL_STAGE = 5
-
-// The answers as the demo has revealed them so far: the sentence cut to `chars` characters, the
-// company only from stage 2. The sketch model gates the style and the colour by stage itself.
-export function answersAt(stage: number, chars: number): Answers {
-  return {
-    ...EXAMPLE_ANSWERS,
-    description: EXAMPLE_ANSWERS.description.slice(0, chars),
-    company: stage >= 2 ? EXAMPLE_ANSWERS.company : '',
-  }
-}
-
-// How many answers the chips should show as given at a stage: none while the sentence is still
-// typing, then every answer up to that stage.
-export function answeredAt(stage: number): number {
-  return stage <= 1 ? 0 : stage
-}

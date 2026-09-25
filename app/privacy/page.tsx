@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { displayHeading, titleHeading } from '@/app/_components/section-styles'
+import { DEVICE_STORAGE, PROCESSORS, UNSENT_PICTURES } from '@/app/privacy/privacy-copy'
 import { Logo } from '@/components/brand/logo'
 import { buttonStyles } from '@/components/ui/button'
 import { CONFIG } from '@/lib/config'
@@ -10,16 +11,6 @@ export const metadata: Metadata = {
   title: 'Privacy',
   description: `How ${SITE.name} uses what you tell it, and your rights.`,
 }
-
-// Who processes the visitor's answers on the studio's behalf, named plainly.
-const PROCESSORS = [
-  ['Vercel', 'hosts the site, stores your pictures and runs the pipeline'],
-  ['Neon', 'holds the database'],
-  ['Inngest', 'runs the steps that build your designs'],
-  ['Anthropic', 'writes the wording from your sentence, and judges stock photographs'],
-  ['Pexels', 'supplies stock photographs when you add none of your own'],
-  ['Resend', 'sends the email with your link'],
-] as const
 
 // The notice the guide asks for at the question that takes an email: who we are, what we do
 // with the answers, on what basis, for how long, and what the visitor can do about it. Plain
@@ -73,6 +64,11 @@ export default function PrivacyPage() {
             as a code that cannot be turned back into the address, so a return visit sees new
             designs.
           </p>
+          <p>{UNSENT_PICTURES}</p>
+        </Section>
+
+        <Section title="What this browser keeps">
+          <p>{DEVICE_STORAGE.join(' ')}</p>
         </Section>
 
         <Section title="Who works on it for us">

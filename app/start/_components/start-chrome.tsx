@@ -1,5 +1,6 @@
 import { X } from 'lucide-react'
 import Link from 'next/link'
+import type { CSSProperties } from 'react'
 import { HeaderChrome } from '@/app/_components/header-chrome'
 import { headerLink } from '@/app/_components/header-link'
 import { Logo } from '@/components/brand/logo'
@@ -26,7 +27,9 @@ const EXIT = `${headerLink} shrink-0 max-md:size-10 max-md:justify-center max-md
 // received" over five lit segments, since no question is left, and the polite region says it once
 // as the done pane arrives; the pane carries no eyebrow of its own, so it is said only here. From lg it sits centred, across the seam
 // between the question and the sketch, the one object on both grounds. The progress is live at
-// every width; below sm the island drops the segments and keeps the words.
+// every width; below sm the island drops the segments and keeps the words. Under the segments the
+// home page's ink dot marks the question showing and glides to the next (plan 5.6); it is placed
+// from the right, where the segments end, so it needs no measure and never widens the pill.
 export function StartChrome({ current, total, done = false }: Props) {
   return (
     <HeaderChrome island overDark>
@@ -34,13 +37,20 @@ export function StartChrome({ current, total, done = false }: Props) {
         <Link href="/" aria-label={`${SITE.name} home`} className="shrink-0">
           <Logo nameClassName="hidden md:inline" />
         </Link>
-        <div aria-live="polite" className="min-w-0">
+        <div aria-live="polite" className="relative min-w-0">
           <ProgressSteps
             current={current}
             total={total}
             segmentsClassName="hidden sm:flex"
             label={done ? 'Brief received' : undefined}
           />
+          {!done && (
+            <span
+              aria-hidden="true"
+              style={{ '--dot-after': total - current } as CSSProperties}
+              className="start-dot"
+            />
+          )}
         </div>
         <Link href="/" className={EXIT}>
           <X aria-hidden="true" className="size-5 md:hidden" />

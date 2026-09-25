@@ -10,6 +10,8 @@
   ADR 0031 (decision 4, the hero's italic is now a true italic)
 - Keeps: ADR 0031 and 0032 otherwise whole; the hero's composition, ramp, ink and headline
   fills, subject to the re-measure recorded in the consequences
+- Amended by: ADR 0037 (decision 3's italic rule on `/start`, and the pool's exemption from the
+  caps, which now covers the `/start` curve, 25 September 2026)
 - Plan: `docs/home-page-redesign-plan.md`, amended by the director on 23 September 2026 (A1 to
   A3)
 
@@ -77,7 +79,9 @@ Code section 3).
    walkthrough's Montserrat and DM Serif Display stay inside the phone as the invented
    client's brand and do not count toward two. The H1 follows the site's family (D1); its line
    count is measured at six widths and the fills stand only where the count holds (see the
-   consequences).
+   consequences). Amended 25 September 2026 (ADR 0037, Release 3): on `/start` each question's
+   title carries one fixed italic payoff word, one display italic on screen at a time, and the
+   draft beside it at most two italic notes; the home page's three phrases are unchanged.
 
 4. **Site-only tokens and one dark scope in `app/globals.css`.** New `:root` values
    (`--ink-foot`, `--ink-card`, `--ink-raised`, `--on-ink`, `--on-ink-muted`, `--ink-line`,
@@ -412,7 +416,10 @@ stands.
    and the measured clearance to the heading at 1920 is 430 px against 382 at the cap. A hard
    wall at the cap was tried first and the spring stopped dead against it on a six-notch flick,
    which read as a thud. The caps in D12 gain one line: the pool's `scaleY` is decoration, like
-   the rail's, bounded by `stretchCap` rather than by `scaleFrom`.
+   the rail's, bounded by `stretchCap` rather than by `scaleFrom`. Amended 25 September 2026 (ADR
+   0037, Release 3): the exemption also covers `/start`'s pooled curve below `lg`, which springs
+   on each Next and Back (`lib/motion/start-curve.ts`, `CONFIG.start.curve`), bounded by its own
+   `stretchCap` of 0.3 and asleep after 2.5 s, and never moves under reduced motion.
 4. **The header reads the ink's true foot.** The stretch's box now ends at the band's top, so
    the SVG carries `data-theme="dark"` of its own and the header's observer counts it: the bar
    flips where the apex passes it, as it did when the box overhung. The plan's section 4.4 row
@@ -767,3 +774,94 @@ ms on the way out (open, 36 ms at either pace). Read with care: `n1b/analyze2.mj
 takes the page under the bar to be white, so from a dark band (`#included`) it scores the light
 mark as 1.18:1, at either pace. The phone header's specs, the reduced-motion fade, and the home and
 a11y specs pass (39), with the 554 unit tests, typecheck, lint and knip.
+
+## Amendment, 25 September 2026: the pooled curve is liquid, a chain of two springs
+
+The owner asked for the curve's jiggle to be "more jiggly and natural". The evening amendment
+of 23 September stands except where this says otherwise: the shape at rest, the trigger, the
+knee and cap, the sleep, and phones and reduced motion are unchanged.
+
+1. **The curve changes shape, not only depth.** One rigid `scaleY` at one frequency read as a
+   rubber sheet on a spring: every point moved in step. While it moves the path is now
+   rewritten each frame as one cubic (`lib/motion/pool-curve.ts`) whose handles at rest sit
+   where a cubic hugs the arc (307 in from each end, 187 deep on the 1000 by 140 box, within
+   0.03 of the true arc; the server markup keeps the arc and the loop writes it back at rest).
+   A symmetric cubic is 3t(1 - t) of its handles' depth along its length whatever their inset,
+   so the apex is the handles' depth alone and the handles' inset alone is the shape: toward
+   the centre a pendant drop, toward the ends a flat-bottomed dish. The clearance under the
+   walkthrough's heading (point 3 of the evening amendment) therefore holds for every shape.
+2. **Two masses in a chain.** The scroll's speed pulls the shoulders (2 Hz, damping 0.2), and
+   the belly follows the shoulders (1 Hz, damping 0.1, the accepted swing). The belly's depth
+   is drawn as the apex, through the knee and cap as before, and the belly's lag behind the
+   shoulders is drawn as the shape, `pointiness` (1.2) resting depths of lag per resting inset,
+   eased through tanh toward 0.4 of the inset either way and never reaching it (a hard rail
+   held the drop's point still for a tenth of a second at the top of a flick, measured, and a
+   shape that stops is a wall). So a scroll just begun drops the ends before the middle (a
+   dish), the belly then overshoots into a drop, the stop leaves the belly hanging while the
+   shoulders return, and the swing back up tightens into a dish again; the shoulders' ripple,
+   twice the belly's frequency (a hanging drop's first two symmetric modes) and gone inside a
+   second, makes the settle start busy and end clean. The springs are stepped in fixed 1/240 s
+   sub-steps so a 60 Hz and a 120 Hz display draw the same swing. `CONFIG.motion.choreo.pool`
+   replaces `frequencyHz` and `dampingRatio` with `shoulders`, `belly` and `pointiness`.
+3. **The repaint is the pool's own.** Rewriting `d` repaints the pool's layer, a strip `--pool`
+   deep that `will-change: transform` keeps up where the scroll drives it, and nothing else;
+   the whole-band repaint the evening amendment avoided is still avoided. The loop still wakes
+   on the trigger and sleeps at rest, so a still page costs nothing. `/start`'s curve
+   (`lib/motion/start-curve.ts`) is untouched and keeps its `scaleY` kick.
+4. **Measured at 1440 on a six-notch wheel flick under Lenis** (pool 202 px deep): 300 ms in,
+   the apex is 10 px deeper and the handles at 0.8 of their inset (the dish); 600 ms in, 73 px
+   deeper with the handles at 1.31 (the drop); the swing back is 45 px flatter at 0.77 (the
+   dish again), then 35 deeper, 25 flatter, 18 deeper, 13 flatter, 10 deeper, at rest in about
+   six seconds. Numbers still to feel-check with the owner: `pointiness` (how far the shape
+   goes with the depth) and the shoulders' damping (how much ripple sits on the first swing).
+5. **Checks:** typecheck, lint, prettier, knip and the unit tests (834, eight of them new in
+   `lib/motion/pool-curve.test.ts`: the resting arc, the cap, the lag and the overshoot, the
+   ring and the settle, and frame-rate independence) pass.
+
+## Amendment, 25 September 2026, later: the footer sheet's lip is liquid too
+
+The owner, shown the pooled curve, asked for the same for the footer. The sheet's rounded top
+(decision 1's second shape) now moves with the scroll as the pool does; the rest of the record
+stands, and the amendment above changes in one respect: the chain it describes has moved to
+`lib/motion/chain.ts`, shared by both edges, with `lib/motion/pool-curve.ts` keeping only the
+pool's drawing. The two are driven by one loop, `app/_components/motion/liquid.ts`.
+
+1. **The server markup is unchanged in kind.** The sheet keeps its CSS corners and its overlap
+   over the closing's foot; phones, reduced motion and the page before the choreography loads
+   see exactly what they saw. `app/_components/site-footer.tsx` adds an empty `svg.sheet-lip`
+   before the content and moves the content's clip (the wordmark's cut) onto a positioned box
+   inside the sheet, because a clip on the sheet would clip a swell above it, and because a
+   positioned lip would otherwise paint over the in-flow column headings, which its foot
+   reaches under (seen on the first run; the box now paints over it).
+2. **From md up the choreography takes the edge over** (`app/_components/motion/sheet-lip.ts`):
+   it marks the sheet `data-lip`, which drops the CSS corners and leaves the sheet's top strip
+   unpainted (`--lip-room`, 1.3 corner radii, a hard-stop gradient on the sheet's own ground)
+   and shows the lip; it measures the sheet's width and its corners' radius from the lip's box
+   (`--seam` tall) and draws the same corners as one path in those pixels, the viewBox the
+   sheet's own pixels, so a corner is a true circle at every width; a settled resize refreshes
+   every trigger and the refresh re-measures. The swap is drawn in the frame the corners go, so
+   nothing flashes; measured against the CSS corners at rest, the two match.
+3. **The drawing** (`lib/motion/lip-curve.ts`): the corners stay pinned to the sheet's sides,
+   a quarter circle each at rest (a cubic with handles 0.5523 of the radius along the end
+   tangents); the flat top between them is a cubic whose apex is the belly's, in corner radii,
+   down while the page glides down (the ink lags the page, as the pool's does) and up past rest
+   once it stops; its handles' inset from the corners is `dome` (0.55) of the half-length,
+   moved by the belly's lag behind the shoulders (`pointiness` 1.2, eased toward 0.4 either
+   way): toward the corners while the shoulders lead, a flat lift with steep sides, toward the
+   centre while the belly leads, a peaked swell. Each corner's landing tangent turns with the
+   top's, so the join never kinks, and the rim tips a little the other way as the middle moves,
+   as a meniscus does. The apex is the handles' height alone, so a trough (`stretchCap` 1.2
+   radii) stays inside the unpainted strip and a swell stays under `--spacing-band`, never less
+   than 1.5 radii from md, and never reaches the closing's phone.
+4. **The numbers** (`CONFIG.motion.choreo.sheet`): the pool's springs (shoulders 2 Hz at 0.2,
+   belly 1 Hz at 0.1), so the page's two liquid edges move as one ink; `stretchMax` 0.8 radii,
+   the knee 0.7, the cap 1.2. Measured at 1440 (radius 80) on a six-notch wheel flick into the
+   page's end under Lenis: a 65 px trough 700 ms in with the handles at 0.92 of the half-length
+   (peaked), a 36 px swell at 1.2 s with the handles at 0.19 (flat), then 29 down, 20 up, 15
+   down, 11 up, 8 down, the corners' rims tipping up to 16 px the other way; the loop sleeps
+   about ten seconds after the flick, later than the pool's six, because the rest threshold is a
+   share of the unit and a radius is a smaller unit than the pool's depth. Numbers still to
+   feel-check with the owner: `stretchMax` (how deep the sag goes) and `dome`.
+5. **Checks:** typecheck, lint, prettier, knip and the unit tests (841, with
+   `lib/motion/chain.test.ts`, `pool-curve.test.ts` and `lip-curve.test.ts`) pass. Budgets are
+   not re-measured here; the modules ride the lazy choreography chunk.

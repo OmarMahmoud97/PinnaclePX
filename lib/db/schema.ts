@@ -14,6 +14,8 @@ export type StageState = (typeof STAGE_STATES)[number]
 const stage = (name: string) =>
   text(name, { enum: STAGE_STATES }).notNull().default('pending').$type<StageState>()
 
+const settledAt = (name: string) => timestamp(name, { withTimezone: true })
+
 // Hits under a key within a fixed window (lib/db/rate-limit.ts). Rows for old windows are
 // removed by the retention sweep.
 export const rateLimit = pgTable(
@@ -81,6 +83,17 @@ export const submission = pgTable('submission', {
   stageBrief: stage('stage_brief'),
   stageCopy: stage('stage_copy'),
   stageImagery: stage('stage_imagery'),
+  // When each stage settled (done, fallback or failed), by the database's clock like createdAt,
+  // so the done page and the hub can stamp each line of the build with the server's own time
+  // (docs/start-page-journey-plan.md, 8.2). Null while the stage is open, and on rows written
+  // before these columns existed, which then show no times at all.
+  stageSelectAt: settledAt('stage_select_at'),
+  stageTokensAt: settledAt('stage_tokens_at'),
+  stageBriefAt: settledAt('stage_brief_at'),
+  stageCopyAt: settledAt('stage_copy_at'),
+  stageImageryAt: settledAt('stage_imagery_at'),
+  // When the last stage settled: how long the build took, read against createdAt.
+  settledAt: settledAt('settled_at'),
   deadlineAt: timestamp('deadline_at', { withTimezone: true }).notNull(),
   // When the pipeline event was sent. Null means the send failed and the next submit resends.
   eventSentAt: timestamp('event_sent_at', { withTimezone: true }),

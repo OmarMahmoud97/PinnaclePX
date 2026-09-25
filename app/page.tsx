@@ -39,7 +39,8 @@ if (env.LAUNCH_GATE === '1' && !readyForTraffic(READY_TEMPLATES.length)) {
 // shell, and the separation is a ground, a card, air or one of two shapes. The proof and the
 // promise sit on the hero's own foot as one dark stretch, which ends in a pooled curve over the
 // walkthrough's wash (the SVG at the end of the stretch: a circle segment, --pool deep, that the
-// scroll stretches and lets spring back from md up, app/_components/motion/ink-pool.ts; it is a
+// scroll deepens and lets swing back as liquid from md up, app/_components/motion/ink-pool.ts,
+// which redraws the arc as a cubic of the same shape while it moves; it is a
 // dark scope of its own so the header reads the ink's true foot, which the stretch's box no
 // longer reaches); the wash carries the two commercial bands and dissolves to white for the
 // answers, the studio and the questions; the closing hands the ink back on white; and the footer,

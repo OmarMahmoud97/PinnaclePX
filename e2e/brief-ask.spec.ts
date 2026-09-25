@@ -59,7 +59,8 @@ test('on a short laptop the ask is on screen at every question', async ({ page }
     await expect(page.locator('main#main h1')).toBeVisible()
     await settle(page)
     const ask = page.getByRole('button', {
-      name: question === 5 ? 'Show me my three designs' : 'Next',
+      name: question === 5 ? 'Show me my three designs' : /^Next/,
+      // Holds the last ask to its whole name; a pattern is matched as it is written.
       exact: true,
     })
     await expect(ask, `question ${String(question)}`).toBeInViewport({ ratio: 1 })

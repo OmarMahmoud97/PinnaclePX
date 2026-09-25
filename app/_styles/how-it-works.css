@@ -27,11 +27,11 @@
  * 100 ms breath (--walk-breath), so a step current for less than that on a flick never starts to
  * show. With no step current, the first one shows, so the words are there before the phone
  * starts typing.
- * Every --walk-rest of scroll is one stop; the list's ::after holds the last step through the
- * colour and the build, and the stage and that step let go together because both boxes end at
- * the slot's foot. The rise is on the steps' children, which the track never measures, and the
- * colour restated in their transitions keeps the current title's (app/globals.css). Unlayered,
- * so these beat the utilities.
+ * Every --walk-rest of scroll is one stop; the list's ::after holds the last step, the send,
+ * through the finished sketch and the build, and the stage and that step let go together because
+ * both boxes end at the slot's foot. The rise is on the steps' children, which the track never
+ * measures, and the colour restated in their transitions keeps the current title's
+ * (app/globals.css). Unlayered, so these beat the utilities.
  */
 @media (width < 48rem) {
   .walkthrough-stage {

@@ -1,11 +1,14 @@
+# The staged files are piped in and run in batches rather than interpolated as {staged_files}:
+# Windows caps a command line at about 8k characters, and one release's worth of staged files
+# (243 on 25 September 2026) is well past it, so the hook failed with "The command line is too
+# long" before either tool ran. xargs holds each batch under the cap, and -r keeps a commit that
+# stages none of a glob's types from running the tool over nothing.
 pre-commit:
   commands:
     format:
-      glob: '*.{ts,tsx,js,jsx,mjs,mts,json,css,md,yml,yaml}'
-      run: pnpm prettier --check {staged_files}
+      run: git diff --cached --name-only --diff-filter=ACMR -- '*.ts' '*.tsx' '*.js' '*.jsx' '*.mjs' '*.mts' '*.json' '*.css' '*.md' '*.yml' '*.yaml' | xargs -r -n 40 pnpm prettier --check
     lint:
-      glob: '*.{ts,tsx}'
-      run: pnpm eslint {staged_files}
+      run: git diff --cached --name-only --diff-filter=ACMR -- '*.ts' '*.tsx' | xargs -r -n 40 pnpm eslint
 
 pre-push:
   commands:

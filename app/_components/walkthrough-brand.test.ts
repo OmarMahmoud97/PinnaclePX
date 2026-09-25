@@ -1,15 +1,8 @@
 import { describe, expect, it } from 'vitest'
-import {
-  BUILT_STAGE,
-  EMPTY_STAGE,
-  WALKTHROUGH_ANSWERS,
-  WALKTHROUGH_COPY,
-} from '@/app/_components/walkthrough-brand'
-import { FINAL_STAGE } from '@/lib/brief/example-brief'
+import { WALKTHROUGH_ANSWERS, WALKTHROUGH_COPY } from '@/app/_components/walkthrough-brand'
 import { briefSchema } from '@/lib/brief/schema'
 import { typingOffsets } from '@/lib/brief/typing'
 import { CONFIG } from '@/lib/config'
-import { QUESTION_IDS } from '@/lib/brief/question-ids'
 
 describe('WALKTHROUGH_ANSWERS', () => {
   it('would pass every question the real form asks, apart from the name and email it never shows', () => {
@@ -43,13 +36,5 @@ describe('WALKTHROUGH_ANSWERS', () => {
     const typed = typingOffsets(WALKTHROUGH_ANSWERS.description, CONFIG.demo.typing).at(-1) ?? 0
     expect(typed).toBeGreaterThan(0)
     expect(typed).toBeLessThanOrEqual(3_500)
-  })
-})
-
-describe('the stops', () => {
-  it('run from the empty frame through every question to the finished page', () => {
-    expect(EMPTY_STAGE).toBe(0)
-    expect(FINAL_STAGE).toBe(QUESTION_IDS.length)
-    expect(BUILT_STAGE).toBe(QUESTION_IDS.length + 1)
   })
 })

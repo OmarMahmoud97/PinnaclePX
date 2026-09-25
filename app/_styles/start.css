@@ -1,19 +1,79 @@
-/* /start: this page's own rules, plain CSS only; tokens and utilities stay in app/globals.css. */
-
 /*
- * The region's dark scope (app/start/_components/sketch-pane.tsx) sits on its ground layer and
- * its caption block, never on the section or anything around it. The sketch's variables are
- * declared on the section, and the light style's resolve the page's surface where they are
- * declared (components/sketch/sketch-model.ts): inside the scope that surface is the ink, so a
- * scope on the section would paint every light sketch dark.
+ * /start: this page's own rules, plain CSS only; the site's tokens and utilities stay in
+ * app/globals.css. The route imports this sheet (app/start/page.tsx), so no other page downloads
+ * it, and the draft's and the done view's sheets after it build on what it declares
+ * (docs/start-page-journey-plan.md, D26 and 11.3).
  */
 
 /*
- * The pool of light behind the frames. It is a colour of its own, registered so a change of
- * palette is a transition and not a jump, and so /start never leans on the Work tiles' sheet. At
- * rest it is the home page's cyan backlight. From question five it takes the visitor's colour,
- * which the sketch model keeps transparent until a colour exists, and follows every hover, focus
- * and tap on a palette; once the brief is sent it is at its brightest.
+ * The questionnaire's tokens (plan 6.1). They sit on :root in this sheet, which only /start loads,
+ * so the island, outside the flow, reads them too and the sheet every page shares never carries
+ * them. lib/config.ts holds the same numbers for script, and start-tokens.test.ts keeps the two
+ * equal: the pace stretches --motion-reveal to 900 ms, as --menu-pace does the phone menu's, and
+ * to 300 ms under reduced motion; the exit a question plays before the flow moves on; how far the
+ * lead and the controls rise (and the lead falls, after a Back), where the lead's scale starts,
+ * how far both slip as a question leaves, and the stagger between the three that rise; the lamp's
+ * brightness at each question and its swell on each move; the draft's pour, the walkthrough's
+ * colour beat (CONFIG.walkthrough.beats.colour); a spring with about 9 per cent overshoot, sampled
+ * from CONFIG.start.spring; and the island dot's glide, the home page's (header.css).
+ */
+:root {
+  --start-pace: 1.5;
+  --start-exit: 200ms;
+  --start-rise-lead: 2rem;
+  --start-rise-back: 1.5rem;
+  --start-rise-controls: 0.5rem;
+  --start-rise-exit: 1rem;
+  --start-rise-scale: 0.96;
+  --start-stagger: 80ms;
+  --start-lamp-1: 0.45;
+  --start-lamp-2: 0.6;
+  --start-lamp-3: 0.75;
+  --start-lamp-4: 0.9;
+  --start-lamp-5: 1;
+  --start-lamp-done: 0.75;
+  --start-swell: 1.3;
+  --draft-each: 450ms;
+  --draft-step: 70ms;
+  --draft-glow: 900ms;
+  --ease-spring: linear(
+    0,
+    0.085,
+    0.276,
+    0.5,
+    0.707,
+    0.873,
+    0.989,
+    1.059,
+    1.09,
+    1.094,
+    1.082,
+    1.062,
+    1.041,
+    1.022,
+    1.008,
+    0.998,
+    0.993,
+    0.991,
+    0.991,
+    0.993,
+    1
+  );
+  --start-dot: 420ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --start-pace: 0.5;
+  }
+}
+
+/*
+ * The registered properties (plan 5.3 and 6.1), each a value a transition or an animation can
+ * move smoothly: the lamp's two colours, and its swell; the hue the ramp's dark band takes from the
+ * visitor's colour (OD5), which the flow sets on start-flow and which starts at the studio's own,
+ * the hue every dark stop of the ramp shares within two degrees; the ramp's light stops' shift,
+ * which ready moves; and done's ground, from the wait's ink (0) to ready's light (1).
  */
 @property --start-pool {
   syntax: '<color>';
@@ -21,17 +81,1076 @@
   initial-value: transparent;
 }
 
-.start-stage {
+@property --start-pool-2 {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: transparent;
+}
+
+@property --lamp-swell {
+  syntax: '<number>';
+  inherits: false;
+  initial-value: 1;
+}
+
+@property --start-hue {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 243;
+}
+
+@property --ramp-shift {
+  syntax: '<percentage>';
+  inherits: true;
+  initial-value: 0%;
+}
+
+@property --done-ground {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+/*
+ * The grounds (plan 5.3 and 5.4). Below lg main is the wash with a glow in its top corner, where
+ * the heading sits in on-surface, never brand-ink. From lg the hero's ramp runs under both panes:
+ * one gradient sized to the whole flow (100cqw, the flow being the container), painted from the
+ * left on main and from the right on the region's ground layer, so it runs on across the split.
+ * It is assembled here on the layers, never on :root, where its var()s would resolve before
+ * --ramp-shift or --start-hue could reach them (ADR 0035 D4). Its stops from #175883 down take the
+ * visitor's hue at their own lightness, their chroma held to 0.12, so the band re-hues without
+ * losing its depth. Main's text sits on #c6dcee or lighter, and its links on #e2eef7 or lighter
+ * (brief-ground.spec.ts). The canvas past the page's ends is white while the visitor answers on a
+ * desk (white and the ink either side of the centre on a wide desk, below), and the ink below lg,
+ * where every question opens on the region's ink.
+ */
+.start-flow {
+  container-type: inline-size;
+  transition:
+    --start-hue var(--draft-glow) var(--ease-standard),
+    --ramp-shift var(--draft-glow) var(--ease-standard);
+}
+
+.start-ground-main {
+  background:
+    radial-gradient(60% 50% at 85% 0%, var(--glow-corner), transparent 70%), var(--surface-wash);
+}
+
+html:has(.start-stage) body {
+  background-color: var(--ink-foot);
+}
+
+@media (width >= 64rem) {
+  .start-ground-main,
+  .start-ground-region {
+    --start-ramp: linear-gradient(
+      118deg,
+      #fff 0,
+      #fefeff 20%,
+      #f8fbfd 30%,
+      var(--surface-wash) calc(38% + var(--ramp-shift)),
+      var(--surface-wash-deep) calc(41% + var(--ramp-shift)),
+      var(--on-ink-muted) calc(44% + var(--ramp-shift)),
+      var(--job-answered) calc(46.5% + var(--ramp-shift)),
+      #4581ad calc(49% + var(--ramp-shift)),
+      oklch(from #175883 l min(c, 0.12) var(--start-hue)) calc(52.5% + var(--ramp-shift)),
+      oklch(from #044368 l min(c, 0.12) var(--start-hue)) calc(56% + var(--ramp-shift)),
+      oklch(from #003555 l min(c, 0.12) var(--start-hue)) calc(58.5% + var(--ramp-shift)),
+      oklch(from var(--ink-raised) l min(c, 0.12) var(--start-hue)) calc(61% + var(--ramp-shift)),
+      oklch(from var(--ink-card) l min(c, 0.12) var(--start-hue)) calc(64% + var(--ramp-shift)),
+      oklch(from #02101d l min(c, 0.12) var(--start-hue)) calc(67% + var(--ramp-shift)),
+      oklch(from var(--ink-foot) l min(c, 0.12) var(--start-hue)) calc(70% + var(--ramp-shift))
+    );
+  }
+
+  .start-ground-main {
+    background: var(--start-ramp) left top / 100cqw 100%;
+  }
+
+  .start-ground-region {
+    background: var(--start-ramp) right top / 100cqw 100%;
+  }
+
+  html:has(.start-ground-main) body {
+    background-color: var(--surface);
+  }
+}
+
+/*
+ * A wide desk (plan 5.3, the owner's cap of 25 September 2026): from 120rem the grid holds at
+ * 120rem and centres, so a 2560 px screen shows the composition verified at 1920 in the middle of
+ * the screen rather than two islands on a field, the ramp with it, since the ramp is sized to the
+ * grid. The canvas either side carries the ramp's two ends on, white to the left of the centre and
+ * the ink to the right, so the grid's left margin sits on the ramp's first stop and its right
+ * margin on its last; the done sheet paints it the ink while the designs build (start-done.css).
+ * The island, fixed and centred on the screen, stays over the grid.
+ */
+@media (width >= 120rem) {
+  .start-flow {
+    max-width: 120rem;
+    margin-inline: auto;
+  }
+
+  html:has(.start-ground-main) body {
+    background: linear-gradient(to right, var(--surface) 50%, var(--ink-foot) 50%);
+  }
+
+  /* The lamp reaches half the board again to the right (.start-stage::before, below), which the
+     region's clip cuts at the screen's edge on an uncapped desk; here that edge is inside the
+     screen, so the region lets the light run on sideways over the canvas's ink and fade there,
+     rather than stop in a line down the grid's edge. It stays clipped up and down, and its reach
+     towards the seam ends inside the pane, as at every desk. The light still runs past the
+     screen's edge, and the page's own sideways clip (body, app/globals.css) passes to the
+     viewport, which then keeps that reach as room to scroll into; with a clip of its own the root
+     takes the viewport's, the body's stays on the body and cuts the light at the screen's edge,
+     and the page has nowhere to go sideways. */
+  html:has(.start-ground-main) {
+    overflow-x: clip;
+  }
+
+  .start-region {
+    overflow: visible clip;
+  }
+}
+
+/*
+ * A question on a desk (plan 4.2): its title set high rather than centred, at 144 px on a 900 px
+ * screen and never under 6rem; the question 540 px wide from xl, max-w-lg (512 px) below it. The
+ * card's own padding is the air under it, so the pane adds only 0.75rem there, and every
+ * question, the colour's hex field open, fits 1440 by 900 (plan 4.3). The skeleton takes the same
+ * top, so hydration moves nothing. The board beside the question takes the same top (below), so
+ * the draft's frame sits level with the title as the mockups draw it.
+ */
+@media (width >= 64rem) {
+  .start-ground-main {
+    justify-content: flex-start;
+    padding-top: clamp(6rem, 16vh, 9.5rem);
+    padding-bottom: 0.75rem;
+  }
+
+  .start-board {
+    padding-top: clamp(6rem, 16vh, 9.5rem);
+  }
+}
+
+/*
+ * The board (sketch-pane.tsx): the draft's frame, the caption under it and the whisper at its
+ * foot. Below lg it is no box at all, so the region lays its parts out as before
+ * (start-done-view.css shares one cell between the stage and the designs there). From lg it
+ * holds its own screen: stuck to the top of the window and as tall as it, its content from the
+ * title's top, so the frame sits level with the title, holds still from question to question, and
+ * keeps its caption in view while a long question scrolls; at done the posters take the frame's
+ * cell (start-done-view.css) and hold the same screen while the column beside them runs on. It
+ * is a one-column grid, so the stage and the designs can share that cell. The region's own
+ * centring and padding give way to it there.
+ */
+.start-board {
+  display: contents;
+}
+
+@media (width >= 64rem) {
+  .start-region {
+    justify-content: flex-start;
+    padding-block: 0;
+  }
+
+  .start-board {
+    position: sticky;
+    top: 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-content: start;
+    justify-items: center;
+    row-gap: 1.5rem;
+    width: 100%;
+    height: 100dvh;
+  }
+}
+
+/* Under forced colours the caption's fill is the system's text colour as its colour is: Chromium
+   forces `color` but leaves `-webkit-text-fill-color` at the author's, which axe reads first, so
+   the board's caption measured 1.93:1 on the Canvas the ramp becomes. */
+@media (forced-colors: active) {
+  .start-board p {
+    -webkit-text-fill-color: CanvasText;
+  }
+}
+
+@media (width >= 80rem) {
+  .start-question {
+    max-width: 33.75rem;
+  }
+}
+
+/* A tablet's question is a little wider, 36rem, so its tiles still sit two to a row. */
+@media (40rem <= width < 64rem) {
+  .start-question {
+    max-width: 36rem;
+  }
+}
+
+/*
+ * The question: the title and its receipt, then the card 2rem under them (plan 4.2). Below sm,
+ * where the card is flat, its helper follows the title as closely as the receipt does, so a short
+ * phone's first control still starts above the ask.
+ */
+.start-question {
+  gap: 0.75rem;
+}
+
+@media (width >= 40rem) {
+  .start-question {
+    gap: 2rem;
+  }
+}
+
+/*
+ * The title (plan 5.1): the hero's size, 36 px on a phone, 58 at 1024 and 73.28 at 1440, where it
+ * stops, so a two-line title still leaves a 900 px desk its card. Its payoff word takes the serif
+ * italic through .emphasis em (app/globals.css).
+ */
+.start-heading {
+  font-size: min(var(--text-hero), 4.58rem);
+  line-height: 1;
+  letter-spacing: -0.025em;
+}
+
+/*
+ * The card (plan 5.7): white on the ground from sm, with the card shadow and no edge; below sm it
+ * is flat, and its controls are white wells on the wash. Everything in it reads its ground and its
+ * wells' colour from here: the fades behind the ask riding the foot take the card's ground, and a
+ * well or a tile is the wash inside the white card and white on the flat one. Under forced colours
+ * the card's shadow goes, so it takes a border from sm.
+ */
+.start-card {
+  --start-card-ground: var(--surface-wash);
+  --start-well: var(--surface);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+@media (width >= 40rem) {
+  .start-card {
+    --start-card-ground: var(--surface);
+    --start-well: var(--surface-wash);
+    padding: 1.75rem;
+    border-radius: 1.5rem;
+    background: var(--surface);
+    box-shadow: var(--shadow-card);
+  }
+
+  @media (forced-colors: active) {
+    .start-card {
+      border: 1px solid CanvasText;
+    }
+  }
+}
+
+/*
+ * A field's well (components/ui/field.tsx) and the description's: the card's well colour with a
+ * soft inset edge, and a red ring when its answer is wrong. Its text is 16 px on a phone, where
+ * anything smaller makes iOS Safari zoom the page on focus, and 20 px from sm.
+ */
+.start-well {
+  background: var(--start-well);
+  box-shadow: inset 0 1px 2px rgb(2 6 23 / 0.08);
+  font-size: 1rem;
+}
+
+.start-well[aria-invalid='true'],
+.start-well:has([aria-invalid='true']) {
+  box-shadow:
+    inset 0 1px 2px rgb(2 6 23 / 0.08),
+    0 0 0 2px var(--danger);
+}
+
+@media (width >= 40rem) {
+  .start-well {
+    font-size: 1.25rem;
+  }
+}
+
+/*
+ * The tiles: a choice card, the file picker and the chosen logo's row (plan 5.7), wells of the
+ * card's ground at least 64 px tall. A chosen card turns white inside a ring of brand ink; a
+ * palette's card is filled with the palette and labelled in white (5.99:1 at the least), its ring
+ * set off by the card's white. An unchosen card and the picker answer a hovering pointer with a
+ * ring of brand ink at 40 per cent, and the card with a glow in a corner free of words; a fill a
+ * tint off the well read as nothing (1.05:1). Only for a pointer that hovers: a touch screen keeps
+ * :hover on whatever was last tapped, and the edge would stick there.
+ */
+.choice-card,
+.file-picker,
+.start-tile {
+  background: var(--start-well);
+}
+
+.choice-card {
   position: relative;
-  --start-pool: var(--backlight);
+  isolation: isolate;
+  transition:
+    background-color var(--motion-tap) var(--ease-standard),
+    box-shadow var(--motion-tap) var(--ease-standard),
+    scale var(--motion-tap) var(--ease-standard);
 }
 
-[data-coloured] .start-stage {
-  --start-pool: color-mix(in oklab, var(--sketch-glow) 55%, transparent);
+.choice-card[aria-checked='true'] {
+  background: var(--surface);
+  box-shadow: 0 0 0 2px var(--brand-ink);
 }
 
-[data-coloured][data-done] .start-stage {
-  --start-pool: color-mix(in oklab, var(--sketch-glow) 75%, transparent);
+.choice-card[data-fill] {
+  color: var(--on-brand);
+}
+
+.choice-card[data-fill][aria-checked='true'] {
+  box-shadow:
+    0 0 0 2px var(--surface),
+    0 0 0 4px var(--brand-ink);
+}
+
+@media (hover: hover) {
+  .choice-card:not([aria-checked='true']):hover,
+  .file-picker:hover {
+    box-shadow: 0 0 0 2px color-mix(in oklab, var(--brand-ink) 40%, transparent);
+  }
+
+  /* The glow keeps to a corner no word reaches (plan 5.4), 3rem across and spent by 34 px. On a
+     card without a picture that is its end, where the words stop 48 px short (the check's 24 px
+     and the gap and padding either side) and the check shows only once the card is chosen. On a
+     card with one, whose words may run to its end, it is the picture's lower corner, and the
+     words start 56 px in at the least, past the smallest picture, the 32 px swatch. */
+  .choice-card:not([aria-checked='true'], [data-fill]):hover::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    background: radial-gradient(
+      3rem 100% at var(--glow-x, 100%) 100%,
+      var(--glow-corner),
+      transparent 70%
+    );
+    pointer-events: none;
+  }
+
+  .choice-card:has(.start-tile-media) {
+    --glow-x: 0%;
+  }
+}
+
+/*
+ * A card answers a press by sinking a touch, and a choice with a bloom of its ink from where it was
+ * pressed (--tap-x and --tap-y, the centre for a key) that fills the card and fades, and a check
+ * drawn in its chip (plan 6.2). The bloom plays only for a choice made on this question, never on
+ * arrival (components/ui/choice-card.tsx). Under reduced motion the card stays still, the bloom is
+ * a flash of its tint and the check appears.
+ */
+.choice-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: color-mix(in oklab, var(--brand-ink) 14%, transparent);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.choice-card[data-fill]::after {
+  background: rgb(255 255 255 / 0.22);
+}
+
+.choice-card[data-bloom][aria-checked='true']::after {
+  animation: start-bloom calc(var(--draft-each) * 2) var(--ease-enter);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .choice-card:active {
+    scale: 0.97;
+  }
+
+  @keyframes start-bloom {
+    from {
+      opacity: 1;
+      clip-path: circle(0 at var(--tap-x, 50%) var(--tap-y, 50%));
+    }
+
+    50% {
+      opacity: 1;
+      clip-path: circle(150% at var(--tap-x, 50%) var(--tap-y, 50%));
+    }
+
+    to {
+      opacity: 0;
+      clip-path: circle(150% at var(--tap-x, 50%) var(--tap-y, 50%));
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  @keyframes start-bloom {
+    from {
+      opacity: 1;
+    }
+  }
+}
+
+.start-check {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-inline-start: auto;
+  border-radius: 999px;
+  background: var(--brand-ink);
+  color: var(--on-brand);
+  opacity: 0;
+  transition: opacity var(--motion-tap) var(--ease-standard);
+}
+
+.choice-card[data-fill] .start-check {
+  background: transparent;
+  box-shadow: inset 0 0 0 1.5px currentColor;
+}
+
+.start-check svg {
+  width: 0.875rem;
+  height: 0.875rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.start-check path {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset var(--motion-settle) var(--ease-enter);
+}
+
+[aria-checked='true'] .start-check {
+  opacity: 1;
+}
+
+[aria-checked='true'] .start-check path {
+  stroke-dashoffset: 0;
+}
+
+/* Where a card has a picture, its check sits on the picture's corner, ringed in white. */
+.start-tile-media {
+  position: relative;
+  display: flex;
+  flex: none;
+}
+
+.start-tile-media > .start-check {
+  position: absolute;
+  top: -0.375rem;
+  right: -0.375rem;
+  width: 1.25rem;
+  height: 1.25rem;
+  box-shadow: 0 0 0 2px var(--surface);
+}
+
+/*
+ * The looks, two to a row wherever a card can be 12rem wide, which puts them two up from 1280
+ * wide, where the card's interior is 405 px, and keeps the look question inside a laptop's screen;
+ * a look's name may take two lines beside its picture there, and one from 1440. One to a row in
+ * a narrower column, 1024 among them.
+ */
+.start-looks {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
+  gap: 0.5rem;
+}
+
+/*
+ * A colour of the visitor's own shows in a swatch, with an inset edge so white still reads as a
+ * swatch on white; before a code reads as a colour, it shows the whole wheel.
+ */
+.start-swatch {
+  box-shadow: inset 0 0 0 1px rgb(2 6 23 / 0.12);
+}
+
+.start-swatch:not([style]) {
+  background: conic-gradient(#f43f5e, #f59e0b, #84cc16, #06b6d4, #6366f1, #d946ef, #f43f5e);
+}
+
+/*
+ * Under forced colours every tile takes a border and a chosen one a thicker border in the system's
+ * highlight, as a ring (a box-shadow) is dropped there (plan 9.4). A palette's card and a swatch keep
+ * the colour they show, which is the visitor's answer, and the check keeps its stroke.
+ */
+@media (forced-colors: active) {
+  .choice-card[aria-checked='true'] {
+    border: 2px solid Highlight;
+  }
+
+  .choice-card[data-fill],
+  .start-swatch {
+    forced-color-adjust: none;
+  }
+}
+
+/*
+ * The mood art (plan 5.5 and 5.8): what each look's photos will feel like, drawn in CSS until the
+ * visitor's own replace it, beside each look's name and, larger, in the draft. Without a look it is
+ * the studio's own light. Warm is a low sun over three hills; minimal one pale plane; bold two hard
+ * fields and a circle; dark one bloom; each under a fine grain. The draft pours the visitor's colour
+ * through it by setting the --mood-* colours, whose fallbacks are each look's own. "Aa" sits in the
+ * corner that carries it, in the look's display face once that has loaded; it is decoration, so
+ * aria-hidden.
+ */
+.mood-art {
+  position: relative;
+  display: grid;
+  overflow: hidden;
+  align-items: end;
+  justify-items: start;
+  background:
+    radial-gradient(circle at 58% 28%, #fff 0 8%, transparent 22%),
+    radial-gradient(
+      circle at 74% 66%,
+      color-mix(in oklab, var(--glow-secondary) 60%, transparent),
+      transparent 55%
+    ),
+    radial-gradient(
+      circle at 30% 38%,
+      color-mix(in oklab, var(--glow) 55%, transparent),
+      transparent 55%
+    ),
+    #f3f7fb;
+}
+
+.mood-art::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0.18;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  pointer-events: none;
+}
+
+.mood-art[data-style='warm'] {
+  background:
+    radial-gradient(120% 45% at 20% 108%, var(--mood-land-3, #5f5d40) 60%, transparent 61%),
+    radial-gradient(110% 50% at 85% 104%, var(--mood-land-2, #7f7a55) 58%, transparent 59%),
+    radial-gradient(130% 60% at 40% 118%, var(--mood-land-1, #b5a47c) 60%, transparent 61%),
+    radial-gradient(circle at 66% 40%, #fff4df 0 9%, var(--mood-sun, #ffcf9a) 13%, transparent 30%),
+    linear-gradient(#fbe9d2, var(--mood-sky, #f2bf98) 68%);
+}
+
+.mood-art[data-style='minimal'] {
+  background:
+    linear-gradient(#fbfbfa, #fbfbfa) 50% 50% / 64% 60% no-repeat,
+    var(--mood-ground, #eceff2);
+}
+
+.mood-art[data-style='bold'] {
+  background:
+    radial-gradient(circle at 64% 52%, var(--mood-circle, #ffd23f) 24%, transparent 24.5%),
+    linear-gradient(105deg, var(--mood-field, #2743d6) 50%, transparent 50%),
+    var(--mood-ground, #ff5a36);
+}
+
+.mood-art[data-style='dark'] {
+  background:
+    radial-gradient(
+      circle at 62% 42%,
+      #c4bdff 0 6%,
+      color-mix(in oklab, var(--mood-bloom, #6d5dfc) 75%, transparent) 18%,
+      transparent 48%
+    ),
+    #0b1320;
+}
+
+.start-specimen {
+  padding: 0 0 0.25rem 0.375rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1;
+  color: #fff;
+}
+
+[data-style='minimal'] > .start-specimen,
+.mood-art:not([data-style]) > .start-specimen {
+  color: var(--on-surface);
+}
+
+/*
+ * Below lg the card lays its last row out as a grid: Back's well and the ask's side by side, Back a
+ * 48 px round button beside the ask (plan 5.7), and under it below 22.5rem, where the ask takes the
+ * whole width; Back's name is said, not shown (sr-only, which lg undoes below). Every other part
+ * of the card spans the row.
+ */
+@media (width < 64rem) {
+  .start-card {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    column-gap: 0;
+  }
+
+  .start-card > *,
+  .start-ask {
+    grid-column: 1 / -1;
+  }
+
+  .start-actions {
+    display: contents;
+  }
+
+  .start-back + .start-ask {
+    grid-column: 2;
+  }
+
+  .start-back-button {
+    justify-content: center;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 999px;
+    background: var(--surface);
+    box-shadow: var(--shadow-card);
+  }
+
+  @media (forced-colors: active) {
+    .start-back-button {
+      border: 1px solid ButtonText;
+    }
+  }
+}
+
+@media (width < 22.5rem) {
+  .start-back {
+    order: 1;
+  }
+
+  .start-back,
+  .start-back + .start-ask {
+    grid-column: 1 / -1;
+  }
+}
+
+/*
+ * A short screen below lg: a phone under 47.5rem tall (Safari leaves 664 px on the common iPhones
+ * with its bars showing) and the stacked band, 36rem to lg, under 52rem tall (640 by 800 among
+ * them), the lines at which each frame takes its short crop (start-draft.css). There the full
+ * region, its curve and the ask riding at the foot leave no room for a question's first control,
+ * so the region's padding tightens, and at 390 by 664 and at 640 by 800 every question's first
+ * control shows whole above the ask on arrival. The pool's reach down drops to 7.5% of the shorter
+ * crop, so it is still spent before the curve.
+ */
+@media ((width < 36rem) and (height < 47.5rem)) or ((36rem <= width < 64rem) and (height < 52rem)) {
+  .start-region {
+    padding-top: 4rem;
+    padding-bottom: 0.75rem;
+  }
+
+  .start-region .start-stage::before {
+    bottom: -7.5%;
+  }
+
+  /* The pane sits 0.75rem under the curve rather than 1.5rem, which the short screen needs more
+     than the air. */
+  .start-ground-main {
+    padding-top: calc(var(--pool) + 0.75rem);
+  }
+}
+
+/*
+ * In the stacked band's short screen the card is also set to fit, as a laptop's desk is (below):
+ * its parts 1rem apart and 1.5rem under the title. With the tighter region that lifts the
+ * description's box 48 px at 640 by 800, whole above the ask, where the region's padding alone
+ * left its last 9 px under it.
+ */
+@media (36rem <= width < 64rem) and (height < 52rem) {
+  .start-question {
+    gap: 1.5rem;
+  }
+
+  .start-card {
+    row-gap: 1rem;
+  }
+}
+
+/*
+ * Under 30rem tall below lg, a phone on its side or a desk at 400 per cent (plan 4.2 and D8), the
+ * draft and the curve give way, so the title and the first control are in the first screen: the
+ * region keeps only the island's clearance and the sentence a screen reader hears, and main needs
+ * no room for a curve.
+ */
+@media (width < 64rem) and (height < 30rem) {
+  .start-region {
+    padding-block: 4rem 0;
+  }
+
+  .start-region .start-stage,
+  .start-region .ink-pool {
+    display: none;
+  }
+
+  .start-ground-main {
+    padding-top: 1.5rem;
+  }
+}
+
+/*
+ * Below lg the ask rides at the foot of the screen, so the next step is never a scroll away on a
+ * long question, with Back's round button beside it riding too. Each is one of the card's own
+ * items (the actions row has no box of its own there), so it sticks within the whole question; at
+ * the end of a scroll it settles into its place under the last control and covers nothing. The two
+ * share the card's last row, so they are as tall as each other and ride as one. They stand on a
+ * fade of the card's ground, so what scrolls under them goes quietly, and reach out by the card's
+ * edge (the pane's gutter, 1rem, where the card is flat below sm; its 1.75rem padding from sm) so
+ * the fade spans the column. While an ask is on the page the scroll padding keeps clear of it any
+ * control the browser scrolls to, but browsers scroll only a text field's caret line into view, so
+ * the question pane lifts the whole control on focus (question-pane.tsx). The foot measures 113 px
+ * at 390 (24 of fade, the 48 px button, 8, the reassurance's 21 and 12), so 7.5rem leaves air; at
+ * 320 the reassurance takes two lines and the foot 134, and the 14 px it gains still falls inside
+ * the fade, above the button. Below 22.5rem Back waits under the ask, at the end of the question.
+ *
+ * All of this only on a screen at least 30rem tall. There the island's 56 px and the foot's 134 at
+ * 320 take no more than 40 per cent of the height and leave about 290 px for the question. A
+ * desktop at 400 per cent (320 by 200 to 480 by 270) or a phone on its side is shorter, and a
+ * stuck ask would leave a slit of 10 to 66 px under the island and sit over the heading (WCAG
+ * 1.4.10). So there the ask waits in its place at the end of the question, and the scroll padding
+ * goes with it. The rem follows the reader's default text size, so larger text reaches the
+ * in-flow ask sooner, and 30rem rather than more keeps small portrait phones on the sticky ask:
+ * an iPhone SE is about 375 by 548 in Safari.
+ */
+@media (width < 64rem) and (height >= 30rem) {
+  .start-ask,
+  .start-back {
+    position: sticky;
+    bottom: 0;
+    z-index: 1;
+    background: linear-gradient(to top, var(--start-card-ground) 60%, transparent);
+  }
+
+  .start-ask {
+    margin-inline: -1rem;
+    padding: 1.5rem 1rem max(0.75rem, env(safe-area-inset-bottom));
+  }
+
+  .start-back {
+    margin-inline-start: -1rem;
+    padding: 1.5rem 0.5rem 0 1rem;
+  }
+
+  .start-back + .start-ask {
+    margin-inline-start: 0;
+    padding-inline-start: 0;
+  }
+
+  html:has(.start-ask) {
+    scroll-padding-bottom: 7.5rem;
+  }
+
+  /* Forced colours drop the fade's gradient, and the stuck ask would print over the question
+     scrolling under it; the system's own ground keeps it opaque. */
+  @media (forced-colors: active) {
+    .start-ask,
+    .start-back {
+      background: Canvas;
+    }
+  }
+}
+
+/* From sm the card is white and padded, and the fade reaches its edge. Gated on height with the
+   sticky ask above, so a short screen's in-flow ask carries no stray margin. */
+@media (40rem <= width < 64rem) and (height >= 30rem) {
+  .start-ask {
+    margin-inline: -1.75rem;
+    padding-inline: 1.75rem;
+  }
+
+  .start-back {
+    margin-inline-start: -1.75rem;
+    padding-inline-start: 1.75rem;
+  }
+}
+
+/*
+ * Below 22.5rem wide the ask waits in its place at the end of the question, as it does on a
+ * screen under 30rem tall: at 320 by 640 the title takes two lines, the helper three and the
+ * reassurance two, so a stuck ask's foot was 134 px and sat over the first control on arrival,
+ * the description's whole box among them. The scroll padding goes with it. The line under the
+ * ask stays, where every other width keeps it.
+ */
+@media (width < 22.5rem) and (height >= 30rem) {
+  .start-ask,
+  .start-back {
+    position: static;
+    margin: 0;
+    padding: 0;
+    background: none;
+  }
+
+  html:has(.start-ask) {
+    scroll-padding-bottom: 0;
+  }
+}
+
+/*
+ * From lg the actions row rides at the foot in the same way on a desk window shorter than the
+ * question: Back, a text button, to the left and the ask to the right. At 1366 by 657, a common
+ * laptop window, a question's ask would otherwise sit below the fold. From lg the row is a box of
+ * its own inside the card, so it sticks within the question and settles in place at the end of a
+ * scroll. Its fade is the card's white and reaches out by the card's padding. The negative block
+ * margins take back the fade's padding (the top one equals the card's gap): at rest the row sits
+ * exactly where it would, a page that fits (1440 by 900) lays out as before, and the row only moves
+ * when the foot of the screen would cut it. The row measures 113 px at 1366 and 134 px at 1024,
+ * where the reassurance takes two lines, so 8.5rem of scroll padding keeps a control focused from
+ * the keyboard clear of it. At rest the row ends 1rem above the card's foot, inside the card's
+ * 1.5rem corners, so its own foot is rounded by the difference and never squares them off.
+ * Forced colours drop the gradient, so the row takes Canvas.
+ */
+@media (width >= 64rem) {
+  .start-actions {
+    position: sticky;
+    bottom: 0;
+    z-index: 1;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    margin-inline: -1.75rem;
+    margin-block: -1.5rem -0.75rem;
+    padding: 1.5rem 1.75rem 0.75rem;
+    border-radius: 0 0 0.5rem 0.5rem;
+    background: linear-gradient(to top, var(--start-card-ground) 60%, transparent);
+  }
+
+  .start-back {
+    margin-inline-end: auto;
+  }
+
+  .start-back-button {
+    height: 3rem;
+    border-radius: 0.25rem;
+    text-underline-offset: 4px;
+  }
+
+  .start-back-button:hover {
+    text-decoration-line: underline;
+  }
+
+  .start-back-label {
+    position: static;
+    width: auto;
+    height: auto;
+    margin: 0;
+    overflow: visible;
+    clip-path: none;
+    white-space: normal;
+  }
+
+  html:has(.start-actions) {
+    scroll-padding-bottom: 8.5rem;
+  }
+
+  @media (forced-colors: active) {
+    .start-actions {
+      background: Canvas;
+    }
+  }
+}
+
+/*
+ * A laptop's desk, under 56.25rem (900 px) tall, which is every desk screen but the mockup's
+ * once the browser's own bars are taken off it, and where most visitors will be. The full layout
+ * is built to fill exactly 900 px, so on anything shorter the action row would ride up over the
+ * card on arrival and hide what the question is about (the description's third line at 1366 by
+ * 657). So the question is set to fit: the title 4.5rem down and one step of the scale smaller,
+ * the helper at the body size, the card's parts 1rem apart and the card 1.5rem under the title.
+ * At 1366 by 657 the first four questions then end 11 px over the screen at the most and the
+ * send question 35, so the row rests, or rides only over the card's closing line, never over a
+ * control. The receipts, the whisper and the draft's zoom keep their own line at 47.5rem.
+ */
+@media (width >= 64rem) and (height < 56.25rem) {
+  .start-ground-main,
+  .start-board {
+    padding-top: 4.5rem;
+  }
+
+  .start-question {
+    gap: 1.5rem;
+  }
+
+  .start-question .start-heading {
+    font-size: var(--text-display);
+  }
+
+  .start-question .start-helper {
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+  }
+
+  .start-card {
+    gap: 1rem;
+  }
+
+  .start-actions {
+    margin-block-start: -1rem;
+  }
+}
+
+/*
+ * A desk under 40rem tall (1024 by 600 among them), where no question fits the screen even set to
+ * fit: the row would ride up over the first control on arrival at every question, the
+ * description's third line included. So the row waits in its place at the end of the question, as
+ * the ask does under 30rem tall and below 22.5rem wide, and the scroll padding goes with it. At
+ * 40rem the first control of every question is whole above the row again at 1024 wide.
+ */
+@media (width >= 64rem) and (height < 40rem) {
+  .start-actions {
+    position: static;
+  }
+
+  html:has(.start-actions) {
+    scroll-padding-bottom: 0;
+  }
+}
+
+/* The ask while the question leaves or the brief is sent: busy, not gone, so it keeps the focus. */
+.start-ask [aria-disabled='true'] {
+  cursor: progress;
+}
+
+/*
+ * The question's entrance (plan 6.2 and 6.3). The form fades in by its opacity alone, since it
+ * holds the title and the ask that rides the foot, which never move. Inside it the lead (the
+ * receipt, then the helper) rises 2rem from a touch smaller and the controls 0.5rem, one after
+ * another, at the questions' pace; after a Back they fall in from above instead, the lead 1.5rem.
+ * A question leaving by the page's own Next lets them fade and slip up 1rem (down after a Back) on
+ * the drain's curve. Under reduced motion each only fades, at a third of the pace. The form's fade
+ * lets go once it has played (backwards, not both), so the form is no stacking context after it
+ * and the ask can climb over the send's ink (start-done.css).
+ */
+.start-question {
+  animation: question-in var(--motion-settle) var(--ease-standard) backwards;
+}
+
+.start-question [data-rise] {
+  --rise-by: var(--start-rise-lead);
+  --rise-scale: var(--start-rise-scale);
+  animation: start-rise calc(var(--motion-reveal) * var(--start-pace)) var(--ease-enter) both;
+  animation-delay: calc(var(--rise-at, 0) * var(--start-stagger));
+}
+
+.start-question .start-helper {
+  --rise-at: 1;
+}
+
+.start-question [data-rise='controls'] {
+  --rise-by: var(--start-rise-controls);
+  --rise-scale: 1;
+  --rise-at: 2;
+}
+
+[data-dir='back'] .start-question [data-rise] {
+  --rise-by: calc(var(--start-rise-back) * -1);
+}
+
+[data-dir='back'] .start-question [data-rise='controls'] {
+  --rise-by: calc(var(--start-rise-controls) * -1);
+}
+
+.start-question[data-leaving] [data-rise] {
+  --leave-by: calc(var(--start-rise-exit) * -1);
+  animation: start-leave var(--start-exit) var(--ease-drain) forwards;
+}
+
+.start-question[data-leaving='back'] [data-rise] {
+  --leave-by: var(--start-rise-exit);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes start-rise {
+    from {
+      opacity: 0;
+      translate: 0 var(--rise-by);
+      scale: var(--rise-scale);
+    }
+  }
+
+  @keyframes start-leave {
+    to {
+      opacity: 0;
+      translate: 0 var(--leave-by);
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  @keyframes start-rise {
+    from {
+      opacity: 0;
+    }
+  }
+
+  @keyframes start-leave {
+    to {
+      opacity: 0;
+    }
+  }
+}
+
+/*
+ * The lamp (plan 5.5 and the table in 5.3): the one ambient light, a pool behind the frames that
+ * walks the home page's job colours as the questions go, brighter each time: cyan at the sentence,
+ * indigo at the name, both at the look, then the visitor's own glow and its complement from the
+ * colour question, following every hover, focus and tap on a colour, at its brightest at the
+ * last. The colours are registered, so each step is a crossfade over the draft's glow; each move
+ * swells it once, by its alpha and never a scale, to 1.3 times and back. The swell is two named
+ * animations taken in turn, so each change of question starts it afresh. The draft's own colours
+ * (app/_styles/start-draft.css) may stand in for --sketch-glow, and the done view's for the lamp.
+ */
+.start-stage {
+  --lamp-lit: var(--start-lamp-1);
+  --lamp-a: var(--job-found);
+  --lamp-b: transparent;
+  --start-pool: color-mix(in oklab, var(--lamp-a) calc(var(--lamp-lit) * 100%), transparent);
+  --start-pool-2: color-mix(in oklab, var(--lamp-b) calc(var(--lamp-lit) * 100%), transparent);
+  position: relative;
+}
+
+.start-flow:has([data-question='brand']) .start-stage {
+  --lamp-lit: var(--start-lamp-2);
+  --lamp-a: var(--job-trusted);
+}
+
+.start-flow:has([data-question='imagery']) .start-stage {
+  --lamp-lit: var(--start-lamp-3);
+  --lamp-b: var(--job-trusted);
+}
+
+.start-flow:has([data-question='colours']) .start-stage {
+  --lamp-lit: var(--start-lamp-4);
+  --lamp-b: var(--job-trusted);
+}
+
+.start-flow:has([data-question='details']) .start-stage {
+  --lamp-lit: var(--start-lamp-5);
+}
+
+.start-flow [data-done] .start-stage {
+  --lamp-lit: var(--start-lamp-done);
+}
+
+/* The visitor's colour and its complement, the glow the draft gives it, opaque here so the
+   lamp's own brightness decides. A grey has no hue to give, so a grey choice, which the draft
+   marks data-grey (plan 5.8), keeps the studio's lamp. */
+.start-flow:not(:has([data-grey])) [data-coloured] .start-stage {
+  --lamp-a: oklch(from var(--sketch-glow) 0.8 max(c, 0.12) h / 1);
+  --lamp-b: oklch(from var(--sketch-glow) 0.72 max(c, 0.14) calc(h - 130) / 1);
+}
+
+.start-flow [data-coloured][data-done] .start-stage {
+  --lamp-b: transparent;
 }
 
 /*
@@ -60,19 +1179,6 @@ html:has(.start-stage) {
 }
 
 /*
- * The canvas. The body is white on every page and html sets no colour, so the body's colour is
- * the canvas: Safari shows it past either end of the page when it is pulled (iPhone, iPad, a Mac
- * trackpad) and beside the page on a landscape iPhone. Every question below lg opens on the
- * region's ink and the done state is ink at every width, so on this page the body takes the ink.
- * The grid covers the whole body at every width, so nothing on the page itself changes. The cost
- * is a pull past the foot of a question, where the ink shows under the wash; the top is the first
- * screen and where a pull to refresh starts, so it is the edge that matches.
- */
-html:has(.start-stage) body {
-  background-color: var(--ink-foot);
-}
-
-/*
  * The layer bleeds past the stage so it reads as light around the frames, not as a card behind
  * them, and holds its full colour as far as the frames reach, because a pool that fades from its
  * centre shows only its faint rim. Below lg the stage is the phone alone, which covers the pool
@@ -81,15 +1187,17 @@ html:has(.start-stage) body {
  * has no corner where it leaves the full colour or where it meets the ink; a straight fall-off's
  * corner read as the rim of a disc at the done state's brightest share. The pool reaches well out
  * to the sides and up under the island, and only 12% down, where the region ends in its curve
- * 24 px under the phone (12 px on a short screen, below), so it is spent before the curve's edge
+ * 24 px under the phone (12 px on a short screen, above), so it is spent before the curve's edge
  * and never cuts off in a line there. From lg the stage is the whole board, which covers the
- * middle, so the full colour holds to half the radius; the section clips the layer at the seam,
- * where the done state's ink on both sides would show the cut, so the pool reaches a tenth up and
- * down and only 6% to the sides, which the pane's own padding holds at every desk width. A change
- * of colour eases over --motion-reveal, the breath's own length, so the pool moves on one clock,
- * inside the 900 ms cap in CONFIG.motion.caps.
+ * middle, so the full colour holds to half the radius, the second colour offset to the right. The
+ * pool reaches a tenth up and down, which keeps the caption under the frames on its faint rim, and
+ * only 6% towards the seam, which the pane's own padding holds at every desk width, so the section's
+ * clip never draws a line down the split; to the right it spreads half the board again, where the
+ * ramp's ink takes the light the way the hero's does.
  */
 .start-stage::before {
+  --lamp: oklch(from var(--start-pool) l c h / calc(alpha * var(--lamp-swell)));
+  --lamp-2: oklch(from var(--start-pool-2) l c h / calc(alpha * var(--lamp-swell)));
   content: '';
   position: absolute;
   inset: -35% -70% -12%;
@@ -97,177 +1205,233 @@ html:has(.start-stage) body {
   pointer-events: none;
   background: radial-gradient(
     closest-side,
-    var(--start-pool) 42%,
-    color-mix(in oklab, var(--start-pool) 94%, transparent) 51%,
-    color-mix(in oklab, var(--start-pool) 78%, transparent) 59%,
-    color-mix(in oklab, var(--start-pool) 50%, transparent) 71%,
-    color-mix(in oklab, var(--start-pool) 22%, transparent) 83%,
-    color-mix(in oklab, var(--start-pool) 6%, transparent) 91%,
+    var(--lamp) 42%,
+    color-mix(in oklab, var(--lamp) 94%, transparent) 51%,
+    color-mix(in oklab, var(--lamp) 78%, transparent) 59%,
+    color-mix(in oklab, var(--lamp) 50%, transparent) 71%,
+    color-mix(in oklab, var(--lamp) 22%, transparent) 83%,
+    color-mix(in oklab, var(--lamp) 6%, transparent) 91%,
     transparent
   );
   opacity: var(--start-lit);
-  transition: --start-pool var(--motion-reveal) var(--ease-standard);
+  transition:
+    --start-pool var(--draft-glow) var(--ease-standard),
+    --start-pool-2 var(--draft-glow) var(--ease-standard);
+  animation: start-swell var(--draft-glow) var(--ease-standard);
 
+  /* The second colour falls away on the same curve, from a smaller plateau, so it is a wash
+     behind the frame's corner and never a lit disc with a rim. */
   @media (width >= 64rem) {
-    inset: -10% -6%;
-    background: radial-gradient(closest-side, var(--start-pool) 50%, transparent);
+    inset: -10% -50% -10% -6%;
+    background:
+      radial-gradient(
+        closest-side at 66% 42%,
+        var(--lamp-2) 30%,
+        color-mix(in oklab, var(--lamp-2) 94%, transparent) 40%,
+        color-mix(in oklab, var(--lamp-2) 78%, transparent) 50%,
+        color-mix(in oklab, var(--lamp-2) 50%, transparent) 63%,
+        color-mix(in oklab, var(--lamp-2) 22%, transparent) 78%,
+        color-mix(in oklab, var(--lamp-2) 6%, transparent) 90%,
+        transparent
+      ),
+      radial-gradient(closest-side, var(--lamp) 50%, transparent);
+  }
+}
+
+.start-flow:has([data-question='brand'], [data-question='colours']) .start-stage::before {
+  animation-name: start-swell-again;
+}
+
+@keyframes start-swell {
+  33% {
+    --lamp-swell: var(--start-swell);
+  }
+}
+
+@keyframes start-swell-again {
+  33% {
+    --lamp-swell: var(--start-swell);
   }
 }
 
 /*
- * A short phone's first screen: Safari leaves 664 px on the common iPhones with its bars showing.
- * There the full region (309 px), its curve and the ask riding at the foot leave no room for a
- * question's first control, so question one's box starts under the Next button. Below 760 tall
- * the phone drops to half size, 152 px, about the height of the list of five chips beside it,
- * and the region's padding tightens. That takes the region to 228 px, and at 390 by 664 every
- * question's first control shows above the ask on arrival. The pool's reach down drops to 7.5%
- * of the smaller phone, 11 px, inside the 12 px under it, so it is still spent before the curve.
- * These rules are unlayered, so they beat the zoom utility in brief-sketch.tsx.
- */
-@media (width < 64rem) and (height < 47.5rem) {
-  .start-region {
-    padding-top: 4rem;
-    padding-bottom: 0.75rem;
-  }
-
-  .start-region [data-frame='phone'] {
-    zoom: 0.5;
-  }
-
-  .start-region .start-stage::before {
-    bottom: -7.5%;
-  }
-}
-
-/*
- * Below lg the ask rides at the foot of the screen, so the next step is never a scroll away on a
- * long question. The question pane gives its actions no box of their own below lg, so the ask is
- * one of the form's own items and sticks within the whole question; at the end of a scroll it
- * settles into its place under the last control and covers nothing. It stands on a fade of the
- * wash, so what scrolls under it goes quietly, and reaches out by the pane's gutter so the fade
- * spans the column. While an ask is on the page the scroll padding keeps clear of it any control
- * the browser scrolls to, but browsers scroll only a text field's caret line into view, so the
- * question pane lifts the whole control on focus (question-pane.tsx). The foot measures 113 px at
- * 390 (24 of fade, the 48 px button, 8, the reassurance's 21 and 12), so 7.5rem leaves air; at 320
- * the reassurance takes two lines and the foot 134, and the 14 px it gains still falls inside the
- * fade, above the button.
- *
- * All of this only on a screen at least 30rem tall. There the island's 56 px and the foot's 134 at
- * 320 take no more than 40 per cent of the height and leave about 290 px for the question. A
- * desktop at 400 per cent (320 by 200 to 480 by 270) or a phone on its side is shorter, and a
- * stuck ask would leave a slit of 10 to 66 px under the island and sit over the heading (WCAG
- * 1.4.10). So there the ask waits in its place at the end of the question, and the scroll padding
- * goes with it. The rem follows the reader's default text size, so larger text reaches the
- * in-flow ask sooner, and 30rem rather than more keeps small portrait phones on the sticky ask:
- * an iPhone SE is about 375 by 548 in Safari.
- */
-@media (width < 64rem) and (height >= 30rem) {
-  .start-ask {
-    position: sticky;
-    bottom: 0;
-    z-index: 1;
-    margin-inline: -1rem;
-    padding: 1.5rem 1rem max(0.75rem, env(safe-area-inset-bottom));
-    background: linear-gradient(to top, var(--surface-wash) 60%, transparent);
-  }
-
-  html:has(.start-ask) {
-    scroll-padding-bottom: 7.5rem;
-  }
-
-  /* Forced colours drop the fade's gradient, and the stuck ask would print over the question
-     scrolling under it; the system's own ground keeps it opaque. */
-  @media (forced-colors: active) {
-    .start-ask {
-      background: Canvas;
-    }
-  }
-}
-
-/* From sm the pane's gutter is 2rem, and the fade reaches as far. Gated on height with the sticky
-   ask above, so a short screen's in-flow ask carries no stray margin. */
-@media (40rem <= width < 64rem) and (height >= 30rem) {
-  .start-ask {
-    margin-inline: -2rem;
-    padding-inline: 2rem;
-  }
-}
-
-/*
- * From lg the actions row rides at the foot in the same way on a desk window shorter than the
- * question. At 1366 by 657, a common laptop window, questions two, four and five put the ask 19,
- * 117 and 42 px below the fold, and question four hides it whole. From lg the row is a box of its
- * own inside the form (Back and the ask), so it sticks within the question and settles in place
- * at the end of a scroll. Its fade reaches out by main's gutter, 2.5rem from lg and 4rem from xl,
- * matching start-layout.ts. The negative block margins take back the fade's padding (the top one
- * equals the form's gap-6): at rest the row sits exactly where it did, a page that fits (1440 by
- * 900) lays out as before, and the row only moves when the foot of the screen would cut it. The
- * row measures 113 px at 1366 and 134 px at 1024, where the reassurance takes two lines, so
- * 8.5rem of scroll padding keeps a control focused from the keyboard clear of it. Forced colours
- * drop the gradient, so the row takes Canvas, as the ask does below lg.
- */
-@media (width >= 64rem) {
-  .start-actions {
-    position: sticky;
-    bottom: 0;
-    z-index: 1;
-    margin-inline: -2.5rem;
-    margin-block: -1.5rem -0.75rem;
-    padding: 1.5rem 2.5rem 0.75rem;
-    background: linear-gradient(to top, var(--surface-wash) 60%, transparent);
-  }
-
-  html:has(.start-actions) {
-    scroll-padding-bottom: 8.5rem;
-  }
-
-  @media (width >= 80rem) {
-    .start-actions {
-      margin-inline: -4rem;
-      padding-inline: 4rem;
-    }
-  }
-
-  @media (forced-colors: active) {
-    .start-actions {
-      background: Canvas;
-    }
-  }
-}
-
-/*
- * Back enters from the left, the way the visitor is going; Next keeps the entrance in globals.css
- * from the right. The flow marks main with the direction whenever the question changes, the
- * browser's own Back included, and only the keyframes swap: the form's entrance keeps its timing.
- */
-@media (prefers-reduced-motion: no-preference) {
-  @keyframes question-back {
-    from {
-      opacity: 0;
-      translate: -0.5rem 0;
-    }
-  }
-}
-
-/*
- * Reduced motion: Back fades only, as Next does. The global allowlist names colour properties,
- * not registered ones, so it would snap the pool's colour, which is not movement and keeps its
- * timing here (this wins over the allowlist by specificity). The allowlist's opacity must not come
- * back with it: the layer's opacity follows the breath frame by frame, and a transition of its own
- * would trail behind. The breath is an animation of a brightness, so it runs as it is.
+ * Reduced motion: the global allowlist names colour properties, not registered ones, so it would
+ * snap the lamp's colours and the ramp's hue, which are not movement and keep their timing here
+ * (this wins over the allowlist by specificity). The allowlist's opacity must not come back with
+ * them: the layer's opacity follows the breath frame by frame, and a transition of its own would
+ * trail behind. The breath and the swell are animations of a brightness, so they run as they are.
  */
 @media (prefers-reduced-motion: reduce) {
-  @keyframes question-back {
-    from {
-      opacity: 0;
-    }
+  .start-stage::before {
+    transition-property: --start-pool, --start-pool-2 !important;
   }
 
-  .start-stage::before {
-    transition-property: --start-pool !important;
+  .start-flow {
+    transition-property: --start-hue, --ramp-shift !important;
   }
 }
 
-[data-dir='back'] .start-question {
-  animation-name: question-back;
+/*
+ * The island's ink dot, the home page's (plan 5.6): under the segment of the question showing,
+ * placed from the segments' right-hand end by how many come after it (--dot-after), so it glides
+ * one segment and its gap, 1.5rem, per question. Below sm the island drops the segments, and the
+ * dot with them. Under reduced motion the allowlist leaves its move out, and it jumps.
+ */
+.start-dot {
+  position: absolute;
+  top: calc(50% + 0.4375rem);
+  right: 0.4375rem;
+  width: 0.375rem;
+  height: 0.375rem;
+  border-radius: 999px;
+  background: var(--brand-ink);
+  translate: calc(var(--dot-after) * -1.5rem) 0;
+  transition: translate var(--start-dot) var(--ease-enter);
+}
+
+@media (width < 40rem) {
+  .start-dot {
+    display: none;
+  }
+}
+
+/*
+ * The receipt under a question's title (docs/start-page-journey-plan.md, D6 and 4.6). A desk at
+ * least 47.5rem tall has room for one at every question. Below lg, and on a shorter desk, only the
+ * notices and the hero's hand-off keep theirs, so a phone's first control stays above the ask. The
+ * hand-off echoes the sentence on a desk of any height, which keeps its helper; below lg it is the
+ * short form, standing in for the helper, which yields.
+ */
+.start-receipt:is([data-place='desk'], [data-place='tall-desk']) {
+  display: none;
+}
+
+@media (width < 64rem) {
+  .start-helper[data-yields] {
+    display: none;
+  }
+}
+
+@media (width >= 64rem) {
+  .start-receipt[data-place='desk'] {
+    display: block;
+  }
+
+  .start-receipt[data-place='narrow'] {
+    display: none;
+  }
+}
+
+@media (width >= 64rem) and (height >= 47.5rem) {
+  .start-receipt[data-place='tall-desk'] {
+    display: block;
+  }
+}
+
+/*
+ * On a desk the receipt stands on the ramp, whose band leans in under its right end (plan 5.4):
+ * its link starts a line of its own, so "Change it" stays at the left, on the lightest stops,
+ * however long the sentence it follows; and between lg and xl, where the column reaches furthest
+ * across, the receipt keeps to 24rem, clear of #c6dcee.
+ */
+@media (width >= 64rem) {
+  .start-receipt a {
+    display: block;
+    width: fit-content;
+  }
+}
+
+@media (64rem <= width < 80rem) {
+  .start-receipt {
+    max-width: 24rem;
+  }
+}
+
+/*
+ * A hint cut to its short form where a short screen needs the room, the first question's example
+ * and the email's promise, so the first control starts above the ask on a phone's first screen.
+ */
+.start-hint-short {
+  display: none;
+}
+
+@media (height < 47.5rem) {
+  .start-hint-long {
+    display: none;
+  }
+
+  .start-hint-short {
+    display: inline;
+  }
+}
+
+/*
+ * The first question's meter: a short bar that fills as the sentence nears the length a brief
+ * needs, its words beside it, and, where Enter goes on, the key's hint at the far end. The fill
+ * scales rather than widens, so it never lays anything out again; under reduced motion the
+ * allowlist in globals.css leaves the transform out and it jumps. Forced colours drop the track's
+ * fill, so it takes a border, and the fill the system's highlight.
+ */
+.start-meter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem 0.75rem;
+}
+
+.start-meter-track {
+  flex: none;
+  width: 4rem;
+  height: 0.375rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--on-surface) 12%, transparent);
+}
+
+.start-meter-fill {
+  display: block;
+  height: 100%;
+  background: var(--brand-ink);
+  transform-origin: left;
+  transition: transform var(--motion-settle) var(--ease-enter);
+}
+
+.start-enter {
+  margin-inline-start: auto;
+}
+
+/* The key the hint names, as a keycap (plan 5.7): an edge, deeper at its foot, around the hint's
+   own words and colour, so it adds no height to the row and no contrast to check. */
+.start-enter kbd {
+  padding-inline: 0.375rem;
+  border-radius: 0.375rem;
+  box-shadow:
+    inset 0 0 0 1px color-mix(in oklab, currentColor 30%, transparent),
+    inset 0 -2px 0 color-mix(in oklab, currentColor 30%, transparent);
+  font: inherit;
+}
+
+@media (forced-colors: active) {
+  .start-meter-track {
+    border: 1px solid CanvasText;
+  }
+
+  .start-meter-fill {
+    forced-color-adjust: none;
+    background: Highlight;
+  }
+}
+
+/* The ask's spinner turns only where motion is welcome; under reduced motion it holds still. One
+   turn takes the questions' own pace, so it needs no duration of its own. */
+@media (prefers-reduced-motion: no-preference) {
+  .start-spinner {
+    animation: start-spin calc(var(--motion-reveal) * var(--start-pace)) linear infinite;
+  }
+
+  @keyframes start-spin {
+    to {
+      rotate: 1turn;
+    }
+  }
 }

@@ -1,0 +1,333 @@
+/*
+ * /start: the send and the done view's ground (docs/start-page-journey-plan.md, 4.8, 4.9, 5.3
+ * and 6.2): the bloom from the ask, the wait's ink and ready rising to light. Plain CSS only, on
+ * the hooks and tokens app/_styles/start.css declares and the attributes the flow sets on the grid
+ * (brief-flow.tsx): data-state (sending, done), data-arriving while a sent brief's ink runs on,
+ * data-lit once the designs can be opened, data-dim for a build that ended without them. The route imports this sheet last (app/start/page.tsx), so
+ * no other page downloads it. The done view's own rules load with its chunk
+ * (app/_styles/start-done-view.css).
+ */
+
+/*
+ * The send's tokens (plan 6.1), which lib/config.ts holds for script and start-done.test.ts keeps
+ * equal: how far the ink blooms before it holds (CONFIG.start.send.holdShare), and ready's flip
+ * (CONFIG.start.ready), whose words fade out and in either side of the ground rising, the rest
+ * of the flip.
+ */
+:root {
+  --send-hold: 0.38;
+  --done-flip: 600ms;
+  --done-fade: 150ms;
+  --done-veil: 450ms;
+  --done-rise: calc(var(--done-flip) - 2 * var(--done-fade));
+}
+
+/*
+ * The bloom (send-bloom.tsx): the page's ink, clipped to a disc at the ask, which grows as the
+ * phone menu's does (header.css), from the ask's own ring (1.25rem) to 142 per cent of the layer's
+ * normalised diagonal, which reaches every corner from any point inside it. The send holds it at
+ * 38 per cent of that path until the server answers, then drains it here, or runs it on in the
+ * done view's sheet (start-done-view.css), which only a send that went needs; the whole path
+ * takes the questions' pace (900 ms). It sits in the region, whose stacking context is over main:
+ * under the region's ground it would be hidden, so it is a layer of its own one step above that
+ * ground and under the draft, which stays lit on it. The ask climbs over it while the brief is on
+ * its way, so the focus it keeps is always in sight, alone: the fade it rides on, Back and the line
+ * under it, and the question itself (its title, receipt, helper and controls, and the card's own
+ * ground) go quiet under the ink, since at a laptop's height the held disc's edge cut the title
+ * to its first letters and at 1024 left it whole above "Off it goes." (plan 4.4, desk-send).
+ * Under forced colours the ink goes, the ask's "Sending" carries the state, and the question
+ * stays in sight, since there is no ink to say where it went.
+ */
+.send-bloom {
+  --press-at: 50% 100%;
+  --bloom-rest: circle(1.25rem at var(--press-at));
+  --bloom-hold: circle(calc(1.25rem + (142% - 1.25rem) * var(--send-hold)) at var(--press-at));
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: var(--ink-foot);
+  pointer-events: none;
+}
+
+.start-flow[data-state='sending'] :is(.start-ask, .start-actions) {
+  z-index: 2;
+  background: none;
+}
+
+.start-flow[data-state='sending']
+  :is(
+    .start-back,
+    .start-ask > p,
+    .start-heading,
+    .start-receipt,
+    .start-helper,
+    [data-part='controls']
+  ) {
+  opacity: 0;
+  transition: opacity var(--draft-each) var(--ease-standard);
+}
+
+.start-flow[data-state='sending'] .start-card {
+  background-color: transparent;
+  box-shadow: none;
+  transition: background-color var(--draft-each) var(--ease-standard);
+}
+
+@media (forced-colors: active) {
+  .start-flow[data-state='sending']
+    :is(.start-heading, .start-receipt, .start-helper, [data-part='controls']) {
+    opacity: 1;
+  }
+}
+
+@media (width < 64rem) and (height < 30rem) {
+  .start-flow[data-state='sending'] .start-ask {
+    position: relative;
+  }
+}
+
+/* On the flat ink the region's clip would cut the draft's glow in a line down the split, so the
+   glow runs on over main while the ink is out. */
+@media (width >= 64rem) {
+  .start-flow[data-state='sending'] .start-region {
+    overflow: visible;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .send-bloom[data-phase='hold'] {
+    animation: send-hold calc(var(--draft-glow) * var(--send-hold)) var(--ease-enter) both;
+  }
+
+  .send-bloom[data-phase='drain'] {
+    animation: send-drain var(--draft-each) var(--ease-drain) both;
+  }
+
+  @keyframes send-hold {
+    from {
+      clip-path: var(--bloom-rest);
+    }
+
+    to {
+      clip-path: var(--bloom-hold);
+    }
+  }
+
+  @keyframes send-drain {
+    from {
+      clip-path: var(--bloom-hold);
+    }
+
+    to {
+      clip-path: var(--bloom-hold);
+      opacity: 0;
+    }
+  }
+}
+
+/* Reduced motion: the ink fades in to the same share and holds, then fills or fades, 300 ms each,
+   by its colour, so the words on it keep theirs. */
+@media (prefers-reduced-motion: reduce) {
+  .send-bloom {
+    --bloom-held: color-mix(in oklab, var(--ink-foot) calc(var(--send-hold) * 100%), transparent);
+    background: transparent;
+  }
+
+  .send-bloom[data-phase='hold'] {
+    animation: send-hold-fade var(--motion-settle) var(--ease-standard) both;
+  }
+
+  .send-bloom[data-phase='drain'] {
+    animation: send-drain-fade var(--motion-settle) var(--ease-standard) both;
+  }
+
+  @keyframes send-hold-fade {
+    to {
+      background-color: var(--bloom-held);
+    }
+  }
+
+  @keyframes send-drain-fade {
+    from {
+      background-color: var(--bloom-held);
+    }
+  }
+}
+
+@media (forced-colors: active) {
+  .send-bloom {
+    visibility: hidden;
+  }
+}
+
+/*
+ * "Off it goes." on the ink (plan 4.6), the display italic at the heading's size, well inside the
+ * held disc: in main's column from lg, and above the ask riding the foot below it. It rises 300 ms
+ * into the press and fades as the ink drains.
+ */
+.send-words {
+  position: absolute;
+  bottom: 9rem;
+  left: 1rem;
+  margin: 0;
+  color: var(--on-ink);
+  font-size: min(var(--text-hero), 4.58rem);
+  line-height: 1;
+  animation: send-words var(--draft-each) var(--ease-standard) var(--motion-settle) both;
+}
+
+@media (width >= 64rem) {
+  .send-words {
+    top: 40%;
+    bottom: auto;
+    left: 2.5rem;
+  }
+}
+
+@media (width >= 80rem) {
+  .send-words {
+    left: 4rem;
+  }
+}
+
+@keyframes send-words {
+  from {
+    opacity: 0;
+  }
+}
+
+/*
+ * The draft is sealed as it goes (plan 5.8): its selection lets go and one sheen crosses the
+ * browser frame. Under reduced motion there is no sheen.
+ */
+.start-flow[data-state='sending'] .draft-whole {
+  opacity: 0;
+  transition: opacity var(--draft-each) var(--ease-standard);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .start-flow[data-state='sending'] .draft-browser::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        105deg,
+        transparent 35%,
+        rgb(255 255 255 / 0.45) 50%,
+        transparent 65%
+      ) -100%
+      0 / 250% 100% no-repeat;
+    pointer-events: none;
+    animation: send-sheen var(--draft-glow) var(--ease-standard) var(--motion-settle) both;
+  }
+
+  @keyframes send-sheen {
+    to {
+      background-position: 200% 0;
+    }
+  }
+}
+
+/*
+ * The wait's ink and ready's light (plan 5.3). At done main keeps the questions' own ground (the
+ * ramp from lg, the wash below it) under a layer of the ink, and the region's ground takes the
+ * same layer, so the whole page is the ink while the designs build; the skeleton's pre-paint gives
+ * main the same dark scope and classes, so a refreshed done page is the ink from its first paint.
+ * Once the designs can be opened, --done-ground rises from 0 to 1 between the words' fades, the
+ * layers lift, and the ramp's light stops move 8 per cent further across (--ramp-shift), so the
+ * #c6dcee isoline clears every text box in main (brief-done-ground.spec.ts). The page behind the
+ * ends is the ink while the designs build, from lg too.
+ */
+.start-flow[data-state='done'] #main,
+#main.start-ground-main[data-theme='dark'] {
+  isolation: isolate;
+}
+
+.start-flow[data-state='done'] #main::before,
+#main.start-ground-main[data-theme='dark']::before,
+.start-flow[data-state='done'] .start-ground-region::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--ink-foot);
+  opacity: calc(1 - var(--done-ground));
+  pointer-events: none;
+}
+
+.start-flow[data-state='done'] .start-ground-region::after {
+  z-index: auto;
+}
+
+/*
+ * A send the server took (plan 4.8 and 6.2): the bloom runs on from its hold until it covers the
+ * page, and only then does the page's own ink take over (the flow's data-arriving, meanwhile).
+ * Until it does, main keeps the questions' ground under the growing disc, and what main holds
+ * waits unseen, so the heading is never shown on the light, covered, and shown again. The heading
+ * still takes the focus as the view opens; the view's entrance plays as the ink settles.
+ */
+.start-flow[data-arriving] #main::before,
+.start-flow[data-arriving] .start-ground-region::after {
+  opacity: 0;
+}
+
+.start-flow[data-arriving] #main > * {
+  opacity: 0;
+  animation: none;
+}
+
+.start-flow[data-lit] {
+  --ramp-shift: 8%;
+  animation: done-rise var(--done-rise) var(--ease-standard) var(--done-fade) both;
+}
+
+@keyframes done-rise {
+  from {
+    --done-ground: 0;
+  }
+
+  to {
+    --done-ground: 1;
+  }
+}
+
+/* The shorthand, so on a wide desk the two-tone canvas start.css paints past the capped grid goes
+   with it; and the skeleton's pre-paint, which marks main dark before the flow sets the grid's
+   state, is the ink there too. */
+@media (width >= 64rem) {
+  html:has(.start-flow[data-state='done']:not([data-lit])) body,
+  html:has(#main.start-ground-main[data-theme='dark']) body {
+    background: var(--ink-foot);
+  }
+}
+
+/*
+ * The lamp at done (plan 5.3, the table): the visitor's colour at three quarters while the designs
+ * build (start.css), gone once they are lit, each poster then lit from behind instead; dimmed to
+ * the first question's level when the build ended without designs.
+ */
+.start-flow[data-lit] .start-stage {
+  --lamp-lit: 0;
+}
+
+.start-flow[data-dim] .start-stage {
+  --lamp-lit: var(--start-lamp-1);
+}
+
+/*
+ * A done view this tab did not send (plan 4.9, restored: a refresh, a pasted link, the email's):
+ * it has no answers to draw, so the draft is never shown, where the blank template's notes showed
+ * through the posters' place until the poll's first answer. The flow marks the region, and the
+ * skeleton's pre-paint marks it the same way on a done address (start-skeleton.tsx), so the
+ * blank draft is never painted there at all. When such a build ended without designs the region
+ * has nothing to show, so below lg it keeps only the island's clearance (plan 4.2).
+ */
+.start-region[data-restored] .draft {
+  opacity: 0;
+}
+
+@media (width < 64rem) {
+  .start-flow[data-dim] .start-region[data-restored] .start-stage {
+    display: none;
+  }
+}

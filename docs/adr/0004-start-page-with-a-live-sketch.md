@@ -5,6 +5,9 @@
 - Supersedes: 0003 (the dialog)
 - Superseded in part by: ADR 0035 (the page's look and layout; the flow, URL, draft and
   accessibility decisions stand)
+- Amended by: ADR 0037 (decisions 2, 4 and 5, 24 September 2026; the question order and decision
+  5's stages, 25 September 2026; decision 5 on the furthest question reached, Release 3, 25
+  September 2026)
 
 ## Context
 
@@ -21,14 +24,20 @@ answers as they give them.
    sitemap.
 2. **The URL is the only source of truth for which question shows.** The reducer holds answers,
    errors and status; it no longer has an index. A `?q` beyond the first unanswered question is
-   corrected with `router.replace`, computed by `firstInvalidIndex`.
+   corrected with `router.replace`, computed by `firstInvalidIndex`. Amended 24 September 2026
+   (ADR 0037, decisions 5 to 7): the done address carries its submission (`?q=done&s={slug}`),
+   so a refresh or a pasted link reopens it; the guard is the lower of the furthest question
+   shown (`reached`) and `firstInvalidIndex`; and the flow moves by `pushState` and
+   `replaceState`, keeping its depth in each history entry, so one Back from done leaves `/start`.
 3. **Hydration through `useSyncExternalStore`, not an effect.** The server and the hydration
    render show a skeleton; the real flow mounts once, initialised from `sessionStorage`. No
    `setState` in an effect, no flash of the wrong question.
 4. **Answers persist in `sessionStorage` for the tab**, validated on the way back in by a lenient
    `draftSchema` (shape only, no length or format rules, because a draft may be half-typed). A
    restored logo file falls back to the wordmark: the bytes were never kept. Cleared on submit,
-   never read by the server.
+   never read by the server. Amended 24 September 2026 (ADR 0037, decision 6): the draft also
+   keeps `reached`, and the home page's sentence arrives in a key of its own that `/start` merges
+   in, so it never overwrites a draft.
 5. **The sketch computes only from the answers.** The description is the hero's paragraph, clamped
    by CSS to three lines, never its headline: a headline slot cannot hold a paragraph of any
    length, and truncating one there looked wrong. The company name is the headline, the wordmark
@@ -36,7 +45,17 @@ answers as they give them.
    and turn the chosen hex into three tints with `oklch(from …)`, which keeps the hue and moves only
    lightness and chroma, the rule the real colour engine will follow. The style paints in from
    question 4 and the colour from question 5, so a default answer never shows before its
-   question. Hovering a style or palette previews it; selecting makes it stick.
+   question. Hovering a style or palette previews it; selecting makes it stick. Amended 24
+   September 2026 (ADR 0037, decision 13): no template draws initials, so the sketch no longer
+   derives them; a plain point stands in for the mark. Amended 25 September 2026 (ADR 0037,
+   decision 18): the questions run sentence, name, look, colour, send, so the style paints in
+   from question 3 and the colour from question 4, each read from the order in
+   `lib/brief/question-ids.ts` rather than written as a number. Amended 25 September 2026 (ADR
+   0037, Release 3): on `/start` the live draft (`app/start/_components/draft/`) paints from the
+   furthest question reached, so going back never takes a part away, and until the colour
+   question it stands in the studio's light, which is not an answer. The sentence is the draft's
+   headline until the business name arrives and then steps down to the paragraph, and its colours
+   come from a CSS engine that mirrors `CONFIG.colour`.
 6. **The sketch is decorative.** It is `aria-hidden`; a visually hidden sentence under it lists
    the answers given so far. The question heading is an `h1` that takes focus on every question.
 7. **Checkout mode.** No site navigation and no footer on `/start`: the logo, the progress, and

@@ -5,6 +5,13 @@ import type { Artwork } from '@/lib/copy-slots/template-meta'
 // the surface can be chosen to hide the box's edge.
 export type LogoPolarity = Artwork | 'mixed'
 
+// Every polarity, for a schema that stores one (lib/brief/schema.ts).
+export const LOGO_POLARITIES = [
+  'dark-artwork',
+  'light-artwork',
+  'mixed',
+] as const satisfies readonly LogoPolarity[]
+
 export type LogoAnalysis = Readonly<{
   polarity: LogoPolarity
   // Alpha-weighted mean perceptual lightness (CIE L*, 0 to 1) of the visible artwork.

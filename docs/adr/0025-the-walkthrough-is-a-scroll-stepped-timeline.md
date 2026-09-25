@@ -4,6 +4,8 @@
 - Date: 6 September 2026
 - Amends: ADR 0005 (item 3, one GSAP leaf and the walkthrough's discrete stages)
 - Builds on: ADR 0006 (the build, FLIP on GSAP core)
+- Amended by: ADR 0036 (decisions 2 and 6, below `md`, 24 September 2026); ADR 0037 (decision 2,
+  the steps follow `/start`'s order, 25 September 2026)
 
 ## Context
 
@@ -36,7 +38,12 @@ good website. The plan is `docs/walkthrough-plan.md`.
    because on a wide screen the frame sits beside the beats and is not yet stuck when the first
    beat arrives. One passive scroll listener, one read per frame; Lenis scrolls the window, so
    its glides arrive as ordinary scroll events. Progress ("Question N of 5") and the caption are
-   React state driven by the stop, so they are right before GSAP arrives.
+   React state driven by the stop, so they are right before GSAP arrives. Amended 25 September
+   2026 (ADR 0037, Release 2): the steps follow `/start`'s new order, sentence, name, look, colour
+   and send, with `/start`'s titles, from a list of their own (`walkthrough-steps.ts`) that a test
+   holds to the questionnaire's. The name and the logo land on one stop, and the last step, the
+   send, holds the finished sketch on its first stop and builds the page on its second, so the
+   build still lands while the frame is whole on screen; the seven stops are unchanged.
 3. **The build is shared.** The FLIP routine from the hero loop (`addBuild`, the layers and the
    measuring) moved to `sketch-build.ts`, parameterised by a beats table; the hero passes
    `CONFIG.demo.build` and the walkthrough `CONFIG.walkthrough.beats.build`. The hero's

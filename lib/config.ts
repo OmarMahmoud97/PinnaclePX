@@ -36,7 +36,10 @@ export const CONFIG = {
   // alphaFloor are ignored; mean perceptual lightness (CIE L*, 0 to 1) under darkBelow is dark
   // artwork, over lightAbove is light; a border ring this wide that is backdropShare opaque is a
   // box behind the mark. The normalised raster the templates show is at most maxPx on its
-  // longer side; an SVG is rasterised at the density that fills it.
+  // longer side; an SVG is rasterised at the density that fills it. The logo's own colour, which
+  // the colour question offers (lib/logo/accent.ts), is the mean of the band of hues, one of
+  // hueBands around the wheel, that the most colourful pixels share, and only when that band
+  // covers minShare of the visible artwork.
   logo: {
     samplePx: 128,
     alphaFloor: 16,
@@ -45,6 +48,7 @@ export const CONFIG = {
     borderRingPx: 4,
     backdropShare: 0.9,
     maxPx: 512,
+    accent: { hueBands: 12, minShare: 0.1 },
   },
   // WCAG AA body text. The solver moves a text token's lightness by stepL until its pair passes,
   // and repeats over every pair until nothing moves, up to maxPasses (lib/tokens/contrast.ts).
@@ -88,6 +92,13 @@ export const CONFIG = {
     glowHueShift: -130,
     // Below this chroma a colour is grey: its hue is not trusted and no colour is added to it.
     greyChroma: 0.02,
+    // The live draft's fill (app/start/_components/draft/draft-model.ts) keeps at most this much
+    // chroma. The server brings a fill into sRGB by lowering its chroma and keeping its hue
+    // (lib/tokens/contrast.ts), but a browser clips a relative colour channel by channel, so a
+    // bright colour pulled down into the fill band changed hue on the page (#ff5a1f went to a
+    // deep red). Inside sRGB for the plan's sweep at every band lightness but yellow's and cyan's,
+    // which drift by two degrees rather than eight.
+    fillMaxC: 0.15,
   },
   templates: { count: 10, conceptsShown: 3 },
   // The model calls (lib/ai). The guide's models: Sonnet 5 writes, Haiku 4.5 ranks pictures.
@@ -146,8 +157,68 @@ export const CONFIG = {
   } | null,
   // A submission, its pictures and, once nothing of theirs is left, the lead are deleted this
   // many days after it was sent, by a nightly sweep (lib/inngest/functions/retention-sweep.ts).
-  retention: { days: 30, cron: '0 3 * * *' },
+  // A picture uploaded but never sent goes the same night once it is `unsentHours` old and no
+  // submission points at it (lib/inngest/functions/orphan-upload-sweep.ts), so none outlives two
+  // days, which is what /privacy says.
+  retention: { days: 30, cron: '0 3 * * *', unsentHours: 24 },
   polling: { statusMs: 3_000 }, // how often the done page asks how the designs are coming along
+  // The questionnaire at /start (docs/start-page-journey-plan.md, section 6.1), from its first
+  // release: the longest business name and name the form takes, and the longest tab label the
+  // sketch draws from the business name, its ellipsis included (plan 7.7); how long past its
+  // deadline a sent brief can be brought back by a refresh or a saved link (plan 7.3); how long
+  // a send in flight is remembered, so a reload during it can say the brief may be on its way
+  // (plan 4.8); and how often a hidden tab still asks after its designs (plan 7.6). The second
+  // release adds the longest clause of the sentence a receipt echoes, before its ellipsis, and the
+  // fewest words that clause's first sentence may end on, so "Dr." or "St." is never taken for one
+  // (plan 4.6); how near the end of the sentence's room the meter starts counting what is left;
+  // and the longest side a logo is sent at, downscaled in the browser (plan 7.2; photos keep
+  // CONFIG.images.maxWidth). The third release adds the lit draft's numbers (plan 6.1): the
+  // questions' pace, a multiple of --motion-reveal (900 ms, 300 ms under reduced motion), and
+  // their exit, which a question plays before the flow moves on; how far and how late the lead and
+  // the controls rise, how far the lead falls in after a Back, and how far both slip as a question
+  // leaves; the spring --ease-spring is sampled from; the phone curve's spring; the lamp's
+  // brightness at each question, its swell on each move and its ceiling behind text; the hero
+  // sentence's typing and the display faces' wait; the phone window; the send's held breath; the
+  // wait's intermission and early finish; and ready's flip. app/_styles/start.css mirrors the
+  // numbers CSS reads, and app/_styles/start-tokens.test.ts keeps the two equal.
+  start: {
+    pace: 1.5,
+    reducedPace: 0.5,
+    exitMs: 200,
+    rise: {
+      leadRem: 2,
+      backRem: 1.5,
+      controlsRem: 0.5,
+      exitRem: 1,
+      scaleFrom: 0.96,
+      staggerMs: 80,
+      items: 3,
+    },
+    spring: { frequencyHz: 1.6, dampingRatio: 0.6, durationMs: 900 },
+    curve: { frequencyHz: 1, dampingRatio: 0.2, kick: 0.25, stretchCap: 0.3, sleepMs: 2_500 },
+    lamp: { lit: [0.45, 0.6, 0.75, 0.9, 1], swell: 1.3, doneLit: 0.75, textMaxAlpha: 0.2 },
+    typing: { capChars: 120 },
+    fonts: { timeoutMs: 3_000 },
+    // Where each frame's window opens on the draft, by question, so the part the question feeds
+    // is whole in it: the phone page under its full and its short crop, and the desk page under
+    // the 300 px and the 150 px crops of the stacked layouts (app/_styles/start-draft.css).
+    window: {
+      cropPx: 212,
+      shortCropPx: 150,
+      crossfadeMs: 450,
+      offsetsPx: [0, 0, 96, 48, 0],
+      shortOffsetsPx: [12, 4, 96, 56, 60],
+      cropOffsetsPx: [0, 0, 20, 200, 0],
+      shortCropOffsetsPx: [84, 20, 60, 286, 0],
+    },
+    names: { companyMax: 80, personMax: 60, slugMax: 28, clauseMax: 42, clauseMinWords: 3 },
+    done: { restoreHours: 24 },
+    send: { pendingMs: 120_000, holdShare: 0.38, timeoutMs: 20_000 },
+    wait: { hiddenPollMs: 15_000, intermissionMs: 60_000, earlyFinishMs: 240_000 },
+    ready: { flipMs: 600, textFadeMs: 150, veilMs: 450 },
+    meter: { countdownChars: 40 },
+    uploads: { logoMaxPx: 1_024 },
+  },
   analytics: { sectionViewThreshold: 0.2 }, // share of a section on screen before it counts as viewed
   // The ink over the hero and the closing section (ADR 0031, ADR 0032, lib/motion/fluid.ts):
   // the simulation grid as a share of the canvas; the splat radius factor (splat / height,
@@ -303,37 +374,74 @@ export const CONFIG = {
       // A resize refreshes every ScrollTrigger once the window has been still for this long, the
       // same settle the walkthrough uses for its rebuild.
       resizeSettleMs: 150,
-      // The pooled curve under the ink stretch (app/_components/motion/ink-pool.ts): a mass on a
-      // spring. The scroll's speed pulls it, deeper on the way down and flatter on the way up,
-      // and the spring carries it back with a wobble once the page stops. stretchMax is the pull
-      // at full speed, as a share of the resting depth; fullSpeedPxS is the speed at which the
-      // pull is three quarters of that (a wheel notch under Lenis peaks near 500, a hard flick
-      // near 2500), so lower makes a gentle scroll stir the curve too. frequencyHz is how fast
-      // it wobbles and dampingRatio how soon the wobble dies: under 1 it overshoots. Lenis lets
-      // the page down gently, so a spring that follows closely barely bounces (1.3 Hz at 0.35
-      // swung back 4 px on a six-notch flick, measured; 1.1 Hz at 0.2 swung back 18 px and the
-      // owner asked for more). 1 Hz at 0.1 lags the glide enough to swing back about half its
-      // stretch and ring through five or six visible swings over three seconds, which is the
-      // jiggle asked for; the loop then sleeps. Up to stretchKnee the curve is drawn as the
-      // spring has it; past the knee what is drawn eases toward stretchCap and never reaches
-      // it, so the top of a hard flick (the spring can swing to about 0.5) rounds off instead
-      // of hitting a wall, and the apex stays under the band over the walkthrough's heading:
-      // --spacing-band over --spacing-pool is 0.47 at its tightest, from 1943 px up, where both
-      // tokens are at their caps.
+      // The pooled curve under the ink stretch (app/_components/motion/ink-pool.ts drives it, the
+      // physics and the drawing are lib/motion/pool-curve.ts): two masses in a chain, the
+      // shoulders and the belly, and the curve drawn from both. The scroll's speed pulls the
+      // shoulders, deeper on the way down and flatter on the way up; the belly follows the
+      // shoulders on a looser spring, so it lags them while the page gets going and overshoots
+      // them once it stops, and the curve's shape follows that lag: a flat-bottomed dish while
+      // the shoulders lead, a pendant drop while the belly hangs below them, the resting segment
+      // stretched where they agree. stretchMax is the pull at full speed, as a share of the
+      // resting depth; fullSpeedPxS is the speed at which the pull is three quarters of that (a
+      // wheel notch under Lenis peaks near 500, a hard flick near 2500), so lower makes a gentle
+      // scroll stir the curve too. Each spring has a frequency and a damping ratio (under 1 it
+      // overshoots). The belly is the swing the eye follows: 1 Hz at 0.1 lags the glide enough to
+      // swing back about half its stretch and ring through five or six visible swings over three
+      // seconds (1.3 Hz at 0.35 swung back 4 px on a six-notch flick, measured, and 1.1 Hz at
+      // 0.2 swung back 18 px; the owner asked for more both times). The shoulders are the ripple
+      // on it: twice the belly's frequency, the ratio of a hanging drop's first two symmetric
+      // modes, damped so they ring about three times inside the first second, so the settle
+      // starts busy and ends clean, which is what reads as jelly rather than a metronome (one
+      // rigid stretch at one frequency read as a rubber sheet). pointiness is how far the belly's
+      // lag behind the shoulders, in resting depths, moves the curve's handles toward the centre
+      // (a drop) or the ends (a dish), as a share of their resting inset; the drawing holds the
+      // handles between 0.4 and 1.4 of that inset whatever the springs do. Up to stretchKnee the
+      // depth is drawn as the belly has it; past the knee what is drawn eases toward stretchCap
+      // and never reaches it, so the top of a hard flick (the belly can swing to about 0.5)
+      // rounds off instead of hitting a wall, and the apex stays under the band over the
+      // walkthrough's heading: --spacing-band over --spacing-pool is 0.47 at its tightest, from
+      // 1943 px up, where both tokens are at their caps. The depth is the apex's alone (the
+      // handles move only sideways with the shape), so that clearance holds for every shape.
       pool: {
         stretchMax: 0.3,
         stretchKnee: 0.25,
         stretchCap: 0.42,
         fullSpeedPxS: 1500,
-        frequencyHz: 1,
-        dampingRatio: 0.1,
+        shoulders: { frequencyHz: 2, dampingRatio: 0.2 },
+        belly: { frequencyHz: 1, dampingRatio: 0.1 },
+        pointiness: 1.2,
+      },
+      // The footer sheet's lip (app/_components/motion/sheet-lip.ts drives it; the drawing is
+      // lib/motion/lip-curve.ts): the pool's chain (lib/motion/chain.ts), drawn the other way
+      // up. The sheet's corners stay pinned to its sides, and the flat top between them sags
+      // while the page glides down (the ink lags the page, as the pool does), swells past rest
+      // once it stops and settles; the belly's lag behind the shoulders moves the top's
+      // handles between a flat lift with steep sides near the corners and a peaked swell at the
+      // centre. Displacements are in corner radii (--seam: 80 px from 1333 wide, 46 at 768), so
+      // stretchMax 0.8 is a 64 px sag at full speed on a wide screen; the knee and cap work as
+      // the pool's, and the cap sits under --lip-room (1.3 radii, the strip the sheet leaves
+      // unpainted for the lip) below the flat line and under --spacing-band (never less than
+      // 1.5 radii) above it, so a trough never meets the sheet's own paint and a swell never
+      // reaches the closing's phone. dome is the handles' inset from the corners at no lag, as
+      // a share of the half-length between them: 0.55 is a broad, even swell; pointiness moves
+      // it, eased toward 0.4 either way. The springs are the pool's, so the page's two liquid
+      // edges move as one ink.
+      sheet: {
+        stretchMax: 0.8,
+        stretchKnee: 0.7,
+        stretchCap: 1.2,
+        fullSpeedPxS: 1500,
+        shoulders: { frequencyHz: 2, dampingRatio: 0.2 },
+        belly: { frequencyHz: 1, dampingRatio: 0.1 },
+        pointiness: 1.2,
+        dome: 0.55,
       },
     },
     // The caps (ADR 0034, D12) every choreography number stays inside: translate, scale, one tween,
     // one stagger and the parallax layers at md+. Never width, padding, margin, inset, font axes,
     // letter-spacing, box-shadow, filter, the H1, an .over-ink wrapper, or an ancestor of the
-    // walkthrough stage or of a sticky column. The pool's scaleY is decoration, like the rail's,
-    // and is bounded by choreo.pool.stretchCap rather than by scaleFrom.
+    // walkthrough stage or of a sticky column. The pool's path is decoration, like the rail's
+    // scaleY, and its depth is bounded by choreo.pool.stretchCap rather than by scaleFrom.
     caps: { translateRem: 2.5, scaleFrom: 0.94, tweenMs: 900, staggerMs: 80, parallaxRem: 6 },
   },
 } as const

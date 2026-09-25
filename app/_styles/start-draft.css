@@ -1,0 +1,977 @@
+/*
+ * /start: the live draft beside the questions (docs/start-page-journey-plan.md, 5.8): its frames,
+ * its colour engine, its parts landing and its faces, the phone window below lg, and the curve.
+ * Plain CSS only, on the hooks and tokens app/_styles/start.css declares; the route imports this
+ * sheet after that one (app/start/page.tsx), so no other page downloads it. The parts' plain
+ * layout (flex, gaps, rounding) is utilities the site's sheet already carries (draft-parts.tsx);
+ * what is here is the draft's own.
+ */
+
+/*
+ * The region's tokens: the window's crop, its short-screen crop, and the crossfade it plays when a
+ * question moves it (CONFIG.start.window, which draft-model.test.ts holds these to). The lamp
+ * takes the visitor's colour as its glow (start.css reads --sketch-glow).
+ */
+.start-region {
+  --window-crop: 212px;
+  --window-crop-short: 150px;
+  --window-fade: 450ms;
+  --sketch-glow: var(--draft-hex);
+}
+
+/*
+ * The frames keep the site's white and greys whatever the page inside them takes, the tab's dot
+ * alone pouring. The page paints with the engine's colours (--d-*, set on .draft by
+ * draftColours), and its bars take its line.
+ */
+.draft {
+  --sketch-bg: var(--surface);
+  --sketch-bg-muted: var(--surface-muted);
+  --sketch-line: var(--border);
+  --sketch-muted: var(--on-surface-muted);
+  --sketch-fg: var(--on-surface);
+  --sketch-strong: var(--d-brand);
+  position: relative;
+}
+
+.draft-page {
+  --sketch-line: var(--d-line);
+  gap: 10px 12px;
+  padding: 16px 16px 0;
+  background: var(--d-surface);
+  color: var(--d-ink);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+/*
+ * The phone's page, as the window shows it at its own size and the desk shows it zoomed over the
+ * browser's corner: the headline across, then the call and the sentence beside the picture, the
+ * cards as rows, and the footer's ink filling whatever screen is left under them, as a real
+ * phone page ends. Each row is a fixed height, so no answer moves the layout and the window's
+ * offsets (CONFIG.start.window) land on the part each question feeds: the call and the picture
+ * start 130 px down, where the window's first screen already shows the picture's top, and the
+ * headline's lines start 72 and 96 px down, so the look's offset opens on a whole line. The
+ * desk's page is authored at 640 px, the words and the call beside the picture, its text 15 px so
+ * it still reads at the smallest desk zoom, and its paragraph's row holds three of those lines.
+ */
+.draft-phone .draft-page {
+  grid-template:
+    'nav nav' 24px
+    'eye eye' 12px
+    'head head' 48px
+    'cta art' 32px
+    'para art' 108px
+    'cards cards' auto
+    'foot foot' 1fr / 1fr 1fr;
+}
+
+.draft-phone .draft-foot {
+  align-items: flex-start;
+}
+
+.draft-browser .draft-page {
+  gap: 12px 24px;
+  padding: 20px 24px 0;
+  font-size: 15px;
+  grid-template:
+    'nav nav' 48px
+    'eye art' 12px
+    'head art' 110px
+    'para art' 64px
+    'cta art' 1fr
+    'cards cards' auto
+    'foot foot' auto / 1.15fr 1fr;
+}
+
+.draft-nav {
+  grid-area: nav;
+}
+
+.draft-mark {
+  max-width: 55%;
+  margin-inline-end: auto;
+}
+
+.draft-point {
+  background: radial-gradient(circle at 35% 35%, #fff, var(--d-glow) 50%, var(--d-glow-2));
+  box-shadow: 0 0 8px var(--d-glow);
+}
+
+.draft-logo {
+  width: 64px;
+  height: 16px;
+  background-position: left;
+}
+
+.draft-pill,
+.draft-cta {
+  width: 52px;
+  height: 20px;
+  background: var(--d-fill);
+}
+
+.draft-pill::before,
+.draft-cta::before {
+  content: '';
+  width: 45%;
+  height: 3px;
+  border-radius: 9px;
+  background: var(--d-surface);
+}
+
+.draft-cta {
+  grid-area: cta;
+  width: 96px;
+  height: 32px;
+}
+
+.draft-eyebrow {
+  grid-area: eye;
+}
+
+.draft-eyebrow > span {
+  width: 32px;
+  height: 4px;
+  background: var(--d-brand);
+}
+
+/* The look's display face, once it has loaded (load-faces.ts): the headline, the wordmark and the
+   whisper take it (plan 5.8). */
+.draft-head,
+.draft-mark,
+.draft-whisper p {
+  font-family: var(--draft-face, inherit);
+}
+
+/*
+ * The phone's headline keeps a 24 px line at every size, so a name's lines always fill 72 to 96
+ * and 96 to 120 and the look's window opens on a whole one; the note that holds its place breaks
+ * as two short lines, the width of a name.
+ */
+.draft-head {
+  grid-area: head;
+  z-index: 2;
+  color: var(--d-fill);
+  font-size: 22px;
+  font-weight: 750;
+  line-height: 24px;
+  letter-spacing: -0.02em;
+}
+
+.draft-head[data-size='m'] {
+  font-size: 18px;
+}
+
+.draft-head[data-size='s'] {
+  font-size: 15px;
+}
+
+.draft-head .draft-note {
+  display: block;
+  max-width: 8em;
+}
+
+/* The wordmark keeps to one line in the phone's 24 px nav row; the desk's 48 px row holds two. */
+.draft-phone .draft-mark .draft-name {
+  -webkit-line-clamp: 1;
+}
+
+.draft-para {
+  grid-area: para;
+  color: var(--d-muted);
+}
+
+/* Five lines end 263 px down the phone's page, inside the look's window at every phone width. */
+.draft-phone .draft-para {
+  -webkit-line-clamp: 5;
+}
+
+.draft-art {
+  grid-area: art;
+}
+
+.draft-art .mood-art {
+  border-radius: inherit;
+}
+
+.draft-photo {
+  object-fit: cover;
+}
+
+.draft-cards {
+  grid-area: cards;
+  align-content: start;
+}
+
+.draft-card {
+  grid-template-columns: 24px 1fr;
+  gap: 4px 10px;
+  background: var(--d-soft);
+}
+
+.draft-card > :not(.draft-glyph) {
+  grid-column: 2;
+}
+
+.draft-glyph {
+  grid-row: span 2;
+  height: 24px;
+  background: color-mix(in oklab, var(--d-brand) 35%, var(--d-surface));
+}
+
+.draft-foot {
+  grid-area: foot;
+  margin: 6px -16px 0;
+  padding: 10px 16px;
+  background: var(--d-ink);
+  color: var(--d-soft);
+  font-size: 11px;
+}
+
+.draft[data-scheme='dark'] .draft-foot {
+  background: var(--d-soft);
+  color: var(--d-muted);
+}
+
+/* The desk's sizes, and its links and cards across. */
+.draft-browser .draft-mark {
+  font-size: 15px;
+}
+
+.draft-browser .draft-point {
+  width: 12px;
+  height: 12px;
+}
+
+.draft-browser .draft-logo {
+  width: 88px;
+  height: 22px;
+}
+
+.draft-browser .draft-links {
+  display: flex;
+}
+
+.draft-browser .draft-pill {
+  width: 72px;
+  height: 26px;
+}
+
+.draft-browser .draft-cta {
+  width: 128px;
+  height: 40px;
+}
+
+.draft-browser .draft-eyebrow > span {
+  width: 40px;
+  height: 5px;
+}
+
+.draft-browser .draft-head {
+  font-size: 34px;
+  line-height: 1.08;
+}
+
+.draft-browser .draft-head[data-size='m'] {
+  font-size: 26px;
+}
+
+.draft-browser .draft-head[data-size='s'] {
+  font-size: 24px;
+}
+
+.draft-browser .draft-head bdi {
+  -webkit-line-clamp: 3;
+}
+
+.draft-browser .draft-cards {
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.draft-browser .draft-card {
+  grid-template-columns: 1fr;
+  padding: 12px;
+}
+
+.draft-browser .draft-card > * {
+  grid-column: 1;
+}
+
+.draft-browser .draft-glyph {
+  width: 24px;
+}
+
+.draft-browser .draft-foot {
+  margin: 8px -24px 0;
+  padding: 12px 24px;
+  font-size: 12px;
+}
+
+/* The finished draft (plan 5.8): at the last question its cards and grey bars take the tones. */
+.draft[data-finished] .draft-page {
+  --sketch-line: color-mix(in oklab, var(--d-brand) 40%, var(--d-surface));
+}
+
+.draft[data-finished] .draft-card {
+  background: color-mix(in oklab, var(--d-brand) 14%, var(--d-surface));
+}
+
+/*
+ * The draft lights up once the sentence is long enough to brief from, its first answer landing
+ * (plan D10, brighter per answer): until then a veil of the page's own surface holds everything
+ * but the headline, where the sentence lands, pale. The page is isolated (draft-page.tsx), so the
+ * veil stays inside it.
+ */
+.draft-page::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: var(--d-surface);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--draft-glow);
+}
+
+.draft:not([data-lit]) .draft-page::before {
+  opacity: 0.55;
+}
+
+/*
+ * The studio's notes (plan 5.2): the serif italic in the page's muted colour. On the picture a
+ * note sits in a chip of the page's surface; the signature is a pill of ink in the finished
+ * draft's corner: on a phone the window's, at a desk the picture's, on the side the phone over
+ * the frame's corner leaves clear.
+ */
+.draft-note {
+  color: var(--d-muted);
+  font-family: var(--font-emphasis);
+  letter-spacing: 0;
+}
+
+.mood-art > .draft-note {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: var(--d-surface);
+  color: var(--d-ink);
+}
+
+.draft-sign {
+  bottom: 10px;
+  left: 10px;
+  background: var(--d-ink);
+  color: var(--d-surface);
+  font-size: 16px;
+}
+
+.draft-browser .draft-sign {
+  font-size: 20px;
+}
+
+.draft-phone > .draft-sign {
+  right: 10px;
+  left: auto;
+}
+
+.draft-phone .draft-art .draft-sign {
+  display: none;
+}
+
+/*
+ * The part the question showing feeds (plan 5.8): a box with a handle at each corner, and the
+ * question's numbered tag on its top edge, ticked once the answer is complete. At the last
+ * question the whole page is selected. The handles are one 5 px square, the top-left quarter of a
+ * conic gradient, drawn on tiles sized so that exactly one falls in each corner. The line, the
+ * handles and the tag are sized against the desk's zoom (below), so they read the same at every
+ * desk width: 11 px of tag on screen, never 7.
+ */
+.draft {
+  --draft-zoom: 1;
+  --draft-line: calc(1.5px / var(--draft-zoom));
+  --draft-handle: calc(5px / var(--draft-zoom));
+}
+
+.draft [data-now]::after {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border: var(--draft-line) solid var(--brand-deeper);
+  background: conic-gradient(
+      at var(--draft-handle) var(--draft-handle),
+      #0000 75%,
+      var(--brand-deeper) 0
+    )
+    0 0 / calc(100% - var(--draft-handle)) calc(100% - var(--draft-handle));
+  pointer-events: none;
+  animation: draft-box var(--draft-each) var(--ease-enter) calc(var(--draft-step) * 2) both;
+}
+
+/*
+ * The whole page's box: on the phone against the window, so its foot sits inside the window's
+ * at every crop; on the desk against the page inside the browser's frame, so its tag clears the
+ * frame's chrome and a crop cuts the box where it cuts the page. The phone's tag sits inside the
+ * box's bottom-left corner, as the mockup draws it, where the window's bar does not reach.
+ */
+.draft-whole {
+  inset: 40px 12px 12px;
+}
+
+.draft-browser .draft-whole {
+  top: 16px;
+}
+
+.draft-tag {
+  top: -6px;
+  left: -6px;
+  padding: 0.2em 0.55em;
+  translate: 0 -50%;
+  background: var(--brand-deeper);
+  color: var(--on-brand);
+  font-family: var(--font-sans);
+  font-size: calc(11px / var(--draft-zoom));
+  line-height: 1;
+  letter-spacing: 0;
+  animation: draft-pop var(--motion-settle) var(--ease-spring) both;
+}
+
+.draft-phone .draft-whole > .draft-tag {
+  top: auto;
+  bottom: -6px;
+  translate: 0 0;
+}
+
+/* The look's tag rises less on the phone, clear of a two-line headline's descenders 10 px above
+   the picture; so does the colour's, on the call to action, whose full rise reached the tail of
+   the paragraph above it at the desk's smallest zoom. */
+.draft-phone .draft-art > .draft-tag,
+.draft-cta > .draft-tag {
+  translate: 0 -30%;
+}
+
+.draft-tag[data-ticked]::after {
+  content: '';
+  width: 4px;
+  height: 7px;
+  border: solid;
+  border-width: 0 1.5px 1.5px 0;
+  rotate: 45deg;
+}
+
+/*
+ * The colour pours through the page in order (plan 6.2): the nav's pill, the headline, the
+ * eyebrow, the call to action, the cards and the footer, 450 ms each and 70 ms apart. A hovered
+ * colour previews in 300 ms, all at once; leaving it pours back. The point of light's gradient
+ * and glow and the mood art's --mood-* stops (start.css) are not properties a transition can run,
+ * so they take the colour at once.
+ */
+.draft-pill,
+.draft-head,
+.draft-eyebrow > span,
+.draft-cta,
+.draft-card,
+.draft-glyph,
+.draft-foot {
+  transition-property: color, background-color;
+  transition-duration: var(--draft-each);
+  transition-delay: calc(var(--pour, 0) * var(--draft-step));
+}
+
+.draft-head {
+  --pour: 1;
+}
+
+.draft-eyebrow > span {
+  --pour: 2;
+}
+
+.draft-cta {
+  --pour: 3;
+}
+
+.draft-card,
+.draft-glyph {
+  --pour: 4;
+}
+
+.draft-foot {
+  --pour: 5;
+}
+
+.draft[data-preview] * {
+  transition-duration: var(--motion-settle);
+  transition-delay: 0s;
+}
+
+/*
+ * The mood art keeps its look's own colours (app/_styles/start.css, the --mood-* fallbacks) once
+ * the visitor's colour is in. It stands in for the photos the pipeline finds for the look, and a
+ * photo does not take the brand colour: the pipeline puts that colour into the buttons, the
+ * headline and the glow (lib/tokens/derive.ts), which the pour above already paints. Tinting the
+ * art gave Forest a green sun over a pink sky (owner's decision, 25 September 2026).
+ */
+
+/*
+ * What lands (plan 6.2): the business name in each place it shows, one after another, and the
+ * sentence the headline gives up; a face re-sets the headline the same way. A tag springs in, its
+ * box drawn open after it; a logo drops into the mark; a new picture fades in over the last.
+ * Under reduced motion each only fades, all together, and the window jumps. Only what an answer
+ * brings lands, so a load or a refresh replays nothing (plan 3.1): the server's skeleton paints
+ * its draft still, over every landing whatever its selector (hence !important), and the flow
+ * finishes what it draws at its first commit (sketch-pane.tsx).
+ */
+[data-still] *,
+[data-still] ::after {
+  animation: none !important;
+}
+
+.draft-name {
+  animation: draft-land var(--draft-each) var(--ease-spring) calc(var(--i, 0) * var(--draft-step))
+    both;
+}
+
+.draft-browser .draft-head .draft-name {
+  --i: 1;
+}
+
+.draft-browser .draft-foot .draft-name {
+  --i: 2;
+}
+
+.draft-phone .draft-mark .draft-name {
+  --i: 3;
+}
+
+.draft-phone .draft-head .draft-name {
+  --i: 4;
+}
+
+.draft-logo {
+  animation: draft-pop var(--draft-each) var(--ease-enter) both;
+}
+
+.draft-art .mood-art,
+.draft-para bdi,
+.draft-note,
+.draft-photo {
+  animation: draft-fade var(--draft-each) both;
+}
+
+@keyframes draft-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes draft-land {
+    from {
+      opacity: 0;
+      translate: 0 0.375rem;
+    }
+  }
+
+  @keyframes draft-pop {
+    from {
+      opacity: 0;
+      scale: 0.94;
+    }
+  }
+
+  @keyframes draft-box {
+    from {
+      clip-path: inset(0 100% 100% 0);
+    }
+  }
+
+  @keyframes draft-turn-0 {
+    50% {
+      opacity: 0;
+    }
+  }
+
+  @keyframes draft-turn-1 {
+    50% {
+      opacity: 0;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .draft {
+    --draft-step: 0ms;
+  }
+
+  @keyframes draft-land {
+    from {
+      opacity: 0;
+    }
+  }
+
+  @keyframes draft-pop {
+    from {
+      opacity: 0;
+    }
+  }
+
+  @keyframes draft-box {
+    from {
+      opacity: 0;
+    }
+  }
+}
+
+/*
+ * A failed Next flashes the part the question feeds in brand ink, once, as its field turns
+ * invalid (plan 4.8): the sentence's headline, the name's wordmark, the colour's call to action.
+ */
+.start-flow:has([data-question='describe'] [aria-invalid='true']) .draft-head,
+.start-flow:has([data-question='brand'] [aria-invalid='true']) .draft-mark {
+  animation: draft-flash var(--draft-each);
+}
+
+.start-flow:has([data-question='colours'] [aria-invalid='true']) .draft-cta {
+  animation: draft-flash-fill var(--draft-each);
+}
+
+@keyframes draft-flash {
+  40% {
+    color: var(--brand-ink);
+  }
+}
+
+@keyframes draft-flash-fill {
+  40% {
+    background-color: var(--brand-ink);
+  }
+}
+
+/*
+ * Below 36rem the phone frame is the window (plan D8): the page at its own size, min(the screen
+ * less 2rem, 30rem) wide and 212 px tall under its bar, 150 px on a screen under 47.5rem tall,
+ * each crop with offsets of its own (CONFIG.start.window) so the part being answered is whole in
+ * it. An offset jumps while a crossfade hides it; the jump is a transition held to the
+ * crossfade's middle, which reduced motion drops, so there it is instant. The crossfade plays
+ * only for the crop showing: the screen carries a turn for each, and the height picks one. Under
+ * the full crop the window's foot is a short fade to the page's surface, so a line the crop meets
+ * fades rather than cuts; the short crop keeps a hard foot, since its part being answered runs
+ * to the edge. Below lg the lamp around the window reaches past the screen's sides, so the region
+ * clips them, sideways only, so the curve still hangs below it.
+ */
+.draft-browser,
+.draft-bar {
+  display: none;
+}
+
+@media (width < 64rem) {
+  .start-region {
+    overflow-x: clip;
+  }
+}
+
+@media (width < 36rem) {
+  .start-region .draft-phone {
+    width: min(100cqi - 2rem, 30rem);
+    height: var(--window-crop);
+    aspect-ratio: auto;
+    zoom: 1;
+    border: 0;
+    border-radius: 1rem;
+    box-shadow: var(--shadow-panel);
+  }
+
+  /*
+   * A dark page sits on the ink, so the panel's shadow says nothing and the window's foot ran
+   * into the ground. It is lifted by light, never by a line (ADR 0034 D2): a halo in the page's
+   * own glow hugs the frame, and the shadow stays for a light page's sake.
+   */
+  .start-region .draft[data-scheme='dark'] .draft-phone {
+    box-shadow:
+      var(--shadow-panel),
+      0 0 2.5rem -0.25rem color-mix(in oklab, var(--d-glow) 45%, transparent);
+  }
+
+  .draft-phone [data-speaker] {
+    display: none;
+  }
+
+  .draft-bar {
+    display: flex;
+  }
+
+  .draft-bar::before {
+    content: '';
+    width: 7px;
+    height: 7px;
+    border-radius: 9px;
+    background: var(--glow);
+  }
+
+  .draft-tab {
+    margin-inline-start: auto;
+  }
+
+  .draft-screen {
+    overflow: hidden;
+  }
+
+  .draft-screen > .draft-page {
+    translate: 0 calc(var(--window-y) * -1);
+    transition: translate 0s calc(var(--window-fade) / 2);
+  }
+
+  @media (height >= 47.5rem) {
+    .draft-screen::after {
+      content: '';
+      position: absolute;
+      inset: auto 0 0;
+      height: 12px;
+      background: linear-gradient(transparent, var(--d-surface));
+      pointer-events: none;
+    }
+
+    .draft-screen[data-turn] {
+      animation: draft-turn-0 var(--window-fade);
+    }
+
+    .draft-screen[data-turn='1'] {
+      animation-name: draft-turn-1;
+    }
+  }
+
+  @media (height < 47.5rem) {
+    .draft-screen > .draft-page {
+      translate: 0 calc(var(--window-y-short) * -1);
+    }
+
+    .draft-screen[data-turn-short] {
+      animation: draft-turn-0 var(--window-fade);
+    }
+
+    .draft-screen[data-turn-short='1'] {
+      animation-name: draft-turn-1;
+    }
+  }
+}
+
+/*
+ * From 36rem to lg the region shows the desk's page instead, cropped at 300 px, or at 150 px on
+ * a screen under 52rem tall (700 by 500 among them, plan 4.2; and 640 by 800, where the taller
+ * crop left the first control under the ask). The page keeps its 640 px layout and is zoomed to
+ * the region in steps, 0.8 from 36rem and 0.9 from 40rem, rather than reflowing as a narrow
+ * browser; the zoom is the zoom in force (--draft-zoom), so the tag, the box's line and its
+ * handles hold their size on screen here as they do from lg; the crop's foot fades over its last
+ * 24 px so it never ends mid-glyph; and the page moves under the crop to the part each question
+ * feeds, crossfading as the window does.
+ */
+@media (36rem <= width < 64rem) {
+  .start-region .draft-phone {
+    display: none;
+  }
+
+  .draft {
+    --draft-zoom: 0.8;
+  }
+
+  .draft-browser {
+    display: block;
+    width: min(100cqi - 4rem, 44rem);
+    max-height: 300px;
+    mask-image: linear-gradient(#000 calc(100% - 24px), transparent);
+  }
+
+  .draft-crop {
+    zoom: var(--draft-zoom);
+    translate: 0 calc(var(--crop-y) * -1);
+    transition: translate 0s calc(var(--window-fade) / 2);
+  }
+
+  @media (width >= 40rem) {
+    .draft {
+      --draft-zoom: 0.9;
+    }
+  }
+
+  @media (width >= 44rem) {
+    .draft {
+      --draft-zoom: 1;
+    }
+  }
+
+  @media (height >= 52rem) {
+    .draft-crop[data-turn] {
+      animation: draft-turn-0 var(--window-fade);
+    }
+
+    .draft-crop[data-turn='1'] {
+      animation-name: draft-turn-1;
+    }
+  }
+
+  @media (height < 52rem) {
+    .draft-browser {
+      max-height: var(--window-crop-short);
+    }
+
+    .draft-crop {
+      translate: 0 calc(var(--crop-y-short) * -1);
+    }
+
+    .draft-crop[data-turn-short] {
+      animation: draft-turn-0 var(--window-fade);
+    }
+
+    .draft-crop[data-turn-short='1'] {
+      animation-name: draft-turn-1;
+    }
+  }
+}
+
+/* A phone under 47.5rem tall takes the window's short crop, so this comes after the crop it
+   shortens. */
+@media (width < 36rem) and (height < 47.5rem) {
+  .start-region .draft-phone {
+    height: var(--window-crop-short);
+  }
+}
+
+/*
+ * From lg the board: the browser frame, 640 px, zoomed as a whole to the pane (0.72 at 1024 wide,
+ * 1 at 1440, 1.25 from 1760) and never past 0.78 on a desk under 47.5rem tall, the frame lit by
+ * its panel glow (plan 5.5). From 80rem the phone sits at 0.4 over its corner; under 80rem the
+ * mirror would be under 115 px wide with a 4 px headline, so it goes and the frame takes its
+ * room. The window's chrome, tags and signature are the window's alone, and the phone's notes
+ * stay with the browser's, so the draft never shows more than two (plan 5.2). --draft-zoom-wide
+ * is the width's zoom and --draft-zoom the zoom in force, which the tag and the box's line read.
+ */
+@media (width >= 64rem) {
+  .draft {
+    --draft-zoom-wide: 0.72;
+    --draft-zoom: var(--draft-zoom-wide);
+    width: 40rem;
+    zoom: var(--draft-zoom);
+  }
+
+  .draft-browser {
+    display: block;
+    width: 40rem;
+    box-shadow: var(--shadow-panel);
+  }
+
+  .draft-browser > :first-child {
+    border-color: transparent;
+  }
+
+  .start-region .draft-phone {
+    display: none;
+  }
+
+  .draft-phone :is(.draft-tag, .draft-note, .draft-whole),
+  .draft-phone [data-now]::after {
+    display: none;
+  }
+}
+
+@media (width >= 70rem) {
+  .draft {
+    --draft-zoom-wide: 0.8;
+  }
+}
+
+@media (width >= 80rem) {
+  .draft {
+    --draft-zoom-wide: 0.85;
+    width: 43.5rem;
+    padding: 0 3.5rem 2.5rem 0;
+  }
+
+  .start-region .draft-phone {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    width: 358px;
+    zoom: 0.4;
+  }
+}
+
+@media (width >= 90rem) {
+  .draft {
+    --draft-zoom-wide: 1;
+  }
+}
+
+@media (width >= 110rem) {
+  .draft {
+    --draft-zoom-wide: 1.25;
+  }
+}
+
+@media (width >= 64rem) and (height < 47.5rem) {
+  .draft {
+    --draft-zoom: min(var(--draft-zoom-wide), 0.78);
+  }
+}
+
+/*
+ * The whisper (plan 5.1): the business name in the look's face at the region's foot, the wordmark
+ * colour on the ink at 1.44:1, sized to the pane between 3rem and 9rem and shown only where it
+ * fits at 3rem or more (the sign of the room left), on a desk at least 47.5rem tall, under
+ * everything else in the region.
+ */
+.draft-whisper {
+  display: none;
+}
+
+@media (width >= 64rem) and (height >= 47.5rem) {
+  /* The whisper sits at the foot of the board (start.css), which is already inside the region's
+     gutter. */
+  .draft-whisper {
+    position: absolute;
+    inset: auto 0 0.5rem;
+    z-index: -1;
+    display: block;
+    container-type: inline-size;
+    text-align: right;
+    animation: draft-fade var(--draft-glow) both;
+  }
+
+  .draft-whisper p {
+    --fit: calc(100cqi / (var(--graphemes) * 0.56));
+    color: var(--wordmark);
+    font-size: clamp(3rem, var(--fit), 9rem);
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    white-space: nowrap;
+    opacity: max(0, sign(var(--fit) - 3rem + 0.5px));
+  }
+}
+
+/*
+ * Forced colours (plan 9.4): the page's fills go to Canvas, so the pill, the call to action, the
+ * eyebrow, the cards and their glyphs and the tag take a border to keep their shapes, the mood
+ * art keeps its own colours as decoration, and the veil goes, since Canvas over Canvas only
+ * greys the notes.
+ */
+@media (forced-colors: active) {
+  .draft-pill,
+  .draft-cta,
+  .draft-eyebrow > span,
+  .draft-card,
+  .draft-glyph,
+  .draft-tag {
+    border: 1px solid CanvasText;
+  }
+
+  .mood-art {
+    forced-color-adjust: none;
+  }
+
+  .draft-page::before {
+    display: none;
+  }
+}
