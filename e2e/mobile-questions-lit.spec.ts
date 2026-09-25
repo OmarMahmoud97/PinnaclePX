@@ -15,8 +15,10 @@ const TITLES = [
   'Where should we send them?',
 ] as const
 
-// The most the region may take of a 390 by 844 phone (plan 9.6).
-const REGION_MAX_PX = 320
+// The most the region may take of a 390 by 844 phone (plan 9.6, as ADR 0037's seventh amendment
+// moves it): the island's clearance, the desk's frame whole at the screen's width, about 300 px,
+// and the curve's clearance; it measures 396.
+const REGION_MAX_PX = 400
 // Back's round button and the ask are both this tall (plan 9.5).
 const TARGET_PX = 48
 

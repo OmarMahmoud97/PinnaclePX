@@ -737,11 +737,10 @@ html:has(.start-stage) body {
 /*
  * A short screen below lg: a phone under 47.5rem tall (Safari leaves 664 px on the common iPhones
  * with its bars showing) and the stacked band, 36rem to lg, under 52rem tall (640 by 800 among
- * them), the lines at which each frame takes its short crop (start-draft.css). There the full
- * region, its curve and the ask riding at the foot leave no room for a question's first control,
- * so the region's padding tightens, and at 390 by 664 and at 640 by 800 every question's first
- * control shows whole above the ask on arrival. The pool's reach down drops to 7.5% of the shorter
- * crop, so it is still spent before the curve.
+ * them), the lines at which the draft's zoom is capped (start-draft.css). There the full region,
+ * its curve and the ask riding at the foot leave no room for a question's first control, so the
+ * region's padding tightens. The pool's reach down drops to 7.5% of the smaller frame, so it is
+ * still spent before the curve.
  */
 @media ((width < 36rem) and (height < 47.5rem)) or ((36rem <= width < 64rem) and (height < 52rem)) {
   .start-region {

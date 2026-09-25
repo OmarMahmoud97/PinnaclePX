@@ -21,7 +21,7 @@ type Props = {
 
 // The phone shell the sketch draws: a 9:19 frame with the speaker bar, painted with the
 // --sketch-* variables of the nearest stage. The screen is whatever the caller puts inside.
-// data-speaker lets a caller that restyles the frame drop the speaker (/start's window).
+// data-speaker lets a caller that restyles the frame drop the speaker.
 export function PhoneFrame({ zoom = 1, className, children }: Props) {
   return (
     <div

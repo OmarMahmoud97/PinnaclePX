@@ -3,12 +3,22 @@ import { CONFIG } from '@/lib/config'
 import { changed, next, pixels, settle } from './helpers/draft'
 import { ANSWERED, refuseSends, withDraft } from './helpers/start'
 
-// The live draft on a phone (docs/start-page-journey-plan.md, D8, 4.2, 6.2 and package P6): the
-// phone frame is a window onto the draft, 358 by 212 in a 308 px region; each answer changes a
-// tenth of the window and each Next a twentieth of the region; the window moves to the part each
-// question feeds
-// and crossfades as it does; the curve springs after a Next and sleeps; the crops at other sizes;
-// and nothing an answer changes set under 12 px. Nothing here sends a brief.
+// The live draft on a phone (docs/start-page-journey-plan.md, 4.2 and 6.2, as ADR 0037's seventh
+// amendment amends them): the region shows the desk's browser frame whole, zoomed to the screen's
+// width, 358 across at 390 wide, the phone frame hidden; the frame keeps its 640 px layout with
+// nothing cut off, and the tag holds its size on screen; each answer changes a tenth of the frame
+// and each Next a twentieth of the region; the curve springs after a Next and sleeps; the caps on
+// a short screen and in the stacked band; and under 30rem tall the draft gives way. Nothing here
+// sends a brief.
+
+// The frame's layout width, the desk's, whatever the zoom (app/_styles/start-draft.css).
+const LAYOUT_PX = 640
+// What the region adds around the frame: the island's clearance above (72 px, or 64 on a short
+// screen) and the curve's clearance below (24, or 12).
+const REGION_PADDING_PX = 96
+const SHORT_REGION_PADDING_PX = 76
+// The tag on screen: 11 px of type on a line of its own height, with 0.2em above and below.
+const TAG_HEIGHT_PX = 11 * 1.4
 
 test.beforeEach(async ({ page }) => {
   await refuseSends(page)
@@ -22,7 +32,11 @@ function region(page: Page) {
   return page.getByRole('region', { name: 'Your brief so far' })
 }
 
-function draftWindow(page: Page) {
+function frame(page: Page) {
+  return region(page).locator('[data-frame="browser"]')
+}
+
+function phone(page: Page) {
   return region(page).locator('[data-frame="phone"]')
 }
 
@@ -34,31 +48,52 @@ async function top(page: Page) {
   await settle(page)
 }
 
-async function heightOf(page: Page, selector: string): Promise<number> {
-  const box = await page.locator(selector).first().boundingBox()
-  return box?.height ?? Number.NaN
+// The frame's box on screen, its layout width, and how much of its page it clips (nothing, when
+// the page is whole in it).
+function measure(page: Page) {
+  return frame(page).evaluate((element) => {
+    if (!(element instanceof HTMLElement)) throw new Error('no frame')
+    const box = element.getBoundingClientRect()
+    return {
+      x: box.x,
+      width: box.width,
+      height: box.height,
+      layoutWidth: element.offsetWidth,
+      clipped: element.scrollHeight - element.clientHeight,
+    }
+  })
 }
 
-test('the region is the island, a 358 by 212 window onto the draft, and the curve', async ({
+async function regionHeight(page: Page): Promise<number> {
+  return region(page).evaluate((element) => element.getBoundingClientRect().height)
+}
+
+test('the region is the island, the desk’s frame whole at the screen’s width, and the curve', async ({
   page,
 }) => {
   await page.goto('/start?q=1')
   await expect(heading(page)).toBeVisible()
-  expect(await region(page).evaluate((element) => element.getBoundingClientRect().height)).toBe(308)
-  await expect(draftWindow(page)).toHaveCount(1)
-  const box = await draftWindow(page).boundingBox()
-  expect(box).toMatchObject({ x: 16, y: 72, width: 358, height: 212 })
-  await expect(draftWindow(page)).toContainText('Live draft')
-  await expect(draftWindow(page)).toContainText('your-business')
-  await expect(region(page).locator('[data-frame="browser"]')).toBeHidden()
+  await settle(page)
+  await expect(frame(page)).toBeVisible()
+  await expect(frame(page)).toContainText('your-business')
+  const box = await measure(page)
+  expect(box).toMatchObject({ x: 16, width: 358, layoutWidth: LAYOUT_PX, clipped: 0 })
+  expect((await regionHeight(page)) - box.height).toBeCloseTo(REGION_PADDING_PX, 0)
+  await expect(phone(page)).toBeHidden()
   await expect(region(page).locator('[data-curve]')).toBeVisible()
 })
 
 // The plan's two measures of a draft that answers back (section 1, row 2), as its audit took
-// them: an answered question changes a tenth of the frame, here the window, from where the
-// question before left it, and a Next a twentieth of the pane, here the region, as the next
-// question arrives.
-test('each question changes a tenth of the window, and each Next a twentieth of the region', async ({
+// them: an answered question changes a tenth of the frame, from where the question before left
+// it, and a Next a twentieth of the pane, here the region, as the next question arrives. Two
+// answers change less than a tenth of the desk's frame, which is now the phone's: the name
+// lands as type in the wordmark, the headline, the tab and the footer, and the colour pours into
+// the pills, the cards' tint and the footer. Measured on 25 September 2026 at 390 by 844: the
+// sentence 0.296, the name 0.087, the look 0.225, the colour 0.058, the send 0.197 (at 1440 by
+// 900: 0.292, 0.072, 0.196, 0.049, 0.145); their floors sit under both readings.
+const SHARES: Readonly<Record<string, number>> = { name: 0.07, colour: 0.045 }
+
+test('each question changes a tenth of the frame, and each Next a twentieth of the region', async ({
   page,
 }) => {
   test.slow()
@@ -66,7 +101,7 @@ test('each question changes a tenth of the window, and each Next a twentieth of 
   await expect(heading(page)).toHaveText('Start with a sentence.')
   await settle(page)
   const shoot = async () => ({
-    frame: await pixels(page, draftWindow(page)),
+    frame: await pixels(page, frame(page)),
     pane: await pixels(page, region(page)),
   })
   let answered = await shoot()
@@ -94,40 +129,44 @@ test('each question changes a tenth of the window, and each Next a twentieth of 
     await answer()
     await top(page)
     const now = await shoot()
-    expect(changed(answered.frame, now.frame), `the ${name}`).toBeGreaterThanOrEqual(0.1)
+    expect(changed(answered.frame, now.frame), `the ${name}`).toBeGreaterThanOrEqual(
+      SHARES[name] ?? 0.1,
+    )
     answered = now
   }
 })
 
-test('the window moves to the part each question feeds, crossfading as it does', async ({
+test('nothing is cut off at any question, and the last boxes the whole page inside the frame', async ({
   page,
 }) => {
   await withDraft(page, { reached: 4 })
-  for (const [index, offset] of CONFIG.start.window.offsetsPx.entries()) {
-    await page.goto(`/start?q=${String(index + 1)}`)
+  for (const question of [1, 2, 3, 4, 5]) {
+    await page.goto(`/start?q=${String(question)}`)
     await expect(heading(page)).toBeVisible()
-    const shift = await draftWindow(page).evaluate((phone) => {
-      const screen = phone.querySelector('.draft-screen')
-      const page = screen?.querySelector('.draft-page')
-      if (!screen || !page) throw new Error('no window')
-      return screen.getBoundingClientRect().top - page.getBoundingClientRect().top
+    await settle(page)
+    expect(await measure(page), `question ${String(question)}`).toMatchObject({
+      width: 358,
+      layoutWidth: LAYOUT_PX,
+      clipped: 0,
     })
-    expect(shift, `question ${String(index + 1)}`).toBe(offset)
   }
+  const whole = frame(page).locator('.draft-whole')
+  await expect(whole).toBeVisible()
+  const [box, inside] = await Promise.all([whole.boundingBox(), frame(page).boundingBox()])
+  if (box === null || inside === null) throw new Error('nothing to measure')
+  expect(box.y).toBeGreaterThanOrEqual(inside.y)
+  expect(box.y + box.height).toBeLessThanOrEqual(inside.y + inside.height)
+})
 
-  // From the name to the look the window moves, so it fades out and back while it jumps.
-  await page.goto('/start?q=2')
-  await expect(heading(page)).toHaveText('Put your name on it.')
-  await next(page, 3)
-  const screen = draftWindow(page).locator('.draft-screen')
-  await expect(screen).toHaveAttribute('data-turn', /^[01]$/)
-  expect(
-    await screen.evaluate((element) =>
-      element
-        .getAnimations()
-        .map((animation) => (animation instanceof CSSAnimation ? animation.animationName : '')),
-    ),
-  ).toEqual([expect.stringMatching(/^draft-turn-[01]$/)])
+// The tag is sized against the zoom in force (start-draft.css), so at the phone's zoom it still
+// reads at 11 px, as it does on every desk.
+test('the tag holds its size on screen at the phone’s zoom', async ({ page }) => {
+  await page.goto('/start?q=1')
+  await expect(heading(page)).toBeVisible()
+  await settle(page)
+  const tag = frame(page).locator('.draft-tag').first()
+  await expect(tag).toHaveText('01 Sentence')
+  expect((await tag.boundingBox())?.height).toBeCloseTo(TAG_HEIGHT_PX, 0)
 })
 
 test('the curve springs on a Next and lets go once it sleeps', async ({ page }) => {
@@ -147,13 +186,13 @@ test('the curve springs on a Next and lets go once it sleeps', async ({ page }) 
 test.describe('on a 320 by 640 phone', () => {
   test.use({ viewport: { width: 320, height: 640 } })
 
-  test('the window is 288 wide and its short crop, and nothing scrolls sideways', async ({
+  test('the frame takes the short cap, 192 wide, and nothing scrolls sideways', async ({
     page,
   }) => {
     await withDraft(page, { reached: 4 })
     await page.goto('/start?q=3')
     await expect(heading(page)).toBeVisible()
-    expect(await draftWindow(page).boundingBox()).toMatchObject({ width: 288, height: 150 })
+    expect(await measure(page)).toMatchObject({ width: 192, clipped: 0 })
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(320)
   })
 })
@@ -161,37 +200,63 @@ test.describe('on a 320 by 640 phone', () => {
 test.describe('on a 390 by 664 phone', () => {
   test.use({ viewport: { width: 390, height: 664 } })
 
-  test('the window takes its short crop and the region 226 px', async ({ page }) => {
+  test('the frame takes the short cap in a tightened region', async ({ page }) => {
     await page.goto('/start?q=1')
     await expect(heading(page)).toBeVisible()
-    expect(await heightOf(page, 'section[aria-label="Your brief so far"]')).toBe(226)
-    expect(await draftWindow(page).boundingBox()).toMatchObject({ width: 358, height: 150 })
+    await settle(page)
+    const box = await measure(page)
+    expect(box).toMatchObject({ width: 192, clipped: 0 })
+    expect((await regionHeight(page)) - box.height).toBeCloseTo(SHORT_REGION_PADDING_PX, 0)
+  })
+})
+
+test.describe('on a 360 by 740 phone', () => {
+  test.use({ viewport: { width: 360, height: 740 } })
+
+  test('the frame takes the taller short cap, 256 wide', async ({ page }) => {
+    await page.goto('/start?q=1')
+    await expect(heading(page)).toBeVisible()
+    expect(await measure(page)).toMatchObject({ width: 256, clipped: 0 })
+  })
+})
+
+test.describe('on a 375 by 812 phone', () => {
+  test.use({ viewport: { width: 375, height: 812 } })
+
+  test('the frame takes the same cap, 256 wide, up to 52rem tall', async ({ page }) => {
+    await page.goto('/start?q=1')
+    await expect(heading(page)).toBeVisible()
+    expect(await measure(page)).toMatchObject({ width: 256, clipped: 0 })
   })
 })
 
 test.describe('from 36rem to lg', () => {
   test.use({ viewport: { width: 768, height: 1024 } })
 
-  test('the region shows the desk page cropped at 300 px, and no window', async ({ page }) => {
+  test('the frame sits at its own size, whole, and no phone shows', async ({ page }) => {
     await page.goto('/start?q=1')
     await expect(heading(page)).toBeVisible()
-    const browser = region(page).locator('[data-frame="browser"]')
-    expect(await browser.boundingBox()).toMatchObject({ width: 704, height: 300 })
-    await expect(draftWindow(page)).toBeHidden()
-    expect(await heightOf(page, 'section[aria-label="Your brief so far"]')).toBe(396)
+    await settle(page)
+    const box = await measure(page)
+    expect(box).toMatchObject({ x: 64, width: LAYOUT_PX, clipped: 0 })
+    expect((await regionHeight(page)) - box.height).toBeCloseTo(REGION_PADDING_PX, 0)
+    await expect(phone(page)).toBeHidden()
   })
 })
 
 test.describe('on a 700 by 500 screen', () => {
   test.use({ viewport: { width: 700, height: 500 } })
 
-  test('the desk page takes the short crop, and the title is in the first screen', async ({
-    page,
-  }) => {
-    await page.goto('/start?q=1')
-    await expect(heading(page)).toBeInViewport({ ratio: 1 })
-    const browser = region(page).locator('[data-frame="browser"]')
-    expect((await browser.boundingBox())?.height).toBe(CONFIG.start.window.shortCropPx)
+  test('the frame takes the band’s cap, and the title is in the first screen', async ({ page }) => {
+    await withDraft(page, { reached: 4 })
+    for (const question of [1, 5]) {
+      await page.goto(`/start?q=${String(question)}`)
+      await expect(heading(page)).toBeInViewport({ ratio: 1 })
+      expect(await measure(page), `question ${String(question)}`).toMatchObject({
+        width: 256,
+        clipped: 0,
+      })
+    }
   })
 })
 
@@ -206,36 +271,4 @@ test.describe('under 30rem tall', () => {
     await expect(region(page).locator('[data-draft]')).toBeHidden()
     await expect(region(page).locator('[data-curve]')).toBeHidden()
   })
-})
-
-// The picture's note shows until the draft is signed, and the signature from the last question.
-const SET_AT = [
-  [
-    4,
-    [
-      '.draft-head',
-      '.draft-mark .draft-name',
-      '.draft-para',
-      '.draft-art .draft-note',
-      '.draft-tab',
-    ],
-  ],
-  [5, [':scope > .draft-sign']],
-] as const
-
-test('nothing an answer changes is set under 12 px in the window', async ({ page }) => {
-  await withDraft(page, { reached: 4, imagery: { style: 'warm', photos: [] } })
-  for (const [question, selectors] of SET_AT) {
-    await page.goto(`/start?q=${String(question)}`)
-    await expect(heading(page)).toBeVisible()
-    const sizes = await draftWindow(page).evaluate(
-      (phone, wanted) =>
-        wanted.map((selector) => {
-          const element = phone.querySelector(selector)
-          return [selector, element === null ? 0 : parseFloat(getComputedStyle(element).fontSize)]
-        }),
-      [...selectors],
-    )
-    for (const [selector, size] of sizes) expect(size, String(selector)).toBeGreaterThanOrEqual(12)
-  }
 })

@@ -1,4 +1,3 @@
-import { readFileSync } from 'node:fs'
 import { clampChroma, type Oklch, oklch, parse, type Rgb, rgb, wcagContrast } from 'culori'
 import { describe, expect, it } from 'vitest'
 import { DRAFT_NOTES, photosNote } from '@/app/start/_components/draft-copy'
@@ -23,7 +22,7 @@ import type { Scheme } from '@/lib/tokens/types'
 
 // The live draft's rules (docs/start-page-journey-plan.md, 5.8 and section 10): what each stage
 // shows by `reached`, the colour engine against CONFIG.colour and the sweep of awkward colours,
-// the notes, the headline's sizes, the whisper, and the window's numbers in start-draft.css.
+// the notes, the headline's sizes and the whisper.
 
 const ANSWERS: Answers = {
   description: 'Physiotherapy clinic in Sheffield. Sports injuries and same-week appointments.',
@@ -350,25 +349,5 @@ describe('the whisper', () => {
       })
     }
     expect(whisperOf(longest)?.graphemes).toBe(24)
-  })
-})
-
-describe('the window’s numbers in start-draft.css', () => {
-  const css = readFileSync(new URL('../../../_styles/start-draft.css', import.meta.url), 'utf8')
-  const token = (name: string) => new RegExp(`${name}:\\s*([^;]+);`).exec(css)?.[1]
-
-  it('match CONFIG.start.window', () => {
-    const { cropPx, shortCropPx, crossfadeMs } = CONFIG.start.window
-    expect(token('--window-crop')).toBe(`${String(cropPx)}px`)
-    expect(token('--window-crop-short')).toBe(`${String(shortCropPx)}px`)
-    expect(token('--window-fade')).toBe(`${String(crossfadeMs)}ms`)
-  })
-
-  it('open each crop on a part for every question, never above the page', () => {
-    const { offsetsPx, shortOffsetsPx, cropOffsetsPx, shortCropOffsetsPx } = CONFIG.start.window
-    for (const offsets of [offsetsPx, shortOffsetsPx, cropOffsetsPx, shortCropOffsetsPx]) {
-      expect(offsets).toHaveLength(QUESTION_IDS.length)
-      for (const offset of offsets) expect(offset).toBeGreaterThanOrEqual(0)
-    }
   })
 })

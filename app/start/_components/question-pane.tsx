@@ -539,7 +539,12 @@ function Question({
               // The ask wraps below xl: from lg a question's column is a share of the screen,
               // and "Show me my three designs" on one line was wider than the column at 1024,
               // where it pushed the split over and the board with it (start-layout.ts).
-              className="w-full text-center max-xl:h-auto max-xl:min-h-12 max-xl:py-3 max-xl:whitespace-normal lg:w-auto"
+              // Below lg the ask is full width, so its side padding only sets where the label
+              // wraps: at the size's 32 px it had 210 px at 390 wide, and Linux Chromium sets the
+              // send's label at 211 px (Windows 202), so CI's ask stood two lines tall and 24 px
+              // higher than the plan's arrival rule allows (ADR 0037, seventh amendment). 12 px
+              // keeps the label on one line from 320 wide in every engine.
+              className="w-full text-center max-xl:h-auto max-xl:min-h-12 max-xl:py-3 max-xl:whitespace-normal max-lg:px-3 lg:w-auto"
             >
               {busy && <LoaderCircle aria-hidden="true" className="start-spinner size-4" />}
               {ask}
