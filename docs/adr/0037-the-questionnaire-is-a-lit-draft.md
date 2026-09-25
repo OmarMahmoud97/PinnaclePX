@@ -1251,6 +1251,21 @@ seen. Chromium forces `color` and leaves `-webkit-text-fill-color` at the author
 `start.css` notes for the caption; the draft's type now takes `CanvasText` as its fill under
 forced colours, and the four axe tests on the mobile and tablet projects pass.
 
+**CI's Linux engine** (26 September 2026, after the package went up as PR #41). The `e2e` job had
+failed one test since e5436be, on main too: `mobile-order.spec.ts` at 390 by 664, question 5's
+first control above the ask on arrival, at 21.5 px on main and 8.2 px with the frame, against 24. A throwaway branch that dumped the page's boxes on the runner and here showed the same stack
+to the decimal down to the email field, and the ask 24 px taller there: the send's button stood
+two lines. Below `lg` the ask is full width, so the button's side padding (its size's 32 px)
+only set where the label wraps, and left "Show me my three designs" 210 px at 390 wide. Windows
+Chromium sets that label at 202.25 px and Linux Chromium, on FreeType's hinted advances, at
+211.00, over by a pixel; the same 32 px had it two lines tall at 375 and 360 in both. The
+button now takes 12 px of side padding below `lg` (`max-lg:px-3`, question-pane.tsx), which the
+full-width pill never shows: the label has 250 px at 390, 235 at 375, 220 at 360 and 236 at
+320, so it is one line from 320 wide in both engines, 9 px to spare at 360 against Linux. The
+ask measures 113 px at every phone width (77 at 320, where Back sits under it), so question 5's
+clearances at 375 by 812, 360 by 780, 360 by 740 and 320 by 640 in the cap table above are 24
+px more than tabled; 390's numbers stand, and the desk from `lg` is untouched. Here the mobile and tablet projects pass, 147 of 147, and the unit tests.
+
 **Shot** (GET only, `scratchpad/fit/shots/`): 320 by 640, 360 by 740, 375 by 667, 390 by 664,
 390 by 844, 412 by 915, 430 by 932, 640 by 800, 700 by 500, 768 by 1024 and 1024 by 768 in
 Chromium at the blank first question, the warm look's colour question and the dark look's last;
