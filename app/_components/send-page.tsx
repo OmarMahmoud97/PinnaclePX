@@ -6,7 +6,7 @@ import { captionStyles } from '@/components/ui/caption'
 import { textLinkStyles } from '@/components/ui/text-link'
 import { trackEvent } from '@/lib/analytics/events'
 
-type Props = { url: string; location: 'closing' | 'examples' }
+type Props = { url: string; location: 'closing' }
 
 type Method = 'share' | 'copy' | 'mailto'
 

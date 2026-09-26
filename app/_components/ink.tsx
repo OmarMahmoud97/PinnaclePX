@@ -19,7 +19,7 @@ function inkColourOf(canvas: HTMLCanvasElement): InkColour | undefined {
   const hex = getComputedStyle(canvas).getPropertyValue('--ink').trim()
   if (hex === '') return undefined
   const value = Number.parseInt(hex.slice(1), 16)
-  if (!/^#[0-9a-f]{6}$/i.test(hex) || Number.isNaN(value)) {
+  if (!/^#[0-9a-f]{6}$/i.test(hex)) {
     throw new Error(`--ink must be a six-digit hex colour, not "${hex}"`)
   }
   return { r: ((value >> 16) & 255) / 255, g: ((value >> 8) & 255) / 255, b: (value & 255) / 255 }

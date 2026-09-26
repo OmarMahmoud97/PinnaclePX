@@ -40,9 +40,9 @@ import { type LenisClass, onActiveLenis } from '@/lib/motion/lenis'
 //                  hidden again. Otherwise it runs `arm` at once (the initial state), fires
 //                  `enter` when the group's top crosses CONFIG.motion.choreo.enterStart, and
 //                  fires `preempt` instead if anyone else sets data-inview first. Each handler
-//                  gets Tools: the group, its direct children as `items`, `finish(vars)` (tweens
+//                  gets Tools: the group's direct children as `items`, `finish(vars)` (tweens
 //                  the items to rest, clears transform and opacity by name, then settles),
-//                  `clear(targets)`, `settle()`, `rise()` (the default arm: the items set to
+//                  `rise()` (the default arm: the items set to
 //                  riseRem, scaleFrom and opacity 0, for a custom arm that adds to it) and
 //                  `settleS` (the CSS settle in seconds, for a custom pre-empt). Every handler
 //                  has a default (a rise from riseRem and scaleFrom over tweenS with staggerS;
@@ -73,7 +73,6 @@ import { type LenisClass, onActiveLenis } from '@/lib/motion/lenis'
 // an element the CSS reveal moves (a `[data-reveal] > *` child) loses the reveal's rise and snaps
 // when its styles clear. Own the group, or tween an element inside the reveal child instead.
 
-type TweenTarget = Parameters<Gsap['set']>[0]
 type TweenVars = Parameters<Gsap['set']>[1]
 type MatchMedia = ReturnType<Gsap['matchMedia']>
 type Trigger = ReturnType<ScrollTriggerStatic['create']>
@@ -90,11 +89,8 @@ export const CONDITIONS = {
 
 export type Tools = Readonly<{
   gsap: Gsap
-  group: HTMLElement
   items: HTMLElement[]
   finish: (vars?: TweenVars) => void
-  clear: (targets: TweenTarget, props?: string) => void
-  settle: () => void
   rise: () => void
   settleS: number
 }>
@@ -219,23 +215,14 @@ export function start(main: HTMLElement, { gsap, ScrollTrigger }: Motion): () =>
     markSettled()
   }
 
-  const clear = (targets: TweenTarget, props = CLEAR) => {
-    gsap.set(targets, { clearProps: props })
-  }
-
   const toolsFor = (group: HTMLElement): Tools => {
     const items = children(group)
     const tools: Tools = {
       gsap,
-      group,
       items,
-      clear,
       settleS: settleSeconds(),
       rise: () => {
         gsap.set(items, { y: remPx(choreo.riseRem), scale: choreo.scaleFrom, opacity: 0 })
-      },
-      settle: () => {
-        settle(group)
       },
       finish: (vars = {}) => {
         const { onComplete, ...rest } = vars

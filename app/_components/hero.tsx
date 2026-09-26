@@ -46,7 +46,7 @@ export function Hero() {
         {/* The clients' marks, in the hero's white so they read on the dark foot of the ground,
             and under them what they are: the disclosure sits with the logos, not sections away. */}
         <div className="flex flex-col gap-4">
-          <LogoMarquee className="text-surface" />
+          <LogoMarquee />
           <p className="text-center text-small text-surface/60">{LOGOS.caption}</p>
         </div>
       </div>
