@@ -206,7 +206,7 @@ export function SketchPane({
               {caption}
             </p>
           )}
-          <SketchChips answers={answers} answered={answered} chips={false} />
+          <SketchChips answers={answers} answered={answered} />
         </div>
       </div>
 

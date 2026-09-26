@@ -414,7 +414,6 @@ export function HowItWorksTrack({ heading, steps, actions }: Props) {
               answered={answeredAt(shown)}
               labels={WALKTHROUGH_LABELS}
               prefix="An example brief so far"
-              chipsClassName="hidden"
             />
           </div>
         </div>

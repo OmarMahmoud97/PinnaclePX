@@ -85,7 +85,7 @@ export function RealBuild() {
                 scrub is the only thing that ever transforms it. */}
             <div
               aria-hidden="true"
-              className="rail absolute top-4 bottom-4 left-[2.6rem] hidden w-0.5 rounded-full bg-on-surface/10 md:block"
+              className="absolute top-4 bottom-4 left-[2.6rem] hidden w-0.5 rounded-full bg-on-surface/10 md:block"
             >
               <div className="rail-fill absolute inset-0 origin-top rounded-full bg-brand-ink" />
             </div>
