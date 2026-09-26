@@ -5,6 +5,8 @@
 - Amends: ADR 0005 (item 3, the one GSAP leaf, which moved; item 6, ambient motion), ADR 0006
   (the loop is no longer in the hero), ADR 0026 (the refusal of ambient motion, for the hero
   only)
+- Amended by: ADR 0032 (decision 3, one canvas becomes two; the idle wander, which now resumes, 21
+  September 2026); ADR 0034 (decision 4, the hero's italic is now a true italic, 23 September 2026)
 
 ## Context
 

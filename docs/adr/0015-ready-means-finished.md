@@ -3,7 +3,8 @@
 - Status: accepted
 - Date: 4 September 2026
 - Amends: ADR 0009 (decision 1), ADR 0013 (decision 1)
-- Amended by: ADR 0037 (decision 5, 24 September 2026)
+- Amended by: ADR 0017 (decisions 2 and 3, 4 September 2026); ADR 0018 (decision 4, 4 September
+  2026); ADR 0037 (decision 5, 24 September 2026)
 
 ## Context
 

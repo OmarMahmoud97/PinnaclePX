@@ -2,6 +2,9 @@
 
 - Status: accepted
 - Date: 4 September 2026
+- Amended by: ADR 0024 (decision 5, a template's utilities compile into `templates/tailwind.css`,
+  not the site's stylesheet, 5 September 2026); ADR 0034 (decision 3, Geist is retired, so the two
+  families fall back to the site's face, Mona Sans, 23 September 2026)
 
 ## Context
 

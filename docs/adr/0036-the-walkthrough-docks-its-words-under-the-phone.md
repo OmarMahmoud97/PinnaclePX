@@ -7,7 +7,10 @@
   rise inside `#how-it-works` below `md`)
 - Amended by: ADR 0037 (decisions 3 and 10, the steps' order, 25 September 2026)
 - Keeps: ADR 0025 decisions 1, 3, 4 and 5 whole; ADR 0034 decisions 5, 8 and 12 and constraint 36
-  in `app/_components/motion/index.ts`; the walkthrough from `md` up as it was
+  in `app/_components/motion/index.ts`; the walkthrough from `md` up as it was. Corrected 26
+  September 2026: ADR 0034 numbers its decisions 1 to 11; the 8 and 12 here are its decision 9's
+  fence inside `#how-it-works` (the redesign plan's D8) and its decision 7, the caps (the plan's
+  D12)
 - Plan: `docs/start-page-redesign-plan.md`, section 18 (package K1)
 
 ## Context
@@ -108,7 +111,10 @@ was closed, a walk test, and reading the small viewport.
     steps, their copy, their order, the progress line and the one `aria-hidden` frame are
     unchanged, and hidden steps are opacity 0, so a screen reader still reads all five in order.
     Amended 25 September 2026 (ADR 0037, Release 2): the steps' copy and order now follow
-    `/start`'s questions; the dock, the stops and the progress line are unchanged.
+    `/start`'s questions; the dock, the stops and the progress line are unchanged. Corrected 26
+    September 2026: the fence is ADR 0034 decision 9 (the redesign plan's D8; ADR 0034's decision 8
+    is the header's `data-over-dark`), and the caps are ADR 0034 decision 7 (the plan's D12); ADR
+    0034 has no decision 12.
 
 ## Consequences
 
@@ -170,7 +176,8 @@ was closed, a walk test, and reading the small viewport.
   with the day's other work.
 - **Owner decisions carried.** The stillness between stops: for 144 px of scroll only the phone
   moves; if it feels stuck, the lever is `--walk-rest`, and scroll snapping stays refused (ADR
-  0034 decision 12). The dock itself over the deck.
+  0034 decision 12). The dock itself over the deck. Corrected 26 September 2026: the refusal of
+  scroll snapping is ADR 0034 decision 5; ADR 0034 has no decision 12.
 - **Left for a later pass.** A phone in landscape gets the `md` layout, whose pinned panel is
   648 px tall against a 390 or 430 px screen. The first step's body says "the sketch beside you",
   where on a phone the sketch is above it.
