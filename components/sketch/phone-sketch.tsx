@@ -20,9 +20,8 @@ type Props = {
   zoom?: number | undefined
 }
 
-// The same answers in a phone frame, at a phone's proportions (9:19), laid over the browser's
-// corner the way a mock-up board shows both, or on its own at a larger zoom where the browser
-// frame has no room. Below the hero the page carries on: three feature rows and a footer.
+// The answers in a phone frame, at a phone's proportions (9:19). Below the hero the page carries
+// on: three feature rows and a footer.
 export function PhoneSketch({ model, zoom = 1 }: Props) {
   const { company } = model
 

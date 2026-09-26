@@ -43,7 +43,7 @@ export const SITE = {
   bookingUrl: 'https://cal.com/pinnaclepx/quick-chat',
 } as const
 
-// A price as the page prints it: "£4,750" while the studio is not VAT registered; the gross
+// A price as the page prints it: "£1,679" while the studio is not VAT registered; the gross
 // figure with "including VAT" once it is, because the audience is mixed and mostly cannot
 // recover VAT, so an ex-VAT figure would mislead (CAP 3.18). Rounded to the pound.
 type VatState = Readonly<{ vatRegistered: boolean; vatRate: number }>

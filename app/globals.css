@@ -633,8 +633,8 @@ html.lenis {
     transition-property: color, background-color, border-color, opacity !important;
   }
 
-  /* The header's ask: the list above puts its ink hold on `color` by position, which would
-     delay the header's own flip; instant is the readable answer here. */
+  /* The header's ask: under reduced motion it keeps only opacity (app/_styles/header.css),
+     which by position takes the ask's --ask-ink hold; zeroed here, the hover dims at once. */
   .header-ask {
     transition-duration: 0s;
     transition-delay: 0s;

@@ -48,9 +48,9 @@ async function overlap(
   )
 }
 
-// Safari's first screen on the common iPhones with its bars showing. There the phone in the
-// sketch drops to half size (app/_styles/start.css), so the question's first control is on
-// screen above the ask on arrival, not hidden under it.
+// Safari's first screen on the common iPhones with its bars showing. There the draft's frame is
+// capped at 0.3 (app/_styles/start-draft.css) and the region's padding tightens (start.css), so
+// the question's first control is on screen above the ask on arrival, not hidden under it.
 test.describe('on a 390 by 664 phone', () => {
   test.use({ viewport: { width: 390, height: 664 } })
 

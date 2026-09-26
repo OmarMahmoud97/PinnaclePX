@@ -304,7 +304,7 @@ describe('the headline and the notes', () => {
     )
     expect(notesOf(draftModelFrom(ANSWERS, 0, NO_EXTRAS), false)).toEqual(new Set(['mark', 'art']))
     // The finished draft: the signature, and the face if it is missing; the picture's note gives
-    // way to the signature, which covers it in the phone's window.
+    // way to the signature (ADR 0037).
     expect(notesOf(DRAFT, true)).toEqual(new Set(['sign', 'face']))
     expect(notesOf(DRAFT, false)).toEqual(new Set(['sign']))
   })

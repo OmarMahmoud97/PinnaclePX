@@ -17,7 +17,8 @@ export function Words({ text }: { text: string }) {
 // A sentence with one word set apart in an <em>, the way the reference sets its headline: the
 // promise is in that word. The sentence stays whole in its copy module for the title and the
 // copy tests, and the em takes the serif italic by CSS (app/globals.css, .emphasis em), so the
-// text a test reads by name is unchanged. Used by the hero's H1 and the walkthrough's H2.
+// text a test reads by name is unchanged. Used by the hero's H1, the walkthrough's H2, and the
+// H1s of /start's questions and its done view.
 export function emphasised(text: string, word: string): ReactNode {
   const at = text.indexOf(word)
   if (at < 0) return text

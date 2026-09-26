@@ -127,9 +127,9 @@ export function SketchPane({
   // nothing it shows then is news: the draft's and the whisper's entrances are finished before
   // the first paint (plan 3.1), so only what an answer brings later lands. Nothing in them loops
   // (plan 6.3), so each has an end to finish at. A frame the screen's width had hidden starts its
-  // entrances afresh the moment it shows, so a tablet turned across lg, or a phone across 36rem,
-  // would watch the board land again: each frame boundary is watched, and the entrances are
-  // finished again as it is crossed.
+  // entrances afresh the moment it shows, so a tablet turned across lg, or a window widened across
+  // 80rem, would watch the board or the phone over its corner land again: each frame boundary is
+  // watched, and the entrances are finished again as it is crossed.
   const region = useRef<HTMLElement>(null)
   useLayoutEffect(() => {
     const finish = () => {

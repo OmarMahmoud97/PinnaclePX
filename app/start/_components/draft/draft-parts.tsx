@@ -171,7 +171,8 @@ export function Cta({ focus }: { focus: Focus }) {
 
 // The mood art for the look, or their first photo in its place, with the note that says what the
 // photos will be. Keyed by what it shows, so a new look fades in over the last. The finished
-// draft is signed in its corner, where the desk frame shows it; the phone's window signs its own.
+// draft is signed in its corner, where the desk frame shows it; the phone frame hides its notes,
+// the signature among them.
 export function Art({ model, focus, face }: FacedProps) {
   const photo = model.photos[0]
   const noted = notesOf(model, face.missing).has('art')

@@ -12,7 +12,7 @@ import { CONFIG } from '@/lib/config'
 // stay upright (plan 5.2); at most two show at once.
 export const DRAFT_NOTES = {
   // Where the sentence will land, before a character is typed. The no-break space keeps "set
-  // large" together, so the note breaks after the comma in both frames, as the mockups draw it.
+  // large" together, so the note breaks after the comma, as the mockups draw it.
   sentence: 'your sentence, set large',
   // Beside the mark, before the business name.
   name: 'your name',

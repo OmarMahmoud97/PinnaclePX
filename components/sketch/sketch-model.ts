@@ -29,7 +29,7 @@ const DARK_SCHEME = {
   '--sketch-dash': 'color-mix(in oklab, var(--surface) 30%, transparent)',
 }
 
-// Object URLs of the pictures the visitor has added, held by the flow rather than the answers.
+// URLs of the pictures to draw, passed in by the caller rather than read from the answers.
 export type SketchFiles = Readonly<{ logo: string | null; photos: readonly string[] }>
 
 export type SketchModel = Readonly<{

@@ -14,7 +14,7 @@ import { SITE } from '@/lib/site'
 // the caption, and the clients' logos under it, on the dark part whatever the viewport's height.
 // The ground is a layer of its own, first in the section, because it rises as the hero scrolls
 // out (app/globals.css, .hero-ground), and the ink and the content stay put over it.
-// The headline is server-rendered and is the largest contentful paint. Nothing between it and
+// The headline is server-rendered and is the LCP on desktop (ADR 0031). Nothing between it and
 // the section may create a stacking context (a transform, an opacity, a filter, a z-index), or
 // its colour flip over the ink (app/globals.css, .hero-heading) switches off. The prompt box is
 // the first question.
