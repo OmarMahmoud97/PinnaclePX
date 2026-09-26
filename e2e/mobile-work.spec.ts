@@ -38,12 +38,12 @@ test('the work band is one rail, and every site is a swipe away', async ({ page 
   await expect.poll(() => left(0)).toBe(24)
   await links.first().focus()
   await page.keyboard.press('Tab')
-  await expect(tiles.nth(1).getByRole('radio', { name: 'Phone' })).toBeFocused()
+  await expect(tiles.nth(1).getByRole('radio', { name: 'Desktop' })).toBeFocused()
   await expect.poll(() => left(1)).toBe(24)
   await tiles.first().scrollIntoViewIfNeeded()
-  await tiles.first().getByText('Desktop', { exact: true }).click()
-  await expect(tiles.first().locator('[data-frame="browser"]')).toBeVisible()
-  await expect(tiles.first().locator('[data-frame="phone"]')).toBeHidden()
+  await tiles.first().getByText('Phone', { exact: true }).click()
+  await expect(tiles.first().locator('[data-frame="phone"]')).toBeVisible()
+  await expect(tiles.first().locator('[data-frame="browser"]')).toBeHidden()
 })
 
 // The rail scrolls inside itself: its cross axis is hidden with nothing overflowing it, so a
