@@ -33,8 +33,6 @@ describe('blobUrlsIn', () => {
         answers,
         logo: {
           polarity: 'mixed',
-          lightness: 0.5,
-          opaqueBackdrop: false,
           image: { src: `${BLOB}/logo-rasters/${SHA}.png`, width: 200, height: 100 },
         },
         imagery: {

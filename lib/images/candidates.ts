@@ -3,8 +3,6 @@ import * as z from 'zod'
 // A photograph Pexels offers for a query: enough to judge it, to fetch it, and to credit it.
 export type Candidate = Readonly<{
   id: number
-  width: number
-  height: number
   alt: string
   photographer: string
   photographerUrl: string
@@ -29,8 +27,6 @@ const responseSchema = z.object({ photos: z.array(photoSchema) })
 export function candidatesFrom(body: unknown): Candidate[] {
   return responseSchema.parse(body).photos.map((photo) => ({
     id: photo.id,
-    width: photo.width,
-    height: photo.height,
     alt: photo.alt ?? '',
     photographer: photo.photographer,
     photographerUrl: photo.photographer_url,

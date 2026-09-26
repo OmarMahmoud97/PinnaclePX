@@ -1,7 +1,7 @@
-import type { Oklch } from 'culori'
+import { type Oklch, wcagContrast } from 'culori'
 import { CONFIG } from '@/lib/config'
 import { AppError } from '@/lib/errors'
-import { contrastOf, type OklchSet, solvePairs, solveText } from '@/lib/tokens/contrast'
+import { type OklchSet, solvePairs, solveText } from '@/lib/tokens/contrast'
 import { TOKEN_NAMES } from '@/lib/tokens/types'
 
 const OPTIONS = CONFIG.contrast
@@ -17,7 +17,7 @@ describe('solveText', () => {
   it('moves the text away from the background until the pair passes', () => {
     const solved = solveText(colour(0.6), colour(0.98), OPTIONS)
     expect(solved.l).toBeLessThan(0.6)
-    expect(contrastOf(solved, colour(0.98))).toBeGreaterThanOrEqual(OPTIONS.minRatio)
+    expect(wcagContrast(solved, colour(0.98))).toBeGreaterThanOrEqual(OPTIONS.minRatio)
   })
 
   it('flips to the other side when the near side cannot reach the ratio', () => {
@@ -25,7 +25,7 @@ describe('solveText', () => {
     const fill = colour(0.8, 0.17, 95)
     const solved = solveText(colour(1), fill, OPTIONS)
     expect(solved.l).toBeLessThan(0.5)
-    expect(contrastOf(solved, fill)).toBeGreaterThanOrEqual(OPTIONS.minRatio)
+    expect(wcagContrast(solved, fill)).toBeGreaterThanOrEqual(OPTIONS.minRatio)
   })
 
   it('keeps the hue of the text it moves', () => {
@@ -55,8 +55,8 @@ describe('solvePairs', () => {
       ],
       OPTIONS,
     )
-    expect(contrastOf(solved['brand-deeper'], solved.surface)).toBeGreaterThanOrEqual(4.5)
-    expect(contrastOf(solved['on-brand'], solved['brand-deeper'])).toBeGreaterThanOrEqual(4.5)
+    expect(wcagContrast(solved['brand-deeper'], solved.surface)).toBeGreaterThanOrEqual(4.5)
+    expect(wcagContrast(solved['on-brand'], solved['brand-deeper'])).toBeGreaterThanOrEqual(4.5)
   })
 
   it('leaves tokens not in any pair alone', () => {

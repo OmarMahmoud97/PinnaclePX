@@ -14,10 +14,6 @@ export const LOGO_POLARITIES = [
 
 export type LogoAnalysis = Readonly<{
   polarity: LogoPolarity
-  // Alpha-weighted mean perceptual lightness (CIE L*, 0 to 1) of the visible artwork.
-  lightness: number
-  opaqueBackdrop: boolean
-  // The normalised raster on Blob, or null when the file could not be read and the template
-  // shows the wordmark instead.
+  // The normalised raster on Blob.
   image: Readonly<{ src: string; width: number; height: number }> | null
 }>
