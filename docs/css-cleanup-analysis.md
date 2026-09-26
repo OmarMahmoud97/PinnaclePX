@@ -177,6 +177,8 @@ the wording was changed. Until section C lands, that is the rule for every note 
 | C. Excluding `docs/`        | Not done — still blocked   | Unchanged: the `--breakpoint-xl` dependency has to be made explicit first. Writing this document proved the point, adding 227 bytes of permanently unused CSS until the wording was changed; see the note under "Rejected".                              |
 | D. The 8 rem anchor landing | Not done — owner decision  | Unchanged. Nothing was touched.                                                                                                                                                                                                                          |
 
+Since this table: on 23 September 2026 ADR 0034 (`31a591e`) removed five of section A's recipes (`cellGrid`, `hairlineCell`, `stepRow`, `stepNumber`, `trailingNote`) and, with `stepNumber`, the note section B left in `section-styles.ts` (`app/_components/section-styles.ts:7-9`). On 24 September 2026 `app/globals.css` took `@source not '../docs';` (`e478f06`, ADR 0035 decision 28) before the `--breakpoint-xl` dependency was made explicit, and it has no `@source not '../e2e';` line. No stylesheet defines `--breakpoint-xl` since, so `max-w-(--breakpoint-xl)` in `templates/t03-meridian` and `templates/t04-atlas` sets no maximum width, the regression section C measured.
+
 ### How A and B were verified
 
 The stylesheet is **byte-identical** to the pre-change build — same content hash (`0uu9hscc5jr7c.css`), same 80,607 bytes — so not one byte of CSS moved.
@@ -195,6 +197,6 @@ Four e2e accessibility tests fail, and they **failed identically on `a898a24` be
 
 ## What is left
 
-1. **Section C**, in two steps: make the `--breakpoint-xl` dependency explicit, then add the two `@source not` lines and re-run the cross-route comparison.
+1. **Section C**: `docs/` left the scan on 24 September 2026 before its first step, so the Atlas and Meridian containers have lost their 1,280 px cap. Left: make the `--breakpoint-xl` dependency explicit, then add `@source not '../e2e';` and re-run the cross-route comparison.
 2. **Section D** stays open as an observation until the owner rules on 4 rem against 8 rem.
-3. The a11y suite, so it can settle on a page with an infinite animation.
+3. The a11y suite: done on 7 September 2026 (`967bcdd`). `settled()` in `e2e/a11y.spec.ts` waits only for animations that end, so the scan runs with the logo marquee on screen.

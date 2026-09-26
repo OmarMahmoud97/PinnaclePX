@@ -31,7 +31,7 @@ they are in the commit message.
 ## 3. Run what CI runs
 
 The hooks cover less than CI does, so a green commit can still fail the build. The gaps are
-`knip`, the template guards, and `build` plus `budget`.
+`knip`, the template guards, `build` plus `budget`, and `e2e`.
 
 | Runs where      | Checks                                                     |
 | --------------- | ---------------------------------------------------------- |
@@ -52,6 +52,7 @@ comments, so a hex code written in a comment fails the build:
 
 ```sh
 grep -rEn "#[0-9a-fA-F]{3,8}\b" templates/ --include="*.ts" --include="*.tsx"
+grep -rEn "\b(bg|text|border|from|via|to|ring|fill|stroke)-(slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-[0-9]{2,3}\b" templates/ --include="*.ts" --include="*.tsx"
 ```
 
 ## 4. Commit and push
