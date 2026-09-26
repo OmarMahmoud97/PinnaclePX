@@ -38,7 +38,6 @@
 
   --ease-enter: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-standard: cubic-bezier(0.2, 0, 0, 1);
-  --animate-question-in: question-in var(--motion-enter) var(--ease-enter) both;
   --animate-sketch-in: sketch-in var(--motion-settle) var(--ease-enter) both;
   --animate-logo-marquee: logo-marquee 20s linear infinite;
 

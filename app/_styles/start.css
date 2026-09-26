@@ -676,8 +676,7 @@ html:has(.start-stage) body {
   color: #fff;
 }
 
-[data-style='minimal'] > .start-specimen,
-.mood-art:not([data-style]) > .start-specimen {
+[data-style='minimal'] > .start-specimen {
   color: var(--on-surface);
 }
 

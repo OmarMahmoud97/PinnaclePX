@@ -369,7 +369,6 @@
  * width: 11 px of tag on screen, never 7.
  */
 .draft {
-  --draft-zoom: 1;
   --draft-line: calc(1.5px / var(--draft-zoom));
   --draft-handle: calc(5px / var(--draft-zoom));
 }
@@ -633,7 +632,7 @@
   display: none;
 }
 
-.draft-phone :is(.draft-tag, .draft-note, .draft-whole),
+.draft-phone :is(.draft-tag, .draft-note),
 .draft-phone [data-now]::after {
   display: none;
 }
