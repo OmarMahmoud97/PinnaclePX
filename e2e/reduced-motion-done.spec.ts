@@ -2,6 +2,7 @@ import { expect, type Page, test } from '@playwright/test'
 import { SEND_FAILED } from '@/app/start/_components/start-copy'
 import { CONFIG } from '@/lib/config'
 import {
+  answerSend,
   interceptStatus,
   openDone,
   refuseSends,
@@ -64,14 +65,7 @@ test('a send the server took fills the page with its ink by colour', async ({ pa
   await interceptStatus(page, SLUG, [statusFor(SLUG, 'building')])
   // The submission, answered in the browser as the Server Action replies, so nothing is sent.
   const deadlineAt = new Date(Date.now() + CONFIG.deadline.totalMs).toISOString()
-  const reply = { a: { ok: true, value: { slug: SLUG, deadlineAt, conceptCount: 3 } }, f: '' }
-  await page.route(
-    (url) => url.pathname === '/start',
-    (route) =>
-      route.request().method() === 'GET'
-        ? route.fallback()
-        : route.fulfill({ contentType: 'text/x-component', body: `0:${JSON.stringify(reply)}\n` }),
-  )
+  await answerSend(page, { ok: true, value: { slug: SLUG, deadlineAt, conceptCount: 3 } })
   await withDraft(page, { reached: 4 })
   await page.goto('/start?q=5')
   await expect(page.locator('main#main h1')).toHaveText('Where should we send them?')

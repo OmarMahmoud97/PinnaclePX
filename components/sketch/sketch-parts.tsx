@@ -3,10 +3,6 @@ import type { SketchModel } from '@/components/sketch/sketch-model'
 import type { VisualStyle } from '@/lib/brief/styles'
 import { cn } from '@/lib/cn'
 
-// The grey bar is the phone frame's, which draws it as its speaker; the parts use it, and the
-// walkthrough's frame takes it from here with the rest of its parts.
-export { Bar }
-
 // The phone frame (phone-sketch.tsx) draws these parts. Parts carry a data-part name
 // so the hero's build can pair each with its counterpart on the finished page.
 

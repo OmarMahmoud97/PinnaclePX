@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+import { questionLines } from '@/app/_components/copy-corpus'
 import {
   clauseOf,
   doneTitle,
@@ -6,7 +7,6 @@ import {
   lineText,
   meterShare,
   meterWords,
-  type Notice,
   QUESTIONS,
   questionTitle,
   receiptsFor,
@@ -29,21 +29,6 @@ const ANSWERED: Answers = {
   company: 'Gibbs',
   name: 'Sam',
   email: 'sam@gibbs.example',
-}
-
-// Every line a question shows about the answers: its helper and each receipt, for every way a
-// visit can begin and every notice.
-function linesFor(answers: Answers): string[] {
-  const handOffs: readonly HandOff[] = ['none', 'sentence', 'short']
-  const notices: readonly (Notice | null)[] = [null, 'expired', 'notFound', 'pending']
-  return QUESTION_IDS.flatMap((id) => [
-    lineText(QUESTIONS[id].helper(answers)),
-    ...handOffs.flatMap((handOff) =>
-      notices.flatMap((notice) =>
-        receiptsFor(id, { answers, handOff, notice }).map((receipt) => lineText(receipt.line)),
-      ),
-    ),
-  ])
 }
 
 describe('the questions', () => {
@@ -205,7 +190,7 @@ describe('the questions with names at their edges', () => {
 
   it('never leaves a slot empty or unfilled', () => {
     for (const company of SHAPES) {
-      for (const line of linesFor({ ...ANSWERED, company })) {
+      for (const line of questionLines({ ...ANSWERED, company })) {
         expect(line, line).not.toMatch(/undefined|null|NaN|\s{2}|\s[.,:?]|“”|^\s|\s$/)
       }
     }

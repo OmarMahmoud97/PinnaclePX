@@ -1,7 +1,6 @@
-import { PhoneFrame } from '@/components/sketch/phone-frame'
+import { Bar, PhoneFrame } from '@/components/sketch/phone-frame'
 import type { SketchModel } from '@/components/sketch/sketch-model'
 import {
-  Bar,
   CtaPill,
   Headline,
   ImageBlock,

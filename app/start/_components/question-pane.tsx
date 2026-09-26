@@ -11,12 +11,12 @@ import {
   type SubmitError,
   validateQuestion,
 } from '@/app/start/_components/brief-reducer'
+import { LineWords } from '@/app/start/_components/line-words'
 import { failedPictureAt } from '@/app/start/_components/picture-holds'
 import { hrefFor } from '@/app/start/_components/start-address'
 import {
   CHANGE_IT,
   type HandOff,
-  type Line,
   lineText,
   type Notice,
   QUESTIONS,
@@ -95,18 +95,6 @@ function ringOf(control: HTMLElement, form: HTMLElement): HTMLElement {
   return control
 }
 
-// Words with the visitor's own set apart and isolated, so a name in another script never turns
-// the sentence around it (docs/start-page-journey-plan.md, 7.7).
-function Words({ line, echoClassName }: { line: Line; echoClassName?: string }) {
-  return (
-    <>
-      {line.before}
-      {line.echo !== '' && <bdi className={echoClassName}>{line.echo}</bdi>}
-      {line.after}
-    </>
-  )
-}
-
 // A notice is news, so a screen reader is told it as the question arrives: its words follow a
 // frame late into a status line already in the page, which is how a live region is heard.
 function Said({ text }: { text: string }) {
@@ -139,7 +127,7 @@ function ReceiptLine({ receipt, onChange, inert }: ReceiptProps) {
       {receipt.news ? (
         <Said text={lineText(receipt.line)} />
       ) : (
-        <Words line={receipt.line} echoClassName="font-semibold" />
+        <LineWords line={receipt.line} className="font-semibold" />
       )}
       {receipt.change && (
         <>
@@ -421,7 +409,7 @@ function Question({
           inert={quiet('lead')}
           className={`start-helper ${sectionLead} wrap-anywhere`}
         >
-          <Words line={question.helper(answers)} />
+          <LineWords line={question.helper(answers)} />
         </p>
 
         <div data-rise="controls" data-part="controls" inert={quiet('controls')}>

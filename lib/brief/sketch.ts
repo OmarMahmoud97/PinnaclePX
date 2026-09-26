@@ -2,6 +2,7 @@ import { toSixDigitHex } from '@/lib/brief/hex'
 import { paletteFor } from '@/lib/brief/palettes'
 import type { ColoursAnswer } from '@/lib/brief/schema'
 import { CONFIG } from '@/lib/config'
+import type { Scheme } from '@/lib/tokens/types'
 
 // Everything the live sketch shows is computed here from the visitor's own answers. Nothing is
 // invented: an empty answer produces an empty string, and the sketch draws a grey bar instead.
@@ -36,8 +37,6 @@ export function tabLabelFrom(company: string): string {
 export function brandHexFrom(colours: ColoursAnswer): string | null {
   return colours.kind === 'palette' ? paletteFor(colours.paletteId).hex : toSixDigitHex(colours.hex)
 }
-
-type Scheme = 'light' | 'dark'
 
 type Tints = Readonly<{ strong: string; onStrong: string; soft: string; glow: string }>
 

@@ -131,7 +131,7 @@ const SAMPLE_ANSWERS: readonly Answers[] = [
 ]
 const HAND_OFFS: readonly HandOff[] = ['none', 'sentence', 'short']
 const SAMPLE_NOTICES: readonly (Notice | null)[] = [null, ...(Object.keys(NOTICES) as Notice[])]
-const questionLines = (answers: Answers) =>
+export const questionLines = (answers: Answers) =>
   QUESTION_IDS.flatMap((id) => [
     lineText(QUESTIONS[id].helper(answers)),
     ...HAND_OFFS.flatMap((handOff) =>

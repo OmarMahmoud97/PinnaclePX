@@ -1,5 +1,5 @@
 import { CONFIG } from '@/lib/config'
-import type { Pixels } from '@/lib/logo/polarity'
+import { linear, type Pixels } from '@/lib/logo/polarity'
 
 // The colour a logo is drawn in, offered at the colour question as "Your logo's colour"
 // (docs/start-page-journey-plan.md, OD12), only when the artwork has real colour: a black, white
@@ -9,12 +9,7 @@ import type { Pixels } from '@/lib/logo/polarity'
 
 type Lab = Readonly<{ l: number; a: number; b: number }>
 
-// sRGB channel to linear light, and back.
-function linear(channel: number): number {
-  const c = channel / 255
-  return c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4
-}
-
+// Linear light back to an sRGB channel (lib/logo/polarity.ts's linear goes the other way).
 function gamma(value: number): number {
   const c = Math.min(Math.max(value, 0), 1)
   return c <= 0.0031308 ? 12.92 * c : 1.055 * c ** (1 / 2.4) - 0.055
