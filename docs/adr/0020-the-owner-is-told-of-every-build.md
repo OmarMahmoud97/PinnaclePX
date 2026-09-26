@@ -3,6 +3,8 @@
 - Status: accepted
 - Date: 4 September 2026
 - Amends: ADR 0013 (decision 1)
+- Amended by: ADR 0037 (decision 3, 24 September 2026, its decision 10 emails a partial page to the
+  visitor too, amending ADR 0015 decision 5, which decision 3 cites)
 
 ## Context
 

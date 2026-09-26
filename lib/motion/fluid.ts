@@ -10,7 +10,7 @@ type Wave = readonly [amplitude: number, frequency: number, phase: number]
 // radius factor (4 / height is about 2 * sqrt(height) pixels across), how hard pointer movement
 // pushes the fluid, the pressure passes a frame, the fixed time step, and where the ink
 // wanders while the pointer is still, along with how long it waits before it does.
-export type FluidOptions = Readonly<{
+type FluidOptions = Readonly<{
   colour: InkColour
   resolution: number
   splat: number

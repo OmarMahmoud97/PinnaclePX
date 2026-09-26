@@ -8,7 +8,7 @@ import { PRICE } from '@/lib/site'
 // quality word about either route. Four rows, not six: the two that were cut said nothing rows
 // one and two and the Connected cell do not. The rows about ownership, care and staged payment
 // join once the owner has recorded those decisions (docs/home-page-content-plan.md, 3.9).
-export type OptionRow = Readonly<{ question: string; builder: string; studio: string }>
+type OptionRow = Readonly<{ question: string; builder: string; studio: string }>
 
 export const YOUR_OPTIONS = {
   heading: 'Doing it yourself, or asking us.',

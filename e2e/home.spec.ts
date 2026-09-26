@@ -98,14 +98,18 @@ test('the work band shows six dated captures, each linking to the live site', as
   }
   await expect(work.getByRole('img')).toHaveCount(6)
   await expect(work.getByText(/, \d{1,2} [A-Z][a-z]+ \d{4}$/)).toHaveCount(6)
-  // Each card switches to the desktop capture, and back, without a script of its own.
+  // Each card opens on the desktop capture and switches to the phone, and back, without a script
+  // of its own.
   const first = cards.first()
-  await first.getByText('Desktop', { exact: true }).click()
   await expect(first.getByRole('radio', { name: 'Desktop' })).toBeChecked()
   await expect(first.locator('[data-frame="browser"]')).toBeVisible()
   await expect(first.locator('[data-frame="phone"]')).toBeHidden()
   await first.getByText('Phone', { exact: true }).click()
+  await expect(first.getByRole('radio', { name: 'Phone' })).toBeChecked()
   await expect(first.locator('[data-frame="phone"]')).toBeVisible()
+  await expect(first.locator('[data-frame="browser"]')).toBeHidden()
+  await first.getByText('Desktop', { exact: true }).click()
+  await expect(first.locator('[data-frame="browser"]')).toBeVisible()
 })
 
 test('about makes no claim about agencies and counts the sites built', async ({ page }) => {
@@ -176,8 +180,8 @@ test('a keyboard focus below the fold lands on screen with its tile shown', asyn
   await page.getByRole('link', { name: 'Scroll to the next section' }).focus()
   await page.keyboard.press('Tab')
   const tile = page.locator('#work ul[data-choreo="tiles"]').getByRole('listitem').first()
-  await expect(tile.getByRole('radio', { name: 'Phone' })).toBeFocused()
-  await expect(tile.getByText('Phone', { exact: true })).toBeInViewport()
+  await expect(tile.getByRole('radio', { name: 'Desktop' })).toBeFocused()
+  await expect(tile.getByText('Desktop', { exact: true })).toBeInViewport()
   await expect(tile).toHaveCSS('opacity', '1')
 })
 

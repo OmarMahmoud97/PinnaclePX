@@ -33,9 +33,6 @@
   --text-hero: clamp(2.25rem, 1.25rem + 3.7vw, 5.625rem);
   --text-hero--line-height: 1;
   --text-hero--letter-spacing: -0.025em;
-  /* The lift under the header's surface: short and soft, so it separates the bar from the hero's
-     ink and gradient and all but vanishes on the white sections. Site-only, like --text-hero. */
-  --shadow-header: 0 12px 32px -16px rgb(2 6 23 / 0.16);
 }
 
 /*
@@ -108,13 +105,10 @@
   --color-brand-ink: var(--brand-ink);
   --color-surface-wash: var(--surface-wash);
   --color-surface-wash-deep: var(--surface-wash-deep);
-  --color-ink-card: var(--ink-card);
-  --color-ink-raised: var(--ink-raised);
   --color-job-found: var(--job-found);
   --color-job-trusted: var(--job-trusted);
   --color-job-answered: var(--job-answered);
   --color-job-reachable: var(--job-reachable);
-  --color-wordmark: var(--wordmark);
   --font-emphasis: var(--font-site-serif), 'Iowan Old Style', Georgia, serif;
   --shadow-card: var(--shadow-card);
   --shadow-card-ink: var(--shadow-card-ink);
@@ -639,8 +633,8 @@ html.lenis {
     transition-property: color, background-color, border-color, opacity !important;
   }
 
-  /* The header's ask: the list above puts its ink hold on `color` by position, which would
-     delay the header's own flip; instant is the readable answer here. */
+  /* The header's ask: under reduced motion it keeps only opacity (app/_styles/header.css),
+     which by position takes the ask's --ask-ink hold; zeroed here, the hover dims at once. */
   .header-ask {
     transition-duration: 0s;
     transition-delay: 0s;
@@ -835,10 +829,6 @@ details.faq[open]::details-content {
   .hero-heading {
     background-image: linear-gradient(to bottom, #e6f0f8, #b1cee6);
   }
-}
-
-.hero-heading em {
-  font-weight: 400;
 }
 
 /* Inside the blended layer white reads as black, and flips with the text. */

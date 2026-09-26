@@ -1,7 +1,6 @@
-import { oklch, parse } from 'culori'
+import { oklch, parse, wcagContrast } from 'culori'
 import { CONFIG } from '@/lib/config'
 import { AppError } from '@/lib/errors'
-import { contrastOf } from '@/lib/tokens/contrast'
 import { deriveTokens, parseBrand } from '@/lib/tokens/derive'
 import { type ContrastPair, type Scheme, TOKEN_NAMES } from '@/lib/tokens/types'
 
@@ -68,7 +67,7 @@ describe('deriveTokens', () => {
     it.each(CORPUS)('brings every pair to AA for %s', (hex) => {
       const tokens = deriveTokens(hex, scheme, EVERY_PAIR)
       for (const pair of EVERY_PAIR) {
-        const ratio = contrastOf(tokens[pair.text], tokens[pair.background])
+        const ratio = wcagContrast(tokens[pair.text], tokens[pair.background])
         expect(ratio, `${pair.text} on ${pair.background}`).toBeGreaterThanOrEqual(
           CONFIG.contrast.minRatio,
         )
@@ -100,8 +99,8 @@ describe('deriveTokens', () => {
   it('puts the page on a light surface in the light scheme and a dark one in the dark scheme', () => {
     const light = deriveTokens('#2f6f4e', 'light', EVERY_PAIR)
     const dark = deriveTokens('#2f6f4e', 'dark', EVERY_PAIR)
-    expect(contrastOf('#ffffff', light.surface)).toBeLessThan(1.15)
-    expect(contrastOf('#000000', dark.surface)).toBeLessThan(1.6)
+    expect(wcagContrast('#ffffff', light.surface)).toBeLessThan(1.15)
+    expect(wcagContrast('#000000', dark.surface)).toBeLessThan(1.6)
   })
 
   it('is deterministic', () => {

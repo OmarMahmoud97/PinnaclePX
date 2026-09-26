@@ -5,6 +5,7 @@ import { readModelCalls } from '@/lib/db/model-calls'
 import {
   markEmailSent,
   markOwnerNotified,
+  PROPERTY,
   readSubmissionWithLead,
   STAGES,
   type SubmissionRow,
@@ -20,14 +21,6 @@ import { statusOf } from '@/lib/preview/status'
 import { SITE } from '@/lib/site'
 
 type Outcome = Readonly<{ sent: boolean; reason?: string }>
-
-const STAGE_COLUMN = {
-  select: 'stageSelect',
-  tokens: 'stageTokens',
-  brief: 'stageBrief',
-  copy: 'stageCopy',
-  imagery: 'stageImagery',
-} as const
 
 async function load(slug: string) {
   const found = await readSubmissionWithLead(slug)
@@ -63,7 +56,7 @@ async function sendToVisitor(slug: string): Promise<Outcome> {
 }
 
 const fallbackStagesOf = (row: SubmissionRow) =>
-  STAGES.filter((stage) => row[STAGE_COLUMN[stage]] === 'fallback')
+  STAGES.filter((stage) => row[PROPERTY[stage]] === 'fallback')
 
 // The owner's notice, once: sent whenever there is a page, partial or not, because the owner
 // wants to know of every build and what it cost. Nothing is sent when nothing was built.

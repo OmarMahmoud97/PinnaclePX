@@ -1,3 +1,4 @@
+import type { SlotImage } from '@/lib/copy-slots/assets'
 import type { StageState } from '@/lib/db/schema'
 import type { Stage } from '@/lib/db/submissions'
 
@@ -37,10 +38,7 @@ type StageView = Readonly<{ state: StageState; atS: number | null }>
 
 // The picture a design's poster shows: the first image slot of its template. The credit is null
 // for a photograph of the visitor's own.
-type PhotoView = Readonly<{
-  src: string
-  credit: Readonly<{ photographer: string; url: string }> | null
-}>
+type PhotoView = Pick<SlotImage, 'src' | 'credit'>
 
 type ConceptView = ConceptStatus &
   Readonly<{

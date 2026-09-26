@@ -1,6 +1,6 @@
 # Porting a template from provided code
 
-How to turn a landing page the owner provides, as a GitHub repository or as pasted code, into one of the ten templates so that it looks exactly like the original and every word, picture and colour on it comes from the visitor's form. Written after `t02` to `t04` (ADR 0023), whose first attempt was rejected for looking nothing like its sources and whose second attempt was accepted after being checked against the sources section by section. Follow this in order; the checks at the end are the definition of done.
+How to turn a landing page the owner provides, as a GitHub repository or as pasted code, into a template so that it looks exactly like the original and every word, picture and colour on it comes from the visitor's form. Written after `t02` to `t04` (ADR 0023), whose first attempt was rejected for looking nothing like its sources and whose second attempt was accepted after being checked against the sources section by section. Follow this in order; the checks at the end are the definition of done.
 
 The two rules, in tension, that every decision serves:
 
@@ -51,7 +51,7 @@ The owner's own dev server usually holds port 3000; use 3001 for this project if
 - **Forms.** A source's contact or newsletter form posts to the owner's email as a mail message (`TemplateAssets.email`, the lead's address, read by the concept page); without an address the form leads to the page's ask. Never render a form that posts nowhere.
 - **Optional sections** are `Readonly<{...}> | null`, checked in `violations` only when present, absent from the copy schema, set null in `assemble`, and listed in the contract's `ModelSlot` exclusion so the guide never asks the model for them.
 
-The violations function uses `slotChecks` from `lib/copy-slots/checks.ts`. The contract (`contract.ts`) follows Aurora's shape: the zod schema (no lengths, the API takes none), the guide built from `PURPOSE` for the slots the model writes, `assemble`, the deterministic fallback proven over the corpus of briefs, and `defineContract`. Register the template in `templates/registry.ts` and `templates/render.tsx`, and move the registry test's "no contract" case to the next placeholder.
+The violations function uses `slotChecks` from `lib/copy-slots/checks.ts`. The contract (`contract.ts`) follows Aurora's shape: the zod schema (no lengths, the API takes none), the guide built from `PURPOSE` for the slots the model writes, `assemble`, the deterministic fallback proven over the corpus of briefs, and `defineContract`. Register the template in `templates/registry.ts` and `templates/render.tsx`. No placeholders are left: the set is eight (ADR 0038), held by `TemplateTuple` (`lib/copy-slots/template-meta.ts`) and `CONFIG.templates.count`, so a ninth widens both, and it needs an explicit cap on visits first, because the two-visit cap follows from eight templates at three a visit (ADR 0038, Consequences).
 
 ## 4. Build the sections, class for class
 

@@ -30,7 +30,6 @@ export function kickCurve(state: CurveState, direction: 1 | -1): CurveState {
   return { stretch: state.stretch, speed: state.speed + direction * curve.kick * OMEGA }
 }
 
-// What is drawn: the stretch, held inside the cap.
 export function drawnStretch(stretch: number): number {
   return Math.max(-curve.stretchCap, Math.min(curve.stretchCap, stretch))
 }

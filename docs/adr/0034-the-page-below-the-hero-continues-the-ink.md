@@ -10,8 +10,10 @@
   ADR 0031 (decision 4, the hero's italic is now a true italic)
 - Keeps: ADR 0031 and 0032 otherwise whole; the hero's composition, ramp, ink and headline
   fills, subject to the re-measure recorded in the consequences
-- Amended by: ADR 0037 (decision 3's italic rule on `/start`, and the pool's exemption from the
-  caps, which now covers the `/start` curve, 25 September 2026)
+- Amended by: ADR 0035 (decision 4, the last `ring-brand-deeper` on `/start` moves to `brand-ink`,
+  24 September 2026); ADR 0036 (decision 9, the panel's chrome on a phone and a CSS rise inside
+  `#how-it-works` below `md`, 24 September 2026); ADR 0037 (decision 3's italic rule on `/start`,
+  and the pool's exemption from the caps, which now covers the `/start` curve, 25 September 2026)
 - Plan: `docs/home-page-redesign-plan.md`, amended by the director on 23 September 2026 (A1 to
   A3)
 

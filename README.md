@@ -4,7 +4,7 @@ A lead-gen tool: answer a five-step form and receive a branded landing page prev
 
 ## Stack
 
-Next.js 16 App Router, React 19, TypeScript 5.9 (strict), Tailwind v4, Drizzle on Neon Postgres, Inngest v4, Vitest, Playwright, pnpm 10.
+Next.js 16 App Router, React 19, TypeScript 6.0 (strict), Tailwind v4, Drizzle on Neon Postgres, Inngest v4, Vitest, Playwright, pnpm 10.
 
 ## Getting started
 
@@ -27,11 +27,13 @@ Every environment variable is validated in `lib/env.ts` and the build fails fast
 | ------------------- | --------------------------------------- |
 | `pnpm dev`          | Start the dev server                    |
 | `pnpm build`        | Production build                        |
-| `pnpm typecheck`    | `tsc --noEmit` over the whole project   |
+| `pnpm start`        | Serve the production build              |
+| `pnpm typecheck`    | `next typegen`, then `tsc --noEmit`     |
 | `pnpm lint`         | ESLint (flat config, type-aware)        |
 | `pnpm format`       | Prettier write                          |
 | `pnpm format:check` | Prettier check                          |
 | `pnpm test`         | Vitest unit tests                       |
+| `pnpm test:watch`   | Vitest in watch mode                    |
 | `pnpm e2e`          | Playwright end-to-end tests             |
 | `pnpm knip`         | Unused files, exports, and dependencies |
 | `pnpm db:generate`  | Generate a Drizzle migration into `db/` |
@@ -44,10 +46,12 @@ app/          routes only (thin: validate, delegate, respond)
   _components/                 home page sections (private, not routable)
   start/                       the five questions on their own page, beside a live sketch
     _components/               flow, question pane, sketch, reducer, Server Action
-  examples/aurora/             the Aurora template with example content, for design review (noindex)
+  examples/                    the eight templates and the designs page with example content, for design review (noindex)
   preview/[slug]/              the shareable page: every design a submission built, and the call
   preview/[slug]/[templateId]/ one design, full page, rendered from the submission row (ADR 0009)
   api/upload/ api/inngest/     the Blob token route and the Inngest serve handler
+  api/status/[slug]/           a submission's status, for the done page, the designs page and a design opened before it is ready (ADR 0037)
+  privacy/                     the privacy notice (ADR 0014)
 components/   shared UI primitives
   ui/ brand/
   sketch/                      the live sketch: model, parts, browser and phone frames, chips
@@ -56,16 +60,16 @@ lib/          all application logic
   brief/ identity/ select/ tokens/ copy-slots/ preview/  pure modules (copy-slots holds the template contract, ADR 0009)
   analytics/                   client event names and the track() wrapper
   motion/                      the lazy GSAP loader and the reduced-motion hook (ADR 0005)
-  env.ts config.ts site.ts errors.ts log.ts cn.ts
-scripts/      bundle-budget.mjs, run after next build (pnpm budget)
-templates/    the ten landing page templates and their registry of metas and contracts (t01-aurora built, ADRs 0008 and 0009)
+  env.ts config.ts site.ts errors.ts log.ts cn.ts download.ts
+scripts/      bundle-budget.mjs, run after next build (pnpm budget); capture-work.mjs, imgstats.py, pool.mjs and template-compare.mjs, run by hand (pnpm capture:work, measure:colour, measure:ground, template:compare)
+templates/    the eight landing page templates and their registry of metas and contracts (ADRs 0008, 0009 and 0038)
 db/           generated SQL migrations (committed)
 tests/        integration tests and fixtures
 e2e/          Playwright specs
 docs/adr/     architecture decision records
 ```
 
-Import boundaries are enforced by ESLint: templates may import only `lib/tokens` and `lib/copy-slots`; `lib` never imports `app` or `templates`; pure modules never import IO modules.
+Import boundaries are enforced by ESLint: templates may import only `lib/tokens` and `lib/copy-slots`; `lib` never imports `app`, and imports nothing from `templates` but `templates/registry`; pure modules never import IO modules.
 
 ## Standards
 

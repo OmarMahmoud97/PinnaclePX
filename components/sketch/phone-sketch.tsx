@@ -1,8 +1,6 @@
-import type { ReactNode } from 'react'
-import { PhoneFrame } from '@/components/sketch/phone-frame'
+import { Bar, PhoneFrame } from '@/components/sketch/phone-frame'
 import type { SketchModel } from '@/components/sketch/sketch-model'
 import {
-  Bar,
   CtaPill,
   Headline,
   ImageBlock,
@@ -19,35 +17,30 @@ type Props = {
   model: SketchModel
   // CSS zoom, not a transform: the frame lays out at the zoomed size and its text stays crisp.
   zoom?: number | undefined
-  className?: string | undefined
-  // A finished page laid under the sketch's screen, for the hero's build.
-  built?: ReactNode | undefined
 }
 
-// The same answers in a phone frame, at a phone's proportions (9:19), laid over the browser's
-// corner the way a mock-up board shows both, or on its own at a larger zoom where the browser
-// frame has no room. Below the hero the page carries on: three feature rows and a footer.
-export function PhoneSketch({ model, zoom = 1, className, built }: Props) {
+// The answers in a phone frame, at a phone's proportions (9:19). Below the hero the page carries
+// on: three feature rows and a footer.
+export function PhoneSketch({ model, zoom = 1 }: Props) {
   const { company } = model
 
   return (
-    <PhoneFrame zoom={zoom} className={className}>
+    <PhoneFrame zoom={zoom}>
       <div className="relative isolate flex flex-1 flex-col">
-        {built}
         <div
           data-layer="sketch"
           className="relative z-10 flex flex-1 flex-col gap-2.5 px-3 pt-1 pb-3"
         >
           <div className="flex items-center justify-between">
-            <Wordmark model={model} frame="phone" />
+            <Wordmark model={model} />
             <span data-part="menu" className="flex flex-col gap-0.5">
               <Bar className="h-0.5 w-3" />
               <Bar className="h-0.5 w-3" />
             </span>
           </div>
-          <Headline model={model} frame="phone" />
-          <Paragraph model={model} frame="phone" />
-          <CtaPill model={model} frame="phone" />
+          <Headline model={model} />
+          <Paragraph model={model} />
+          <CtaPill model={model} />
           <ImageBlock model={model} className="aspect-4/3" />
           <div className="flex flex-col gap-1.5">
             {FEATURES.map((n) => (

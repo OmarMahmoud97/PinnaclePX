@@ -43,7 +43,7 @@ test('a returning draft keeps its other answers when the hero sentence lands', a
   await withDraft(page, { reached: 4 })
   await carryFromHero(page, SENTENCE)
   await expect(page).toHaveURL(/\/start\?q=2$/)
-  await expect(page.getByLabel(/^(Company|Business name)$/)).toHaveValue(ANSWERED.company)
+  await expect(page.getByLabel('Business name')).toHaveValue(ANSWERED.company)
 
   await page.goto('/start?q=1')
   await expect(page.locator('main#main textarea')).toHaveValue(SENTENCE)

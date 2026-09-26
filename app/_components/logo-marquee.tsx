@@ -5,7 +5,6 @@ import {
   LOGOS,
   sizeFor,
 } from '@/app/_components/client-logos'
-import { cn } from '@/lib/cn'
 import type { CSSProperties } from 'react'
 
 function Logo({ logo }: { logo: ClientLogo }) {
@@ -33,8 +32,8 @@ function Logo({ logo }: { logo: ClientLogo }) {
 // behind the second before the loop reset; four keep the track longer than the strip plus a
 // row at any width the hero reaches. The copies after the first are hidden from the
 // accessibility tree because they say nothing the first has not.
-// The ink is the strip's text colour, muted by default; the hero, which shows the strip on the
-// dark foot of its ground, passes its own white.
+// The ink is the strip's text colour: the hero's white, since the strip sits on the dark foot of
+// its ground.
 //
 // Reduced motion stops the slide: the keyframes exist only under `prefers-reduced-motion:
 // no-preference` (app/globals.css), and here the copy, the fades and the clipping go with them,
@@ -43,13 +42,10 @@ function Logo({ logo }: { logo: ClientLogo }) {
 // How many times the row is drawn; the keyframe in app/globals.css divides the slide by it.
 const ROW_COPIES = 4
 
-export function LogoMarquee({ className }: { className?: string }) {
+export function LogoMarquee() {
   return (
     <div
-      className={cn(
-        'relative w-full min-w-0 overflow-hidden mask-[linear-gradient(to_right,transparent,black_var(--logo-fade),black_calc(100%_-_var(--logo-fade)),transparent)] text-on-surface-muted [--logo-fade:3rem] [--logo-gap:4rem] motion-reduce:overflow-visible motion-reduce:mask-none',
-        className,
-      )}
+      className="relative w-full min-w-0 overflow-hidden mask-[linear-gradient(to_right,transparent,black_var(--logo-fade),black_calc(100%_-_var(--logo-fade)),transparent)] text-surface [--logo-fade:3rem] [--logo-gap:4rem] motion-reduce:overflow-visible motion-reduce:mask-none"
       style={{ minHeight: LOGO_ROW_HEIGHT }}
     >
       <div

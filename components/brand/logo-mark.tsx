@@ -24,7 +24,7 @@ export function LogoMark({ size, className }: Props) {
   return (
     <span
       aria-hidden="true"
-      className={cn('brand-mark relative inline-block shrink-0', className)}
+      className={cn('relative inline-block shrink-0', className)}
       style={{ width, height: size }}
     >
       {/* A committed file at two known widths, like the work captures: no optimiser, no client

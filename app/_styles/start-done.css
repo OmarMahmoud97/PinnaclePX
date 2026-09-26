@@ -4,7 +4,8 @@
  * the hooks and tokens app/_styles/start.css declares and the attributes the flow sets on the grid
  * (brief-flow.tsx): data-state (sending, done), data-arriving while a sent brief's ink runs on,
  * data-lit once the designs can be opened, data-dim for a build that ended without them. The route imports this sheet last (app/start/page.tsx), so
- * no other page downloads it. The done view's own rules load with its chunk
+ * no other page links it, though a prefetch of /start fetches it early. The done view's own
+ * rules load with its chunk
  * (app/_styles/start-done-view.css).
  */
 

@@ -26,8 +26,8 @@ import { BLANK_ANSWERS } from '@/lib/brief/answers'
 const NEUTRAL = sketchModelFrom(BLANK_ANSWERS, 1, { logo: null, photos: [] })
 
 // The two radio buttons that choose the view, on a borderless segmented track: native inputs and
-// the CSS :has() selector, so the switch works with JavaScript off and the default is the phone,
-// which is where most visitors are. The checked pill is the light ink on the dark ground. Each
+// the CSS :has() selector, so the switch works with JavaScript off and the default is the desktop
+// (owner, 26 September 2026). The checked pill is the light ink on the dark ground. Each
 // pill is 28 px tall, above the 24 px a tap target needs, and the focus ring's offset takes the
 // track's own colour so it reads as a ring and not a halo.
 const SEGMENT =
@@ -114,17 +114,17 @@ export function Work() {
                 <fieldset className="inline-flex self-center rounded-full bg-surface p-1">
                   <legend className="sr-only">{WORK.viewLegend(client.name)}</legend>
                   <label className={SEGMENT}>
-                    <input
-                      type="radio"
-                      name={group}
-                      value="phone"
-                      defaultChecked
-                      className="sr-only"
-                    />
+                    <input type="radio" name={group} value="phone" className="sr-only" />
                     {WORK.phone}
                   </label>
                   <label className={SEGMENT}>
-                    <input type="radio" name={group} value="desktop" className="sr-only" />
+                    <input
+                      type="radio"
+                      name={group}
+                      value="desktop"
+                      defaultChecked
+                      className="sr-only"
+                    />
                     {WORK.desktop}
                   </label>
                 </fieldset>
@@ -137,12 +137,12 @@ export function Work() {
 
                 {/* The phone view fills its frame edge to edge: the frame takes the picture's own
                     height instead of the 9:19 the sketch draws, so nothing is cropped. */}
-                <div className="flex flex-1 items-start justify-center group-has-[input[value=desktop]:checked]/card:hidden">
+                <div className="hidden flex-1 items-start justify-center group-has-[input[value=phone]:checked]/card:flex">
                   <PhoneFrame className="aspect-auto w-full max-w-48 lg:max-w-56">
                     <Picture picture={image.phone} sizes="(min-width: 1024px) 224px, 192px" />
                   </PhoneFrame>
                 </div>
-                <div className="hidden flex-1 items-center group-has-[input[value=desktop]:checked]/card:flex">
+                <div className="flex flex-1 items-center group-has-[input[value=phone]:checked]/card:hidden">
                   <BrowserFrame company={client.name} coloured={false} className="w-full">
                     <Picture
                       picture={image.desktop}

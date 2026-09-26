@@ -4,8 +4,9 @@
 - Date: 6 September 2026
 - Amends: ADR 0005 (item 3, one GSAP leaf and the walkthrough's discrete stages)
 - Builds on: ADR 0006 (the build, FLIP on GSAP core)
-- Amended by: ADR 0036 (decisions 2 and 6, below `md`, 24 September 2026); ADR 0037 (decision 2,
-  the steps follow `/start`'s order, 25 September 2026)
+- Amended by: ADR 0034 (decision 1, ScrollTrigger, 23 September 2026); ADR 0036 (decisions 2 and 6,
+  below `md`, 24 September 2026); ADR 0037 (decision 2, the steps follow `/start`'s order, 25
+  September 2026)
 
 ## Context
 

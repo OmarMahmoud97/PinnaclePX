@@ -30,7 +30,7 @@ async function tryCopy(text: string): Promise<boolean> {
 }
 
 // How a link was handed on, for share_click: the share sheet, the clipboard or a new mail.
-export type HandedOn = 'share' | 'copy' | 'mailto'
+type HandedOn = 'share' | 'copy' | 'mailto'
 
 // Hands a link on by the first way that works: the share sheet, else the clipboard, else a new
 // mail with the link in it. It asks for no address and sends nothing itself. Null when the visitor

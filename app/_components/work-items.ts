@@ -7,7 +7,7 @@ import manifest from '@/app/_images/work/manifest.json'
 // studio's records and are the only figures on the page (copy.test.ts exempts them by string).
 // The pictures and their dates come from app/_images/work/manifest.json, written by
 // scripts/capture-work.mjs.
-export type ClientItem = Readonly<{
+type ClientItem = Readonly<{
   slug: string
   name: string
   trade: string
@@ -81,13 +81,13 @@ export const MEASURED_RESULTS: readonly string[] = CLIENT_ITEMS.flatMap((client)
   client.result === undefined ? [] : [client.result],
 )
 
-type Capture = Readonly<{ slug: string; url: string; capturedAt: string }>
+type Capture = Readonly<{ url: string; capturedAt: string }>
 
 // When each picture was taken, from the manifest, so the caption and the file can never drift.
 export function captureFor(slug: string): Capture {
   const entry = manifest.clients.find((client) => client.slug === slug)
   if (entry === undefined) throw new Error(`No capture in the work manifest for ${slug}`)
-  return { slug: entry.slug, url: entry.url, capturedAt: entry.capturedAt }
+  return { url: entry.url, capturedAt: entry.capturedAt }
 }
 
 // "5 September 2026" from an ISO date, for the caption.

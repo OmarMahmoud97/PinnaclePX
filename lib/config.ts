@@ -178,9 +178,10 @@ export const CONFIG = {
   // the controls rise, how far the lead falls in after a Back, and how far both slip as a question
   // leaves; the spring --ease-spring is sampled from; the phone curve's spring; the lamp's
   // brightness at each question, its swell on each move and its ceiling behind text; the hero
-  // sentence's typing and the display faces' wait; the phone window; the send's held breath; the
-  // wait's intermission and early finish; and ready's flip. app/_styles/start.css mirrors the
-  // numbers CSS reads, and app/_styles/start-tokens.test.ts keeps the two equal.
+  // sentence's typing and the display faces' wait; the send's held breath; the wait's
+  // intermission and early finish; and ready's flip. app/_styles/start.css mirrors the numbers
+  // CSS reads, and app/_styles/start-tokens.test.ts keeps the two equal; the send's and ready's
+  // are mirrored in app/_styles/start-done.css, which start-done.test.ts checks.
   start: {
     pace: 1.5,
     reducedPace: 0.5,
@@ -295,12 +296,11 @@ export const CONFIG = {
         cross: 0.4,
         label: { at: 0, for: 250 },
         bg: { at: 250, for: 1100 },
-        nav: { at: 100, for: 600, step: 50 },
+        nav: { at: 100, for: 600 },
         photo: { at: 250, for: 1100 },
         text: { at: 500, for: 800, step: 60 },
         cards: { at: 900, for: 600, step: 60 },
         footer: { at: 900, for: 500 },
-        arrows: { at: 1650, for: 350, step: 80 },
         doneAt: 2200,
         photoFilter: { from: 'sepia(0.3) saturate(1.25)', to: 'sepia(0) saturate(1)' },
         rise: { underPx: 8, byPx: 4 },

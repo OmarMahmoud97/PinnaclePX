@@ -2,8 +2,8 @@
  * /start's done view (docs/start-page-journey-plan.md, 4.4, 4.5, 4.9, 6.2 and 9): the send's ink
  * running on into it, its column in main, the time, the ring and the log, the designs as rows and
  * as posters, ready's colours and words, and the phone's sticky ask. It loads with the view's
- * chunk (brief-done.tsx), never with /start's first paint, so a visitor who never sends never
- * downloads it (plan 9.6); the ground under it, which a refreshed done page needs before any
+ * chunk (brief-done.tsx), which comes as the last question shows or at done, never with /start's
+ * first paint (plan 9.6); the ground under it, which a refreshed done page needs before any
  * script, is app/_styles/start-done.css's. Plain CSS on the site's tokens and on /start's own
  * (start.css, start-done.css).
  */

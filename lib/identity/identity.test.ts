@@ -82,7 +82,6 @@ describe('newSlug', () => {
     const slugs = new Set(Array.from({ length: 1000 }, newSlug))
     expect(slugs.size).toBe(1000)
     for (const slug of slugs) expect(slugSchema.safeParse(slug).success).toBe(true)
-    expect(slugs.size).toBe(1000)
   })
 
   it('has a schema that refuses anything else', () => {

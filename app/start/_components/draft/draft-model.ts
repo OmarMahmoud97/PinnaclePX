@@ -210,7 +210,7 @@ export function awaitsName({ logo, company, sentence }: DraftModel): boolean {
 // The notes that show: at most two at once (plan 5.2), the first two of those wanted in this
 // order, so the picture's note is the first to yield and a note that stands for an answer never
 // does. The first two cannot both be wanted: one needs the sentence and the other its absence.
-// The picture's note also gives way to the signature, which would cover it in the phone's window.
+// The picture's note also gives way to the signature (ADR 0037, Release 3 amendment).
 export function notesOf(draft: DraftModel, faceMissing: boolean): ReadonlySet<NoteAt> {
   const signed = draft.first !== ''
   const wanted: readonly (readonly [NoteAt, boolean])[] = [

@@ -18,9 +18,9 @@
 export const startGrid =
   'start-flow grid min-h-dvh max-lg:grid-rows-[auto_1fr] lg:grid-cols-[minmax(0,46fr)_minmax(0,54fr)]'
 
-// The question's pane, without its ground or its top padding below lg, which the two states
-// below add. From lg what it holds is centred in the pane, which the done view keeps; a question
-// sets its title high instead (startMainAsking). Between lg and xl the gutter is 2.5rem,
+// The question's pane, without its ground or its top padding, which the two states below add:
+// start-ground-main, which from lg sets the title high for a question and the done view alike
+// (start.css), and each state's own top padding below lg. Between lg and xl the gutter is 2.5rem,
 // not 4rem: at 1024 the pane is 471 px, and a 4rem gutter left the question 343 px, where the
 // style cards broke word by word and question five's heading ran to four lines. From xl the 4rem
 // gutter returns, so 1280 and wider are as before. The pane clips sideways: the ask reaches out
@@ -28,7 +28,7 @@ export const startGrid =
 // 8 px wider until the next layout, which a finished animation does not trigger. A clip is not a
 // scroller, so the ask still sticks.
 export const startMain =
-  'relative flex flex-col items-center overflow-x-clip px-4 pb-10 transition-colors duration-(--motion-settle) sm:px-8 lg:items-start lg:justify-center lg:px-10 lg:pt-20 lg:pb-12 xl:px-16'
+  'relative flex flex-col items-center overflow-x-clip px-4 pb-10 transition-colors duration-(--motion-settle) sm:px-8 lg:items-start lg:px-10 xl:px-16'
 
 // While the visitor answers, and in the skeleton that stands in for that state: the ground (the
 // wash below lg, the ramp from lg, and from lg the title set high rather than centred, start.css),

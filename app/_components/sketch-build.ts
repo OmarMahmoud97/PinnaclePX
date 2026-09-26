@@ -17,7 +17,7 @@ type Beat = Readonly<{ at: number; for: number; step?: number }>
 // siblings that move one after another. CONFIG.walkthrough.beats.build is this shape. `cross` is the share of a travel each half of a crossfade takes: the sketch
 // part fades out over the first share, the finished part fades in over the last, and the stretch
 // between, the fastest, shows neither.
-export type BuildPlan = Readonly<{
+type BuildPlan = Readonly<{
   cross: number
   label: Beat
   bg: Beat
@@ -26,7 +26,6 @@ export type BuildPlan = Readonly<{
   text: Beat
   cards: Beat
   footer: Beat
-  arrows: Beat
   // The photograph arrives wearing the sketch's treatment and returns to itself as it lands.
   photoFilter: Readonly<{ from: string; to: string }>
   // A finished part that barely travels (under `underPx`) rises `byPx` into place instead.
@@ -39,7 +38,7 @@ export type BuildPlan = Readonly<{
   card: Readonly<{ after: number; for: number; risePx: number }>
 }>
 
-type BeatKey = 'nav' | 'photo' | 'text' | 'cards' | 'footer' | 'arrows'
+type BeatKey = 'nav' | 'photo' | 'text' | 'cards' | 'footer'
 
 // power3.inOut peaks at three times the average speed; expo.inOut peaks at seven and snaps
 // through the middle of a travel.
@@ -50,11 +49,9 @@ const FADE = 'power2.inOut'
 export const WRITTEN = 'transform,transformOrigin,opacity,visibility,filter'
 
 // Every named part on both frames, the beat it moves on, and its place in a beat that steps its
-// members. A part with several elements (links, cards, arrows) steps through them in order.
+// members. A part with several elements (the cards) steps through them in order.
 const PARTS: readonly Readonly<{ part: string; beat: BeatKey; index?: number }>[] = [
   { part: 'wordmark', beat: 'nav' },
-  { part: 'nav-link', beat: 'nav' },
-  { part: 'nav-cta', beat: 'nav' },
   { part: 'menu', beat: 'nav' },
   { part: 'image', beat: 'photo' },
   { part: 'eyebrow', beat: 'text', index: 0 },
@@ -63,14 +60,13 @@ const PARTS: readonly Readonly<{ part: string; beat: BeatKey; index?: number }>[
   { part: 'cta', beat: 'text', index: 3 },
   { part: 'card', beat: 'cards' },
   { part: 'footer', beat: 'footer' },
-  { part: 'arrow', beat: 'arrows' },
 ]
 
 // Sketch parts that are bars or boxes, so they scale into their counterpart's box; text only
 // travels, because scaled type smears.
-const SCALED_FROM = new Set(['nav-link', 'nav-cta', 'eyebrow', 'cta', 'card', 'footer', 'menu'])
+const SCALED_FROM = new Set(['cta', 'card', 'footer', 'menu'])
 // Finished parts that are boxes and arrive scaling up out of the sketch's box.
-const SCALED_TO = new Set(['nav-cta', 'cta', 'card', 'footer', 'menu'])
+const SCALED_TO = new Set(['cta', 'card', 'footer', 'menu'])
 
 export const seconds = (ms: number): number => ms / 1000
 
@@ -138,7 +134,7 @@ function movesIn(sketch: Element, built: Element, plan: BuildPlan): Move[] {
 // The build inside one frame, added to `tl` from its time zero: the sketch's parts travel to
 // their places on the finished page and the finished parts arrive from the sketch's, crossing in
 // flight. The photograph is one element that swaps for the sketch's copy of the same picture and
-// then travels. Parts with no counterpart rise in or pop. Every tween is a plain tween, so a
+// then travels. Parts with no counterpart rise in. Every tween is a plain tween, so a
 // timeline holding the build can be played, scrubbed or reversed.
 export function addBuild(tl: Timeline, { root, sketch, built }: Layers, plan: BuildPlan): void {
   // A frame that is not displayed at this size has nothing to measure.
@@ -255,27 +251,18 @@ export function addBuild(tl: Timeline, { root, sketch, built }: Layers, plan: Bu
       )
       tl.to(from, { autoAlpha: 0, duration: fadeFor, ease: FADE }, at)
     } else if (to !== undefined) {
-      if (part === 'arrow') {
-        tl.fromTo(
-          to,
-          { autoAlpha: 0, scale: 0.6 },
-          { autoAlpha: 1, scale: 1, duration, ease: 'back.out(1.7)', immediateRender: false },
-          at,
-        )
-      } else {
-        tl.fromTo(
-          to,
-          { autoAlpha: 0, y: 6 },
-          {
-            autoAlpha: 1,
-            y: 0,
-            duration: duration * cross,
-            ease: 'power2.out',
-            immediateRender: false,
-          },
-          at + duration * (1 - cross),
-        )
-      }
+      tl.fromTo(
+        to,
+        { autoAlpha: 0, y: 6 },
+        {
+          autoAlpha: 1,
+          y: 0,
+          duration: duration * cross,
+          ease: 'power2.out',
+          immediateRender: false,
+        },
+        at + duration * (1 - cross),
+      )
     } else if (from !== undefined) {
       tl.to(from, { autoAlpha: 0, duration: duration * cross, ease: FADE }, at)
     }

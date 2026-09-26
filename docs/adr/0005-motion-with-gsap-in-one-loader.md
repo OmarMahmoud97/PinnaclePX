@@ -27,3 +27,6 @@ The home page had no motion beyond hover colours, and the owner asked for it to 
 - 3 September 2026 (ADR 0006): item 6, autoplay loops. The hero sketch loops.
 - 5 September 2026 (ADR 0021): item 6, scroll smoothing. The owner asked for Lenis; it joins GSAP behind the same kind of lazy loader, and the rest of the list stands.
 - 6 September 2026 (ADR 0026): item 6, motion on the glow's layers. The second wash layer steps back while the hero holds a client's colour, so the page's one authored payoff changes the ground; opacity only, on the existing data-tinted contract. The rest of the list stands.
+- 6 September 2026 (ADR 0025): item 3, one GSAP leaf and the walkthrough's discrete stages. The walkthrough is a second leaf on the same lazy chunk, a paused timeline whose stops the scroll picks; the loader, the ESLint boundary and the budget check are unchanged.
+- 18 September 2026 (ADR 0031): item 3, the one GSAP leaf, which moved out of the hero; item 6, ambient motion, for the hero's ink only.
+- 23 September 2026 (ADR 0034): item 6, the caps and scroll-tied motion below the hero. Its decision 5 registers ScrollTrigger behind the same lazy loader (`loadScrollTrigger` in `lib/motion/gsap.ts`), so item 2's "none does today" no longer holds.

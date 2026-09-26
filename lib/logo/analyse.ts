@@ -2,7 +2,7 @@ import sharp from 'sharp'
 import { CONFIG } from '@/lib/config'
 import { type LogoReading, readPolarity } from '@/lib/logo/polarity'
 
-export type LogoRaster = Readonly<{ png: Buffer; width: number; height: number }>
+type LogoRaster = Readonly<{ png: Buffer; width: number; height: number }>
 
 // An SVG is rasterised at the density that fills the limit; anything else at its own size.
 async function densityFor(bytes: Buffer): Promise<number | undefined> {

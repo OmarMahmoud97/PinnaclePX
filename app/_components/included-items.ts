@@ -18,7 +18,7 @@ type IncludedItem = Readonly<{ title: string; body: string }>
 // A key rather than the label, so the copy can change without the picture following it.
 export type IncludedJob = 'found' | 'trusted' | 'answered' | 'reachable'
 
-export type IncludedGroup = Readonly<{
+type IncludedGroup = Readonly<{
   job: IncludedJob
   label: string
   scene: string

@@ -22,8 +22,6 @@ describe('candidatesFrom', () => {
     const [candidate] = candidatesFrom({ page: 1, photos: [PHOTO], total_results: 7082 })
     expect(candidate).toEqual({
       id: 20860622,
-      width: 4000,
-      height: 2667,
       alt: 'A physiotherapist assists a patient',
       photographer: 'Funkcines Terapijos Centras',
       photographerUrl: 'https://www.pexels.com/@funkcines-terapijos-centras-927573878',

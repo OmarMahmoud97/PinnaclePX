@@ -1,4 +1,4 @@
-import { clampChroma, type Color, type Oklch, wcagContrast } from 'culori'
+import { clampChroma, type Oklch, wcagContrast } from 'culori'
 import { AppError } from '@/lib/errors'
 import type { ContrastPair, TokenName } from '@/lib/tokens/types'
 
@@ -59,9 +59,4 @@ export function solvePairs(
   throw new AppError(
     `Contrast did not settle: ${failing.map((p) => `${p.text} on ${p.background}`).join(', ')}`,
   )
-}
-
-// The ratio of a pair, as hex or as colours, for tests and for the checks the pipeline logs.
-export function contrastOf(text: Color | string, background: Color | string): number {
-  return wcagContrast(text, background)
 }

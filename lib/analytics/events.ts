@@ -8,8 +8,8 @@ import type { Stage } from '@/lib/db/submissions'
 export type EventData = Readonly<Record<string, string | number | boolean | null>>
 
 // Every custom analytics event the browser sends, in one place, with what each carries.
-// Server-side events go through @vercel/analytics/server in their own module when the pipeline
-// lands. The questionnaire's journey events (docs/start-page-journey-plan.md, section 8.5) name
+// Server-side events go through @vercel/analytics/server in their own module; none is built yet.
+// The questionnaire's journey events (docs/start-page-journey-plan.md, section 8.5) name
 // their properties, at most two, so the funnel reads by question id and never by a slug; the
 // slug is also stripped from every address (lib/analytics/without-slug.ts). The older events keep
 // free-form properties.

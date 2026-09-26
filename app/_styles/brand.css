@@ -70,10 +70,6 @@
  * under the bar wants arrives in one step as the drain uncovers it. The gradient is an image, not
  * a colour, so its hold is a discrete transition. These come last, at the dark list's weight.
  */
-.group:has([data-menu='open']) .header-bar :is(.brand-mark-image, .brand-mark-mask) {
-  transition: none;
-}
-
 .group:not([data-solid]):has([data-menu='open']) .header-bar .brand-mark-mask {
   transition: background 0s var(--menu-hold-in) allow-discrete;
 }

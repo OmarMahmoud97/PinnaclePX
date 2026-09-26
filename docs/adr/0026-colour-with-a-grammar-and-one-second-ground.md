@@ -3,7 +3,8 @@
 - Status: accepted
 - Date: 6 September 2026
 - Amends: ADR 0005 (item 6, motion on the glow's layers)
-- Amended by: ADR 0037 (decision 1, the visitor's colour on `/start`, 25 September 2026)
+- Amended by: ADR 0031 (the refusal of ambient motion, for the hero only, 18 September 2026); ADR
+  0037 (decision 1, the visitor's colour on `/start`, 25 September 2026)
 
 ## Context
 

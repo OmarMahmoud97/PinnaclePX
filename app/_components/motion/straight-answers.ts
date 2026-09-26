@@ -29,9 +29,6 @@ export function straightAnswers({ root, mm, own }: SectionContext): void {
           opacity: 0,
         })
       },
-      enter: ({ finish }) => {
-        finish({ duration: choreo.tweenS, ease: 'power3.out', stagger: choreo.staggerS })
-      },
     })
   })
 }

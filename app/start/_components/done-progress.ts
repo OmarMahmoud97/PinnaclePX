@@ -156,7 +156,7 @@ export function newsOf(view: FoundView, late: boolean): readonly News[] {
 // What the status line has heard: every item of news it knows, and the one that arrived last since
 // the view opened, if any. Kept in the order the polls brought the news rather than read from one
 // poll's list, so a stage that lands after the time has run out is still said.
-export type Heard = Readonly<{ known: readonly News[]; newest: News | null }>
+type Heard = Readonly<{ known: readonly News[]; newest: News | null }>
 
 // Opening the view says only its heading, which takes the focus: what is already so is known.
 export function heardAtOpen(news: readonly News[]): Heard {

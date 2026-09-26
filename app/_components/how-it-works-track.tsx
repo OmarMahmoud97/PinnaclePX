@@ -35,7 +35,7 @@ const DOCK_MEDIA = '(width < 48rem)'
 const RELEASE = ['touchstart', 'wheel', 'keydown', 'pointerdown'] as const
 
 // The finished page the sketch builds into. Never server-rendered: only a client that allows
-// motion ever shows it, and the chunk, its font and its photographs load with it.
+// motion ever shows it, and the chunk and its fonts load with it; the frame loads its photograph.
 const WalkthroughBuilt = dynamic(
   () => import('@/app/_components/walkthrough-built').then((module) => module.WalkthroughBuilt),
   { ssr: false },
@@ -414,7 +414,6 @@ export function HowItWorksTrack({ heading, steps, actions }: Props) {
               answered={answeredAt(shown)}
               labels={WALKTHROUGH_LABELS}
               prefix="An example brief so far"
-              chipsClassName="hidden"
             />
           </div>
         </div>

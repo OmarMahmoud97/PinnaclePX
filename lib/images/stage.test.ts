@@ -43,8 +43,6 @@ function contract(id: string, imageSlots: readonly string[]): ImageContract {
 function candidate(id: number): Candidate {
   return {
     id,
-    width: 1600,
-    height: 900,
     alt: `photo ${String(id)}`,
     photographer: 'A Photographer',
     photographerUrl: 'https://www.pexels.com/@a',

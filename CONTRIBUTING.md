@@ -7,8 +7,8 @@ Simple beats complex. One way to do a thing. Fail fast at boundaries. Trust the 
 ## Workflow
 
 1. Branch from `main`, keep the branch short-lived.
-2. Commit. The pre-commit hook formats and lints staged files; the pre-push hook typechecks and runs unit tests.
-3. Open a PR to `main`. CI must pass: typecheck, lint, format check, template hex and palette grep, knip, unit tests.
+2. Commit. The pre-commit hook checks formatting and lints staged files; the pre-push hook typechecks and runs unit tests.
+3. Open a PR to `main`. CI must pass: typecheck, lint, format check, template hex and palette grep, knip, unit tests, build and byte budget, e2e tests.
 4. Squash or rebase; `main` requires linear history.
 
 `docs/shipping-a-change.md` has the commands for all four steps, the checks CI runs that the hooks

@@ -1,9 +1,9 @@
-// The clients' logos for the strip under the hero sketch: the work band's clients in its order,
+// The clients' logos for the strip at the hero's foot: the work band's clients in its order,
 // then the group behind four of them and the others the owner supplied.
 //
 // Every file in public/logos/ is drawn in one ink through its own alpha (app/_components/
 // logo-marquee.tsx), so a white wordmark, a lime mark and a full-colour raster all sit as one
-// quiet grey row on the hero. The files are the owner's originals (app/_images/logos/, 6 September
+// quiet white row on the hero. The files are the owner's originals (app/_images/logos/, 6 September
 // 2026) with the artboard trimmed to the mark itself, so `width` and `height` here are the mark's
 // own shape and the sizing rule below is not fooled by padding; Mvmnt's tile is dropped because
 // under a mask it would be a solid block. Go Wild and TrvlWell have no mark yet and are left out
@@ -28,7 +28,7 @@ export const LOGOS = {
   // What a screen reader hears in place of the strip.
   label: 'Companies we have designed and built for',
   // Under the strip, for everyone: what the marks are, and that four of them are one group, said
-  // where the logos are rather than four sections down in the work band, so the strip never
+  // where the logos are rather than in the work band below the hero, so the strip never
   // implies more breadth than it has.
   caption: 'Companies we have designed and built for. Four of them belong to one group.',
 } as const

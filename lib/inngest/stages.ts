@@ -5,13 +5,13 @@ import { markStage, type Stage, type StagePatch } from '@/lib/db/submissions'
 import { log } from '@/lib/log'
 
 // How a stage's work ended: finished, or settled with its own fallback in the patch.
-export type Written = Readonly<{ state: 'done' | 'fallback'; patch: StagePatch }>
+type Written = Readonly<{ state: 'done' | 'fallback'; patch: StagePatch }>
 
 export const done = (patch: StagePatch): Written => ({ state: 'done', patch })
 
 type Work = () => Promise<Written>
 
-export type StageOutcome =
+type StageOutcome =
   | Written
   // The sweeper settled this stage before this attempt reached it: there is nothing to do.
   | Readonly<{ state: 'settled' }>

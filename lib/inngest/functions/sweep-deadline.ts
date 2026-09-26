@@ -3,7 +3,7 @@ import { NonRetriableError } from 'inngest'
 import { submissionAnswersSchema } from '@/lib/brief/submission'
 import { fallbackBrief } from '@/lib/copy-slots/brief'
 import { CONFIG } from '@/lib/config'
-import { markStage, readSubmission, STAGES } from '@/lib/db/submissions'
+import { markStage, PROPERTY, readSubmission, STAGES } from '@/lib/db/submissions'
 import { inngest } from '@/lib/inngest/client'
 import { submissionCreated, submissionReady } from '@/lib/inngest/events'
 import { log } from '@/lib/log'
@@ -38,13 +38,7 @@ export const sweepDeadline = inngest.createFunction(
       const row = await readSubmission(slug)
       if (row === null) throw new NonRetriableError(`No submission ${slug}`)
       const open = STAGES.filter((stage) => {
-        const state = {
-          select: row.stageSelect,
-          tokens: row.stageTokens,
-          brief: row.stageBrief,
-          copy: row.stageCopy,
-          imagery: row.stageImagery,
-        }[stage]
+        const state = row[PROPERTY[stage]]
         return state === 'pending' || state === 'running'
       })
       if (open.length === 0) return []

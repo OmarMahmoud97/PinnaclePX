@@ -7,7 +7,7 @@ export type TemplateMeta = Readonly<{
   id: string
   name: string
   description: string
-  // False for a placeholder. The selector never chooses an unready template.
+  // False takes a template out of rotation. The selector never chooses an unready template.
   ready: boolean
   polarity: Artwork | 'either'
   // Words for how the template feels, so the selector can pick three that feel different.

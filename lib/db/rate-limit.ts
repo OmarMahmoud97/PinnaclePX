@@ -9,9 +9,9 @@ type Limit = Readonly<{ scope: string; subject: string; windowSeconds: number; m
 // Counts one hit and says whether it was within the limit. One atomic upsert: the row for the
 // key and window is created or its count raised, and the new count comes back. Never in memory,
 // because a serverless function has none to keep.
-export async function hitLimit(limit: Limit, now = new Date()): Promise<boolean> {
+export async function hitLimit(limit: Limit): Promise<boolean> {
   const key = limitKey(limit.scope, limit.subject)
-  const window = windowKey(now, limit.windowSeconds)
+  const window = windowKey(new Date(), limit.windowSeconds)
   const rows = await db
     .insert(rateLimit)
     .values({ key, window, count: 1 })

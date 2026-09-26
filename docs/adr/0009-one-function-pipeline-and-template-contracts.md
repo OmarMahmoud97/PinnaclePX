@@ -3,6 +3,10 @@
 - Status: accepted
 - Date: 4 September 2026
 - Plan: `docs/pipeline-plan.md`
+- Amended by: ADR 0015 (decision 1, 4 September 2026); ADR 0016 (exclusivity, off behind a flag
+  production refuses, 4 September 2026); ADR 0017 (decision 6, 4 September 2026); ADR 0037 (decision
+  7, 24 September 2026, its decision 4 makes the status poll a GET route,
+  `app/api/status/[slug]/route.ts`, and deletes the Server Action)
 
 ## Context
 

@@ -26,7 +26,7 @@ type Empties = Readonly<{
   exhausted: boolean
 }>
 
-export type ImageryOutcome = Readonly<{ imagery: SubmissionImagery }> & Empties
+type ImageryOutcome = Readonly<{ imagery: SubmissionImagery }> & Empties
 
 type SearchStep = Extract<SlotPlan, { kind: 'search' }>
 

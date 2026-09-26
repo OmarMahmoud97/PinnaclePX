@@ -37,8 +37,6 @@ export async function analyseSubmissionLogo(
     })
     return {
       polarity: reading.polarity,
-      lightness: reading.lightness,
-      opaqueBackdrop: reading.opaqueBackdrop,
       image: { src: stored.url, width: raster.width, height: raster.height },
     }
   } catch (error) {

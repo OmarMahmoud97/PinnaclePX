@@ -23,7 +23,7 @@ const COLUMN = {
   imagery: submission.stageImagery,
 } as const
 
-const PROPERTY = {
+export const PROPERTY = {
   select: 'stageSelect',
   tokens: 'stageTokens',
   brief: 'stageBrief',

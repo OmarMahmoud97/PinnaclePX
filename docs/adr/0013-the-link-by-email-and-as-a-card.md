@@ -3,6 +3,7 @@
 - Status: accepted
 - Date: 4 September 2026
 - Plan: `docs/pipeline-plan.md`, section 18, slice 6
+- Amended by: ADR 0015 (decision 1, 4 September 2026); ADR 0020 (decision 1, 4 September 2026)
 
 ## Context
 
