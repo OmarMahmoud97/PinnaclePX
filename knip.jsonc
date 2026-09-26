@@ -1,11 +1,7 @@
 {
   "$schema": "https://unpkg.com/knip@6/schema.json",
   // drizzle.config.ts is read by drizzle-kit, never imported.
-  "entry": [
-    "drizzle.config.ts",
-    // The nine placeholder components are rendered by templates/render.tsx as each is built.
-    "templates/*/index.tsx",
-  ],
+  "entry": ["drizzle.config.ts"],
   // drizzle.config.ts loads .env.local itself and needs only DATABASE_URL, but Knip's Drizzle
   // plugin would still load it; the path is listed under entry above instead.
   "drizzle": false,

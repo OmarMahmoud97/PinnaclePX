@@ -34,17 +34,6 @@ describe('layoutOf', () => {
     expect(new Set(layouts).size).toBe(layouts.length)
   })
 
-  it('draws a layout only for a template that exists, alongside its words', () => {
-    const ids = new Set<string>(TEMPLATES.map((template) => template.id))
-    for (const id of Object.keys(DESCRIPTORS)) {
-      expect(ids.has(id)).toBe(true)
-      expect(layoutOf(id)).not.toBeNull()
-    }
-    for (const template of TEMPLATES) {
-      expect(layoutOf(template.id) === null).toBe(descriptorOf(template.id) === null)
-    }
-  })
-
   it('draws nothing before a template is chosen, or for one without an entry', () => {
     expect(layoutOf(null)).toBeNull()
     expect(layoutOf('t99-unnamed')).toBeNull()

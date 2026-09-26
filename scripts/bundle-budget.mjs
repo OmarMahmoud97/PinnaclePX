@@ -219,7 +219,7 @@ const built = new Set(
   Object.keys(LAZY).filter((name) => chunks.some((file) => carries(file, LAZY[name]))),
 )
 
-for (const [route, line] of Object.entries(BUDGETS)) {
+for (const [route, budget] of Object.entries(BUDGETS)) {
   // A route that stops being prerendered has no HTML here at all. /start must stay static, so it
   // reads the URL inside the flow and never in the page (plan 7.8).
   const file = join(NEXT, 'server', 'app', route === '/' ? 'index.html' : `${route.slice(1)}.html`)
@@ -238,7 +238,6 @@ for (const [route, line] of Object.entries(BUDGETS)) {
     html: gzipSync(html, { level: 9 }).length,
     fonts: preloadedFonts(html).reduce((sum, url) => sum + statSync(assetPath(url)).size, 0),
   }
-  const budget = line
   for (const [kind, limit] of Object.entries(budget)) {
     const actual = totals[kind]
     report(

@@ -148,12 +148,11 @@ test('Enter in the hex field checks the colour, keeps the focus and never sends'
       sends.push(request.method())
     }
   })
-  // The visitor's own colour is chosen, so the hex field shows whether it stands alone, as today,
-  // or waits behind "My own colour", as it will.
+  // The visitor's own colour is chosen, so the hex field behind "My own colour" shows.
   const colours = numberOf('colours')
   await withDraft(page, { reached: colours - 1, colours: { kind: 'custom', hex: '#2f6f4e' } })
   await page.goto(`/start?q=${String(colours)}`)
-  const hex = page.getByRole('textbox', { name: /^(Brand colour|Hex code)$/ })
+  const hex = page.getByRole('textbox', { name: 'Hex code' })
 
   await hex.fill('#12')
   await hex.press('Enter')

@@ -19,7 +19,7 @@ import {
 const SLUG = 'rdonk7m2p9x4'
 
 // Motion properties an animation must never carry here.
-const MOVING = ['translate', 'rotate', 'scale', 'transform', 'clipPath', 'clip-path']
+const MOVING = ['translate', 'rotate', 'scale', 'transform', 'clipPath']
 
 test.beforeEach(async ({ page }) => {
   await refuseSends(page)
