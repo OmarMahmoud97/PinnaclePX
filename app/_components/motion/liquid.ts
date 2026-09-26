@@ -5,7 +5,7 @@ import type { Gsap, ScrollTriggerStatic } from '@/lib/motion/gsap'
 // keeps its shape on the way back rather than being kicked by the whole gap at once.
 const MAX_FRAME_S = 0.064
 
-export type Liquid = Readonly<{
+type Liquid = Readonly<{
   gsap: Gsap
   ScrollTrigger: ScrollTriggerStatic
   // The element whose time on screen the loop follows.

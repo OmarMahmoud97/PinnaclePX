@@ -20,7 +20,7 @@ type StageUsage = Readonly<{
   output: number
 }>
 
-export type UsageSummary = Readonly<{
+type UsageSummary = Readonly<{
   calls: number
   // Tokens the model read, in three kinds: sent fresh, read from the cache, written to it.
   input: number

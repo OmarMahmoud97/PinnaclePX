@@ -12,7 +12,7 @@ const CEILING_GRADE = 9
 // A syllable count by vowel groups, with the usual corrections: a silent final "e" ("name"), the
 // "le" ending after a consonant ("little"), and "es" or "ed" endings that add no syllable
 // ("makes", "asked"). Good to within a syllable on ordinary English, which is all a grade needs.
-export function syllables(word: string): number {
+function syllables(word: string): number {
   const w = word.toLowerCase().replace(/[^a-z]/g, '')
   if (w.length === 0) return 0
   if (w.length <= 3) return 1
@@ -23,7 +23,7 @@ export function syllables(word: string): number {
   return Math.max(1, (stem.match(/[aeiouy]+/g) ?? []).length)
 }
 
-export function fleschKincaidGrade(texts: readonly string[]): number {
+function fleschKincaidGrade(texts: readonly string[]): number {
   const sentences = texts.flatMap((text) => text.split(/(?<=[.!?])\s+/).filter((s) => /\w/.test(s)))
   const words = sentences.flatMap((sentence) =>
     sentence.split(/\s+/).filter((w) => /[a-z]/i.test(w)),

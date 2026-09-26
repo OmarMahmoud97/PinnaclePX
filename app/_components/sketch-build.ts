@@ -17,7 +17,7 @@ type Beat = Readonly<{ at: number; for: number; step?: number }>
 // siblings that move one after another. CONFIG.walkthrough.beats.build is this shape. `cross` is the share of a travel each half of a crossfade takes: the sketch
 // part fades out over the first share, the finished part fades in over the last, and the stretch
 // between, the fastest, shows neither.
-export type BuildPlan = Readonly<{
+type BuildPlan = Readonly<{
   cross: number
   label: Beat
   bg: Beat

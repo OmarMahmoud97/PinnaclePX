@@ -1,5 +1,6 @@
 'use server'
 
+import type { Submitted } from '@/app/start/_components/brief-reducer'
 import { briefSchema } from '@/lib/brief/schema'
 import { type SubmissionAnswers, submissionAnswersFrom } from '@/lib/brief/submission'
 import { CONFIG } from '@/lib/config'
@@ -18,11 +19,9 @@ import { callerAddress } from '@/lib/rate-limit/request'
 import { conceptCountFor } from '@/lib/select/select'
 import { READY_TEMPLATES } from '@/templates/registry'
 
-type Submitted = Readonly<{ slug: string; deadlineAt: string; conceptCount: number }>
-
 // What the form sends besides the answers: how long it has been open, and a field no person
 // sees. A bot fills the field, or finishes in no time.
-export type Submission = Readonly<{ answers: unknown; openedForMs: number; website: string }>
+type Submission = Readonly<{ answers: unknown; openedForMs: number; website: string }>
 
 // Why a brief did not go (docs/start-page-journey-plan.md, 4.8): something failed on our side,
 // the day's limit is reached, or the answers were refused, by the hidden field, the time the form

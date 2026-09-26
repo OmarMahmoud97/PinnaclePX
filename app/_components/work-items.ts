@@ -7,7 +7,7 @@ import manifest from '@/app/_images/work/manifest.json'
 // studio's records and are the only figures on the page (copy.test.ts exempts them by string).
 // The pictures and their dates come from app/_images/work/manifest.json, written by
 // scripts/capture-work.mjs.
-export type ClientItem = Readonly<{
+type ClientItem = Readonly<{
   slug: string
   name: string
   trade: string

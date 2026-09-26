@@ -7,7 +7,7 @@ import type { TokenSet } from '@/lib/tokens/types'
 
 // Where a pipeline stage stands. `failed` is only for the two stages with no fallback, select
 // and tokens, and should never be seen; it exists so a failure is visible rather than silent.
-export const STAGE_STATES = ['pending', 'running', 'done', 'fallback', 'failed'] as const
+const STAGE_STATES = ['pending', 'running', 'done', 'fallback', 'failed'] as const
 
 export type StageState = (typeof STAGE_STATES)[number]
 

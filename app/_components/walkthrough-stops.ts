@@ -1,4 +1,4 @@
-export type Beat = Readonly<{ top: number; height: number; stages: readonly number[] }>
+type Beat = Readonly<{ top: number; height: number; stages: readonly number[] }>
 
 // Which stop the scroll has reached. Each beat paints one or more stages, spread evenly down its
 // height: the first at its top, the next a share of the way down, and so on. A stage is reached

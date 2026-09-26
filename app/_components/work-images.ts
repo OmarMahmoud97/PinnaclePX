@@ -39,7 +39,7 @@ export type WorkPicture = Readonly<{
   alt: string
 }>
 
-export type WorkImage = Readonly<{ phone: WorkPicture; desktop: WorkPicture }>
+type WorkImage = Readonly<{ phone: WorkPicture; desktop: WorkPicture }>
 
 type View = 'phone' | 'desktop'
 type Captured = Readonly<Record<View, Omit<WorkPicture, 'avif'>>>

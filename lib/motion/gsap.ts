@@ -14,7 +14,7 @@ export function loadGsap(): Promise<Gsap> {
   return loading
 }
 
-export type ScrollMotion = Readonly<{ gsap: Gsap; ScrollTrigger: ScrollTriggerStatic }>
+type ScrollMotion = Readonly<{ gsap: Gsap; ScrollTrigger: ScrollTriggerStatic }>
 
 let loadingScroll: Promise<ScrollMotion> | undefined
 

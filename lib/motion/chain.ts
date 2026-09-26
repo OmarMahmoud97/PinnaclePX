@@ -22,7 +22,7 @@
 
 type SpringNumbers = Readonly<{ frequencyHz: number; dampingRatio: number }>
 
-export type ChainNumbers = Readonly<{
+type ChainNumbers = Readonly<{
   stretchMax: number
   stretchKnee: number
   stretchCap: number

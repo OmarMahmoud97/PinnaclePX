@@ -5,7 +5,7 @@ import { type CopySlot, type SlotViolation, slotViolation } from '@/lib/copy-slo
 // result is every one outside its range, in the order they were checked. The path of an item
 // in a list is written the way the copy stage reports it back: nav.links[2].label.
 
-export type SlotChecks<TSlot extends string, TCount extends string> = Readonly<{
+type SlotChecks<TSlot extends string, TCount extends string> = Readonly<{
   text: (slot: TSlot, path: string, text: string) => void
   count: (slot: TCount, path: string, length: number) => void
   // Checks a list's count, then hands each item and its path to `each`.

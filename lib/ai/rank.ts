@@ -8,7 +8,7 @@ import { noteModelCall } from '@/lib/ai/usage'
 import { CONFIG } from '@/lib/config'
 import { AppError } from '@/lib/errors'
 
-export type Judged = Readonly<{ id: number; score: number; reject: string | null }>
+type Judged = Readonly<{ id: number; score: number; reject: string | null }>
 
 const verdictSchema = z.object({
   photos: z.array(

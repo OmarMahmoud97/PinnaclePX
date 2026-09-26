@@ -3,8 +3,8 @@ import { asc, eq } from 'drizzle-orm'
 import { db } from '@/lib/db/client'
 import { modelCall } from '@/lib/db/schema'
 
-export type ModelCallRow = typeof modelCall.$inferSelect
-export type NewModelCall = typeof modelCall.$inferInsert
+type ModelCallRow = typeof modelCall.$inferSelect
+type NewModelCall = typeof modelCall.$inferInsert
 
 // One row per call to the model, appended as the call returns. Steps that run in parallel each
 // append their own rows, so nothing is summed until the owner's notice reads them.

@@ -99,7 +99,7 @@ export type Tools = Readonly<{
   settleS: number
 }>
 
-export type Handlers = Readonly<{
+type Handlers = Readonly<{
   arm?: (tools: Tools) => void
   enter?: (tools: Tools) => void
   preempt?: (tools: Tools) => void
@@ -118,7 +118,7 @@ export type SectionContext = Readonly<{
   inview: (group: HTMLElement) => boolean
 }>
 
-export type SectionModule = (ctx: SectionContext) => void
+type SectionModule = (ctx: SectionContext) => void
 
 const { choreo } = CONFIG.motion
 // One module per section that has choreography of its own, in page order. Two sections have

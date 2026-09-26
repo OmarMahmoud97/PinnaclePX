@@ -8,7 +8,7 @@ import type { ContrastPair } from '@/lib/tokens/types'
 // slot and nothing else: no links, no pictures, no logo. Those are fixed by the template's link
 // plan and by the assets the pipeline hands over. The schema is a zod v4 schema with no length
 // limits (the structured output API has none); copyViolations is where the limits live.
-export type TypedContract<TCopy> = Readonly<{
+type TypedContract<TCopy> = Readonly<{
   meta: TemplateMeta
   contrastPairs: readonly ContrastPair[]
   // The image slots the imagery stage fills, in order of importance.
