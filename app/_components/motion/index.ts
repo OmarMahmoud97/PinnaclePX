@@ -12,6 +12,7 @@ import { yourOptions } from '@/app/_components/motion/your-options'
 import { CONFIG } from '@/lib/config'
 import type { Gsap, ScrollTriggerStatic } from '@/lib/motion/gsap'
 import { type LenisClass, onActiveLenis } from '@/lib/motion/lenis'
+import { WORK_FLIGHT } from '@/lib/motion/work-flight'
 
 // The scroll choreography below the hero (ADR 0034, docs/home-page-redesign-plan.md section 6).
 //
@@ -117,9 +118,6 @@ export type SectionContext = Readonly<{
 type SectionModule = (ctx: SectionContext) => void
 
 const { choreo } = CONFIG.motion
-// A Work switch's flight (ADR 0039): the attribute that holds the refresh while it lives, and
-// the event that runs it once the last one ends.
-const { signal: workFlight } = CONFIG.motion.work
 // One module per section that has choreography of its own, in page order. Two sections have
 // none and no module: the walkthrough (#how-it-works, plan 7.3, D8), where nothing moves but
 // the heading's CSS reveal and the active step's colour, and no trigger is ever made inside the
@@ -357,17 +355,17 @@ export function start(main: HTMLElement, { gsap, ScrollTrigger }: Motion): () =>
       settling = window.setTimeout(refresh, choreo.resizeSettleMs)
     }
     const resizes = new ResizeObserver(() => {
-      if (html.hasAttribute(workFlight.attribute)) {
+      if (html.hasAttribute(WORK_FLIGHT.attribute)) {
         window.clearTimeout(settling)
         return
       }
       settleThenRefresh()
     })
     resizes.observe(main)
-    window.addEventListener(workFlight.endEvent, settleThenRefresh)
+    window.addEventListener(WORK_FLIGHT.endEvent, settleThenRefresh)
     cleanups.push(() => {
       window.removeEventListener(READY_EVENT, refresh)
-      window.removeEventListener(workFlight.endEvent, settleThenRefresh)
+      window.removeEventListener(WORK_FLIGHT.endEvent, settleThenRefresh)
       window.clearTimeout(settling)
       resizes.disconnect()
     })

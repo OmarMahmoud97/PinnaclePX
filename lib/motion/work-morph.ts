@@ -1,4 +1,4 @@
-import { CONFIG } from '@/lib/config'
+import { WORK_MORPH } from '@/lib/motion/work-tuning'
 
 // The Work tile's view switch (ADR 0039): one device that reshapes between a browser window
 // and a phone. This file is numbers only; app/_components/work-morph-controller.ts writes them.
@@ -14,7 +14,7 @@ import { CONFIG } from '@/lib/config'
 // display draw the same flight, and each frame is drawn from a sample at its own time, one
 // partial step past the last whole one (sampleAt), so a frame is never up to a sub-step stale.
 
-const N = CONFIG.motion.work
+const N = WORK_MORPH
 
 type Range = readonly [number, number]
 export type View = 0 | 1 // desktop, phone

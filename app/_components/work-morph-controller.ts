@@ -1,5 +1,4 @@
 import 'client-only'
-import { CONFIG } from '@/lib/config'
 import {
   advance,
   apply,
@@ -33,6 +32,8 @@ import {
   startState,
   type View,
 } from '@/lib/motion/work-morph'
+import { WORK_FLIGHT } from '@/lib/motion/work-flight'
+import { WORK_MORPH } from '@/lib/motion/work-tuning'
 
 // The Work switch's controller (ADR 0039), a lazy chunk WorkMorph loads on the first intent. It
 // writes what lib/motion/work-morph.ts computes; the CSS in app/_styles/work.css owns both rest
@@ -64,8 +65,8 @@ import {
 // in by opacity alone. No gsap here: a spring chain carries its speed through a change of mind,
 // which a tween cannot.
 
-const N = CONFIG.motion.work
-const { attribute: FLYING, endEvent: LANDED } = N.signal
+const N = WORK_MORPH
+const { attribute: FLYING, endEvent: LANDED } = WORK_FLIGHT
 const SVG = 'http://www.w3.org/2000/svg'
 // The front's four strokes, back to front: two soaks on the old page, the halo and the rim.
 const STROKES = ['soak-far', 'soak-near', 'halo', 'rim'] as const

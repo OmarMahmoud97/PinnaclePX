@@ -6,9 +6,10 @@
 - Amends: ADR 0034 decision 7 (the caps, the redesign plan's D12: the switch is its own
   component motion, outside them) and its amendment 4 (the rail's height now follows a switch);
   the Work tile's rest layout from `docs/home-page-redesign-plan.md` 7.1 (the device sits under
-  the pill in both views, owner decision 1)
-- Keeps: ADR 0005 and ADR 0021 (GSAP and Lenis stay in `lib/motion` and lazy; the switch imports
-  neither); the switch working with JavaScript off (the owner, 26 September 2026); ADR 0034's byte
+  the pill in both views, owner decision 1); ADR 0005 decision 5 (the switch's JavaScript numbers
+  live beside it in `lib/motion/work-tuning.ts`, not in `CONFIG.motion`, decision 12)
+- Keeps: ADR 0005 and ADR 0021 otherwise (GSAP and Lenis stay in `lib/motion` and lazy; the switch
+  imports neither); the switch working with JavaScript off (the owner, 26 September 2026); ADR 0034's byte
   lines, none of which moves; `docs/standards.md`, unchanged
 - Plan: none kept. The implementation spec and the prototype it was written from were working
   files of the build session and are not in the repository; this ADR is the record of what was
@@ -65,7 +66,7 @@ the judges flagged (the spec's section 0).
    allows: edge to edge, their two anti-aliased edges shared a device pixel as a flat front
    drained, and the device's dark ground showed through as a hairline (2 of 561 seeked frames).
    At pace 1 the device crosses p 0.5 at 400 ms and is at rest at 1,054 ms, and the beat ends at
-   about 1.46 s; the ranges are `CONFIG.motion.work.beats`.
+   about 1.46 s; the ranges are `WORK_MORPH.beats` (`lib/motion/work-tuning.ts`).
 
 3. **The drive is a two-spring chain, not a tween.** A motor pulled by the checked radio (1.5 Hz,
    critically damped) pulls the device (1.2 Hz, ζ 0.8), so it leaves with no jolt and lands
@@ -118,7 +119,7 @@ the judges flagged (the spec's section 0).
    a text query still finds one "Phone" per tile. The capture layers take no class of their own;
    the chrome's dots are `.work-chrome-dots` (`.work-dots` is already the rail's dot row).
 
-6. **The pace is 1.15.** `CONFIG.motion.work.pace` and `--work-morph-pace` on `#work` are the same
+6. **The pace is 1.15.** `WORK_MORPH.pace` and `--work-morph-pace` on `#work` are the same
    number; every spring and both beat clocks run that many times slower, so the device is at rest
    at 1.2 s and the beat ends at about 1.68 s. The owner has asked for weightier motion more than
    once; the switch's pace is scoped like `--menu-pace`, never the `--motion-*` clocks.
@@ -201,7 +202,7 @@ the judges flagged (the spec's section 0).
    within 0.1 px/frame². While any flight lives `<html>` carries `data-work-morph`, which turns
    scroll anchoring off, and the scroll choreography's resize refresh waits
    (`app/_components/motion/index.ts`); the last flight's `work:morph-end` event runs it once, a
-   settle later. The attribute and the event are `CONFIG.motion.work.signal`, so the
+   settle later. The attribute and the event are `WORK_FLIGHT` (`lib/motion/work-flight.ts`), so the
    choreography's chunk never carries the switch. A resize that changes the width lands every
    flight at once; a phone's address bar, which changes only the height, does not. A page that
    hides lands them too, where their radios say: it draws no frames, and a flight left in it
@@ -217,6 +218,14 @@ the judges flagged (the spec's section 0).
     `height` on the tile, one layout pass a frame and only for the switched tile; and
     `box-shadow`, through `--work-lift` and `--work-ring`, on an element whose size already
     repaints it. No filter is used; the lit edge is SVG strokes, not a drop shadow.
+
+12. **The switch's numbers live beside it, not in `CONFIG`.** ADR 0005 puts motion's numbers in
+    `CONFIG.motion`, but `CONFIG` is one object and rides every route's initial bundle, and the
+    switch's block alone put `/contact`'s scripts over their line once the contact page (ADR 0040)
+    landed beside it. So the numbers are `WORK_MORPH` in `lib/motion/work-tuning.ts`, read only by
+    the pure module, the lazy controller and the tests, and the two names the scroll choreography
+    reads of a flight are `WORK_FLIGHT` in `lib/motion/work-flight.ts`. `CONFIG` carries nothing of
+    the switch, so no page but `/` pays for it before a visitor reaches for one.
 
 ## Consequences
 
@@ -235,7 +244,11 @@ the judges flagged (the spec's section 0).
   ride `CONFIG`; 396 B under its line), and the lazy chunk 7,342 B (the row's rounded maximum and
   its carry); after its fourth, `/` scripts 217,417 B and HTML 34,925 B, stylesheets and `/start`
   unchanged, and the lazy chunk 7,456 B (the leaving end, the row before its floor and the sticky
-  hand-back).
+  hand-back). Merged with the contact page, CI measured `/contact`'s scripts at 208,932 B against
+  their 208,500 B line with the switch's numbers in `CONFIG`; with them beside the switch, as
+  decision 12 records, `/` scripts are 217,176 B, `/start` 253,171 B and `/contact` 208,419 B, and
+  `lib/config.ts` differs from `main` only in a comment, so `/contact`'s initial bundle is what it
+  was without the switch.
 - **Measured on the production build** (Chromium with GPU flags, the second tile, real clicks):
   at 1440 by 900, each way, the worst frame is 16.8 ms and none is over 20 ms; the tile grows at
   most 11.9 px a frame to the phone and 13.7 px back, with a second difference of 2.2 and 1.6

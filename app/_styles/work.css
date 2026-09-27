@@ -134,8 +134,9 @@ html[data-motion] [data-reveal]:not([data-inview]) .work-backlight {
 
 /*
  * The switch's own pace: every spring and both beat clocks run this many times slower
- * (CONFIG.motion.work.pace is the same number; keep the two equal). Scoped here like
- * --menu-pace, never the --motion-* clocks. The light is the lit edge's and the landing's.
+ * (WORK_MORPH.pace in lib/motion/work-tuning.ts is the same number; keep the two equal). Scoped
+ * here like --menu-pace, never the --motion-* clocks. The light is the lit edge's and the
+ * landing's.
  */
 #work {
   --work-morph-pace: 1.15;

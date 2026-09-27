@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { CONFIG } from '@/lib/config'
+import { WORK_MORPH } from '@/lib/motion/work-tuning'
 import {
   advance,
   apply,
@@ -40,7 +40,7 @@ import {
 // is never shorter than a tile in it and turns no corner in a frame, the landing beat fires once,
 // and the pill and the meniscus stay inside their bounds.
 
-const N = CONFIG.motion.work
+const N = WORK_MORPH
 
 // The prototype's measured lg tile (three columns at 1300 wide), and the phone rail at 390.
 const WIDE: Geometry = {
