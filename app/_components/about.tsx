@@ -57,8 +57,14 @@ function AddressCard() {
 // The studio's seal: the mark on a wash tile with one corner lit, ringed like a stamp. The ring
 // is complete in the markup; from md up motion/about.ts draws it on as the tile scales in. Below
 // md the tile is 80px and the ring would hug its edge, so the mark stands alone there. From md
-// the tile is 128px (144px at lg) with a 64px mark, so the seal reads as a real mark beside the
-// H2 rather than an icon under it.
+// the tile is 128px (144px at lg), so the seal reads as a real mark beside the H2 rather than an
+// icon under it.
+//
+// The mark is drawn at its lg size, 60px tall (91px wide) in the 144px tile, and scaled by the
+// tile's own ratio below lg, so the seal is one object at three sizes: unscaled it would crowd
+// the ring at md and overflow the tile on a phone. Scale leaves its layout box at 91px, so the
+// tile's one column is pinned to the tile's width, or that box would widen the track and pull
+// the mark off centre.
 //
 // The slot is the column's reveal child and CSS alone moves it; GSAP scales the tile inside.
 // They must be two elements: GSAP folds an element's own CSS translate and scale into its
@@ -68,7 +74,7 @@ function StudioTile() {
   return (
     <div aria-hidden="true" className="about-tile-slot">
       <div
-        className={`about-tile glow-corner grid size-20 place-items-center md:size-32 lg:size-36 ${cardWash}`}
+        className={`about-tile glow-corner grid size-20 grid-cols-1 place-items-center md:size-32 lg:size-36 ${cardWash}`}
       >
         <svg
           viewBox="0 0 100 100"
@@ -90,7 +96,10 @@ function StudioTile() {
           />
         </svg>
         {/* The mark is landscape, so size is its height; the ring is drawn round its box. */}
-        <LogoMark size={60} />
+        <LogoMark
+          size={60}
+          className="max-md:scale-[calc(80/144)] md:max-lg:scale-[calc(128/144)]"
+        />
       </div>
     </div>
   )
