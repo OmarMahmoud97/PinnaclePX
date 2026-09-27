@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { type CSSProperties, useEffect, useRef, useState } from 'react'
-import { BOOK_CALL, CTA, NAV_LINKS } from '@/app/_components/nav-links'
+import { BOOK_CALL, CONTACT, CTA, NAV_LINKS } from '@/app/_components/nav-links'
 import { LogoMark } from '@/components/brand/logo-mark'
 import { Button, buttonStyles } from '@/components/ui/button'
 import { textLinkStyles } from '@/components/ui/text-link'
@@ -39,11 +39,11 @@ function aimAt(button: HTMLElement | null, nav: HTMLElement | null) {
 }
 
 // The phone menu: a sheet over the whole screen in the page's dark set, the four sections as big
-// type with their numerals, and the two actions at the foot. The header stays on top of it with
-// its mark and the button, which has turned into the cross; the dark scope in app/globals.css
-// covers the header while the button is expanded. Open, the rest of the page is inert under it.
-// Closing, the sheet is inert at once, so it has left the tab order and the accessibility tree
-// before the ink has drained, and hidden after.
+// type with their numerals, and the ask, the call and the contact page at the foot. The header
+// stays on top of it with its mark and the button, which has turned into the cross; the dark
+// scope in app/globals.css covers the header while the button is expanded. Open, the rest of the
+// page is inert under it. Closing, the sheet is inert at once, so it has left the tab order and
+// the accessibility tree before the ink has drained, and hidden after.
 export function MobileNav() {
   const [phase, setPhase] = useState<Phase>('closed')
   const rootRef = useRef<HTMLDivElement>(null)
@@ -210,15 +210,24 @@ export function MobileNav() {
           >
             {CTA.label}
           </TrackedLink>
-          <TrackedLink
-            href={BOOK_CALL.href}
-            event="call_click"
-            location="mobile-nav"
-            onClick={close}
-            className={`${textLinkStyles} text-small`}
-          >
-            {BOOK_CALL.label}
-          </TrackedLink>
+          {/* The two quieter ways in stand side by side under the ask, the call first as the
+              stronger of them. The contact page's link has no event of its own: the visit is
+              counted as a page view (telemetry.tsx). From 640px the pair wraps under the ask and
+              takes the tablet's size (.menu-foot in header.css). */}
+          <div className="flex items-center gap-6">
+            <TrackedLink
+              href={BOOK_CALL.href}
+              event="call_click"
+              location="mobile-nav"
+              onClick={close}
+              className={`${textLinkStyles} text-small`}
+            >
+              {BOOK_CALL.label}
+            </TrackedLink>
+            <Link href={CONTACT.href} onClick={close} className={`${textLinkStyles} text-small`}>
+              {CONTACT.label}
+            </Link>
+          </div>
         </div>
       </nav>
     </div>

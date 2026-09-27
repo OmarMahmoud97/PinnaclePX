@@ -1,0 +1,1161 @@
+/*
+ * /contact (ADR 0040): the home page's closing, carried on into a page of its own. Plain CSS on
+ * the site's tokens and on the hooks the page's markup names, imported by the route alone
+ * (app/contact/page.tsx), so no other page downloads it. The sheet is unlayered, so a rule here
+ * wins over a utility on the same property: nothing here sets `display` on an element that
+ * carries `hidden`, `md:hidden` or `noscript:hidden`, which would lose to it.
+ */
+
+/*
+ * The page's clocks. It moves at the phone menu's weight, the page's own durations stretched by
+ * --contact-pace as --menu-pace stretches the menu's, so the shared --motion-* tokens are never
+ * retuned (the owner, 24 September 2026: weightier). The stagger is held to the caps' 80 ms, and
+ * --contact-hold is how far along its path the send's ink waits for the server's answer.
+ * CONFIG.contact.pace and CONFIG.contact.send.holdShare are the same two numbers, and
+ * contact-tokens.test.ts keeps them equal. Under reduced motion the page keeps its own pace, and
+ * the stagger, which the shared token zeroes, goes with it.
+ */
+.contact {
+  --contact-pace: 1.5;
+  --contact-tap: calc(var(--motion-tap) * var(--contact-pace));
+  --contact-enter: calc(var(--motion-enter) * var(--contact-pace));
+  --contact-settle: calc(var(--motion-settle) * var(--contact-pace));
+  --contact-reveal: calc(var(--motion-reveal) * var(--contact-pace));
+  --contact-stagger: min(calc(var(--motion-stagger) * var(--contact-pace)), 80ms);
+  --contact-hold: 0.38;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .contact {
+    --contact-pace: 1;
+  }
+}
+
+/*
+ * The first band: the hero's ground under the H1 and the two cards. The ramp is the hero's own,
+ * copied stop for stop (app/globals.css, .hero-ground) and written in lengths of --g, the height
+ * it is drawn over, so its bow is the hero's. It starts --ramp-top down, just under the H1's last
+ * line, and is still white for its first fourteenth, so the H1 always sits on pure white, the one
+ * ground its flip over the ink (.over-ink) was made for: two lines on a phone, one from 40rem,
+ * where the words first fit a line with Linux's wider setting to spare, and the header's taller
+ * clearance from 48rem. The ramp's image is 1.2 --g tall, which ends below its last stop at every
+ * x, and the solid foot under it is that stop's colour, so no seam shows where the image ends.
+ * The band is at least as tall as the ramp's reach, so the pool below meets the foot's colour
+ * wherever it hangs; from 64rem, where the cards sit side by side, that is what sets its height.
+ * The ramp is locked to the hero's by contact-tokens.test.ts.
+ */
+.contact-band {
+  --g: 52rem;
+  --ramp-top: calc(6.5rem + var(--text-hero) * 2 + 0.5rem);
+  min-height: calc(var(--ramp-top) + var(--g) * 1.1);
+  padding-top: 6.5rem;
+  padding-bottom: var(--spacing-band-sm);
+}
+
+@media (width >= 40rem) {
+  .contact-band {
+    --ramp-top: calc(6.5rem + var(--text-hero) + 1rem);
+  }
+}
+
+@media (width >= 48rem) {
+  .contact-band {
+    --ramp-top: calc(8rem + var(--text-hero) + 1rem);
+    padding-top: 8rem;
+  }
+}
+
+@media (width >= 64rem) {
+  .contact-band {
+    --g: 40rem;
+  }
+}
+
+.contact-ground {
+  position: absolute;
+  inset: var(--ramp-top) 0 0;
+  pointer-events: none;
+  background: var(--ink-foot)
+    radial-gradient(
+      ellipse 269% calc(var(--g) * 3.1) at 50% calc(var(--g) * 3),
+      #020a12 65%,
+      #02101d 67%,
+      #021b2c 68.7%,
+      #002943 70.2%,
+      #003555 71.2%,
+      #044368 72.2%,
+      #175883 73.9%,
+      #4581ad 76.6%,
+      #75a5cc 79.1%,
+      #9abfdd 81.1%,
+      #c6dcee 83.9%,
+      #e2eef7 86.3%,
+      #f8fbfd 90.1%,
+      #fefeff 92.1%,
+      #ffffff 94.5%
+    )
+    top / 100% calc(var(--g) * 1.2) no-repeat;
+}
+
+/*
+ * Where the header turns to its dark pill: an empty, full-width mark from the point the ramp is
+ * already the studio's mid-blue to the band's foot, which the header's observer finds by its
+ * data-theme like any dark band (app/_components/header-chrome.tsx). The cards are never marked:
+ * the call card and the sent card take the dark tokens through .contact-ink instead, so a card
+ * narrower than the bar never turns the pill dark over the white one beside it.
+ */
+.contact-dark-foot {
+  position: absolute;
+  inset: calc(var(--ramp-top) + var(--g) * 0.7) 0 0;
+  pointer-events: none;
+}
+
+/* The H1 over the two cards: air under the heading, twice as much from 48rem. */
+.contact-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+@media (width >= 48rem) {
+  .contact-stack {
+    gap: 3rem;
+  }
+}
+
+/* Two lines below 40rem whatever the setting: the words are about 9.4em wide, so on a 390 phone
+   they fit one line here and wrap on Linux's wider setting, which would move the ramp's start
+   (--ramp-top) from under the H1 into it. The cap breaks them once, "Ask first, / decide later.". */
+.contact-title {
+  max-width: 8em;
+  margin-inline: auto;
+  text-align: center;
+}
+
+@media (width >= 40rem) {
+  .contact-title {
+    max-width: none;
+  }
+}
+
+/*
+ * The two routes: one column at reading width, the form above the call, until 64rem, where they
+ * stand side by side, the form the wider of the two, each as tall as its own content, across the
+ * shell's content width (75rem), so their edges are the answers band's and the footer's.
+ */
+.contact-grid {
+  display: grid;
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 42rem;
+  margin-inline: auto;
+}
+
+@media (width >= 64rem) {
+  .contact-grid {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    align-items: start;
+    gap: 2rem;
+    max-width: 75rem;
+  }
+}
+
+/*
+ * The ink listens: while the visitor is writing, the canvas withdraws and the ramp stands still;
+ * once the focus leaves the form, the sent card's heading taking it among other ways, it comes
+ * back. A browser without :has() keeps the ink moving, which is where it started.
+ */
+.contact-band .ink {
+  transition: opacity var(--contact-reveal) var(--ease-standard);
+}
+
+.contact-band:has(.contact-form:focus-within) .ink {
+  opacity: 0;
+}
+
+/*
+ * The dark tokens as a class: the call card and the sent card. The same declarations as the dark
+ * scope (app/globals.css, [data-theme='dark']), which contact-tokens.test.ts keeps equal, without
+ * the attribute the header's observer looks for.
+ */
+.contact-ink {
+  color-scheme: dark;
+  color: var(--on-surface);
+  --surface: var(--ink-foot);
+  --surface-muted: var(--ink-card);
+  --surface-tint: var(--ink-raised);
+  --on-surface: var(--on-ink);
+  --on-surface-muted: var(--on-ink-muted);
+  --border: var(--ink-line);
+  --accent: var(--ink-card);
+  --brand-ink: var(--brand);
+}
+
+/*
+ * The form's card: paper, built like the hero's prompt card and /start's question card. It is
+ * its own stacking context, so the send's ink (z 1) and what rides over it (z 2) share one, and
+ * nothing between the card and the ask may make another at rest. The press point defaults to the
+ * foot's middle, and the form writes Send's centre over it as the message goes. Sent, the card is
+ * the ink card's twin, as tall as the form it replaced, its panel centred in it; from 64rem, where
+ * the call card stands beside it, it eases to the call card's height, so the two end level.
+ */
+.contact-card {
+  --press-at: 50% 100%;
+  --start-well: var(--surface-wash);
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+  transition: background-color var(--contact-settle) var(--ease-standard);
+}
+
+.contact-card[data-state='sending'] {
+  min-height: var(--contact-card-h);
+}
+
+.contact-card[data-state='sent'] {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: var(--contact-card-h);
+  background-color: var(--ink-card);
+  box-shadow: var(--shadow-card-ink);
+}
+
+@media (width >= 64rem) {
+  .contact-card[data-state='sent'] {
+    min-height: var(--contact-call-h, var(--contact-card-h));
+  }
+}
+
+@media (width >= 64rem) and (prefers-reduced-motion: no-preference) {
+  .contact-card[data-state='sent'] {
+    transition:
+      background-color var(--contact-settle) var(--ease-standard),
+      min-height var(--contact-reveal) var(--ease-enter);
+  }
+}
+
+/* On a phone the card is taller than the screen and the visitor is at its foot, where Send was,
+   so the panel lands there rather than in the middle, under the header or off the top. */
+@media (width < 48rem) {
+  .contact-card[data-state='sent'] {
+    justify-content: flex-end;
+  }
+}
+
+/*
+ * A field's well (components/ui/field.tsx names the hook): /start's rules, scoped to the card,
+ * since /start's sheet never loads here. The wash inside the white card with a soft inset edge,
+ * a red ring when the answer is wrong, and 16 px text on a phone, where anything smaller makes
+ * iOS Safari zoom the page on focus, then 20 px from 40rem.
+ */
+.contact-card .start-well {
+  background: var(--start-well);
+  box-shadow: inset 0 1px 2px rgb(2 6 23 / 0.08);
+  font-size: 1rem;
+}
+
+.contact-card .start-well[aria-invalid='true'] {
+  box-shadow:
+    inset 0 1px 2px rgb(2 6 23 / 0.08),
+    0 0 0 2px var(--danger);
+}
+
+@media (width >= 40rem) {
+  .contact-card .start-well {
+    font-size: 1.25rem;
+  }
+}
+
+/* The message grows with its words and stops at a phone's comfortable length. Where field-sizing
+   is not supported, rows is the height and the handle lets the visitor pull it longer. */
+.contact-message {
+  field-sizing: content;
+  min-block-size: calc(4lh + 1.5rem);
+  max-block-size: 24lh;
+  resize: vertical;
+}
+
+@supports (field-sizing: content) {
+  .contact-message {
+    resize: none;
+  }
+}
+
+/* The label of the field being written in takes the brand's ink. */
+.contact-form label {
+  transition: color var(--contact-tap) var(--ease-standard);
+}
+
+.contact-form div:focus-within > label {
+  color: var(--brand-ink);
+}
+
+/* Name and email, stacked on a phone and side by side from 40rem, as /start's wells step. */
+.contact-row {
+  display: grid;
+  gap: 1.25rem;
+}
+
+@media (width >= 40rem) {
+  .contact-row {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 1rem;
+  }
+}
+
+/*
+ * The envelope: what will land, the subject the studio sees and the address a reply goes to, as
+ * the visitor types, and again as the sent card's receipt. A long address breaks anywhere rather
+ * than push the card wider.
+ */
+.contact-envelope {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.25rem;
+  margin: 0;
+  color: var(--on-surface-muted);
+  font-size: var(--text-small);
+  line-height: var(--text-small--line-height);
+}
+
+.contact-envelope > div {
+  display: flex;
+  gap: 0.375rem;
+  min-width: 0;
+}
+
+.contact-envelope dt {
+  color: var(--on-surface);
+  font-weight: 500;
+}
+
+.contact-envelope dd {
+  min-width: 0;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.contact-meter:empty {
+  display: none;
+}
+
+/* A message about an answer arrives by its opacity, never a shake; so does the meter's line. */
+.contact-form :is([id$='-error'], [role='alert'], .contact-meter) {
+  animation: contact-fade var(--contact-enter) var(--ease-standard) backwards;
+}
+
+/* From md the caption shares Send's line, as the hero prompt's does: the card is narrower than the
+   prompt, so it takes what the line leaves and balances over two lines at Send's shoulder. */
+@media (width >= 48rem) {
+  .contact-actions > p {
+    flex: 1 1 12rem;
+    text-align: right;
+  }
+
+  /* Send holds its resting width (224 px) through "Sending", so the caption keeps its lines and
+     the ink opens from the middle of the pill it was measured from. */
+  .contact-actions button {
+    min-inline-size: 14rem;
+  }
+}
+
+/* Send's arrow leans on towards where the message goes. */
+@media (prefers-reduced-motion: no-preference) {
+  .contact-actions button > svg:not(.contact-spinner) {
+    transition: translate var(--contact-tap) var(--ease-standard);
+  }
+
+  .contact-actions button:is(:hover, :focus-visible) > svg:not(.contact-spinner) {
+    translate: 0.25rem 0;
+  }
+}
+
+/*
+ * While the message is on its way the card goes quiet under the ink: its heading, fields, note,
+ * envelope and the caption beside Send fade out (the form also makes them inert), and only Send
+ * rides over the ink, alone, so the focus it keeps is always in sight. Under forced colours there
+ * is no ink, so nothing fades, and Send's "Sending" carries the state.
+ */
+.contact-quiet {
+  transition: opacity var(--contact-settle) var(--ease-standard);
+}
+
+.contact-card[data-state='sending'] .contact-quiet {
+  opacity: 0;
+}
+
+.contact-card[data-state='sending'] .contact-actions,
+.contact-sent {
+  position: relative;
+  z-index: 2;
+}
+
+/* Once the message has gone, Send fades out as the ink runs on over the card, so the form is hidden
+   under something already gone. A drain leaves it in view, with the reason beside it. */
+.contact-card .contact-actions {
+  transition: opacity var(--contact-settle) var(--ease-standard);
+}
+
+.contact-card:has(.contact-bloom[data-phase='complete']) .contact-actions {
+  opacity: 0;
+}
+
+/*
+ * Entrances, on the first paint and without JavaScript: the two cards rise one after the other,
+ * and the form's fields and actions settle in after the card, by the --in-at the form gives each.
+ * Every fill is backwards, so nothing is left translated or scaled at rest to make a stacking
+ * context. The largest paint is never faded: from 48rem it is the H1, which is never animated, as
+ * its flip needs no stacking context above it; below 48rem it is the form's lead, so there the
+ * form's card lifts without a fade and its heading and lead come with it. The same names fade
+ * only under reduced motion, where the phone's form card simply appears.
+ */
+.contact-card,
+.contact-call {
+  animation: contact-rise var(--contact-reveal) var(--ease-enter)
+    calc(var(--rise-at, 1) * var(--contact-stagger)) backwards;
+}
+
+.contact-call {
+  --rise-at: 2;
+}
+
+@media (width < 48rem) {
+  .contact-card {
+    animation-name: contact-lift;
+  }
+}
+
+.contact-in {
+  animation: contact-settle-in var(--contact-settle) var(--ease-enter)
+    calc(var(--in-at, 0) * var(--contact-stagger)) backwards;
+}
+
+/* The sent card's parts settle in one after another, the fourth and any after it together. */
+.contact-sent > * {
+  animation: contact-settle-in var(--contact-settle) var(--ease-enter)
+    calc(var(--i, 0) * var(--contact-stagger)) backwards;
+}
+
+.contact-sent > :nth-child(2) {
+  --i: 1;
+}
+
+.contact-sent > :nth-child(3) {
+  --i: 2;
+}
+
+.contact-sent > :nth-child(n + 4) {
+  --i: 3;
+}
+
+@keyframes contact-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes contact-fade-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes contact-rise {
+    from {
+      opacity: 0;
+      translate: 0 2.5rem;
+      scale: 0.96;
+    }
+  }
+
+  @keyframes contact-lift {
+    from {
+      translate: 0 2.5rem;
+      scale: 0.96;
+    }
+  }
+
+  @keyframes contact-settle-in {
+    from {
+      opacity: 0;
+      translate: 0 0.5rem;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  @keyframes contact-rise {
+    from {
+      opacity: 0;
+    }
+  }
+
+  @keyframes contact-settle-in {
+    from {
+      opacity: 0;
+    }
+  }
+}
+
+/*
+ * The send (contact-form.tsx): the house's bloom, /start's and the phone menu's, inside the card.
+ * The ink card's colour, clipped to a disc at Send, grows from Send's own ring to 142 per cent of
+ * the card's normalised diagonal, which reaches every corner from any point inside it. It holds
+ * at --contact-hold of that path until the server has answered, then runs on over the whole card,
+ * which becomes the sent card's ground, or drains away where it stands. The whole path takes the
+ * page's slowest clock (900 ms). "Off it goes." rises on it in the serif italic, well inside the
+ * held disc and clear of Send, and hands over to the sent card or leaves with the ink. It is
+ * decoration and hidden from assistive technology. Under reduced motion the ink fills the card
+ * by its colour instead, since a partial tint would leave the words on it unreadable.
+ */
+.contact-bloom {
+  --bloom-rest: circle(1.25rem at var(--press-at));
+  --bloom-hold: circle(calc(1.25rem + (142% - 1.25rem) * var(--contact-hold)) at var(--press-at));
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+  background: var(--ink-card);
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .contact-bloom[data-phase='hold'] {
+    animation: contact-hold calc(var(--contact-reveal) * var(--contact-hold)) var(--ease-enter) both;
+  }
+
+  .contact-bloom[data-phase='complete'] {
+    animation: contact-run calc(var(--contact-reveal) * (1 - var(--contact-hold))) var(--ease-enter)
+      both;
+  }
+
+  .contact-bloom[data-phase='drain'] {
+    animation: contact-drain var(--contact-settle) var(--ease-drain) both;
+  }
+
+  @keyframes contact-hold {
+    from {
+      clip-path: var(--bloom-rest);
+    }
+
+    to {
+      clip-path: var(--bloom-hold);
+    }
+  }
+
+  @keyframes contact-run {
+    from {
+      clip-path: var(--bloom-hold);
+    }
+
+    to {
+      clip-path: circle(142% at var(--press-at));
+    }
+  }
+
+  @keyframes contact-drain {
+    from {
+      clip-path: var(--bloom-hold);
+    }
+
+    to {
+      clip-path: var(--bloom-hold);
+      opacity: 0;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .contact-bloom {
+    background: transparent;
+  }
+
+  .contact-bloom[data-phase='hold'] {
+    animation: contact-hold var(--contact-settle) var(--ease-standard) both;
+  }
+
+  .contact-bloom[data-phase='complete'] {
+    animation: contact-run var(--contact-settle) var(--ease-standard) both;
+  }
+
+  .contact-bloom[data-phase='drain'] {
+    animation: contact-drain var(--contact-settle) var(--ease-standard) both;
+  }
+
+  @keyframes contact-hold {
+    from {
+      background-color: transparent;
+    }
+
+    to {
+      background-color: var(--ink-card);
+    }
+  }
+
+  @keyframes contact-run {
+    from,
+    to {
+      background-color: var(--ink-card);
+    }
+  }
+
+  @keyframes contact-drain {
+    from {
+      background-color: var(--ink-card);
+    }
+
+    to {
+      background-color: transparent;
+    }
+  }
+}
+
+@media (forced-colors: active) {
+  .contact-bloom {
+    visibility: hidden;
+  }
+}
+
+.contact-words {
+  position: absolute;
+  inset-inline: 1.25rem;
+  bottom: 8.5rem;
+  margin: 0;
+  color: var(--on-ink);
+  font-size: var(--text-title);
+  line-height: 1;
+  text-align: center;
+  animation: contact-fade var(--contact-settle) var(--ease-standard) var(--contact-enter) both;
+}
+
+@media (width >= 48rem) {
+  .contact-words {
+    bottom: 6rem;
+    left: auto;
+    right: 1.75rem;
+    text-align: right;
+  }
+}
+
+.contact-bloom[data-phase='drain'] .contact-words,
+.contact-card[data-state='sent'] .contact-words {
+  animation: contact-fade-out var(--contact-enter) var(--ease-standard) both;
+}
+
+/* Send's spinner turns only where motion is welcome; under reduced motion it holds still. One
+   turn takes the page's slowest clock, so it needs no duration of its own. */
+@media (prefers-reduced-motion: no-preference) {
+  .contact-spinner {
+    animation: contact-spin var(--contact-reveal) linear infinite;
+  }
+
+  @keyframes contact-spin {
+    to {
+      rotate: 1turn;
+    }
+  }
+}
+
+/*
+ * The sent card's tick, /start's early-finish check at a heading's scale, drawn once after the
+ * card's parts have settled; under reduced motion it appears. The ink scope's brand ink behind
+ * the ink foot's stroke is 7.18:1.
+ */
+.contact-check {
+  flex: none;
+  width: 1.75rem;
+  height: 1.75rem;
+  padding: 0.3rem;
+  border-radius: 999px;
+  background: var(--brand-ink);
+  fill: none;
+  stroke: var(--ink-foot);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.contact-check path {
+  stroke-dasharray: 1;
+  animation: contact-check var(--contact-reveal) var(--ease-enter) var(--contact-settle) backwards;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes contact-check {
+    from {
+      stroke-dashoffset: 1;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .contact-check path {
+    animation-duration: var(--contact-settle);
+  }
+
+  @keyframes contact-check {
+    from {
+      opacity: 0;
+    }
+  }
+}
+
+/*
+ * The call's card: ink, with the cyan top light the Work tiles carry. The light is a registered
+ * colour, so when the message has gone it warms by a transition, which reduced motion keeps, as
+ * it is colour: the next step, lit. Stacked on a phone and in its column from 64rem; between 48
+ * and 64rem, where it spans the form's width, the words sit left and the booking link right,
+ * with the foot under both.
+ */
+@property --contact-glow {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: transparent;
+}
+
+.contact-call {
+  --contact-glow: color-mix(in srgb, var(--glow) 16%, transparent);
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+  transition: --contact-glow var(--contact-reveal) var(--ease-standard);
+}
+
+.contact-call::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: -1;
+  height: 70%;
+  pointer-events: none;
+  background: radial-gradient(70% 90% at 50% 0%, var(--contact-glow), transparent 70%);
+}
+
+.contact-grid:has(.contact-card[data-state='sent']) .contact-call {
+  --contact-glow: color-mix(in srgb, var(--glow) 26%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .contact-call {
+    transition-property: --contact-glow !important;
+  }
+}
+
+.contact-call-ask {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+@media (48rem <= width < 64rem) {
+  .contact-call-body {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: 2.5rem;
+  }
+
+  /* The booking link at the top of its column, so a 768 by 1024 tablet's first screen holds it,
+     and what it costs under it at its width, as the hero prompt's caption wraps under its ask
+     on a phone: the words come first in the DOM, so a reader hears the cost before the link. */
+  .contact-call-ask {
+    flex-direction: column-reverse;
+    justify-content: flex-end;
+    width: min-content;
+    gap: 0.75rem;
+    text-align: center;
+  }
+
+  .contact-call-body > :last-child {
+    grid-column: 1 / -1;
+  }
+}
+
+/*
+ * The call card's ask (book-call.tsx, CallActions): the booking control, the booking page as a
+ * plain link under it and, once a call is booked, the line that says so. Under a full-width
+ * control on a phone, and under the control with its cost below it between 48 and 64rem, the
+ * link stands in the middle, as the hero prompt's caption does under its ask; from 64rem, where
+ * the control keeps its own width in the card's column, everything starts at the left.
+ */
+@media (width < 64rem) {
+  .contact-call-actions {
+    align-items: center;
+  }
+}
+
+.contact-booked {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  animation: contact-fade var(--contact-enter) var(--ease-standard) backwards;
+}
+
+.contact-booked .contact-check {
+  width: 1.375rem;
+  height: 1.375rem;
+  padding: 0.25rem;
+}
+
+/*
+ * The booking sheet (booking-sheet.tsx): Cal.com's calendar over the whole screen, opened from a
+ * booking control in either card. Its ink blooms from the press as the phone menu's does
+ * (app/_styles/header.css, .menu-sheet), at the page's weight, over 900 ms; the head, the card and
+ * the foot settle in over it from 180 ms, a stagger apart, as the menu's rows start at its tap,
+ * once the ink has all but covered the page. Closing, they fade first, then
+ * the ink drains back into the control over 450 ms, and only then does the dialog close. The ink
+ * is the ink's foot, written here rather than through a token; the head and the foot take the
+ * dark tokens through .contact-ink, and the scrollbar is the dark one.
+ *
+ * The clip is on the ink alone, an empty layer under everything else, never on anything that
+ * holds the calendar: Chrome clips a composited layer inside a clipped box, as Cal.com's frame and
+ * a scrolling box are, only to the clip's bounding box, so a clipped dialog showed a square of
+ * calendar and card round the disc as it bloomed and drained (measured, 27 September 2026). The
+ * clip lives only where motion is welcome: reduced motion keeps a clip's value and drops its
+ * transition (app/globals.css), and a disc the size of a button is not a sheet. There the whole
+ * sheet fades in and out instead. The dialog never scrolls; the box over the ink does, and Lenis
+ * and the page leave a wheel or a finger over it alone.
+ */
+.contact-sheet {
+  --press-at: 50% 50%;
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  background: transparent;
+  color: var(--on-ink);
+  color-scheme: dark;
+  transition: opacity var(--contact-enter) var(--ease-standard);
+}
+
+.contact-sheet::backdrop {
+  background: transparent;
+}
+
+.contact-sheet-ink {
+  position: absolute;
+  inset: 0;
+  background: var(--ink-foot);
+}
+
+.contact-sheet-scroll {
+  position: relative;
+  height: 100%;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.contact-sheet[data-phase='closing'] {
+  opacity: 0;
+}
+
+@starting-style {
+  .contact-sheet[open] {
+    opacity: 0;
+  }
+}
+
+/* Closing, the parts leave before the ink uncovers them, from wherever their entrance had got to. */
+.contact-sheet[data-phase='closing'] .contact-sheet-part {
+  opacity: 0;
+  animation: none;
+  transition: opacity var(--contact-tap) var(--ease-standard);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .contact-sheet[data-phase='closing'] {
+    opacity: 1;
+  }
+
+  .contact-sheet-ink {
+    clip-path: circle(142% at var(--press-at));
+    transition: clip-path var(--contact-reveal) var(--ease-enter);
+  }
+
+  .contact-sheet[data-phase='closing'] > .contact-sheet-ink {
+    clip-path: circle(1.25rem at var(--press-at));
+    transition: clip-path var(--contact-settle) var(--ease-drain);
+  }
+
+  @starting-style {
+    .contact-sheet[open] {
+      opacity: 1;
+    }
+
+    .contact-sheet[open] > .contact-sheet-ink {
+      clip-path: circle(1.25rem at var(--press-at));
+    }
+  }
+}
+
+/*
+ * The sheet's column: the heading and the round close button, the calendar's card, then the
+ * booking page and Close. From 64rem the card is 944 px wide, which Cal.com's calendar needs to
+ * set its times beside the month rather than under it (at 800 px it stacks them). On a phone the
+ * head sits where the header's row was, the close button about where the menu's was. Each part
+ * settles in once the ink is on its way, a stagger apart.
+ */
+.contact-sheet-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  max-width: 64rem;
+  margin-inline: auto;
+  padding: 1rem 1rem 1.5rem;
+}
+
+@media (width >= 48rem) {
+  .contact-sheet-inner {
+    gap: 1.75rem;
+    padding: 2.5rem 2.5rem 3rem;
+  }
+}
+
+@media (width >= 64rem) {
+  .contact-sheet-inner {
+    padding-top: 4rem;
+  }
+}
+
+.contact-sheet-part {
+  animation: contact-settle-in var(--contact-settle) var(--ease-enter)
+    calc(var(--contact-tap) + var(--i, 0) * var(--contact-stagger)) backwards;
+}
+
+.contact-sheet-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.contact-sheet-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.25rem 1.5rem;
+}
+
+/*
+ * The calendar's card: white, with the panels' cyan halo on the ink (--shadow-panel), in the light
+ * scheme, which is the one Cal.com's loader reads off the frame and paints in, so the calendar is
+ * never its dark theme on the navy. Its words are the page's dark ones, not the sheet's pale ink.
+ * It is as tall as a month's calendar before the calendar has a height of its own.
+ */
+.contact-sheet-card {
+  position: relative;
+  min-block-size: 36rem;
+  overflow: clip;
+  border-radius: var(--radius-card);
+  background: var(--surface);
+  color: var(--on-surface);
+  color-scheme: light;
+  box-shadow: var(--shadow-panel);
+}
+
+/* Cal.com's frame, faded in once it says it is ready, as the skeleton under it fades out. */
+.contact-cal {
+  position: relative;
+  opacity: 0;
+  transition: opacity var(--contact-settle) var(--ease-standard);
+}
+
+.contact-sheet-card[data-cal='ready'] > .contact-cal {
+  opacity: 1;
+}
+
+/*
+ * The skeleton: a still sketch of the calendar in the washes, never a loop. The month and its
+ * arrows, five weeks of days with a few deeper as open ones, and from 64rem a column of times
+ * beside them. It is decoration, under the frame, and never takes a press.
+ */
+.contact-skeleton {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
+  gap: 1.5rem;
+  padding: 1.25rem;
+  pointer-events: none;
+  transition: opacity var(--contact-settle) var(--ease-standard);
+}
+
+.contact-sheet-card:is([data-cal='ready'], [data-cal='failed']) > .contact-skeleton {
+  opacity: 0;
+}
+
+.contact-skeleton span {
+  display: block;
+  background: var(--surface-wash);
+}
+
+.contact-skeleton-month {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.contact-skeleton-month > :first-child {
+  width: 40%;
+  height: 0.875rem;
+  margin-inline-end: auto;
+  border-radius: 999px;
+  background: var(--surface-wash-deep);
+}
+
+.contact-skeleton-month > :not(:first-child) {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 999px;
+}
+
+.contact-skeleton-days {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+.contact-skeleton-days > span {
+  aspect-ratio: 1;
+  border-radius: 0.75rem;
+}
+
+.contact-skeleton-days
+  > :is(
+    :nth-child(10),
+    :nth-child(11),
+    :nth-child(17),
+    :nth-child(18),
+    :nth-child(19),
+    :nth-child(24),
+    :nth-child(25),
+    :nth-child(31)
+  ) {
+  background: var(--surface-wash-deep);
+}
+
+.contact-skeleton-times {
+  display: none;
+}
+
+/* From 64rem, as wide as Cal.com's month and times (720 px) and centred as they are, so the
+   calendar fades in where its sketch stood. */
+@media (width >= 64rem) {
+  .contact-skeleton {
+    grid-template-columns: minmax(0, 1fr) 14rem;
+    column-gap: 1.5rem;
+    max-width: 45rem;
+    margin-inline: auto;
+  }
+
+  .contact-skeleton-times {
+    display: flex;
+    flex-direction: column;
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    gap: 0.75rem;
+  }
+
+  .contact-skeleton-times > span {
+    height: 2.75rem;
+    border-radius: 999px;
+  }
+}
+
+/* When the calendar did not open: why, another try, and the booking page, in the card's middle. */
+.contact-sheet-failed {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 1.5rem;
+  text-align: center;
+  animation: contact-fade var(--contact-enter) var(--ease-standard) backwards;
+}
+
+/* Forced colours flatten the halo and the washes, so the card is drawn by its border and the
+   skeleton by hairlines in the system's quiet colour. */
+@media (forced-colors: active) {
+  .contact-sheet,
+  .contact-sheet-card {
+    border: 1px solid CanvasText;
+  }
+
+  .contact-skeleton span {
+    border: 1px solid GrayText;
+  }
+}
+
+/*
+ * The band of answers: the wash cards of Straight answers on the footer's white, each with its
+ * icon beside the question from 48rem (the icon spans both rows, or the answer drops under it).
+ * The list's reveal is the site's, stretched to the page's pace; nothing shared is re-declared.
+ */
+.contact-answer {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+@media (width >= 48rem) {
+  .contact-answer {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-content: start;
+    gap: 0.375rem 1.25rem;
+  }
+
+  .contact-answer > :first-child {
+    grid-row: span 2;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html[data-motion] .contact [data-reveal] > * {
+    transition-duration: var(--contact-reveal);
+    transition-delay: calc(var(--i, 0) * var(--contact-stagger));
+  }
+}
+
+/*
+ * Forced colours: the ramp, the ink and the send's disc go, so the band is the system's canvas
+ * and the H1 its text; the quiet parts and Send stay in sight while sending; every card is drawn by a
+ * border, since the shadow and the fill that set it off are flattened; and the tick keeps its
+ * disc in the system's colours. The state is carried by words: "Sending", the sent heading.
+ */
+@media (forced-colors: active) {
+  .contact-ground,
+  .contact-band .ink {
+    display: none;
+  }
+
+  .contact-card[data-state='sending'] .contact-quiet,
+  .contact-card:has(.contact-bloom[data-phase='complete']) .contact-actions {
+    opacity: 1;
+  }
+
+  .contact-card,
+  .contact-call,
+  .contact-answer {
+    border: 1px solid CanvasText;
+  }
+
+  .contact-check {
+    forced-color-adjust: none;
+    background: CanvasText;
+    stroke: Canvas;
+  }
+}

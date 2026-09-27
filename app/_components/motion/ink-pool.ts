@@ -3,7 +3,8 @@ import { drive } from '@/app/_components/motion/liquid'
 import { POOL, poolPath } from '@/lib/motion/pool-curve'
 
 // The pooled curve under the ink stretch (app/globals.css .ink-pool, ADR 0034 amendments of 23
-// and 25 September 2026). From md up it is liquid: a chain of two springs, the shoulders pulled
+// and 25 September 2026), and under /contact's first band, which hangs the same curve (ADR
+// 0040); a page has one, so it is found by its class alone. From md up it is liquid: a chain of two springs, the shoulders pulled
 // by the scroll's speed and the belly following them (lib/motion/chain.ts; the drawing is
 // lib/motion/pool-curve.ts), so the curve deepens while the page glides down, flattens while it
 // glides up, and once the page stops it hangs, swings back through rest and settles with a
@@ -13,7 +14,7 @@ import { POOL, poolPath } from '@/lib/motion/pool-curve'
 // writes the server's arc back. Phones (no ScrollTrigger) and reduced motion keep the server
 // markup, the resting segment; the numbers are CONFIG.motion.choreo.pool.
 export function inkPool({ ScrollTrigger, gsap, mm, root }: SectionContext): void {
-  const lip = root.querySelector<SVGSVGElement>('.ink-stretch > .ink-pool')
+  const lip = root.querySelector<SVGSVGElement>('.ink-pool')
   const path = lip?.querySelector('path') ?? null
   const restPath = path?.getAttribute('d') ?? null
   if (lip === null || path === null || restPath === null) return

@@ -2,10 +2,10 @@
 //
 // It reads the prerendered HTML for each route, gzips every script and stylesheet the HTML
 // references, sums the fonts it preloads as served, and compares the totals with the numbers in
-// docs/home-page-design-plan.md, section 8, ADR 0034, ADR 0035 and ADR 0037. It also fails when a
-// route is no longer prerendered, and when a chunk that must stay lazy (GSAP, ADR 0005, and the
-// others in LAZY below) is referenced from a route's initial script tags or can no longer be
-// found at all.
+// docs/home-page-design-plan.md, section 8, ADR 0034, ADR 0035, ADR 0037 and ADR 0040. It also
+// fails when a route is no longer prerendered, and when a chunk that must stay lazy (GSAP, ADR
+// 0005, and the others in LAZY below) is referenced from a route's initial script tags or can no
+// longer be found at all.
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs'
 import { join, relative } from 'node:path'
 import { gzipSync } from 'node:zlib'
@@ -126,6 +126,27 @@ const BUDGETS = {
   // phase that held /start to the ceilings between releases went with the decision. The HTML
   // measures 5,817 B.
   '/start': { scripts: 254_000, stylesheets: 25_000, html: 25_000 },
+  // Set on 27 September 2026 for the contact page's first build (ADR 0040). Scripts measure
+  // 207,887 B: the floor every page with the header and footer carries (179,659 B, /privacy's
+  // bundle less its own chunk), the page's chunk (19,377 B: the form, its bloom and sent card, the
+  // calendar's sheet and its controls, the Server Action's reference, the ink's loader and the
+  // reveal observer) and tailwind-merge (8,654 B), which the button recipe's cn() brings to any
+  // page that renders a button on the client, as / and /start already do. Cal.com's loader,
+  // about 22.7 KB gzipped, is fetched only when a booking control is pressed, so it is in none of
+  // this. The page links two sheets, the shared one and its own (app/_styles/contact.css, 3,440
+  // B), counted together as /start's are: 19,954 B. The HTML measures 10,509 B. Each line is its
+  // measure plus the 70 B margin, rounded up to the next 500 (207,957 B up to 208,000; 20,024 B
+  // up to 20,500; 10,579 B up to 11,000). The same build measures / at 217,004 B of scripts and
+  // 16,514 B of stylesheet, 3 B under its measure before the contact page, so neither / line moves.
+  // The review's fixes the same day (a keyboard send's focus, the sent card's ease to the call
+  // card's height, the sheet's booked line, one booking-page link, the try count kept for the
+  // document) take the scripts to 208,018 B, and the line to 208,500 (208,088 B rounded up); the
+  // two sheets measure 20,053 B and the HTML 10,505 B, inside their lines. / measures 217,008 B
+  // and /start 253,170 B (CONFIG's server deadline), inside theirs. The page then mounted the
+  // home page's choreography for its liquid pool and sheet lip (ADR 0040, OD9): its leaf takes
+  // the scripts to 208,419 B, still inside the line (208,489 B with the margin), and GSAP and
+  // ScrollTrigger stay lazy, fetched on the first scroll intent.
+  '/contact': { scripts: 208_500, stylesheets: 20_500, html: 11_000 },
 }
 
 // Chunks that must never ride a route's initial script tags. Each is found by a string its
@@ -161,6 +182,10 @@ const LAZY = {
 const GUARDS = {
   '/': ['gsap', 'lenis', 'fluid', 'scrollTrigger', 'zod'],
   '/start': ['gsap', 'lenis', 'fluid', 'fraunces', 'done', 'steps'],
+  // The contact page runs the ink, the reveals and the liquid edges as / does, and its Server
+  // Action checks with zod on the server only: its client checks are the zod-free copy in
+  // lib/contact/checks.ts.
+  '/contact': ['gsap', 'lenis', 'fluid', 'scrollTrigger', 'zod'],
 }
 
 function gzipped(file) {
@@ -204,7 +229,7 @@ function emitted() {
 let failed = false
 function report(state, route, line) {
   if (state === 'OVER') failed = true
-  console.log(`${state.padEnd(7)} ${route.padEnd(7)} ${line}`)
+  console.log(`${state.padEnd(7)} ${route.padEnd(8)} ${line}`)
 }
 
 if (!existsSync(join(NEXT, 'BUILD_ID'))) {

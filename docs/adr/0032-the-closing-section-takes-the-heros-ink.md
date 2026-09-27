@@ -4,6 +4,8 @@
 - Date: 21 September 2026
 - Builds on: ADR 0031 (the hero's ink, and its headline's colour flip)
 - Amends: ADR 0031 (decision 3, one canvas becomes two; the idle wander, which now resumes)
+- Amended by: ADR 0040 (decision 1, the one `Ink` component serves a third band, on `/contact`,
+  where decision 3's flip by difference is the H1's alone, 27 September 2026)
 
 ## Context
 

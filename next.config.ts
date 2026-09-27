@@ -28,9 +28,16 @@ const nextConfig: NextConfig = {
   // cannot decode AVIF), so they miss the hashed-asset cache header. Their address carries the
   // manifest's capture date as a version, so they can be cached as long as the hashed files are.
   // The brand mark (public/brand/) is served the same way, with the export date as its version.
+  // No other site may frame a page of this one, so a form (the contact page's, /start's) can never
+  // be laid under another page's clicks; the site's own pages may still frame each other.
   headers() {
     const immutable = [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }]
+    const framedBySelfOnly = [
+      { key: 'Content-Security-Policy', value: "frame-ancestors 'self'" },
+      { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
+    ]
     return Promise.resolve([
+      { source: '/:path*', headers: framedBySelfOnly },
       { source: '/work/:path*', headers: immutable },
       { source: '/brand/:path*', headers: immutable },
     ])

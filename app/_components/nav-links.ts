@@ -22,3 +22,7 @@ export const BOOK_CALL: NavLink = {
   label: `Book a ${String(CONFIG.call.minutes)}-minute call`,
   href: SITE.bookingUrl,
 }
+
+// The contact page: in the footer and the phone menu's foot, never the desktop row, where a fifth
+// link overflows the header between 768 and about 800 px (ADR 0040).
+export const CONTACT: NavLink = { label: 'Contact', href: '/contact' }
