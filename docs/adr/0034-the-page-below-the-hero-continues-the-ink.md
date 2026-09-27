@@ -13,7 +13,9 @@
 - Amended by: ADR 0035 (decision 4, the last `ring-brand-deeper` on `/start` moves to `brand-ink`,
   24 September 2026); ADR 0036 (decision 9, the panel's chrome on a phone and a CSS rise inside
   `#how-it-works` below `md`, 24 September 2026); ADR 0037 (decision 3's italic rule on `/start`,
-  and the pool's exemption from the caps, which now covers the `/start` curve, 25 September 2026)
+  and the pool's exemption from the caps, which now covers the `/start` curve, 25 September 2026);
+  ADR 0039 (decision 7's caps, which the Work switch's own component motion sits outside, and
+  amendment 4's rail, whose height now follows a switch, 27 September 2026)
 - Plan: `docs/home-page-redesign-plan.md`, amended by the director on 23 September 2026 (A1 to
   A3)
 
@@ -488,6 +490,12 @@ At 390 wide `#work` was 4,682 px, 5.55 phone screens, under A2's one column. Dec
    first time. The whole page at 390 falls from 17,020 to 13,540 px. Work at 390 re-measured on the
    finished tree (`judge2-probe.mjs`) reads the same: 1,201 px, six 294 px tiles, the rail's end at
    1,530, dot k+1 lit at stop k and no sideways scroll.
+
+Amended 27 September 2026 (ADR 0039): a tile's view switch now reshapes its one device, and the
+tile's inline height follows it for the second the flight lasts, so the rail's height grows with
+the phone and shrinks back with the desktop (567 to 729 px at 390 wide) while its `scrollLeft`
+stays 0 and the page stays the screen's width. The rail's overflow, snap and Lenis attribute are
+untouched, and the tile's `transform-origin: left` scale is never written.
 
 ## Amendment, 24 September 2026: the header changes in layers
 

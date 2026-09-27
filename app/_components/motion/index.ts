@@ -117,6 +117,9 @@ export type SectionContext = Readonly<{
 type SectionModule = (ctx: SectionContext) => void
 
 const { choreo } = CONFIG.motion
+// A Work switch's flight (ADR 0039): the attribute that holds the refresh while it lives, and
+// the event that runs it once the last one ends.
+const { signal: workFlight } = CONFIG.motion.work
 // One module per section that has choreography of its own, in page order. Two sections have
 // none and no module: the walkthrough (#how-it-works, plan 7.3, D8), where nothing moves but
 // the heading's CSS reveal and the active step's colour, and no trigger is ever made inside the
@@ -343,17 +346,28 @@ export function start(main: HTMLElement, { gsap, ScrollTrigger }: Motion): () =>
       gsap.ticker.lagSmoothing(500, 33)
     })
     // Every start line moves when the fonts land, when the walkthrough's finished page is in the
-    // DOM, and when <main> changes size; a resize refreshes once the window has settled.
+    // DOM, and when <main> changes size; a resize refreshes once the window has settled. A Work
+    // tile reshaping (ADR 0039) moves <main> every frame of its flight, so the switch's flights
+    // hold the refresh and it runs once, a settle after the last one ends.
     void document.fonts.ready.then(refresh)
     window.addEventListener(READY_EVENT, refresh)
     let settling: number | undefined
-    const resizes = new ResizeObserver(() => {
+    const settleThenRefresh = () => {
       window.clearTimeout(settling)
       settling = window.setTimeout(refresh, choreo.resizeSettleMs)
+    }
+    const resizes = new ResizeObserver(() => {
+      if (html.hasAttribute(workFlight.attribute)) {
+        window.clearTimeout(settling)
+        return
+      }
+      settleThenRefresh()
     })
     resizes.observe(main)
+    window.addEventListener(workFlight.endEvent, settleThenRefresh)
     cleanups.push(() => {
       window.removeEventListener(READY_EVENT, refresh)
+      window.removeEventListener(workFlight.endEvent, settleThenRefresh)
       window.clearTimeout(settling)
       resizes.disconnect()
     })

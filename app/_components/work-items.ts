@@ -14,6 +14,10 @@ type ClientItem = Readonly<{
   did: string
   result?: string
   url: string
+  // Where the desktop capture is anchored while the view switch narrows the window onto it, 0
+  // (its left edge) to 1 (its right), for a capture whose headline sits to one side; the switch
+  // centres the rest (ADR 0039, owner decision 5).
+  focus?: number
 }>
 
 export const WORK = {
@@ -34,6 +38,7 @@ export const CLIENT_ITEMS: readonly ClientItem[] = [
     trade: 'Dog walking, North London',
     did: 'Designed and built from scratch, with booking a chat one tap away.',
     url: 'https://gowilddogwalking.co.uk/',
+    focus: 0.2, // the headline sits at the left
   },
   {
     slug: 'vetpres',
@@ -41,6 +46,7 @@ export const CLIENT_ITEMS: readonly ClientItem[] = [
     trade: 'Veterinary prescription software',
     did: 'Designed and built by us. We still look after it.',
     url: 'https://vetpres.com/',
+    focus: 0.85, // the headline sits at the right
   },
   {
     slug: 'trvlwell',
@@ -49,6 +55,7 @@ export const CLIENT_ITEMS: readonly ClientItem[] = [
     did: 'Rebranded, rebuilt and relaunched.',
     result: 'Demo requests rose 40% after the relaunch.',
     url: 'https://trvlwell.co/',
+    focus: 0.35, // the headline sits at the left
   },
   {
     slug: 'withu',

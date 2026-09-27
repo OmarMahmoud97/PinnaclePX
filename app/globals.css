@@ -354,9 +354,10 @@ body {
 /*
  * Each section's own rules live in its own file, so parallel builders never share a line. /start's
  * sheet is not one of them: its route imports it (app/start/page.tsx), so the home page never
- * downloads the questionnaire's rules.
+ * downloads the questionnaire's rules. Nor is Work's, which carries the view switch's two device
+ * states and its flight (ADR 0039): the home page imports it (app/page.tsx), so /start never
+ * downloads them.
  */
-@import './_styles/work.css';
 @import './_styles/how-it-works.css';
 @import './_styles/your-options.css';
 @import './_styles/straight-answers.css';

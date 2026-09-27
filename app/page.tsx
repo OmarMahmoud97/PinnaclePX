@@ -17,6 +17,10 @@ import { CONFIG } from '@/lib/config'
 import { env } from '@/lib/env'
 import { readyForTraffic } from '@/lib/select/select'
 import { READY_TEMPLATES } from '@/templates/registry'
+// Work's own rules, imported by the one route that shows the section rather than by
+// app/globals.css, so the sheet every other page shares never carries the view switch's device
+// and its flight (ADR 0039), as /start's rules stay on /start.
+import './_styles/work.css'
 
 if (env.LAUNCH_GATE === '1' && !readyForTraffic(READY_TEMPLATES.length)) {
   throw new Error(

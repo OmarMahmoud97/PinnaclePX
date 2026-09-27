@@ -32,4 +32,10 @@ test('the whole page reads and works without JavaScript', async ({ page }) => {
 
   await expect(page.locator('#straight-answers').getByRole('heading', { level: 3 })).toHaveCount(4)
   await expect(page.locator('#included').getByRole('heading', { level: 3 })).toHaveCount(8)
+
+  // The Work switch is the radios and CSS alone: the one device takes the phone's shape (ADR 0039).
+  const tile = page.locator('#work').getByRole('listitem').first()
+  await tile.getByText('Phone', { exact: true }).click()
+  await expect(tile.locator('[data-frame="phone"]')).toBeVisible()
+  await expect(tile.locator('[data-frame="browser"]')).toBeHidden()
 })

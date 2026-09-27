@@ -96,17 +96,437 @@ html[data-motion] [data-reveal]:not([data-inview]) .work-backlight {
 }
 
 /*
+ * The view switch (ADR 0039): one device with two rest states, drawn from the radios alone, so
+ * the switch works without script. A flight (app/_components/work-morph-controller.ts) writes
+ * the numbers between the states; the colours are these registered numbers at 0 or 1, so CSS
+ * owns every colour and a write restyles only the element that reads it. Every read falls back to
+ * 0, the desktop state, so a browser without @property still draws both rest states.
+ */
+@property --work-lift {
+  syntax: '<number>';
+  inherits: false;
+  initial-value: 0;
+}
+
+@property --work-ring {
+  syntax: '<number>';
+  inherits: false;
+  initial-value: 0;
+}
+
+@property --work-fold {
+  syntax: '<number>';
+  inherits: false;
+  initial-value: 0;
+}
+
+@property --work-island {
+  syntax: '<number>';
+  inherits: false;
+  initial-value: 0;
+}
+
+@property --work-speaker {
+  syntax: '<number>';
+  inherits: false;
+  initial-value: 0;
+}
+
+/*
+ * The switch's own pace: every spring and both beat clocks run this many times slower
+ * (CONFIG.motion.work.pace is the same number; keep the two equal). Scoped here like
+ * --menu-pace, never the --motion-* clocks. The light is the lit edge's and the landing's.
+ */
+#work {
+  --work-morph-pace: 1.15;
+  --work-light: #d6faff;
+}
+
+/*
+ * The pill. At rest the checked label paints itself (the utilities in work.tsx), script or none.
+ * In flight a thumb and a dark copy of the two words, both made by the controller and clipped to
+ * the thumb's two edges, carry it, so a word turns dark exactly under the thumb; the copy's
+ * words are generated content, so a text query finds only the labels. Armed, the labels change
+ * paint only between flights, so they never transition. A tap never flashes the UA's highlight on
+ * a label, so none shows over the moving thumb.
+ */
+.work-seg,
+.work-seg label {
+  position: relative;
+}
+
+.work-seg label {
+  z-index: 1;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.work-seg[data-enhanced] label {
+  transition: none;
+}
+
+.work-seg[data-pill] label {
+  background: transparent;
+  color: var(--on-surface-muted);
+}
+
+.work-seg-thumb,
+.work-seg-ink {
+  display: none;
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.work-seg[data-pill] > :is(.work-seg-thumb, .work-seg-ink) {
+  display: flex;
+}
+
+.work-seg-thumb {
+  background: var(--on-surface);
+}
+
+.work-seg-ink {
+  z-index: 2;
+  padding: inherit;
+}
+
+.work-seg-ink > span {
+  color: var(--surface);
+}
+
+.work-seg-ink > span::before {
+  content: attr(data-word);
+}
+
+/*
+ * The device, in the desktop state. The stage keeps it under the pill in both states, so a
+ * stretched tile's spare room goes above its dated caption and a row-mate of a switching tile
+ * keeps its device still (ADR 0039, owner decision 1). The chrome is a fixed 35 px, the browser
+ * bar BrowserFrame draws, so both states measure.
+ */
+.work-stage {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.work-device {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  width: 100%;
+  border: 1px solid
+    color-mix(in srgb, var(--sketch-line), var(--glow) calc(var(--work-lift, 0) * 30%));
+  border-radius: 0.75rem;
+  background: var(--sketch-bg);
+  box-shadow:
+    0 0 0 4px rgb(2 6 23 / calc(var(--work-ring, 0) * 0.05)),
+    0 calc(24px + 14px * var(--work-lift, 0)) calc(64px + 28px * var(--work-lift, 0)) -12px
+      rgb(2 6 23 / calc(0.28 + 0.14 * var(--work-lift, 0))),
+    0 0 0 1px rgb(2 6 23 / 0.04);
+}
+
+.work-chrome {
+  position: relative;
+  z-index: 3;
+  flex: none;
+  height: 2.1875rem;
+  border-bottom: 1px solid
+    color-mix(
+      in srgb,
+      var(--sketch-line),
+      transparent calc(min(1, var(--work-fold, 0) * 1.8) * 100%)
+    );
+  background: color-mix(
+    in srgb,
+    var(--sketch-bg-muted),
+    var(--sketch-bg) calc(var(--work-fold, 0) * 100%)
+  );
+}
+
+.work-chrome-dots {
+  position: absolute;
+  top: 0.8125rem;
+  left: 0.75rem;
+  display: flex;
+  gap: 0.375rem;
+}
+
+.work-chrome-dots > span {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 9999px;
+  background: var(--sketch-line);
+}
+
+.work-tab {
+  position: absolute;
+  top: 0.5rem;
+  left: 50%;
+  translate: -50% 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  height: 1.125rem;
+  padding: 0 0.75rem;
+  border: 1px solid
+    color-mix(in srgb, var(--sketch-line), transparent calc(var(--work-island, 0) * 100%));
+  border-radius: 0.375rem;
+  background: color-mix(
+    in srgb,
+    color-mix(in srgb, var(--sketch-bg), black calc(var(--work-island, 0) * 50%)),
+    var(--sketch-line) calc(var(--work-speaker, 0) * 100%)
+  );
+  color: var(--sketch-muted);
+  font-size: 9px;
+  line-height: 1;
+}
+
+.work-tab-label {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  white-space: nowrap;
+}
+
+.work-device > [data-frame='phone'],
+.work-shade,
+.work-front,
+.work-size,
+.work-glint {
+  display: none;
+}
+
+/*
+ * The phone state: the checked radio, or a hold forcing a view while the controller measures it
+ * or waits on a capture. :where() leaves each rule the specificity of the part it styles, so it
+ * overrides the desktop state above by order alone and every in-flight rule below outranks it.
+ */
+:where(
+    .work-tile:has(input[value='phone']:checked):not([data-hold='desktop']),
+    .work-tile[data-hold='phone']
+  )
+  .work-device {
+  width: min(100%, 12rem);
+  border-radius: 1.25rem;
+  --work-ring: 1;
+}
+
+:where(
+    .work-tile:has(input[value='phone']:checked):not([data-hold='desktop']),
+    .work-tile[data-hold='phone']
+  )
+  .work-chrome {
+  height: 1rem;
+  --work-fold: 1;
+}
+
+:where(
+    .work-tile:has(input[value='phone']:checked):not([data-hold='desktop']),
+    .work-tile[data-hold='phone']
+  )
+  :is(.work-chrome-dots, .work-tab-label, .work-device > [data-frame='browser']) {
+  display: none;
+}
+
+:where(
+    .work-tile:has(input[value='phone']:checked):not([data-hold='desktop']),
+    .work-tile[data-hold='phone']
+  )
+  .work-tab {
+  width: 2rem;
+  height: 0.25rem;
+  padding: 0;
+  border-radius: 9999px;
+  --work-island: 1;
+  --work-speaker: 1;
+}
+
+:where(
+    .work-tile:has(input[value='phone']:checked):not([data-hold='desktop']),
+    .work-tile[data-hold='phone']
+  )
+  .work-device
+  > [data-frame='phone'] {
+  display: block;
+}
+
+@media (width >= 64rem) {
+  :where(
+      .work-tile:has(input[value='phone']:checked):not([data-hold='desktop']),
+      .work-tile[data-hold='phone']
+    )
+    .work-device {
+    width: min(100%, 14rem);
+  }
+}
+
+/*
+ * A tile read for its own height, top-aligned for the one read, so its row's stretch is never in
+ * it: the controller reads a switching tile and its resting row-mates this way, in the change's
+ * own task, and a flying tile's height is its row's, made from those reads (ADR 0039, decision 9).
+ */
+.work-tile[data-measure] {
+  align-self: flex-start;
+}
+
+/*
+ * In flight (data-morph): every layer drawn over the device's screen, each placed by the script,
+ * under the chrome and in this order: the leaving page, the pouring page, the lit front and the
+ * readout. The script writes the pool through the flight and the whole landing beat, the bloom's
+ * tail included (data-beat), so its own transition steps back; #work outranks the
+ * choreography's transition on it.
+ */
+#work .work-tile:is([data-morph], [data-beat]) .work-backlight {
+  transition: none;
+}
+
+.work-tile[data-morph] .work-device > [data-frame] {
+  display: block;
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+/* Each capture keeps its own width while the screen narrows past it (the preflight caps an image
+   at its box's), and the new page stretches past the screen by its width. */
+.work-tile[data-morph] [data-frame] img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  max-width: none;
+}
+
+.work-tile[data-morph] [data-frame='phone'] {
+  z-index: 1;
+}
+
+.work-tile[data-morph] :is(.work-chrome-dots, .work-tab-label) {
+  display: flex;
+}
+
+/* The ink shade the leaving page sinks under. */
+.work-tile[data-morph] .work-shade {
+  display: block;
+  position: absolute;
+  inset: 0;
+  background: var(--ink-raised);
+  opacity: 0;
+}
+
+/* The meniscus: four strokes of one curve, lit only while the front moves (--work-lit). */
+.work-tile[data-morph] .work-front {
+  display: block;
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+  fill: none;
+}
+
+.work-front [data-part='rim'] {
+  stroke: var(--work-light);
+  stroke-width: 1.75;
+  stroke-opacity: calc(var(--work-lit, 0) * 0.95);
+}
+
+.work-front [data-part='halo'] {
+  stroke: var(--glow);
+  stroke-width: 5;
+  stroke-opacity: calc(var(--work-lit, 0) * 0.42);
+}
+
+.work-front [data-part^='soak'] {
+  stroke: var(--ink-foot);
+  stroke-width: 8;
+  stroke-opacity: calc(var(--work-lit, 0) * 0.26);
+  translate: 0 5px;
+}
+
+.work-front [data-part='soak-far'] {
+  stroke-width: 14;
+  stroke-opacity: calc(var(--work-lit, 0) * 0.13);
+  translate: 0 13px;
+}
+
+/* The size readout, riding the right bezel like a resized viewport's; the script sets its top. */
+.work-tile[data-morph] .work-size {
+  display: block;
+  position: absolute;
+  right: 0.4375rem;
+  z-index: 2;
+  padding: 2px 5px;
+  border-radius: 4px;
+  background: var(--brand);
+  color: var(--on-brand);
+  font-size: 9px;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: 0.02em;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  opacity: 0;
+  box-shadow: 0 1px 2px rgb(2 6 23 / 0.3);
+}
+
+/*
+ * The landing's one light: a 2 px ring over the device's border (the stage's child, since the
+ * device clips at its padding edge), a band sweeping across it from the pressed pill's side. A
+ * gradient runs from the corner opposite its angle: 240deg from the top right, toward Desktop
+ * (data-beat right), and 120deg from the top left, toward Phone. data-beat holds for the bloom's
+ * tail too, when the script has let the light go and it rests at nothing.
+ */
+.work-tile[data-beat] .work-glint {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 5;
+  padding: 2px;
+  pointer-events: none;
+  opacity: 0;
+  background: linear-gradient(
+    var(--glint-angle, 240deg),
+    transparent calc(var(--glint-at) - 16%),
+    color-mix(in srgb, var(--glow) 55%, transparent) calc(var(--glint-at) - 4%),
+    var(--work-light) var(--glint-at),
+    color-mix(in srgb, var(--glow) 55%, transparent) calc(var(--glint-at) + 4%),
+    transparent calc(var(--glint-at) + 16%)
+  );
+  mask:
+    linear-gradient(black 0 0) content-box exclude,
+    linear-gradient(black 0 0);
+}
+
+.work-tile[data-beat='left'] .work-glint {
+  --glint-angle: 120deg;
+}
+
+/* Scroll anchoring must not turn a tile's growth into a scroll under the pointer. */
+html[data-work-morph] {
+  overflow-anchor: none;
+}
+
+/*
  * Windows High Contrast strips the backgrounds the segmented control is drawn with, and the
  * radios themselves are visually hidden, so the checked pill takes the system's own highlight
  * pair and the track a visible edge; the focus ring is a box shadow, which forced colours drop,
- * so the keyboard gets an outline in its place.
+ * so the keyboard gets an outline in its place. The switch never flies here (the controller
+ * takes forced colours as reduced motion), and the thumb's layers stay hidden whatever script
+ * does; .work-seg lifts the checked pill over the in-flight label rule all the same.
  */
 @media (forced-colors: active) {
   .work-tile fieldset {
     border: 1px solid CanvasText;
   }
 
-  .work-tile label:has(:checked) {
+  .work-tile .work-seg label:has(:checked) {
     forced-color-adjust: none;
     background: Highlight;
     color: HighlightText;
@@ -115,5 +535,10 @@ html[data-motion] [data-reveal]:not([data-inview]) .work-backlight {
   .work-tile label:has(:focus-visible) {
     outline: 2px solid CanvasText;
     outline-offset: 2px;
+  }
+
+  .work-seg-thumb,
+  .work-seg-ink {
+    display: none !important;
   }
 }
