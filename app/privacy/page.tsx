@@ -1,20 +1,31 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import { CONTACT } from '@/app/_components/nav-links'
 import { displayHeading, titleHeading } from '@/app/_components/section-styles'
-import { DEVICE_STORAGE, PROCESSORS, UNSENT_PICTURES } from '@/app/privacy/privacy-copy'
+import {
+  CONTACT_PRIVACY,
+  DEVICE_STORAGE,
+  PROCESSORS,
+  RIGHTS_LINK,
+  UNSENT_PICTURES,
+} from '@/app/privacy/privacy-copy'
 import { Logo } from '@/components/brand/logo'
 import { buttonStyles } from '@/components/ui/button'
 import { CONFIG } from '@/lib/config'
 import { SITE } from '@/lib/site'
 
+// Its own canonical: the layout's is the home page's, and metadata merges shallowly, so a page
+// that sets none would name the home page as the original of this one.
 export const metadata: Metadata = {
   title: 'Privacy',
   description: `How ${SITE.name} uses what you tell it, and your rights.`,
+  alternates: { canonical: '/privacy' },
 }
 
 // The notice the guide asks for at the question that takes an email: who we are, what we do
-// with the answers, on what basis, for how long, and what the visitor can do about it. Plain
-// words, one screen, no legalese it does not need.
+// with the answers, on what basis, for how long, and what the visitor can do about it. A message
+// from the contact page has its own section, which the form links to by its id. Plain words, one
+// screen, no legalese it does not need.
 export default function PrivacyPage() {
   return (
     <div className="flex min-h-dvh flex-col">
@@ -30,16 +41,16 @@ export default function PrivacyPage() {
         <div className="flex flex-col gap-3">
           <h1 className={displayHeading}>How we use what you tell us.</h1>
           <p className="text-on-surface-muted">
-            {SITE.legalName} is a one-person web design studio in the UK. This page says what
-            happens to the five answers, in plain words.
+            {SITE.legalName} is a one-person web design studio in the UK. {CONTACT_PRIVACY.intro}
           </p>
         </div>
 
+        {/* Scoped to the designs, so "Nothing else" stays true beside the contact page's section. */}
         <Section title="What we collect">
           <p>
-            Your name, your company name, your email address, a sentence about your business, and
-            any logo or photographs you add. Nothing else: no cookies for tracking, no phone number,
-            no account.
+            For your designs: your name, your company name, your email address, a sentence about
+            your business, and any logo or photographs you add. Nothing else: no cookies for
+            tracking, no phone number, no account.
           </p>
         </Section>
 
@@ -67,6 +78,16 @@ export default function PrivacyPage() {
           <p>{UNSENT_PICTURES}</p>
         </Section>
 
+        <Section title={CONTACT_PRIVACY.heading} id="contact">
+          <p>
+            {CONTACT_PRIVACY.collect} {CONTACT_PRIVACY.use}
+          </p>
+          <p>
+            {CONTACT_PRIVACY.where} {CONTACT_PRIVACY.keep}
+          </p>
+          <p>{CONTACT_PRIVACY.calendar}</p>
+        </Section>
+
         <Section title="What this browser keeps">
           <p>{DEVICE_STORAGE.join(' ')}</p>
         </Section>
@@ -85,11 +106,12 @@ export default function PrivacyPage() {
           <p>
             You can ask for a copy of what we hold, ask us to correct it, or ask us to delete it all
             before the {String(CONFIG.retention.days)} days are up. You can object to our use of
-            your details at any time. Email us
-            {SITE.contactEmail === null
-              ? ' at the address on the home page'
-              : ` at ${SITE.contactEmail}`}{' '}
-            and we will do it within a few days.
+            your details at any time.{' '}
+            {SITE.contactEmail === null ? (
+              <RightsRoute />
+            ) : (
+              `Email us at ${SITE.contactEmail} and we will do it within a few days.`
+            )}
           </p>
           <p>
             If you are not happy with how we have handled your details, you can complain to the
@@ -105,9 +127,35 @@ export default function PrivacyPage() {
   )
 }
 
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
+// How to use those rights while the studio has no inbox of its own: through the contact page,
+// whose name in the sentence is the link. The sentence stays whole in privacy-copy.ts for the
+// copy tests, as emphasised() keeps a heading whole (app/_components/words.tsx).
+function RightsRoute() {
+  const text = CONTACT_PRIVACY.rightsRoute
+  const at = text.indexOf(RIGHTS_LINK)
+  if (at < 0) return text
   return (
-    <section className="flex flex-col gap-3 text-on-surface-muted">
+    <>
+      {text.slice(0, at)}
+      <Link href={CONTACT.href} className="whitespace-nowrap underline underline-offset-4">
+        {RIGHTS_LINK}
+      </Link>
+      {text.slice(at + RIGHTS_LINK.length)}
+    </>
+  )
+}
+
+function Section({
+  title,
+  id,
+  children,
+}: {
+  title: string
+  id?: string
+  children: React.ReactNode
+}) {
+  return (
+    <section id={id} className="flex flex-col gap-3 text-on-surface-muted">
       <h2 className={`${titleHeading} text-on-surface`}>{title}</h2>
       {children}
     </section>

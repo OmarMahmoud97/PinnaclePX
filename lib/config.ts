@@ -28,6 +28,11 @@ export const CONFIG = {
     submissionsPerIp: { windowSeconds: 3_600, max: 5 },
     submissionsPerIdentity: { windowSeconds: 86_400, max: 3 },
     uploadsPerIp: { windowSeconds: 3_600, max: 100 },
+    // A message from /contact (ADR 0040), by address an hour and by person a day. Both count
+    // before the send, so a retry after a failure counts again: five a day leaves room for two
+    // failed tries and three messages, and once they are spent the page offers the call.
+    contactPerIp: { windowSeconds: 3_600, max: 5 },
+    contactPerIdentity: { windowSeconds: 86_400, max: 5 },
   },
   // How many times the reveal re-reads `seen` and tries again after another submission for the
   // same identity took a template first (lib/db/exclusivity.ts).
@@ -132,6 +137,35 @@ export const CONFIG = {
     minMs: 3_000,
   },
   call: { minutes: 20 }, // the Cal.com event length is set by hand to match
+  // The contact page (ADR 0040). A message may be a single line, and no longer than a phone shows
+  // comfortably twice over; its meter counts only the last `countdownChars`. An email address is
+  // at most the longest a mail server takes (RFC 5321), and a name is held to the questionnaire's
+  // longest (start.names.personMax). The page moves at the phone menu's weight. The send holds its
+  // ink at `holdShare` of its path until the server answers, never runs on sooner than `minHoldMs`
+  // after the press, so "Off it goes." is read (at 900 it shows whole for 150 ms after it fades
+  // in; 1_200 gives 450), and stops waiting after `timeoutMs`. The server gives up sooner, at
+  // `serverMs`, so its answer always reaches the page before the page gives up: a page sends its
+  // Server Actions one at a time, and a try after a stalled one would otherwise wait behind it.
+  // After `stuckAfter` failures in a row that a second try might have cleared, the refusal offers
+  // the call. The calendar is Cal.com's own inline embed, fetched only when a booking control is
+  // pressed. A try after the page's first, from the same sheet or from one mounted again after a
+  // return to the page, mounts under a numbered `namespace`, because each try's listeners would
+  // otherwise stack on the first's, and Cal.com's own page is offered if the calendar is not
+  // ready within `readyMs`. `pace` and `holdShare` are --contact-pace and --contact-hold
+  // (app/_styles/contact.css); keep them equal, as app/_styles/contact-tokens.test.ts checks.
+  contact: {
+    message: { minChars: 1, maxChars: 2_000, countdownChars: 200 },
+    emailMaxChars: 254,
+    pace: 1.5,
+    send: { holdShare: 0.38, minHoldMs: 900, timeoutMs: 20_000, serverMs: 15_000, stuckAfter: 2 },
+    booking: {
+      script: 'https://app.cal.com/embed/embed.js',
+      origin: 'https://app.cal.com',
+      namespace: 'contact',
+      layout: 'month_view',
+      readyMs: 10_000,
+    },
+  },
   // The studio's rate card, as the page prints it (docs/copy-review.md section 11): `from` is
   // the fixed quote for a site of `pages` pages with a contact form, wording, a content system
   // and the launch included; `perPage` is what each page beyond that adds. The owner set the

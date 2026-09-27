@@ -1,4 +1,4 @@
-import { BOOK_CALL, type NavLink } from '@/app/_components/nav-links'
+import { BOOK_CALL, CONTACT, type NavLink } from '@/app/_components/nav-links'
 
 type FooterGroup = Readonly<{ heading: string; links: readonly NavLink[] }>
 
@@ -23,6 +23,7 @@ export const FOOTER_GROUPS: readonly FooterGroup[] = [
       { label: 'Straight answers', href: '/#straight-answers' },
       { label: 'FAQ', href: '/#faq' },
       { label: 'Privacy', href: '/privacy' },
+      CONTACT,
       BOOK_CALL,
     ],
   },
