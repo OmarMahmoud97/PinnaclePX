@@ -463,7 +463,9 @@ export const CONFIG = {
     // one stagger and the parallax layers at md+. Never width, padding, margin, inset, font axes,
     // letter-spacing, box-shadow, filter, the H1, an .over-ink wrapper, or an ancestor of the
     // walkthrough stage or of a sticky column. The pool's path is decoration, like the rail's
-    // scaleY, and its depth is bounded by choreo.pool.stretchCap rather than by scaleFrom.
+    // scaleY, and its depth is bounded by choreo.pool.stretchCap rather than by scaleFrom. The caps
+    // hold everywhere except the Work switch (ADR 0039), which is its own component motion
+    // (lib/motion/work-tuning.ts).
     caps: { translateRem: 2.5, scaleFrom: 0.94, tweenMs: 900, staggerMs: 80, parallaxRem: 6 },
   },
 } as const

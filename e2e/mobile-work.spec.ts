@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test'
+import { flyFirstTile, LANDED } from './helpers/work'
 
 // Work on a 390x844 phone, where the six tiles are one rail (ADR 0034, amendment 4).
 
@@ -44,6 +45,16 @@ test('the work band is one rail, and every site is a swipe away', async ({ page 
   await tiles.first().getByText('Phone', { exact: true }).click()
   await expect(tiles.first().locator('[data-frame="phone"]')).toBeVisible()
   await expect(tiles.first().locator('[data-frame="browser"]')).toBeHidden()
+})
+
+// The switch flies inside the rail (ADR 0039): the rail never scrolls under the flight, the page
+// never widens, and the tile lands on the phone with nothing left on it.
+test('the view switch flies inside the rail and lands clean', async ({ page }) => {
+  const { first, flight, landed } = await flyFirstTile(page)
+  expect(flight).toEqual({ flew: true, widest: 390, lefts: [0] })
+  expect(landed).toEqual(LANDED)
+  await expect(first.locator('[data-frame="phone"]')).toBeVisible()
+  await expect(first.locator('[data-frame="browser"]')).toBeHidden()
 })
 
 // The rail scrolls inside itself: its cross axis is hidden with nothing overflowing it, so a

@@ -8,10 +8,10 @@ import {
   shell,
   titleHeading,
 } from '@/app/_components/section-styles'
+import { WorkDevice } from '@/app/_components/work-device'
 import { WORK_IMAGES, type WorkPicture } from '@/app/_components/work-images'
 import { captureFor, CLIENT_ITEMS, hostOf, longDate, WORK } from '@/app/_components/work-items'
-import { BrowserFrame } from '@/components/sketch/browser-frame'
-import { PhoneFrame } from '@/components/sketch/phone-frame'
+import { WorkMorph } from '@/app/_components/work-morph'
 import { sketchModelFrom } from '@/components/sketch/sketch-model'
 import { buttonStyles } from '@/components/ui/button'
 import { captionStyles } from '@/components/ui/caption'
@@ -19,7 +19,7 @@ import { tapLinkStyles } from '@/components/ui/text-link'
 import { TrackedAnchor, TrackedLink } from '@/components/ui/tracked-link'
 import { BLANK_ANSWERS } from '@/lib/brief/answers'
 
-// The frames borrow the sketch's chrome, so they paint with its variables; an uncoloured model
+// The device borrows the sketch's palette, so it paints with its variables; an uncoloured model
 // gives the neutral shell, and each picture carries its own colour. The section sits inside the
 // page's dark scope, where --surface is the hero's foot, so the bezel and the browser bar come
 // out dark and the captures read as the sites they are (plan 7.1, question 14).
@@ -29,15 +29,16 @@ const NEUTRAL = sketchModelFrom(BLANK_ANSWERS, 1, { logo: null, photos: [] })
 // the CSS :has() selector, so the switch works with JavaScript off and the default is the desktop
 // (owner, 26 September 2026). The checked pill is the light ink on the dark ground. Each
 // pill is 28 px tall, above the 24 px a tap target needs, and the focus ring's offset takes the
-// track's own colour so it reads as a ring and not a halo.
+// track's own colour so it reads as a ring and not a halo. Once the switch's script has armed a
+// tile, a thumb it draws slides between the two (ADR 0039, app/_styles/work.css).
 const SEGMENT =
   'flex h-7 cursor-pointer items-center rounded-full px-3 text-label font-medium text-on-surface-muted transition-colors duration-(--motion-tap) has-[:checked]:bg-on-surface has-[:checked]:text-surface has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-brand-ink has-[:focus-visible]:ring-offset-2 has-[:focus-visible]:ring-offset-surface'
 
-// One tile. The frame is 192 px wide until lg, where three columns give it room for 224 px, the
+// One tile. The phone is 192 px wide until lg, where three columns give it room for 224 px, the
 // ceiling before the capture upscales (constraint 11). Below md the tile drops to the phone
 // radius and padding the plan gives it; from lg it takes the card's own.
 const TILE =
-  'work-tile group/card relative isolate flex flex-col gap-4 p-4 transition-colors duration-(--motion-tap) focus-within:bg-surface-tint hover:bg-surface-tint max-md:rounded-2xl lg:p-7'
+  'work-tile relative isolate flex flex-col gap-4 p-4 transition-colors duration-(--motion-tap) focus-within:bg-surface-tint hover:bg-surface-tint max-md:rounded-2xl lg:p-7'
 
 // Each tile's view timeline, which its dot under the rail reads (app/_styles/work.css). The
 // section declares the names so the dots, outside the list, can see them.
@@ -71,16 +72,19 @@ function Picture({ picture, sizes }: { picture: WorkPicture; sizes: string }) {
 }
 
 // The sites the studio has designed and built, one dark tile each on the hero's own foot: the
-// first screen of the live site, on a phone or a desktop as the visitor chooses, lit from behind
-// by a soft cyan pool, the client's name and trade, one line on what was done and the result
-// where one was measured, a dated caption and a link to the site itself. Nothing here is a
-// mock-up: every picture is a capture of the page the link opens.
+// first screen of the live site, on a phone or a desktop as the visitor chooses, in one device
+// that reshapes between the two (ADR 0039), lit from behind by a soft cyan pool, the client's
+// name and trade, one line on what was done and the result where one was measured, a dated
+// caption and a link to the site itself. Nothing here is a mock-up: the device is only chrome,
+// and every picture in it is a capture of the page the link opens.
 //
 // The heading block reveals by CSS, so the night with white type reads first; the tiles are a
 // group the scroll choreography owns from md up (app/_components/motion/work.ts), and below md,
 // or without the choreography, the same CSS reveal carries them. On a touch screen under 640 px
 // the tiles are one rail with a dot per site under it (app/_styles/work.css), pinned by
-// mobile-work.spec; Lenis's attribute leaves a sideways wheel or trackpad to the rail.
+// mobile-work.spec; Lenis's attribute leaves a sideways wheel or trackpad to the rail. The view
+// switch is the radios and CSS alone until its script arrives (WorkMorph, one small leaf), and
+// the script only animates between the two states the CSS already draws.
 export function Work() {
   return (
     <section
@@ -108,10 +112,11 @@ export function Work() {
             return (
               <li
                 key={client.slug}
+                data-focus={client.focus}
                 style={{ ...revealDelay(index), viewTimelineName: timeline(index) }}
                 className={`${cardInk} ${TILE}`}
               >
-                <fieldset className="inline-flex self-center rounded-full bg-surface p-1">
+                <fieldset className="work-seg inline-flex self-center rounded-full bg-surface p-1">
                   <legend className="sr-only">{WORK.viewLegend(client.name)}</legend>
                   <label className={SEGMENT}>
                     <input type="radio" name={group} value="phone" className="sr-only" />
@@ -129,27 +134,25 @@ export function Work() {
                   </label>
                 </fieldset>
 
-                {/* The pool behind the frame. It sits under the frame in the tile's own stacking
-                    context, fades in with the tile's reveal and brightens under the pointer; its
-                    place and its paint are in app/_styles/work.css. Colour and opacity only, so it
-                    runs under reduced motion too. */}
+                {/* The pool behind the device. It sits under the device in the tile's own
+                    stacking context, fades in with the tile's reveal and brightens under the
+                    pointer; its place and its paint are in app/_styles/work.css. Colour and
+                    opacity only, so it runs under reduced motion too; a flight of the switch
+                    breathes it, and blooms it as the device lands. */}
                 <div aria-hidden className="work-backlight pointer-events-none absolute -z-1" />
 
-                {/* The phone view fills its frame edge to edge: the frame takes the picture's own
+                {/* The phone fills its screen edge to edge: the device takes the picture's own
                     height instead of the 9:19 the sketch draws, so nothing is cropped. */}
-                <div className="hidden flex-1 items-start justify-center group-has-[input[value=phone]:checked]/card:flex">
-                  <PhoneFrame className="aspect-auto w-full max-w-48 lg:max-w-56">
-                    <Picture picture={image.phone} sizes="(min-width: 1024px) 224px, 192px" />
-                  </PhoneFrame>
-                </div>
-                <div className="flex flex-1 items-center group-has-[input[value=phone]:checked]/card:hidden">
-                  <BrowserFrame company={client.name} coloured={false} className="w-full">
+                <WorkDevice
+                  company={client.name}
+                  desktop={
                     <Picture
                       picture={image.desktop}
                       sizes="(min-width: 1024px) 400px, (min-width: 640px) 45vw, 80vw"
                     />
-                  </BrowserFrame>
-                </div>
+                  }
+                  phone={<Picture picture={image.phone} sizes="(min-width: 1024px) 224px, 192px" />}
+                />
 
                 <div className="flex flex-col gap-1">
                   <h3 className={cardHeading}>{client.name}</h3>
@@ -208,6 +211,7 @@ export function Work() {
           </TrackedLink>
         </div>
       </div>
+      <WorkMorph />
     </section>
   )
 }

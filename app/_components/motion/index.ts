@@ -12,6 +12,7 @@ import { yourOptions } from '@/app/_components/motion/your-options'
 import { CONFIG } from '@/lib/config'
 import type { Gsap, ScrollTriggerStatic } from '@/lib/motion/gsap'
 import { type LenisClass, onActiveLenis } from '@/lib/motion/lenis'
+import { WORK_FLIGHT } from '@/lib/motion/work-flight'
 
 // The scroll choreography below the hero (ADR 0034, docs/home-page-redesign-plan.md section 6).
 //
@@ -343,17 +344,28 @@ export function start(main: HTMLElement, { gsap, ScrollTrigger }: Motion): () =>
       gsap.ticker.lagSmoothing(500, 33)
     })
     // Every start line moves when the fonts land, when the walkthrough's finished page is in the
-    // DOM, and when <main> changes size; a resize refreshes once the window has settled.
+    // DOM, and when <main> changes size; a resize refreshes once the window has settled. A Work
+    // tile reshaping (ADR 0039) moves <main> every frame of its flight, so the switch's flights
+    // hold the refresh and it runs once, a settle after the last one ends.
     void document.fonts.ready.then(refresh)
     window.addEventListener(READY_EVENT, refresh)
     let settling: number | undefined
-    const resizes = new ResizeObserver(() => {
+    const settleThenRefresh = () => {
       window.clearTimeout(settling)
       settling = window.setTimeout(refresh, choreo.resizeSettleMs)
+    }
+    const resizes = new ResizeObserver(() => {
+      if (html.hasAttribute(WORK_FLIGHT.attribute)) {
+        window.clearTimeout(settling)
+        return
+      }
+      settleThenRefresh()
     })
     resizes.observe(main)
+    window.addEventListener(WORK_FLIGHT.endEvent, settleThenRefresh)
     cleanups.push(() => {
       window.removeEventListener(READY_EVENT, refresh)
+      window.removeEventListener(WORK_FLIGHT.endEvent, settleThenRefresh)
       window.clearTimeout(settling)
       resizes.disconnect()
     })
