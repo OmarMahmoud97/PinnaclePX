@@ -349,9 +349,13 @@
     font-size: var(--text-small);
   }
 
+  /* The ask and the pair of quieter links beside it are wider than the column together, so the
+     pair wraps to its own line under the ask. The links take the body size over their own small
+     one: this sheet is unlayered, so it wins over the utility. */
   .menu-foot {
     max-width: 34rem;
     flex-direction: row;
+    flex-wrap: wrap;
     justify-content: flex-start;
     gap: 2rem;
   }
@@ -363,7 +367,7 @@
     font-size: var(--text-lead);
   }
 
-  .menu-foot > :last-child {
+  .menu-foot > :last-child a {
     font-size: var(--text-body);
   }
 

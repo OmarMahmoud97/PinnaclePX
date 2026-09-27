@@ -38,6 +38,11 @@ export const SITE = {
   // until then.
   town: null as string | null,
   contactEmail: null as string | null,
+  // What the owner has confirmed about /contact (ADR 0040): that every message is answered by
+  // email, and that Cal.com emails the details of a call booked there. False until confirmed,
+  // and until then the page makes neither promise.
+  contactReplies: false as boolean,
+  calConfirms: false as boolean,
   // The studio's real booking page, confirmed by the owner on 5 September 2026. The event's length
   // is set by hand on Cal.com to match CONFIG.call.minutes.
   bookingUrl: 'https://cal.com/pinnaclepx/quick-chat',

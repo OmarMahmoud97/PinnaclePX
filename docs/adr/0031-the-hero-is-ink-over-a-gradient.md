@@ -6,7 +6,9 @@
   (the loop is no longer in the hero), ADR 0026 (the refusal of ambient motion, for the hero
   only)
 - Amended by: ADR 0032 (decision 3, one canvas becomes two; the idle wander, which now resumes, 21
-  September 2026); ADR 0034 (decision 4, the hero's italic is now a true italic, 23 September 2026)
+  September 2026); ADR 0034 (decision 4, the hero's italic is now a true italic, 23 September 2026);
+  ADR 0040 (the consequence on WCAG 2.2.2: the autoplaying ink also runs on `/contact`, where it
+  withdraws while the visitor writes, 27 September 2026)
 
 ## Context
 

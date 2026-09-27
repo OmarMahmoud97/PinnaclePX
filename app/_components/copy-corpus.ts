@@ -18,7 +18,30 @@ import { NOT_READY_SENTENCE, SHARE } from '@/app/_components/share-copy'
 import { SECOND_VISIT, straightAnswerItems } from '@/app/_components/straight-answer-items'
 import { WORK_IMAGES } from '@/app/_components/work-images'
 import { CLIENT_ITEMS, WORK } from '@/app/_components/work-items'
-import { DEVICE_STORAGE, PROCESSORS, UNSENT_PICTURES } from '@/app/privacy/privacy-copy'
+import {
+  ANSWERS,
+  CALL,
+  CONTACT_HERO,
+  CONTACT_META,
+  ENVELOPE,
+  FAILED,
+  KEPT,
+  meterLine,
+  NO_SCRIPT,
+  REFUSED,
+  SENDING as CONTACT_SENDING,
+  SENT,
+  sentHeading,
+  SHEET,
+  STUCK,
+  WRITE,
+} from '@/app/contact/_components/contact-copy'
+import {
+  CONTACT_PRIVACY,
+  DEVICE_STORAGE,
+  PROCESSORS,
+  UNSENT_PICTURES,
+} from '@/app/privacy/privacy-copy'
 import {
   BACK_TO_DESIGNS,
   BRIEF_LINE,
@@ -92,14 +115,16 @@ import { QUESTION_IDS } from '@/lib/brief/question-ids'
 import { type Answers, NAME_TOO_LONG } from '@/lib/brief/schema'
 import { STYLE_IDS } from '@/lib/brief/styles'
 import { CONFIG } from '@/lib/config'
+import { CONTACT_ERRORS } from '@/lib/contact/messages'
+import { subjectLine } from '@/lib/contact/subject'
 import { previewLinkEmail } from '@/lib/email/preview-link'
 import { DESCRIPTORS, designLinkName, designName } from '@/lib/preview/descriptors'
 import { CALL_AGENDA, NO_SCRIPT_CALL, noScriptLine, PRICE, printedPrice, SITE } from '@/lib/site'
 
-// Every sentence a visitor reads on the home page, and every line the questionnaire's releases
-// add to /start, its email and /privacy, in one list, for the copy tests. Lines that render from
-// a value take a sample of each branch, so a wording that only appears once a decision is
-// recorded is still checked today.
+// Every sentence a visitor reads on the home page, every line the questionnaire's releases add to
+// /start, its email and /privacy, and every line of /contact, in one list, for the copy tests.
+// Lines that render from a value take a sample of each branch, so a wording that only appears
+// once a decision is recorded is still checked today.
 const SAMPLE_CARE = { checkMinutes: 5, replyWorkingDays: 1, backupsPerDay: 1, changesPerMonth: 3 }
 
 // The email with the link, as a visitor with a one-word name reads it, in the build's three
@@ -333,4 +358,40 @@ export const COPY: readonly string[] = [
   CALL_AFTER_OPEN,
   ...Object.values(PARTIAL_NOTES),
   BACK_TO_DESIGNS,
+  // The contact page (ADR 0040): its H1 and snippet, the form, the envelope with a name and
+  // without, the meter at each of its states, the line a visitor without JavaScript reads, the
+  // send, the sent card with a name and without, every refusal and the escalation after them,
+  // the call's card, the calendar's sheet, the band of answers with its gated line, and the
+  // fields' errors, which the Server Action words the same way.
+  CONTACT_HERO.heading,
+  CONTACT_META.description,
+  ...Object.values(WRITE),
+  ...Object.values(ENVELOPE),
+  subjectLine('Sam Patel'),
+  subjectLine(''),
+  ...[1_801, 1_991, 1_999, 2_000, 2_001, 2_012].map((length) => meterLine('x'.repeat(length))),
+  `${NO_SCRIPT.lead} ${BOOK_CALL.label.toLowerCase()}${NO_SCRIPT.tail}`,
+  ...Object.values(CONTACT_SENDING),
+  SENT.status,
+  SENT.docTitle,
+  SENT.fixLead,
+  SENT.fix,
+  SENT.again,
+  SENT.replyTo('sam@example.com'),
+  sentHeading('Sam Patel'),
+  sentHeading(''),
+  ...Object.values(REFUSED),
+  FAILED,
+  KEPT,
+  `${STUCK.lead} ${BOOK_CALL.label}${STUCK.tail}`,
+  ...Object.values(CALL),
+  ...Object.values(SHEET),
+  ANSWERS.heading,
+  ANSWERS.lead,
+  ...ANSWERS.items.flatMap((item) => [item.question, item.answer]),
+  ANSWERS.listReplies,
+  ...Object.values(CONTACT_ERRORS),
+  // What /privacy says about a message from the contact page, the new intro and the way to use
+  // the rights through that page. The processors' new wording is read with the rest above.
+  ...Object.values(CONTACT_PRIVACY),
 ]

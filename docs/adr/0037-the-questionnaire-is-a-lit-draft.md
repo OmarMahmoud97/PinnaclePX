@@ -36,6 +36,8 @@
   pool's exemption covers the `/start` curve)
 - Keeps: ADR 0035 decisions 3 to 8, 10, 12, 14, 18 and 22, and no Suspense boundary; ADR 0004's
   URL grammar, per-tab draft and decorative sketch; ADR 0014's honeypot, floor and `noindex`
+- Amended by: ADR 0040 (decision 20's italic rule, which `/contact` extends with "Off it goes." on
+  its own send's ink, 27 September 2026)
 - Plan: `docs/start-page-journey-plan.md` (the director's decisions D1 to D32, the build order in
   section 11, the owner decisions in section 13)
 

@@ -16,6 +16,9 @@
   and the pool's exemption from the caps, which now covers the `/start` curve, 25 September 2026);
   ADR 0039 (decision 7's caps, which the Work switch's own component motion sits outside, and
   amendment 4's rail, whose height now follows a switch, 27 September 2026)
+  ADR 0040 (decision 3's italic rule on `/contact`: the H1's "later", and "Off it goes." on the
+  send's ink only while it covers the card; and the liquid pool and sheet lip, which now spring on
+  `/contact` too, the pool found by its class, 27 September 2026)
 - Plan: `docs/home-page-redesign-plan.md`, amended by the director on 23 September 2026 (A1 to
   A3)
 

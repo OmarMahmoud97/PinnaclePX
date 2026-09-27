@@ -45,6 +45,13 @@ type EventProperties = {
   design_open: { template: string; from: 'done' | 'hub' | 'email' }
   // "Start a new brief".
   new_brief: Record<string, never>
+  // A message from /contact, and how its send ended (ADR 0040): it went, the server or the network
+  // failed, no answer came in time, the limits were reached, the message was refused, or a field
+  // failed its check before anything was sent.
+  contact_submit: { outcome: 'sent' | 'retry' | 'timeout' | 'too_many' | 'rejected' | 'validation' }
+  // The calendar on /contact, each stage once per page view: it opened, it did not, or a call was
+  // booked in it.
+  booking: { stage: 'ready' | 'failed' | 'booked' }
 }
 
 export type AnalyticsEvent = keyof EventProperties
