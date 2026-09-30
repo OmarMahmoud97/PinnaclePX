@@ -1,0 +1,2616 @@
+/*
+ * Inegro (t09). The source was hand-written CSS, not Tailwind, so its rules are ported here
+ * nearly one for one, scoped to the template's root, with its measures kept: the source set its
+ * root at 10px and wrote every size in rems of that, so `--u` is one of its rems (0.625rem) and
+ * a size reads as the source wrote it, calc(3.4 * var(--u)) for its 3.4rem. Its WordPress
+ * blocks laid out with flex gaps of 0.5em and 2em, kept as em here.
+ *
+ * Colours are the semantic tokens on :root, so a brand's set recolours everything. The source's
+ * page was its night violet with white on it (surface and on-surface); its purple the brand, as
+ * decoration, as the fill of its coloured buttons and as its headline's first word; its grey the
+ * muted ink. Its four other hues lit the ribbons, the three boxes and two buttons: they are the
+ * palette below, derived from the tokens, which the example sets to the source's own values.
+ * Text over a photograph sits on the scrim and is on-scrim, which a brand's set keeps dark and
+ * white in both schemes, so a light page still reads its photo bands.
+ *
+ * The motion is described where it is written; all of it is off under reduced motion and the
+ * page is complete without it.
+ */
+
+.inegro {
+  --u: 0.625rem;
+
+  /* The two faces a preview sets (--template-font-display and --template-font-body), falling
+   * back to the site's face as the utilities do: written out here because the theme's own
+   * --font-display and --font-body are inlined into utilities, not emitted as variables. */
+  --inegro-display:
+    var(--template-font-display, var(--font-site-sans)), ui-sans-serif, system-ui, sans-serif;
+  --inegro-body:
+    var(--template-font-body, var(--font-site-sans)), ui-sans-serif, system-ui, sans-serif;
+
+  /* The palette: the ribbons, the boxes and the two coloured buttons, each from the tokens
+   * unless the page above sets it (the example sets the source's own, as --inegro-set-*). */
+  --inegro-purple: var(--brand);
+  --inegro-blue: var(--inegro-set-blue, var(--glow));
+  --inegro-green: var(--inegro-set-green, var(--glow-secondary));
+  --inegro-peach: var(--inegro-set-peach, var(--glow));
+  --inegro-yellow: var(--inegro-set-yellow, var(--glow-secondary));
+  --inegro-lilac: var(--inegro-set-lilac, color-mix(in oklab, var(--brand) 22%, var(--on-scrim)));
+  --inegro-sand: var(
+    --inegro-set-sand,
+    color-mix(in oklab, var(--glow-secondary) 22%, var(--on-scrim))
+  );
+  /* The light end of every ribbon, and its dark start. */
+  --inegro-light: var(--on-scrim);
+  --inegro-dark: var(--surface);
+  /* The second and third glass cards' buttons: the fill that carries text, unless the page
+   * above sets the source's blue and green. */
+  --inegro-button-2: var(--inegro-set-button-2, var(--brand-deeper));
+  --inegro-on-button-2: var(--inegro-set-on-button-2, var(--on-brand));
+  --inegro-button-3: var(--inegro-set-button-3, var(--brand-deeper));
+  --inegro-on-button-3: var(--inegro-set-on-button-3, var(--on-brand));
+
+  /* The source's curves: its CSS's default ease and ease-in and ease-in-out, GSAP's power1.out
+   * (exactly this bezier, being quadratic) and sine.inOut, and its letter roll. */
+  --inegro-ease: ease;
+  --inegro-power1: cubic-bezier(0.3333, 0.6667, 0.6667, 1);
+  --inegro-sine: cubic-bezier(0.445, 0.05, 0.55, 0.95);
+  --inegro-roll: cubic-bezier(0.76, 0, 0.24, 1);
+
+  position: relative;
+  isolation: isolate;
+  background: var(--surface);
+  color: var(--on-surface);
+  font-family: var(--inegro-body);
+  font-size: calc(1.8 * var(--u));
+  font-weight: 400;
+  line-height: calc(2.4 * var(--u));
+  -webkit-font-smoothing: antialiased;
+  text-align: left;
+}
+
+/* Two more hues, turned from the glows, where the browser can turn a colour. */
+@supports (color: oklch(from red l c h)) {
+  .inegro {
+    --inegro-peach: var(--inegro-set-peach, oklch(from var(--glow-secondary) l c calc(h + 110)));
+    --inegro-yellow: var(--inegro-set-yellow, oklch(from var(--glow) l c calc(h - 120)));
+  }
+}
+
+.inegro *,
+.inegro *::before,
+.inegro *::after {
+  box-sizing: border-box;
+}
+
+.inegro :where(h1, h2, h3, h4, h5, p, ul, li, figure, form) {
+  margin: 0;
+  padding: 0;
+}
+
+.inegro :where(ul, ol) {
+  list-style: none;
+}
+
+.inegro :where(a) {
+  color: var(--brand-deeper);
+  text-decoration: none;
+  transition: 0.4s ease-in;
+}
+
+.inegro :where(a:hover) {
+  color: var(--on-surface);
+}
+
+.inegro :where(img) {
+  max-width: 100%;
+  vertical-align: middle;
+}
+
+.inegro ::selection {
+  background: color-mix(in srgb, var(--on-surface) 40%, var(--surface));
+  color: var(--on-surface);
+}
+
+/* The two faces: the display face (the source's Syne) in its regular and medium cuts, with the
+ * alternates the source asked for, and the body face (its Albert Sans). */
+.inegro .inegro-display,
+.inegro .inegro-display-regular {
+  font-family: var(--inegro-display);
+  font-feature-settings: 'ss04', 'liga';
+  font-weight: 500;
+}
+
+.inegro .inegro-display-regular {
+  font-weight: 400;
+}
+
+/* ---------------------------------------------------------------------------------------------
+ * Headings, as the source set them everywhere.
+ */
+.inegro .inegro-h1 {
+  position: relative;
+  margin-bottom: calc(2 * var(--u));
+  font-family: var(--inegro-display);
+  font-feature-settings: 'ss04', 'liga';
+  font-weight: 500;
+  font-size: calc(3.8 * var(--u));
+  line-height: calc(4 * var(--u));
+  letter-spacing: -0.035em;
+}
+
+/* The small label with its dot. */
+.inegro .inegro-label {
+  position: relative;
+  margin-bottom: calc(2.8 * var(--u));
+  padding-left: calc(1.4 * var(--u));
+  font-family: var(--inegro-display);
+  font-feature-settings: 'ss04', 'liga';
+  font-weight: 400;
+  font-size: calc(2 * var(--u));
+  line-height: calc(2.8 * var(--u));
+  letter-spacing: -0.035em;
+}
+
+.inegro .inegro-label::before {
+  content: '';
+  position: absolute;
+  top: calc(1.1 * var(--u));
+  left: 0;
+  width: calc(0.6 * var(--u));
+  height: calc(0.6 * var(--u));
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.inegro .inegro-h3 {
+  margin-bottom: calc(3 * var(--u));
+  font-size: calc(2.4 * var(--u));
+  line-height: calc(2.8 * var(--u));
+  letter-spacing: calc(-0.1 * var(--u));
+}
+
+.inegro .inegro-p {
+  margin-bottom: calc(3 * var(--u));
+}
+
+@media (min-width: 768px) {
+  .inegro .inegro-h1 {
+    font-size: calc(6 * var(--u));
+    line-height: calc(6.2 * var(--u));
+  }
+
+  .inegro .inegro-h3 {
+    font-size: calc(3.4 * var(--u));
+    line-height: calc(4 * var(--u));
+  }
+
+  .inegro .inegro-p {
+    margin-bottom: calc(4 * var(--u));
+  }
+}
+
+/* ---------------------------------------------------------------------------------------------
+ * Buttons. The source's one recipe (a white pill with ink on it, the brand under the pointer)
+ * and its variants: the hero's faint pills, the coloured fills of the glass cards, the outlined
+ * ones on the ink and on the white, the big one and the dark one in the dropdown.
+ */
+.inegro .inegro-btn {
+  position: relative;
+  display: inline-block;
+  width: auto;
+  padding: calc(1.2 * var(--u)) calc(2 * var(--u));
+  border-radius: calc(2.4 * var(--u));
+  background: var(--on-surface);
+  color: var(--surface);
+  font-family: var(--inegro-display);
+  font-feature-settings: 'ss04', 'liga';
+  font-weight: 500;
+  font-size: calc(1.6 * var(--u));
+  line-height: calc(2.2 * var(--u));
+  text-align: center;
+  transition: 0.4s ease-in;
+}
+
+.inegro .inegro-btn:hover {
+  background: var(--brand-deeper);
+  color: var(--on-brand);
+}
+
+.inegro .inegro-btn:focus-visible,
+.inegro .inegro-focus:focus-visible {
+  outline: 2px solid var(--brand-deeper);
+  outline-offset: 3px;
+}
+
+.inegro .inegro-btn-faint {
+  background: color-mix(in srgb, var(--on-surface) 10%, transparent);
+  color: var(--on-surface);
+}
+
+.inegro .inegro-btn-brand {
+  background: var(--brand-deeper);
+  color: var(--on-brand);
+}
+
+.inegro .inegro-btn-line {
+  border: 1px solid var(--on-surface);
+  background: transparent;
+  color: var(--on-surface);
+}
+
+.inegro .inegro-btn-line:hover {
+  border-color: var(--brand-deeper);
+  background: transparent;
+  color: var(--on-surface);
+}
+
+.inegro .inegro-btn-ink-line {
+  border: 1px solid var(--surface);
+  background: transparent;
+  color: var(--surface);
+}
+
+.inegro .inegro-btn-ink-line:hover {
+  border-color: var(--on-surface);
+  background: transparent;
+  color: var(--on-surface);
+}
+
+.inegro .inegro-btn-dark {
+  background: var(--surface);
+  color: var(--on-surface);
+}
+
+.inegro .inegro-btn-big {
+  padding: calc(2.4 * var(--u)) calc(3.9 * var(--u));
+  border-radius: calc(3.8 * var(--u));
+  font-size: calc(2.4 * var(--u));
+  line-height: calc(2.8 * var(--u));
+}
+
+/* The small round mark at a button's end (the source's play icon, an arrow here). */
+.inegro .inegro-btn-mark {
+  padding-right: calc(5 * var(--u));
+}
+
+.inegro .inegro-btn-mark > svg {
+  position: absolute;
+  top: calc(50% - var(--u));
+  right: calc(2 * var(--u));
+  width: calc(2 * var(--u));
+  height: calc(2 * var(--u));
+}
+
+.inegro .inegro-pill {
+  display: inline-block;
+  width: auto;
+  padding: calc(0.9 * var(--u)) calc(2 * var(--u));
+  border-radius: calc(2.4 * var(--u));
+  font-family: var(--inegro-display);
+  font-feature-settings: 'ss04', 'liga';
+  font-weight: 500;
+  font-size: calc(1 * var(--u));
+  line-height: calc(1.9 * var(--u));
+  transition: 0.4s ease-in-out;
+}
+
+@media (max-width: 768px) {
+  .inegro .inegro-btn-wide {
+    width: 100%;
+    max-width: calc(40 * var(--u));
+  }
+}
+
+/* ---------------------------------------------------------------------------------------------
+ * The frame: the header and the page's blocks sit in a clipping box, as the source's did, so
+ * the ribbons may run wide; the band and the footer follow it.
+ */
+.inegro .inegro-frame {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.inegro .inegro-main {
+  position: relative;
+  min-height: 90vh;
+}
+
+/* A block of the page: its vertical padding, and its inner column with the side padding. */
+.inegro .inegro-block {
+  position: relative;
+  padding-top: calc(13 * var(--u));
+  padding-bottom: calc(13 * var(--u));
+}
+
+.inegro .inegro-inner {
+  position: relative;
+  max-width: 2200px;
+  margin: 0 auto;
+  padding-right: calc(3 * var(--u));
+  padding-left: calc(3 * var(--u));
+}
+
+@media (min-width: 768px) {
+  .inegro .inegro-inner {
+    padding-right: calc(4 * var(--u));
+    padding-left: calc(4 * var(--u));
+  }
+}
+
+@media (max-width: 768px) {
+  .inegro .inegro-inner {
+    padding-right: calc(2.5 * var(--u));
+    padding-left: calc(2.5 * var(--u));
+  }
+}
+
+/* A column of text in a row: the source's columns kept six per cent at each side from 768px. */
+.inegro .inegro-col {
+  display: flex;
+  flex-direction: column;
+}
+
+@media (min-width: 768px) {
+  .inegro .inegro-col {
+    flex: 1 1 auto;
+    padding-right: 6%;
+    padding-left: 6%;
+  }
+}
+
+/* Anchors land below the bar. */
+.inegro [id] {
+  scroll-margin-top: calc(11 * var(--u));
+}
+
+/* ---------------------------------------------------------------------------------------------
+ * Stacking. Each glass card slides over the block before it and casts a shadow down; the block
+ * after it starts tucked up under it and slides out as the card leaves (motion-stack.ts). The
+ * shift is set only by that script, so without it the blocks sit where they fall.
+ */
+.inegro .inegro-stack-prev {
+  z-index: 2;
+  box-shadow: 0 calc(2.5 * var(--u)) calc(4.5 * var(--u)) calc(-0.5 * var(--u))
+    color-mix(in srgb, var(--scrim) 45%, transparent);
+}
+
+.inegro .inegro-stack-row {
+  z-index: 1;
+  will-change: transform;
+}
+
+/* ---------------------------------------------------------------------------------------------
+ * Header. Fixed; hides as the page goes down and returns as a gradient glass as it comes back
+ * (header.tsx). Its row fades down into place two seconds after load, with the hero's words.
+ */
+.inegro .inegro-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 50;
+  width: 100%;
+  text-align: center;
+  transition: transform 0.3s ease-in-out;
+}
+
+.inegro .inegro-header[data-scroll='up'] {
+  transform: translateY(-100%);
+}
+
+.inegro .inegro-header[data-scroll='down'] {
+  transform: translateY(0);
+  background: linear-gradient(var(--surface) 0%, transparent 100%);
+  backdrop-filter: blur(8px) contrast(100%);
+}
+
+.inegro .inegro-header-inner {
+  position: relative;
+  max-width: 2200px;
+  margin: 0 auto;
+  padding: 0 0 0 calc(3 * var(--u));
+}
+
+.inegro .inegro-nav-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: calc(3 * var(--u)) 0;
+}
+
+.inegro .inegro-logo {
+  position: relative;
+  z-index: 2;
+  display: block;
+  width: calc(17.6 * var(--u));
+  color: var(--on-surface);
+  text-align: left;
+}
+
+.inegro .inegro-logo:hover {
+  color: var(--on-surface);
+}
+
+.inegro .inegro-logo img {
+  display: inline-block;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  max-height: calc(8 * var(--u));
+}
+
+.inegro .inegro-wordmark {
+  display: block;
+  font-family: var(--inegro-display);
+  font-feature-settings: 'ss04', 'liga';
+  font-weight: 500;
+  font-size: calc(3.2 * var(--u));
+  line-height: 1;
+  letter-spacing: -0.035em;
+  overflow-wrap: anywhere;
+}
+
+.inegro .inegro-nav-right {
+  display: flex;
+  align-items: center;
+}
+
+.inegro .inegro-nav-right > .inegro-nav-btns {
+  flex: none;
+}
+
+.inegro .inegro-nav-btns .inegro-btn {
+  white-space: nowrap;
+}
+
+.inegro .inegro-menu-link {
+  display: block;
+  padding: var(--u) calc(0.5 * var(--u)) calc(0.9 * var(--u));
+  border: 0;
+  background: none;
+  color: var(--on-surface);
+  font-family: var(--inegro-display);
+  font-feature-settings: 'ss04', 'liga';
+  font-weight: 400;
+  font-size: calc(1.6 * var(--u));
+  line-height: calc(2.4 * var(--u));
+  cursor: pointer;
+  transition: 0.4s ease-in;
+}
+
+/* The plus that turns to a minus on an open dropdown. */
+.inegro .inegro-dd {
+  position: relative;
+  padding-right: calc(1.8 * var(--u));
+}
+
+.inegro .inegro-dd::after {
+  content: '+';
+  position: absolute;
+  top: 50%;
+  right: 0;
+  color: var(--brand-deeper);
+  font-size: calc(2.2 * var(--u));
+  transform: translateY(-50%);
+}
+
+.inegro [aria-expanded='true'] > .inegro-dd::after {
+  content: '-';
+  color: var(--on-surface);
+}
+
+.inegro .inegro-arrow {
+  margin-left: calc(0.9 * var(--u));
+  transition: 0.4s ease-in-out;
+}
+
+.inegro .inegro-arrow svg {
+  display: inline-block;
+  width: calc(1.4 * var(--u));
+  height: auto;
+  vertical-align: -1px;
+}
+
+/* The round toggle with its three lines, below 1024px. */
+.inegro .inegro-toggle {
+  position: relative;
+  right: calc(3 * var(--u));
+  z-index: 2;
+  display: none;
+  width: calc(4.8 * var(--u));
+  height: calc(4.8 * var(--u));
+  padding: 0;
+  border: 1px solid var(--on-surface);
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  transition: 0.4s ease-in-out;
+}
+
+.inegro .inegro-toggle::before,
+.inegro .inegro-toggle::after,
+.inegro .inegro-toggle .inegro-edge {
+  content: '';
+  position: absolute;
+  height: 1px;
+  border-radius: 1px;
+  background: var(--on-surface);
+  transition: 0.4s ease-in-out;
+}
+
+.inegro .inegro-toggle::before {
+  top: calc(50% - 0.9 * var(--u));
+  right: calc(1.2 * var(--u));
+  width: calc(2.2 * var(--u));
+}
+
+.inegro .inegro-toggle::after {
+  top: calc(100% - 1.6 * var(--u));
+  right: calc(1.7 * var(--u));
+  width: calc(1.6 * var(--u));
+}
+
+.inegro .inegro-toggle .inegro-edge {
+  top: calc(2.2 * var(--u));
+  left: calc(1.2 * var(--u));
+  width: calc(2.2 * var(--u));
+}
+
+.inegro .inegro-toggle:hover {
+  border-color: var(--brand-deeper);
+}
+
+.inegro .inegro-toggle:hover::before,
+.inegro .inegro-toggle:hover::after,
+.inegro .inegro-toggle:hover .inegro-edge {
+  background: var(--brand-deeper);
+}
+
+.inegro .inegro-toggle[aria-expanded='true']::after {
+  opacity: 0;
+}
+
+.inegro .inegro-toggle[aria-expanded='true'] .inegro-edge {
+  top: calc(2.3 * var(--u));
+  left: calc(1.2 * var(--u));
+  transform: rotate(45deg);
+}
+
+.inegro .inegro-toggle[aria-expanded='true']::before {
+  top: calc(2.3 * var(--u));
+  left: calc(1.2 * var(--u));
+  transform: rotate(-45deg);
+}
+
+/* A picture card in a dropdown or the phone sheet: a picture, a two-line title, three lines of
+ * the service's line and an outlined pill. */
+.inegro .inegro-highlight {
+  display: inline-block;
+  overflow: hidden;
+  border-radius: var(--u);
+  vertical-align: middle;
+}
+
+.inegro .inegro-highlight a {
+  display: block;
+  color: var(--surface);
+  text-align: left;
+}
+
+.inegro .inegro-highlight img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 300 / 167;
+  margin-bottom: calc(1.7 * var(--u));
+  border-radius: var(--u);
+  object-fit: cover;
+}
+
+.inegro .inegro-highlight-title {
+  display: -webkit-box;
+  height: calc(4.4 * var(--u));
+  margin-bottom: var(--u);
+  overflow: hidden;
+  color: var(--surface);
+  font-family: var(--inegro-display);
+  font-feature-settings: 'ss04', 'liga';
+  font-weight: 500;
+  white-space: normal;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.inegro .inegro-highlight-intro {
+  display: -webkit-box;
+  margin-bottom: calc(2 * var(--u));
+  overflow: hidden;
+  color: color-mix(in srgb, var(--surface) 50%, transparent);
+  white-space: normal;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+.inegro .inegro-highlight .inegro-pill {
+  border: 1px solid var(--surface);
+  background: var(--on-surface);
+  color: var(--surface);
+  font-size: calc(1.4 * var(--u));
+}
+
+.inegro .inegro-highlight a:hover .inegro-pill {
+  border-color: var(--brand-deeper);
+  color: var(--brand-deeper);
+}
+
+/* The desktop dropdown: a white panel under the bar, links and a dark button on the left, two
+ * picture cards on the right, over a frosted page (the scrim behind it). */
+/* It slides open and shut over 0.6s, as the source's slideToggle did (its swing is a sine in
+ * and out), and is hidden once shut, so its links leave the tab order. */
+.inegro .inegro-panel {
+  position: absolute;
+  top: 100%;
+  right: calc(4 * var(--u));
+  z-index: 3;
+  display: grid;
+  grid-template-rows: 0fr;
+  width: 100%;
+  max-width: calc(90 * var(--u));
+  overflow: hidden;
+  border-radius: calc(2 * var(--u));
+  background: var(--on-surface);
+  color: var(--surface);
+  text-align: left;
+  visibility: hidden;
+  transition:
+    grid-template-rows 0.6s var(--inegro-sine),
+    visibility 0s linear 0.6s;
+}
+
+.inegro .inegro-panel[data-open] {
+  grid-template-rows: 1fr;
+  visibility: visible;
+  transition:
+    grid-template-rows 0.6s var(--inegro-sine),
+    visibility 0s;
+}
+
+.inegro .inegro-panel-clip {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.inegro .inegro-panel-body {
+  display: flex;
+  justify-content: space-between;
+  padding: calc(3 * var(--u)) calc(5 * var(--u));
+}
+
+.inegro .inegro-panel-links {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 35%;
+  min-height: calc(22 * var(--u));
+}
+
+.inegro .inegro-panel-links li {
+  margin-bottom: calc(1.5 * var(--u));
+}
+
+.inegro .inegro-panel-links li a {
+  display: inline-block;
+  padding: var(--u) calc(1.3 * var(--u)) var(--u) calc(0.3 * var(--u));
+  color: var(--surface);
+}
+
+.inegro .inegro-panel-links li a:hover {
+  color: var(--brand-deeper);
+}
+
+.inegro .inegro-panel-links .inegro-btn {
+  max-width: calc(20 * var(--u));
+  margin-top: calc(2 * var(--u));
+  align-self: flex-start;
+}
+
+.inegro .inegro-panel-cards {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  width: 60%;
+  min-height: calc(22 * var(--u));
+}
+
+.inegro .inegro-panel-cards .inegro-highlight {
+  width: calc(50% - 1.5 * var(--u));
+}
+
+.inegro .inegro-veil {
+  position: fixed;
+  inset: 0;
+  z-index: 4;
+  background: color-mix(in srgb, var(--on-surface) 10%, transparent);
+  backdrop-filter: blur(30px) contrast(100%);
+  opacity: 0;
+  visibility: hidden;
+  transform: scale(0.95);
+  transition: 0.7s ease-in-out;
+}
+
+.inegro .inegro-veil[data-open] {
+  opacity: 1;
+  visibility: visible;
+  transform: scale(1);
+}
+
+@media (min-width: 1024px) {
+  .inegro .inegro-logo {
+    width: calc(20.9 * var(--u));
+  }
+}
+
+/* The desktop bar from just past 1024px: the source's phone bar held to 1024 inclusive. */
+@media (min-width: 1024.02px) {
+  .inegro .inegro-nav-right {
+    justify-content: flex-end;
+    width: calc(100% - 22 * var(--u));
+    margin-right: calc(4 * var(--u));
+  }
+
+  .inegro .inegro-nav {
+    padding: calc(2 * var(--u));
+  }
+
+  .inegro .inegro-menu {
+    display: flex;
+  }
+
+  /* Every link keeps its margin at both sides: the source's rule that dropped the outer ones
+   * lost to a more specific one. */
+  .inegro .inegro-menu > li {
+    margin: 0 var(--u);
+  }
+
+  .inegro .inegro-menu-link {
+    /* The source's white at 40 per cent, as the muted ink, which a brand's set brings to AA. */
+    color: var(--on-surface-muted);
+  }
+
+  .inegro .inegro-menu-link:hover {
+    color: var(--on-surface);
+  }
+
+  .inegro .inegro-menu-link[aria-expanded='true'] {
+    color: var(--brand-deeper);
+  }
+
+  /* The phone's pieces stay out of the desktop bar. */
+  .inegro .inegro-sub,
+  .inegro .inegro-nav-posts,
+  .inegro .inegro-nav .inegro-nav-btns {
+    display: none;
+  }
+}
+
+/* The phone sheet: below 1024px the menu is a white sheet under the bar, its dropdowns open in
+ * place, the ask sits under the links, and a strip of picture cards scrolls along its foot. */
+@media (max-width: 1024px) {
+  .inegro .inegro-header-inner > .inegro-nav-wrap > .inegro-panel,
+  .inegro .inegro-nav-right > .inegro-nav-btns {
+    display: none;
+  }
+
+  .inegro .inegro-toggle {
+    display: block;
+  }
+
+  .inegro .inegro-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: calc(100dvh - 11.5 * var(--u));
+    border-radius: 0;
+    opacity: 0;
+    visibility: hidden;
+    transform: scale(0.9);
+    transform-origin: center;
+    transition: 1s ease-in-out;
+  }
+
+  .inegro .inegro-nav[data-open] {
+    top: calc(11.5 * var(--u));
+    border-radius: calc(2 * var(--u)) calc(2 * var(--u)) 0 0;
+    background: var(--on-surface);
+    opacity: 1;
+    visibility: visible;
+    transform: scale(1);
+  }
+
+  .inegro .inegro-nav-scroll {
+    flex: 1 1 auto;
+    min-height: 0;
+    padding: var(--u) calc(2 * var(--u)) calc(3 * var(--u));
+    overflow: hidden auto;
+    scrollbar-width: none;
+  }
+
+  .inegro .inegro-menu > li {
+    text-align: left;
+  }
+
+  .inegro .inegro-menu-link {
+    width: 100%;
+    padding: var(--u) calc(1.5 * var(--u));
+    border-radius: calc(2 * var(--u));
+    color: var(--surface);
+    text-align: left;
+  }
+
+  .inegro .inegro-menu[data-open] > li > .inegro-menu-link {
+    opacity: 0.3;
+  }
+
+  .inegro .inegro-menu[data-open] > li > .inegro-menu-link[aria-expanded='true'] {
+    opacity: 1;
+    background: linear-gradient(to right, var(--brand-deeper) 0%, var(--on-surface) 100%);
+    color: var(--on-brand);
+  }
+
+  .inegro .inegro-menu[data-open] > li > .inegro-menu-link[aria-expanded='true'] .inegro-dd::after {
+    color: var(--on-brand);
+  }
+
+  .inegro .inegro-sub {
+    display: grid;
+    grid-template-rows: 0fr;
+    padding: 0 calc(1.5 * var(--u));
+    transition: grid-template-rows 0.6s ease;
+  }
+
+  .inegro .inegro-sub[data-open] {
+    grid-template-rows: 1fr;
+  }
+
+  .inegro .inegro-sub > ul {
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .inegro .inegro-sub li a {
+    display: block;
+    padding: var(--u) calc(1.5 * var(--u));
+    color: var(--surface);
+    font-family: var(--inegro-display);
+    font-feature-settings: 'ss04', 'liga';
+    font-size: calc(1.6 * var(--u));
+    line-height: calc(2.4 * var(--u));
+  }
+
+  .inegro .inegro-nav .inegro-nav-btns {
+    position: relative;
+    z-index: 2;
+    text-align: left;
+  }
+
+  .inegro .inegro-nav .inegro-nav-btns .inegro-btn {
+    padding-left: calc(1.5 * var(--u));
+    border: none;
+    color: var(--surface);
+  }
+
+  .inegro .inegro-nav .inegro-nav-btns .inegro-arrow svg path {
+    stroke: var(--surface);
+  }
+
+  .inegro .inegro-nav-posts {
+    position: relative;
+    z-index: 10;
+    padding: 0 calc(2 * var(--u)) calc(2 * var(--u));
+    background: var(--on-surface);
+  }
+
+  .inegro .inegro-nav-posts::before {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    left: 0;
+    z-index: 2;
+    width: 100%;
+    height: calc(4 * var(--u));
+    background: linear-gradient(to top, var(--on-surface) 0%, transparent 100%);
+    pointer-events: none;
+  }
+
+  .inegro .inegro-nav-posts-row {
+    width: calc(100% + 2 * var(--u));
+    overflow: auto hidden;
+    scrollbar-width: none;
+    text-align: left;
+    white-space: nowrap;
+  }
+
+  .inegro .inegro-nav-posts .inegro-highlight {
+    width: calc(22 * var(--u));
+    margin-right: calc(1.5 * var(--u));
+  }
+
+  .inegro .inegro-nav-posts .inegro-highlight .inegro-pill {
+    display: none;
+  }
+
+  .inegro .inegro-nav-posts-cta {
+    margin-top: calc(1.7 * var(--u));
+    text-align: center;
+  }
+
+  .inegro .inegro-nav-posts-cta .inegro-btn {
+    margin-bottom: var(--u);
+  }
+
+  .inegro .inegro-header[data-scroll='up'] {
+    transform: translateY(calc(-100% - 4.7 * var(--u)));
+  }
+}
+
+/* ---------------------------------------------------------------------------------------------
+ * Hero. A full screen: the headline with its first word in the brand, a line, and the row of
+ * faint pills under a small line, over the ribbons. The ribbons' box starts at half size and
+ * grows over 2.5s while the wide strip under it pans left over 4s, each ribbon draws itself
+ * from its start (the source's DrawSVG, over its own time after its own wait) and a light runs
+ * along each twice (hero.tsx). A wash from the page's colour keeps the words clear.
+ */
+.inegro .inegro-hero {
+  position: relative;
+  z-index: 3;
+  height: 100vh;
+  padding: 0;
+}
+
+.inegro .inegro-hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  width: 70%;
+  height: 100%;
+  background: linear-gradient(to right, var(--surface) 0%, transparent 100%);
+}
+
+.inegro .inegro-hero > .inegro-inner,
+.inegro .inegro-hero-row {
+  height: 100%;
+}
+
+.inegro .inegro-hero-row {
+  position: relative;
+  z-index: 1;
+  display: flex;
+}
+
+.inegro .inegro-hero-col {
+  position: relative;
+  top: calc(3 * var(--u));
+  justify-content: center;
+  width: 100%;
+}
+
+.inegro .inegro-hero .inegro-h1 {
+  max-width: calc(57.5 * var(--u));
+}
+
+.inegro .inegro-mark {
+  background: transparent;
+  color: var(--brand-deeper);
+}
+
+.inegro .inegro-hero-sub {
+  margin-bottom: calc(3 * var(--u));
+}
+
+.inegro .inegro-hero-links {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5em;
+  margin-top: 11vw;
+}
+
+.inegro .inegro-hero-links > p {
+  margin-bottom: calc(3 * var(--u));
+}
+
+.inegro .inegro-hero-links ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5em;
+}
+
+.inegro .inegro-hero-links li {
+  margin-right: calc(1.1 * var(--u));
+}
+
+.inegro .inegro-hero-links li:last-child {
+  margin-right: 0;
+}
+
+.inegro .inegro-hero-links .inegro-btn:hover {
+  background: var(--brand-deeper);
+  color: var(--on-brand);
+}
+
+@media (min-width: 768px) {
+  .inegro .inegro-hero .inegro-h1 {
+    padding-top: calc(17 * var(--u));
+  }
+
+  .inegro .inegro-hero-sub,
+  .inegro .inegro-hero-links > p {
+    margin-bottom: calc(4 * var(--u));
+  }
+
+  .inegro .inegro-hero-links {
+    margin-top: 9vw;
+  }
+
+  .inegro .inegro-hero-links ul {
+    flex-wrap: nowrap;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+  .inegro .inegro-hero .inegro-h1 {
+    padding-top: calc(6 * var(--u));
+  }
+}
+
+@media (max-width: 768px) {
+  .inegro .inegro-hero {
+    height: auto;
+    padding: calc(15 * var(--u)) 0 0;
+  }
+
+  .inegro .inegro-hero .inegro-h1 {
+    max-width: calc(25 * var(--u));
+  }
+
+  .inegro .inegro-hero-sub {
+    max-width: calc(23 * var(--u));
+  }
+
+  .inegro .inegro-hero-links {
+    margin-top: calc(12 * var(--u));
+  }
+
+  .inegro .inegro-hero-links > p {
+    display: none;
+  }
+
+  /* The source meant these full width, but set that on the link inside a box that shrinks to
+   * it, so they keep their own widths and wrap, each with room under it. */
+  .inegro .inegro-hero-links ul {
+    align-items: center;
+  }
+
+  .inegro .inegro-hero-links li {
+    margin: 0 0 calc(1.8 * var(--u));
+  }
+
+  .inegro .inegro-hero-links li:last-child {
+    margin-bottom: 0;
+  }
+
+  .inegro .inegro-hero-links .inegro-btn {
+    display: block;
+    width: 100%;
+    max-width: calc(40 * var(--u));
+    margin: 0 auto;
+  }
+}
+
+.inegro .inegro-lines {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 68vh;
+  overflow: hidden;
+  transform-origin: left top;
+}
+
+.inegro .inegro-lines-strip {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: flex-end;
+  width: 240%;
+  height: 100%;
+  transform: translateX(-55%);
+}
+
+.inegro .inegro-lines svg {
+  position: relative;
+  top: 7vw;
+  display: block;
+  flex: none;
+  width: 100%;
+  height: auto;
+}
+
+.inegro .inegro-ribbon {
+  fill: none;
+  stroke-miterlimit: 10;
+  stroke-width: 30px;
+}
+
+.inegro .inegro-pulse {
+  fill: none;
+  stroke-miterlimit: 10;
+  stroke-width: 30px;
+}
+
+@media (min-width: 768px) {
+  .inegro .inegro-lines {
+    height: 150vh;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+  .inegro .inegro-lines {
+    height: 123vh;
+  }
+
+  .inegro .inegro-lines svg {
+    top: calc(-4 * var(--u));
+  }
+}
+
+@media (min-width: 1024px) and (max-width: 1220px) {
+  .inegro .inegro-lines svg {
+    top: calc(-13 * var(--u));
+  }
+}
+
+/* ---------------------------------------------------------------------------------------------
+ * The glass cards: a photograph under the whole block, washed from the ink at its top, and on
+ * it a frosted card with a label, a long paragraph that lights up letter by letter as the page
+ * scrolls (motion-lit.ts) and a coloured button.
+ */
+.inegro .inegro-glass-band {
+  position: relative;
+  padding-top: calc(10 * var(--u));
+  padding-bottom: calc(10 * var(--u));
+  color: var(--on-scrim);
+}
+
+.inegro .inegro-glass {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5em;
+  width: 100%;
+  padding: calc(3.5 * var(--u));
+  border-radius: calc(2 * var(--u));
+  background: color-mix(in srgb, var(--on-scrim) 20%, transparent);
+  backdrop-filter: blur(30px) contrast(100%);
+}
+
+.inegro .inegro-glass > * {
+  width: 100%;
+  margin: 0;
+}
+
+.inegro .inegro-glass > .inegro-glass-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5em;
+}
+
+.inegro .inegro-glass .inegro-label {
+  margin-bottom: 0;
+}
+
+.inegro .inegro-glass .inegro-lit {
+  margin-bottom: 0;
+  color: color-mix(in srgb, var(--on-scrim) 30%, transparent);
+}
+
+.inegro .inegro-glass .inegro-btn {
+  color: var(--on-brand);
+}
+
+.inegro .inegro-glass .inegro-btn:hover {
+  background: var(--scrim);
+  color: var(--on-scrim);
+}
+
+.inegro .inegro-glass .inegro-btn-2 {
+  background: var(--inegro-button-2);
+  color: var(--inegro-on-button-2);
+}
+
+.inegro .inegro-glass .inegro-btn-3 {
+  background: var(--inegro-button-3);
+  color: var(--inegro-on-button-3);
+}
+
+.inegro .inegro-glass-photo {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  margin: 0;
+  overflow: hidden;
+}
+
+.inegro .inegro-glass-photo::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: 0 0 calc(3 * var(--u)) calc(3 * var(--u));
+  background: linear-gradient(var(--scrim) 0%, transparent 100%);
+}
+
+.inegro .inegro-glass-photo img {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 0 0 calc(3 * var(--u)) calc(3 * var(--u));
+  object-fit: cover;
+}
+
+/* With no photograph the band is the scrim itself, so its words still read. */
+.inegro .inegro-glass-photo:empty {
+  border-radius: 0 0 calc(3 * var(--u)) calc(3 * var(--u));
+  background: var(--scrim);
+}
+
+@media (min-width: 768px) {
+  .inegro .inegro-glass {
+    padding: calc(7.6 * var(--u)) calc(8 * var(--u));
+  }
+
+  .inegro .inegro-glass > * {
+    max-width: 90%;
+    padding-right: calc(14 * var(--u));
+  }
+
+  .inegro .inegro-glass > .inegro-glass-actions {
+    padding-right: 0;
+    max-width: none;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+  .inegro .inegro-glass > * {
+    padding-right: calc(9 * var(--u));
+  }
+}
+
+/* The letters. Each is a span with its index; the script sets how many are lit on the
+ * paragraph. Without a script, or with motion reduced, every letter is lit. */
+.inegro .inegro-lit-word {
+  display: inline-block;
+}
+
+@media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+  .inegro .inegro-lit:not([data-done]) .inegro-lit-char {
+    color: color-mix(
+      in srgb,
+      var(--on-scrim) calc(30% + 70% * clamp(0, var(--lit, 0) - var(--i), 1)),
+      transparent
+    );
+  }
+}
+
+@media not ((scripting: enabled) and (prefers-reduced-motion: no-preference)) {
+  .inegro .inegro-glass .inegro-lit {
+    color: var(--on-scrim);
+  }
+}
+
+.inegro .inegro-lit[data-done] {
+  color: var(--on-scrim);
+}
+
+/* ---------------------------------------------------------------------------------------------
+ * Services: the list of big names. One is open at a time (services.tsx): its name turns to the
+ * ink, its line shows, a rule runs under it and its picture card sits at the right. A closed
+ * name is the muted ink, and from 1024px its letters roll up to a white copy under the pointer.
+ */
+.inegro .inegro-services-top {
+  position: relative;
+}
+
+.inegro .inegro-services-top > .inegro-services-all {
+  margin-top: calc(6 * var(--u));
+}
+
+.inegro .inegro-service {
+  position: relative;
+  z-index: 1;
+  padding-top: calc(3.1 * var(--u));
+}
+
+.inegro .inegro-service-name {
+  margin-bottom: calc(3 * var(--u));
+  font-family: var(--inegro-display);
+  font-feature-settings: 'ss04', 'liga';
+  font-weight: 500;
+  font-size: calc(2.4 * var(--u));
+  line-height: calc(2.8 * var(--u));
+  letter-spacing: calc(-0.1 * var(--u));
+}
+
+.inegro .inegro-service-name button {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--on-surface-muted);
+  font: inherit;
+  font-feature-settings: inherit;
+  letter-spacing: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.inegro .inegro-service[data-open] .inegro-service-name button {
+  color: var(--on-surface);
+}
+
+.inegro .inegro-service-line {
+  display: none;
+  max-width: calc(33 * var(--u));
+  margin-bottom: calc(3 * var(--u));
+  /* The source set it at half opacity; a fifth of the way from the muted ink to the ink is the
+   * same grey on its page and only gains contrast on a brand's. */
+  color: color-mix(in srgb, var(--on-surface) 20%, var(--on-surface-muted));
+}
+
+.inegro .inegro-service[data-open] .inegro-service-line {
+  display: block;
+}
+
+.inegro .inegro-service-card {
+  position: relative;
+  display: none;
+  width: calc(100% + 5 * var(--u));
+  margin: 0 calc(-2.5 * var(--u));
+  overflow: hidden;
+  color: var(--on-surface);
+}
+
+.inegro .inegro-service[data-open] .inegro-service-card {
+  display: block;
+}
+
+.inegro .inegro-service-card::before {
+  content: '';
+  position: absolute;
+  top: 45%;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: var(--on-surface);
+}
+
+.inegro .inegro-service-card:hover {
+  color: var(--on-surface);
+}
+
+.inegro .inegro-card-picture {
+  position: relative;
+  display: block;
+  width: calc(100% - 5 * var(--u));
+  max-width: calc(48 * var(--u));
+  margin: 0 calc(2.5 * var(--u)) calc(2 * var(--u));
+  overflow: hidden;
+  border-radius: calc(2 * var(--u));
+  background: var(--scrim);
+}
+
+.inegro .inegro-card-picture > img {
+  display: block;
+  width: 100%;
+  height: auto;
+  min-height: calc(32 * var(--u));
+  border-radius: calc(2 * var(--u));
+  object-fit: cover;
+}
+
+.inegro .inegro-card-picture > .inegro-card-blank {
+  display: block;
+  min-height: calc(32 * var(--u));
+}
+
+.inegro .inegro-card-info {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  width: 100%;
+  height: 100%;
+  padding: calc(1.9 * var(--u)) calc(1 * var(--u)) 0 0;
+  background: linear-gradient(to right bottom, transparent 0%, var(--scrim) 100%);
+  color: var(--on-scrim);
+}
+
+.inegro .inegro-card-info > span {
+  display: block;
+  width: 60%;
+  margin-bottom: calc(0.9 * var(--u));
+  text-align: right;
+}
+
+.inegro .inegro-card-info > span:last-child {
+  margin-bottom: 0;
+}
+
+.inegro .inegro-card-mark {
+  width: auto;
+  height: calc(3.2 * var(--u));
+}
+
+.inegro .inegro-card-mark img {
+  width: auto;
+  height: 100%;
+}
+
+.inegro .inegro-card-title {
+  font-family: var(--inegro-display);
+  font-feature-settings: 'ss04', 'liga';
+  font-weight: 500;
+  font-size: calc(2.5 * var(--u));
+}
+
+.inegro .inegro-card-tagline {
+  font-family: var(--inegro-display);
+  font-feature-settings: 'ss04', 'liga';
+  font-weight: 500;
+  font-size: calc(1.1 * var(--u));
+}
+
+.inegro .inegro-card-brand {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  z-index: 3;
+  display: block;
+  width: calc(100% - 5 * var(--u));
+  padding: calc(0.2 * var(--u)) 0;
+  overflow: hidden;
+  border-radius: var(--u) var(--u) 0 0;
+  background: var(--brand-deeper);
+  color: var(--on-brand);
+  font-family: var(--inegro-display);
+  font-feature-settings: 'ss04', 'liga';
+  font-weight: 500;
+  font-size: calc(1.1 * var(--u));
+  line-height: calc(2.4 * var(--u));
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transform: translateX(-50%);
+}
+
+.inegro .inegro-card-foot {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0 calc(2.5 * var(--u));
+}
+
+.inegro .inegro-card-number {
+  display: block;
+  font-family: var(--inegro-display);
+  font-feature-settings: 'ss04', 'liga';
+  font-weight: 500;
+}
+
+.inegro .inegro-card-foot .inegro-pill {
+  border: 1px solid var(--on-surface);
+  color: var(--on-surface);
+  font-size: calc(1.4 * var(--u));
+}
+
+.inegro .inegro-service-card:hover .inegro-pill {
+  border-color: var(--brand-deeper);
+}
+
+/* Each name's letters, twice: the second copy sits under the first and rolls up into view.
+ * Until 1024px, and for a name that is open, only the first copy shows. */
+.inegro .inegro-roll-copy {
+  display: block;
+}
+
+.inegro .inegro-roll-copy + .inegro-roll-copy {
+  display: none;
+}
+
+.inegro .inegro-roll-letter {
+  display: inline-block;
+  white-space: pre;
+}
+
+@media (min-width: 580.02px) {
+  .inegro .inegro-card-info {
+    padding-right: calc(1.9 * var(--u));
+  }
+
+  .inegro .inegro-card-info > span {
+    width: 40%;
+  }
+
+  .inegro .inegro-card-foot .inegro-pill {
+    font-size: calc(1 * var(--u));
+  }
+}
+
+@media (min-width: 768px) {
+  .inegro .inegro-services-top > .inegro-services-all {
+    position: absolute;
+    top: 0;
+    right: calc(4 * var(--u));
+    display: block;
+    width: auto;
+    margin-top: calc(-1.3 * var(--u));
+  }
+
+  .inegro .inegro-service-line {
+    margin-bottom: calc(4 * var(--u));
+  }
+
+  .inegro .inegro-service[data-open] {
+    z-index: 2;
+    border-bottom: 1px solid var(--on-surface);
+  }
+
+  .inegro .inegro-service[data-open] .inegro-service-card {
+    position: absolute;
+    right: 5vw;
+    bottom: -125%;
+    z-index: 2;
+    width: calc(50 * var(--u));
+    margin: 0;
+  }
+
+  .inegro .inegro-service:last-child[data-open] .inegro-service-card {
+    bottom: -45%;
+  }
+
+  .inegro .inegro-service-card::before {
+    display: none;
+  }
+
+  .inegro .inegro-service[data-open] .inegro-card-foot .inegro-pill {
+    padding: calc(1.3 * var(--u)) calc(2.3 * var(--u));
+    font-size: calc(1.6 * var(--u));
+  }
+
+  .inegro .inegro-service-name {
+    font-size: calc(3.4 * var(--u));
+    line-height: calc(4 * var(--u));
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+  .inegro .inegro-service[data-open] .inegro-service-card {
+    right: 0;
+    bottom: -100%;
+    width: calc(40 * var(--u));
+  }
+
+  .inegro .inegro-service-name {
+    width: calc(100% - 40 * var(--u));
+  }
+
+  .inegro .inegro-card-picture > img,
+  .inegro .inegro-card-picture > .inegro-card-blank {
+    min-height: calc(26 * var(--u));
+  }
+}
+
+@media (min-width: 1024px) {
+  .inegro .inegro-card-picture {
+    width: calc(47 * var(--u));
+    margin: 0 auto calc(2 * var(--u));
+  }
+
+  .inegro .inegro-service-name {
+    height: 48px;
+    overflow: hidden;
+    font-size: calc(4.4 * var(--u));
+    line-height: calc(4.7 * var(--u));
+  }
+
+  .inegro .inegro-roll-copy {
+    position: relative;
+    top: calc(-0.2 * var(--u));
+  }
+
+  .inegro .inegro-service:not([data-open]) .inegro-roll-copy + .inegro-roll-copy {
+    display: block;
+    color: var(--on-surface);
+  }
+
+  .inegro .inegro-service:not([data-open]) .inegro-roll-letter {
+    transition: transform 0.6s var(--inegro-roll);
+  }
+
+  .inegro .inegro-service:not([data-open]) .inegro-service-name button:hover .inegro-roll-letter,
+  .inegro
+    .inegro-service:not([data-open])
+    .inegro-service-name
+    button:focus-visible
+    .inegro-roll-letter {
+    transform: translateY(-100%);
+    transition-delay: calc(var(--i) * 0.01s);
+  }
+}
+
+/* ---------------------------------------------------------------------------------------------
+ * Notes: two ribbons rising across the width, and cards that travel along them in turn, each
+ * arriving over 2s, resting 10s and leaving over 1.5s; the last stays (motion-notes.ts). A light
+ * sweeps once along the purple ribbon after the first arrives. Without the script, or with
+ * motion reduced, the last card rests where it would have stopped.
+ */
+.inegro .inegro-notes {
+  position: relative;
+  height: calc(40 * var(--u));
+  margin-top: calc(9 * var(--u));
+  container-type: inline-size;
+}
+
+/* The ribbons and cards place themselves on the band, not on its inner column. */
+.inegro .inegro-notes > .inegro-inner {
+  position: static;
+  max-width: none;
+  padding: 0;
+}
+
+.inegro .inegro-notes svg {
+  position: absolute;
+  bottom: calc(8 * var(--u));
+  width: 160%;
+  height: auto;
+  margin-bottom: calc(18 * var(--u));
+  margin-left: -30%;
+  overflow: visible;
+}
+
+.inegro .inegro-note {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  width: calc(28.4 * var(--u));
+  height: auto;
+  padding: calc(2 * var(--u));
+  border-radius: var(--u);
+  background: color-mix(in srgb, var(--on-surface) 30%, transparent);
+  backdrop-filter: blur(24px) contrast(100%);
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+.inegro .inegro-note p {
+  width: 100%;
+  font-size: calc(1.4 * var(--u));
+  line-height: calc(2 * var(--u));
+}
+
+.inegro .inegro-note em {
+  display: block;
+  margin-bottom: calc(2.7 * var(--u));
+  font-style: italic;
+}
+
+.inegro .inegro-note strong {
+  display: block;
+  font-family: var(--inegro-display);
+  font-feature-settings: 'ss04', 'liga';
+  font-weight: 700;
+}
+
+/* The last card at rest: a fifth of the way along the purple ribbon, in the ribbon's own
+ * coordinates scaled to its drawn width (--rest-x and --rest-y, set on the card). */
+.inegro .inegro-note[data-rest] {
+  opacity: 1;
+  transform: translate(
+    calc(var(--svg-left) + var(--svg-width) * var(--rest-x) - 50%),
+    calc(var(--svg-top) + var(--svg-width) * var(--rest-y) - 50%)
+  );
+}
+
+.inegro .inegro-notes {
+  --svg-width: calc(160cqw);
+  --svg-left: calc(-30cqw);
+  /* The drawn ribbon's top edge, from the band's top: the band's height less its foot. */
+  --svg-top: calc(40 * var(--u) - 26 * var(--u) - var(--svg-width) * 0.32577);
+}
+
+@media (min-width: 768px) {
+  .inegro .inegro-notes svg {
+    width: calc(90% + 6 * var(--u));
+    margin-left: 10%;
+  }
+
+  .inegro .inegro-notes {
+    --svg-width: calc(90cqw + 6 * var(--u));
+    --svg-left: 10cqw;
+  }
+}
+
+/* ---------------------------------------------------------------------------------------------
+ * Process: a column of words beside the ring. A gradient ring, a rotating conic ring over it,
+ * an outline circle and three dots drifting on a twelve-second loop, and three numbered lines
+ * that light letter by letter in turn (motion-ring.ts). A white dot sits half off the left edge.
+ */
+.inegro .inegro-process {
+  position: relative;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.inegro .inegro-process::before {
+  content: '';
+  position: absolute;
+  top: calc(50% - 3.8 * var(--u));
+  left: calc(-4.2 * var(--u));
+  width: calc(7.6 * var(--u));
+  height: calc(7.6 * var(--u));
+  border-radius: 50%;
+  background: var(--on-surface);
+}
+
+.inegro .inegro-process-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2em;
+}
+
+/* Both columns may shrink past their content, as the source's WordPress columns could: its
+ * ring's drawing is wider than its column at 1024px and overflows it. */
+.inegro .inegro-process-text {
+  justify-content: center;
+  width: 100%;
+  min-width: 0;
+}
+
+.inegro .inegro-process-text .inegro-p {
+  margin-bottom: calc(3 * var(--u));
+}
+
+.inegro .inegro-ring {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+  margin-top: calc(5 * var(--u));
+  padding: 0;
+}
+
+.inegro .inegro-ring svg.inegro-ring-bg {
+  display: block;
+  width: 150%;
+  height: auto;
+  margin-left: -32%;
+  overflow: visible;
+}
+
+/* The conic ring: the source drew it as a ring-shaped clip over a conic gradient turned a
+ * quarter (a design tool's export), from the ink at its foot through the brand to the light;
+ * here the same gradient under a ring-shaped mask, thirty units thick in 522. */
+.inegro .inegro-ring .inegro-ring-top {
+  position: absolute;
+  top: 9%;
+  z-index: 6;
+  width: 81%;
+  aspect-ratio: 1;
+  margin-left: 10%;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 180deg,
+    var(--inegro-dark) 0deg,
+    var(--inegro-purple) 180deg,
+    var(--inegro-light) 360deg
+  );
+  mask: radial-gradient(
+    farthest-side,
+    transparent calc(100% - 100% * 30 / 261 - 0.5px),
+    black calc(100% - 100% * 30 / 261)
+  );
+}
+
+.inegro .inegro-ring-lines {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  transform: translateY(-50%);
+}
+
+.inegro .inegro-ring-line {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  margin: 0;
+  font-family: var(--inegro-display);
+  font-feature-settings: 'ss04', 'liga';
+  font-weight: 500;
+  font-size: calc(5 * var(--u));
+  line-height: calc(5.5 * var(--u));
+  text-align: center;
+  transform: translateY(-50%);
+}
+
+.inegro .inegro-ring-line em {
+  display: block;
+  max-width: 50%;
+  margin: 0 auto;
+  padding-left: calc(1.3 * var(--u));
+  font-family: var(--inegro-body);
+  font-feature-settings: normal;
+  font-style: normal;
+  font-weight: 400;
+  font-size: calc(1.6 * var(--u));
+  line-height: calc(2.2 * var(--u));
+  letter-spacing: 0;
+  opacity: 0.6;
+}
+
+/* Each line's letters light one after another; the line then fades. The script sets how many
+ * are lit and hides the line; without it the first line shows whole. */
+.inegro .inegro-ring-line .inegro-lit-char {
+  color: color-mix(
+    in srgb,
+    var(--on-surface) calc(100% * clamp(0, var(--lit, 0) - var(--i), 1)),
+    transparent
+  );
+}
+
+@media not ((scripting: enabled) and (prefers-reduced-motion: no-preference)) {
+  .inegro .inegro-ring-line:first-child {
+    --lit: 999;
+  }
+}
+
+/* The loop: the outline circle travels 600 units left and back, the right dot 80 out and
+ * back, the left dot waits, dips and swings, all over twelve seconds, and the conic ring turns
+ * once every five on a sine. It starts when the block's middle reaches the screen's. */
+@media (prefers-reduced-motion: no-preference) {
+  .inegro .inegro-ring[data-running] .inegro-ring-outline {
+    animation: inegro-outline 12s linear infinite;
+  }
+
+  .inegro .inegro-ring[data-running] .inegro-ring-left {
+    animation: inegro-left-dot 12s linear infinite;
+  }
+
+  .inegro .inegro-ring[data-running] .inegro-ring-right {
+    animation: inegro-right-dot 12s linear infinite;
+  }
+
+  /* The turn runs from load, as the source's did; only the drift waits for the block. */
+  .inegro .inegro-ring .inegro-ring-top {
+    animation: inegro-turn 5s var(--inegro-sine) infinite;
+  }
+}
+
+.inegro .inegro-ring-outline {
+  transform: translateX(800px);
+}
+
+@keyframes inegro-outline {
+  0% {
+    transform: translateX(800px);
+  }
+
+  50% {
+    transform: translateX(200px);
+  }
+
+  100% {
+    transform: translateX(800px);
+  }
+}
+
+@keyframes inegro-right-dot {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  50% {
+    transform: translateX(80px);
+  }
+}
+
+@keyframes inegro-left-dot {
+  0%,
+  16.667% {
+    transform: translateX(0);
+  }
+
+  33.333% {
+    transform: translateX(-50px);
+  }
+
+  83.333%,
+  99.999% {
+    transform: translateX(50px);
+  }
+
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes inegro-turn {
+  from {
+    rotate: 0deg;
+  }
+
+  to {
+    rotate: 360deg;
+  }
+}
+
+/* The source's two columns sit side by side from 782px, where WordPress stops stacking them. */
+@media (min-width: 782px) {
+  .inegro .inegro-process-row {
+    flex-wrap: nowrap;
+  }
+
+  .inegro .inegro-process-text {
+    width: 40%;
+  }
+
+  .inegro .inegro-ring {
+    width: 60%;
+  }
+}
+
+@media (min-width: 768px) {
+  .inegro .inegro-process-text {
+    padding-right: calc(5 * var(--u));
+  }
+
+  .inegro .inegro-process-text .inegro-p {
+    margin-bottom: calc(4 * var(--u));
+  }
+
+  .inegro .inegro-ring {
+    margin: 0;
+  }
+
+  .inegro .inegro-ring svg.inegro-ring-bg {
+    position: relative;
+    left: 50%;
+    width: calc(60 * var(--u));
+    margin: 0;
+    transform: translateX(-50%);
+  }
+
+  /* Centred with the translate property, which applies after its turn, so it spins in place. */
+  .inegro .inegro-ring .inegro-ring-top {
+    top: calc(4 * var(--u));
+    left: 50%;
+    width: calc(32 * var(--u));
+    margin-left: calc(3 * var(--u));
+    translate: -50% 0;
+  }
+
+  .inegro .inegro-ring-lines {
+    left: calc(3 * var(--u));
+  }
+
+  .inegro .inegro-ring-line {
+    font-size: calc(7 * var(--u));
+    line-height: calc(8.2 * var(--u));
+  }
+
+  .inegro .inegro-ring-line em {
+    max-width: 40%;
+  }
+}
+
+@media (min-width: 1280px) {
+  .inegro .inegro-ring svg.inegro-ring-bg {
+    width: calc(70 * var(--u));
+  }
+
+  .inegro .inegro-ring .inegro-ring-top {
+    left: 50%;
+    width: calc(38 * var(--u));
+    margin-left: calc(4 * var(--u));
+  }
+}
+
+/* ---------------------------------------------------------------------------------------------
+ * Offers: a label, a line and a button across the top, then three boxes washed from a colour
+ * at the top into the ink, each with its tag pinned in its corner.
+ */
+.inegro .inegro-offers-head {
+  display: block;
+  padding-bottom: calc(2 * var(--u));
+}
+
+.inegro .inegro-offers-head .inegro-p {
+  max-width: calc(40 * var(--u));
+}
+
+.inegro .inegro-offers-head .inegro-offers-all {
+  display: none;
+}
+
+.inegro .inegro-offers-boxes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2em;
+  margin: 0 calc(-1.5 * var(--u));
+}
+
+.inegro .inegro-offers-col {
+  display: flex;
+  flex-direction: column;
+  flex-basis: 100%;
+  flex-grow: 1;
+  min-width: 0;
+  padding: 0 calc(1.5 * var(--u));
+  color: var(--on-surface);
+}
+
+.inegro .inegro-offer {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5em;
+  padding: calc(3.5 * var(--u)) calc(2.5 * var(--u));
+  border-radius: calc(1.8 * var(--u));
+}
+
+.inegro .inegro-offer > * {
+  width: 100%;
+  margin: 0;
+}
+
+.inegro .inegro-offer[data-tone='1'] {
+  background: linear-gradient(var(--inegro-green) 0%, var(--surface) 100%);
+}
+
+.inegro .inegro-offer[data-tone='2'] {
+  background: linear-gradient(var(--inegro-lilac) 0%, var(--surface) 100%);
+}
+
+.inegro .inegro-offer[data-tone='3'] {
+  background: linear-gradient(var(--inegro-sand) 0%, var(--surface) 100%);
+}
+
+.inegro .inegro-offer > .inegro-pill {
+  width: auto;
+  margin-bottom: calc(7 * var(--u));
+  border: 1px solid var(--on-surface);
+  color: var(--on-surface);
+  font-size: calc(1.4 * var(--u));
+}
+
+.inegro .inegro-offer h3 {
+  font-family: var(--inegro-display);
+  font-feature-settings: 'ss04', 'liga';
+  font-weight: 500;
+  font-size: calc(2.4 * var(--u));
+  line-height: calc(2.6 * var(--u));
+}
+
+.inegro .inegro-offer .inegro-p {
+  margin-bottom: calc(3 * var(--u));
+}
+
+@media (min-width: 768px) {
+  .inegro .inegro-offers-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 0 6% calc(8 * var(--u));
+  }
+
+  .inegro .inegro-offers-head .inegro-offers-all {
+    display: block;
+  }
+
+  .inegro .inegro-offers-head .inegro-p {
+    margin-bottom: calc(4 * var(--u));
+  }
+
+  .inegro .inegro-offer {
+    padding: calc(16 * var(--u)) calc(4.5 * var(--u)) calc(4.5 * var(--u));
+  }
+
+  .inegro .inegro-offer > .inegro-pill {
+    position: absolute;
+    top: calc(4.5 * var(--u));
+  }
+
+  .inegro .inegro-offer .inegro-p {
+    margin-bottom: calc(4 * var(--u));
+  }
+}
+
+/* The boxes stand side by side from 782px, where WordPress stops stacking its columns. */
+@media (min-width: 782px) {
+  .inegro .inegro-offers-boxes {
+    flex-wrap: nowrap;
+  }
+
+  .inegro .inegro-offers-col {
+    flex-basis: auto;
+    width: 50%;
+  }
+}
+
+@media (min-width: 1024px) {
+  .inegro .inegro-offers-col {
+    width: 33.33%;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1279.98px) {
+  .inegro .inegro-offers-head {
+    padding-right: 0;
+    padding-left: 0;
+  }
+}
+
+/* ---------------------------------------------------------------------------------------------
+ * The email form: a heading and one field beside its button, centred.
+ */
+.inegro .inegro-newsletter {
+  text-align: center;
+}
+
+.inegro .inegro-form-max {
+  max-width: calc(70 * var(--u));
+  margin: 0 auto;
+}
+
+/* The source set this heading as display-face words in a body-face line, and the two faces'
+ * metrics make the line a pixel taller than its line height; the port keeps the same pair. */
+.inegro .inegro-newsletter h2 {
+  margin-bottom: calc(3 * var(--u));
+  font-weight: 400;
+  font-size: calc(2.4 * var(--u));
+  line-height: calc(2.8 * var(--u));
+  letter-spacing: calc(-0.1 * var(--u));
+}
+
+.inegro .inegro-newsletter h2 > span {
+  font-family: var(--inegro-display);
+  font-feature-settings: 'ss04', 'liga';
+  font-weight: 500;
+}
+
+.inegro .inegro-form {
+  max-width: calc(55 * var(--u));
+  margin: 0 auto;
+}
+
+.inegro .inegro-form form {
+  display: block;
+}
+
+.inegro .inegro-form-field {
+  display: inline-block;
+  width: 100%;
+  padding-bottom: calc(2 * var(--u));
+}
+
+.inegro .inegro-form input {
+  display: block;
+  width: 100%;
+  padding: calc(1.2 * var(--u)) calc(2 * var(--u));
+  border: 1px solid var(--on-surface);
+  border-radius: calc(2.6 * var(--u));
+  outline: none;
+  background: none;
+  color: var(--on-surface);
+  font-family: var(--inegro-display);
+  font-feature-settings: 'ss04', 'liga';
+  font-size: calc(1.6 * var(--u));
+  line-height: calc(2.1 * var(--u));
+  transition: 0.5s;
+  appearance: none;
+}
+
+.inegro .inegro-form input::placeholder {
+  color: var(--on-surface);
+  opacity: 0.5;
+}
+
+.inegro .inegro-form input:hover {
+  border-color: var(--brand-deeper);
+  background: var(--surface);
+}
+
+.inegro .inegro-form input:focus-visible {
+  border-color: var(--brand-deeper);
+  outline: 2px solid var(--brand-deeper);
+  outline-offset: 2px;
+}
+
+.inegro .inegro-form-submit {
+  display: inline-block;
+  width: 100%;
+  text-align: center;
+}
+
+.inegro .inegro-form-submit .inegro-btn {
+  width: 100%;
+  max-width: calc(40 * var(--u));
+  border: 0;
+  border-radius: calc(2.6 * var(--u));
+  font-size: calc(1.4 * var(--u));
+  cursor: pointer;
+}
+
+@media (min-width: 768px) {
+  .inegro .inegro-newsletter h2 {
+    font-size: calc(5 * var(--u));
+    line-height: calc(4 * var(--u));
+  }
+
+  .inegro .inegro-form {
+    width: calc(55.6 * var(--u));
+    max-width: none;
+  }
+
+  .inegro .inegro-form-field {
+    width: calc(100% - 16 * var(--u));
+  }
+
+  .inegro .inegro-form-submit {
+    width: calc(15 * var(--u));
+    text-align: right;
+  }
+
+  .inegro .inegro-form-submit .inegro-btn {
+    width: 90%;
+  }
+}
+
+/* On a phone the source's field sat on its line's baseline (its box clipped its overflow, which
+ * puts the baseline at the foot), so the line's descent left 6px under it. */
+@media (max-width: 767.98px) {
+  .inegro .inegro-form-field {
+    margin-bottom: calc(0.6 * var(--u));
+  }
+}
+
+@media (max-width: 768px) {
+  .inegro .inegro-newsletter h2 {
+    max-width: calc(15 * var(--u));
+    margin-right: auto;
+    margin-left: auto;
+  }
+}
+
+/* ---------------------------------------------------------------------------------------------
+ * The closing band: washed from the light through the brand into the ink, with its words in
+ * the ink at the top, an outlined button, a row of icons and the big outlined button.
+ */
+.inegro .inegro-closing {
+  width: 100%;
+  overflow: hidden;
+  padding: calc(10 * var(--u)) 0;
+  border-radius: calc(3 * var(--u)) calc(3 * var(--u)) 0 0;
+  background: linear-gradient(var(--on-surface) 0%, var(--brand) 51%, var(--surface) 100%);
+  color: var(--surface);
+  text-align: center;
+}
+
+.inegro .inegro-closing > * {
+  padding: 0 6vw;
+}
+
+.inegro .inegro-closing > p {
+  max-width: calc(59 * var(--u));
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.inegro .inegro-closing-btn {
+  margin: calc(3.8 * var(--u)) 0;
+}
+
+.inegro .inegro-closing-btn:last-child {
+  margin-bottom: 0;
+}
+
+.inegro .inegro-closing .inegro-btn-big.inegro-btn-line {
+  border-color: var(--on-surface);
+  color: var(--on-surface);
+}
+
+.inegro .inegro-closing .inegro-btn-big.inegro-btn-line:hover {
+  border-color: var(--brand-deeper);
+}
+
+.inegro .inegro-social a {
+  position: relative;
+  display: inline-block;
+  width: calc(3.6 * var(--u));
+  height: calc(3.6 * var(--u));
+  margin: 0 calc(0.6 * var(--u)) calc(1.6 * var(--u));
+  overflow: hidden;
+  color: var(--surface);
+  vertical-align: middle;
+}
+
+.inegro .inegro-social a:hover {
+  color: var(--surface);
+  opacity: 0.4;
+}
+
+.inegro .inegro-social svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+@media (max-width: 768px) {
+  .inegro .inegro-social > div {
+    display: inline-block;
+    max-width: calc(30 * var(--u));
+    margin: calc(6 * var(--u)) 0;
+  }
+
+  .inegro .inegro-closing-btn .inegro-btn {
+    width: 100%;
+    max-width: calc(40 * var(--u));
+  }
+}
+
+/* ---------------------------------------------------------------------------------------------
+ * Footer: white, rounded at its top, the brand at the left and the small print at the right.
+ */
+.inegro .inegro-footer {
+  position: relative;
+  padding: calc(4 * var(--u)) 0 calc(2.7 * var(--u));
+  border-radius: calc(3 * var(--u)) calc(3 * var(--u)) 0 0;
+  background: var(--on-surface);
+  color: var(--surface);
+  font-size: calc(1 * var(--u));
+  text-align: center;
+}
+
+.inegro .inegro-footer a {
+  color: var(--surface);
+}
+
+.inegro .inegro-footer a:hover {
+  color: var(--brand-deeper);
+}
+
+.inegro .inegro-footer-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 2200px;
+  margin: 0 auto;
+  padding: 0 5vw;
+}
+
+.inegro .inegro-footer-row > * {
+  margin-bottom: calc(5 * var(--u));
+}
+
+.inegro .inegro-footer-row > :last-child {
+  margin-bottom: 0;
+}
+
+.inegro .inegro-footer-logo {
+  display: block;
+  width: 100%;
+}
+
+.inegro .inegro-footer-logo img {
+  width: auto;
+  max-width: calc(20 * var(--u));
+  height: calc(5 * var(--u));
+  object-fit: contain;
+}
+
+.inegro .inegro-footer-logo .inegro-wordmark {
+  font-size: calc(2.4 * var(--u));
+}
+
+.inegro .inegro-footer-links li {
+  display: inline-block;
+  margin: 0 calc(1.6 * var(--u));
+}
+
+.inegro .inegro-footer-links a {
+  font-size: calc(1.2 * var(--u));
+}
+
+.inegro .inegro-footer-small {
+  width: 85%;
+  margin: calc(4 * var(--u)) auto;
+  font-size: calc(1 * var(--u));
+  line-height: calc(2.4 * var(--u));
+}
+
+.inegro .inegro-footer-copy {
+  display: inline-block;
+  font-size: calc(1.2 * var(--u));
+}
+
+@media (min-width: 768px) {
+  .inegro .inegro-footer {
+    padding-bottom: calc(4 * var(--u));
+    font-size: calc(1.2 * var(--u));
+    text-align: left;
+  }
+
+  .inegro .inegro-footer-inner {
+    font-size: calc(1 * var(--u));
+  }
+
+  .inegro .inegro-footer-row {
+    display: flex;
+    align-items: flex-end;
+  }
+
+  .inegro .inegro-footer-row > * {
+    width: 50%;
+    margin-bottom: 0;
+  }
+
+  .inegro .inegro-footer-logo {
+    width: auto;
+    display: inline-block;
+  }
+
+  .inegro .inegro-footer-info {
+    text-align: right;
+  }
+
+  .inegro .inegro-footer-links {
+    display: inline-block;
+  }
+
+  .inegro .inegro-footer-links li {
+    margin: 0;
+    padding: 0 calc(1.3 * var(--u));
+    border-right: 1px solid var(--surface);
+  }
+
+  .inegro .inegro-footer-links li:last-child {
+    padding-right: 0;
+    border-right: none;
+  }
+
+  .inegro .inegro-footer-small {
+    width: auto;
+    margin: calc(2 * var(--u)) 0 calc(3 * var(--u));
+  }
+}
+
+/* ---------------------------------------------------------------------------------------------
+ * Arrival. Two seconds after load the bar drops into place and the hero's words rise, over
+ * 1.5s; the ribbons' box grows, its strip pans, the ribbons draw and the lights run.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  .inegro .inegro-header-inner {
+    animation: inegro-bar-in 1.5s ease 2s both;
+  }
+
+  .inegro .inegro-hero-col {
+    animation: inegro-words-in 1.5s ease 2s both;
+  }
+
+  .inegro .inegro-lines {
+    animation: inegro-zoom 2.5s ease both;
+  }
+
+  .inegro .inegro-lines-strip {
+    animation: inegro-pan 4s ease both;
+  }
+
+  .inegro .inegro-lines svg {
+    animation: inegro-show 0.4s ease-in-out both;
+  }
+
+  .inegro .inegro-ribbon {
+    stroke-dasharray: 1;
+    animation: inegro-draw var(--draw) var(--inegro-power1) var(--wait) both;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .inegro .inegro-pulse {
+    display: none;
+  }
+}
+
+@keyframes inegro-bar-in {
+  from {
+    opacity: 0;
+    translate: 0 calc(-6 * var(--u));
+  }
+
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+@keyframes inegro-words-in {
+  from {
+    opacity: 0;
+    translate: 0 calc(3 * var(--u));
+  }
+
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+@keyframes inegro-zoom {
+  from {
+    transform: scale(0.5);
+  }
+
+  to {
+    transform: scale(1);
+  }
+}
+
+@keyframes inegro-pan {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-55%);
+  }
+}
+
+@keyframes inegro-show {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes inegro-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+
+  to {
+    stroke-dashoffset: 0;
+  }
+}

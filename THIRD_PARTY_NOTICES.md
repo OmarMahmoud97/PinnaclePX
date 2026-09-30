@@ -68,6 +68,16 @@ https://pro.reactbits.dev/docs/templates/agency-site
 
 The layout was re-implemented in this codebase from the template's published demo at https://rbp-agency-template.vercel.app, as a design rebuilt against this project's own tokens and contract. Its two shaders (the hero's waves and the project pictures' duotone and ripple) were written from the demo's own GLSL on raw WebGL, without its bloom pass. The example page's three pictures (`templates/t08-vector/example/project-*.webp`) are the demo's own files.
 
+## t09-inegro, from a friend's WordPress site
+
+The layout was re-implemented in this codebase from the home page of a WordPress site built by a friend of the owner for a client, a podcast, which the friend gave the owner to use as a template (owner, 30 September 2026; `docs/adr/0041-inegro-ported-from-a-friends-site.md`). The site is not named here, as the design is the friend's work for their client; the owner holds the source. It was rebuilt from the live page's markup, its theme's stylesheet and its script, as a design against this project's own tokens and contract. None of the client's words, photographs, portraits or logo are used: the example page's copy is written for the invented Kestrel, and its nine photographs (`templates/t09-inegro/example/*.webp`) are from Pexels, under the Pexels License, each credited in the example's footer: Irina P, Jungsik Kwak, Francesco Ungaro, Heiko Ruth, Vladimir Srajber, alpha innotec, Yura Radochin, Anna Shvets and Mikael Blomkvist. The social marks in `templates/t09-inegro/sections/icons.tsx` are the theme's own drawings of each network's mark, except LinkedIn's, redrawn here.
+
+The example page sets the source's two cuts of Syne from the theme's own files (`app/examples/inegro/syne-*.woff2`), under the SIL Open Font License, Version 1.1 (https://openfontlicense.org), which allows them to be redistributed with this notice:
+
+Copyright 2017 The Syne Project Authors (https://gitlab.com/bonjour-monde/fonderie/syne-typeface)
+
+This Font Software is licensed under the SIL Open Font License, Version 1.1. Its body face, Albert Sans (Copyright 2021 The Albert Sans Project Authors), is loaded from Google Fonts under the same licence and is not redistributed.
+
 ## The hero's ink, from a WebGL fluid simulation
 
 https://codepen.io/ksenia-k/pen/jENEMjN and https://github.com/PavelDoGreat/WebGL-Fluid-Simulation

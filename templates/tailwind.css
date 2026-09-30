@@ -14,8 +14,19 @@
  * site's own tokens from app/tokens.css, which globals.css emits on every page. A utility
  * generated here therefore resolves to the same variables as the same utility on the site, and a
  * brand's generated set still recolours a preview at runtime.
+ *
+ * The utilities sit in the site's utilities layer (ADR 0042). Unlayered, they beat every layered
+ * rule whatever its specificity, so a template's `sr-only` beat the site's `focus:not-sr-only`
+ * and the skip link stayed a 1px square when focused. In the layer they are weighed by
+ * specificity and order like the site's own, and the focus variant wins. The @layer statement
+ * keeps the order right even if this sheet loads first. What it changes: a template's own
+ * unlayered CSS now beats a utility on the same element whatever the specificity, and an
+ * !important utility here beats an unlayered !important rule. A pixel and computed-style diff of
+ * the eight example routes found no change.
  */
+@layer theme, base, components, utilities;
+
 @import 'tailwindcss/theme.css' theme(reference);
 @import '../app/tokens.css' theme(reference);
 
-@import 'tailwindcss/utilities.css' source('.');
+@import 'tailwindcss/utilities.css' layer(utilities) source('.');
