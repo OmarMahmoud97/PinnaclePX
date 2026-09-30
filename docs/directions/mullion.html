@@ -1,0 +1,1526 @@
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Mullion style tile</title>
+    <meta
+      name="description"
+      content="Phase 2 style tile for Mullion, the multi-industry direction: the hero at five widths and in four businesses, the page below it, type, palette, buttons and the WebGL moment."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@600&family=Source+Serif+4:wght@400;500&family=Fraunces:wght@600&family=Instrument+Sans:wght@400;500&family=Manrope:wght@600&family=Inter:wght@400;500&family=Bricolage+Grotesque:wght@600&family=DM+Sans:wght@400;500&family=Sora:wght@600&display=swap"
+    />
+    <!-- prettier-ignore -->
+    <style>
+/* Tokens: the repo's 14 names. These are deriveTokens('#0f7a6c', 'light', Mullion's ten pairs) from the lab
+   palette tool; every other set on the page is applied by the script from the same tool's output. */
+:root { --surface: #f6fbfa; --surface-muted: #eaf2f0; --on-surface: #121716; --on-surface-muted: #505755; --border: #d8e0de; --accent: #e5edeb; --brand: #0f7a6c; --brand-deeper: #007466; --brand-deepest: #006055; --on-brand: #ffffff; --glow: #51d7c2; --glow-secondary: #e9884c; --scrim: #030706; --on-scrim: #ffffff; --fd: 'Schibsted Grotesk', system-ui, sans-serif; --fb: 'Source Serif 4', Georgia, serif; --settle: cubic-bezier(0.25, 0.6, 0.3, 1); }
+/* A critically damped spring sampled into linear(), with the bezier above as its fallback. */
+@supports (transition-timing-function: linear(0, 1)) { :root { --settle: linear(0, 0.236 10%, 0.551 20%, 0.764 30%, 0.883 40%, 0.944 50%, 0.974 60%, 0.988 70%, 0.995 80%, 0.998 90%, 1); } }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+ul, ol { list-style: none; }
+fieldset { border: 0; min-width: 0; }
+img { display: block; }
+body { background: var(--surface); color: var(--on-surface); font: 400 1.0625rem/1.6 var(--fb); }
+.vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.pg, .site { container-type: inline-size; background: var(--surface); color: var(--on-surface); font-family: var(--fb); }
+.pg { padding-block: clamp(1rem, 0.5rem + 2vw, 2.5rem) 4rem; }
+[data-set] { color: var(--on-surface); background: var(--surface); }
+
+/* The frame. Its edges and each section's top rule are on-surface. Pane rules are the border token, a
+   decorative step: each pane draws its left and top rule as pseudo-elements 1 px into its neighbour, and the
+   row clips the ones that would land on the frame. Colour panes draw none; their fill is the edge. */
+.fr { --pad: clamp(1rem, 0.6rem + 1.6cqi, 2rem); --t: 24px; margin-inline: max(clamp(1rem, 0.5rem + 2cqi, 2.5rem), (100% - 97.5rem) / 2); border: 1px solid var(--on-surface); border-top: 0; }
+.rw { --c: 4; display: grid; grid-template-columns: repeat(var(--c), minmax(0, 1fr)); border-top: 1px solid var(--on-surface); overflow: clip; }
+.rw.heavy { border-top-width: 2px; }
+.p { grid-column: span var(--c); position: relative; min-width: 0; padding: var(--pad); display: flex; flex-direction: column; gap: 0.75rem; }
+.p::before, .p::after { content: ''; position: absolute; z-index: 3; background: var(--border); pointer-events: none; }
+.p::before { left: -1px; top: 0; bottom: 0; width: 1px; }
+.p::after { top: -1px; left: 0; right: 0; height: 1px; }
+.col::before, .col::after, .nt::after { display: none; }
+.tint { background: var(--accent); }
+.muted { background: var(--surface-muted); }
+.col { background: var(--brand-deeper); color: var(--on-brand); }
+.flush { padding: 0; }
+.end { justify-content: flex-end; }
+.foot { margin-top: auto; }
+@container (min-width: 48rem) { .rw { --c: 8; } }
+@container (min-width: 64rem) {
+  .rw { --c: 12; }
+  .w3 { grid-column: span 3; } .w4 { grid-column: span 4; } .w5 { grid-column: span 5; } .w6 { grid-column: span 6; }
+  .w7 { grid-column: span 7; } .w8 { grid-column: span 8; } .w9 { grid-column: span 9; }
+}
+
+/* Type. In the tile cqi stands in for vw, so each demo sets type for its own width. */
+.h { font-family: var(--fd); font-weight: 600; letter-spacing: -0.025em; line-height: 1.04; text-wrap: balance; overflow-wrap: anywhere; hyphens: auto; hyphenate-limit-chars: 12 5 5; }
+.s1 { font-size: clamp(2.75rem, 1.5rem + 5cqi, 7rem); }
+.s2 { font-size: clamp(2.25rem, 1.25rem + 3.75cqi, 5.5rem); }
+.s3 { font-size: clamp(1.625rem, 0.9rem + 3cqi, 4.25rem); }
+.h2 { font-size: clamp(1.75rem, 1.1rem + 2.4cqi, 3.5rem); letter-spacing: -0.02em; line-height: 1.06; }
+.h3 { font-size: clamp(1.25rem, 1.05rem + 0.8cqi, 1.75rem); letter-spacing: -0.01em; line-height: 1.15; }
+.kk { display: block; font-size: clamp(1.125rem, 1rem + 0.6cqi, 1.625rem); letter-spacing: -0.01em; line-height: 1.2; margin-bottom: 0.45em; }
+.ld { font-size: clamp(1.125rem, 1.02rem + 0.45cqi, 1.375rem); line-height: 1.45; text-wrap: pretty; }
+.tx { max-width: 62ch; text-wrap: pretty; }
+.mut { color: var(--on-surface-muted); }
+.sm { font-size: 1rem; line-height: 1.5; }
+b, strong, dt { font-weight: 600; }
+
+/* The demo site: StudioBar, then the header. The ask is always the top-right cell. */
+.bar { height: 56px; display: flex; align-items: center; justify-content: space-between; padding: 0 1rem; background: var(--scrim); color: var(--on-scrim); font: 500 0.875rem/1 var(--fb); }
+.hd { grid-template-columns: minmax(0, 1fr) 3.5rem auto; grid-auto-rows: minmax(3.5rem, auto); }
+.hd .p { grid-column: auto; padding-block: 0; justify-content: center; }
+.lg { --wm: clamp(1.25rem, 1.1rem + 0.5cqi, 1.625rem); font: 600 var(--wm)/1.08 var(--fd); letter-spacing: -0.02em; overflow-wrap: anywhere; }
+.lg.m2 { --wm: clamp(1rem, 0.9rem + 0.5cqi, 1.375rem); }
+.lg.m3 { --wm: 0.875rem; line-height: 1.14; letter-spacing: -0.01em; }
+@container (width < 48rem) { .hd.long { grid-template-columns: 3.5rem minmax(0, 1fr); } .hd.long .lgp { grid-column: 1 / -1; padding-block: 0.625rem; } }
+.nv { display: none; flex-direction: row !important; align-items: center; gap: 1.5rem; font-weight: 500; white-space: nowrap; }
+.mn { align-items: center; padding: 0 !important; font: 500 0.875rem/1 var(--fb); }
+.ak { flex-direction: row !important; align-items: center; padding-inline: 0.875rem; color: var(--brand-deeper); font: 500 1rem/1.15 var(--fb); text-decoration: none; box-shadow: inset 0 -3px 0 var(--brand-deeper); white-space: nowrap; }
+.ak .ar { display: none; }
+.ak.is-f, .ak:focus-visible { outline: 2px solid var(--on-surface); outline-offset: -6px; }
+/* The filled ask cell, as the header draws it from 64rem; .akf shows it outside a header in the states grid. */
+.akf { display: grid; width: min(100%, 15rem); grid-template-columns: minmax(0, 1fr) 4rem; align-items: stretch; min-height: 4rem; padding: 0; background: var(--brand-deeper); color: var(--on-brand); box-shadow: none; font-size: 1.0625rem; }
+.akf .bl { display: flex; align-items: center; padding-left: 1rem; }
+.akf .ar { display: grid; place-items: center; border-left: 1px solid var(--on-brand); }
+.akf .ar i { font-style: normal; }
+.akf::after { content: ''; position: absolute; inset: 0; z-index: -1; background: var(--brand-deepest); opacity: 0; transition: opacity 0.15s var(--settle); }
+.akf { position: relative; isolation: isolate; }
+.akf.is-h::after, .akf:hover::after { opacity: 1; }
+.akf.is-f { outline-color: var(--on-brand); }
+
+/* The hero: the h1 pane (kicker deck, h1, service index), the call pane, then slot 0 and its caption. */
+.hl { gap: 2rem; }
+.ix { display: none; }
+.call { padding: 0; overflow: clip; isolation: isolate; gap: 0; }
+.ct { position: relative; z-index: 2; padding: var(--pad); display: flex; flex-direction: column; gap: 0.75rem; }
+.ct .ld { max-width: 40ch; }
+.rs { font-size: 1rem; line-height: 1.45; padding-top: 0.75rem; border-top: 1px solid var(--on-brand); max-width: 36ch; }
+.fz { position: relative; z-index: 2; display: flex; justify-content: flex-end; align-items: flex-end; }
+.fz .b { width: 100%; }
+/* The canvas shows only while something moves; at rest it is hidden, since its rest frame is the plain pane. */
+.call canvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; opacity: 0; visibility: hidden; transition: opacity 0.15s, visibility 0s 0.15s; }
+.call canvas.on { opacity: 1; visibility: visible; transition: opacity 0.15s; }
+.ph0, .abp { padding: 0; aspect-ratio: 4 / 3; overflow: hidden; }
+.ph0 img, .abp img { width: 100%; height: 100%; object-fit: cover; }
+.twin { background: var(--accent); justify-content: flex-end; aspect-ratio: 4 / 3; }
+.cap { justify-content: flex-end; }
+.fold { position: absolute; left: 0; right: 0; border-top: 2px dashed var(--on-surface); pointer-events: none; z-index: 9; }
+.fold b { position: absolute; right: 0.5rem; bottom: 0.375rem; padding: 0.25rem 0.5rem; background: var(--surface); color: var(--on-surface); font: 500 1rem/1.2 var(--fb); }
+@container (min-width: 48rem) {
+  .hd { grid-template-columns: repeat(8, minmax(0, 1fr)); grid-auto-rows: minmax(4rem, auto); }
+  .hd .lgp, .hd.long .lgp { grid-column: span 4; padding-block: 0; }
+  .hd .mn { grid-column: span 1; } .hd .ak { grid-column: span 3; }
+  .ix { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); margin: auto calc(var(--pad) * -1) calc(var(--pad) * -1); border-top: 1px solid var(--border); }
+  .ix li + li { border-left: 1px solid var(--border); }
+  .ix a { display: flex; align-items: center; min-height: 3.5rem; height: 100%; padding: 0.625rem var(--pad); color: var(--on-surface); font-size: 1rem; font-weight: 500; line-height: 1.3; text-decoration: none; text-wrap: balance; }
+  .ix li:nth-child(n + 4) { display: none; }
+  .ix a:hover { text-decoration: underline; }
+  .site .call { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); }
+  .site .ct { grid-column: 1 / 6; }
+  .site .fz { grid-column: 6 / 9; min-height: calc(3 * var(--t) + 3.5rem); }
+  .ph0, .twin { aspect-ratio: 16 / 9; }
+  .abp { aspect-ratio: 16 / 9; }
+}
+@container (min-width: 64rem) {
+  .hd { grid-template-columns: repeat(12, minmax(0, 1fr)); }
+  .hd .lgp, .hd.long .lgp { grid-column: span 6; } .hd .ak { grid-column: span 5; }
+  .hd .ak { display: grid; grid-template-columns: minmax(0, 1fr) 4rem; align-items: stretch; padding: 0; background: var(--brand-deeper); color: var(--on-brand); box-shadow: none; font-size: 1.0625rem; }
+  .hd .ak .bl { display: flex; align-items: center; padding-left: var(--pad); }
+  .hd .ak .ar { display: grid; place-items: center; border-left: 1px solid var(--on-brand); }
+  .hd .ak .ar i { font-style: normal; }
+  .hd .ak { isolation: isolate; }
+  .hd .ak::after { content: ''; position: absolute; inset: 0; z-index: -1; background: var(--brand-deepest); opacity: 0; transition: opacity 0.15s var(--settle); height: auto; top: 0; left: 0; right: 0; display: block; }
+  .hd .ak:hover::after, .hd .ak.is-h::after { opacity: 1; }
+  .hd .ak.is-f, .hd .ak:focus-visible { outline-color: var(--on-brand); }
+  .hd .ak::before { display: none; }
+  .site .hl { grid-column: span 7; } .site .call { grid-column: span 5; display: flex; }
+  .site .ph0, .site .twin { grid-column: span 7; } .site .cap { grid-column: span 5; } .site .cap::after { display: none; }
+  .site .fz { flex: 1 0 auto; min-height: calc(3 * var(--t) + 3.5rem); } .site .fz .b { width: 80%; }
+  .abp { grid-column: span 4; aspect-ratio: 3 / 2; } .abt { grid-column: span 8; } .abh { grid-column: span 5; } .abs { grid-column: span 7; }
+}
+@container (min-width: 80rem) {
+  .hd .lgp, .hd.long .lgp { grid-column: span 3; } .hd .nv { display: flex; grid-column: span 5; } .hd .mn { display: none; } .hd .ak { grid-column: span 4; }
+  .ix li:nth-child(n + 4) { display: block; }
+  .site .hl { grid-column: span 8; } .site .call { grid-column: span 4; } .site .fz .b { width: 75%; }
+  .site .ph0, .site .twin { grid-column: span 8; aspect-ratio: 21 / 9; } .site .cap { grid-column: span 4; }
+}
+
+/* Below the hero: services, process, about, reasons, FAQ, contact, footer. */
+.sr { padding: var(--pad); display: grid; gap: 0.5rem 1.5rem; align-content: start; }
+.sr + .sr, .stp li + li, .rl li + li { border-top: 1px solid var(--border); }
+.sr .lk { justify-self: start; }
+.stp li { display: grid; grid-template-columns: 2.75rem minmax(0, 1fr); gap: 0.25rem 0.75rem; padding: var(--pad); }
+.stp .n { grid-row: span 2; font: 600 clamp(2rem, 1.4rem + 2cqi, 3rem)/1 var(--fd); font-variant-numeric: tabular-nums; }
+.askp { gap: 1.25rem; padding-bottom: 0; }
+.askp .b { margin: auto calc(var(--pad) * -1) 0; width: calc(100% + 2 * var(--pad)); }
+.rl li { padding: var(--pad); }
+.rl b { font-family: var(--fd); }
+.fq details + details { border-top: 1px solid var(--border); }
+.fq summary { list-style: none; display: grid; grid-template-columns: minmax(0, 1fr) 2.75rem; gap: 1rem; align-items: center; min-height: 3.5rem; padding: 0.375rem var(--pad); cursor: pointer; font-weight: 500; }
+.fq summary::-webkit-details-marker { display: none; }
+.fq summary i { width: 2.75rem; height: 2.75rem; display: grid; place-items: center; font-style: normal; box-shadow: inset 0 0 0 1px var(--on-surface-muted); }
+.fq summary i::before { content: '+'; }
+.fq details[open] summary i::before { content: '\2212'; }
+.fq details p { padding: 0 var(--pad) var(--pad); }
+.cb { padding: 0; display: grid; grid-template-columns: repeat(var(--c), minmax(0, 1fr)); }
+.chd { grid-column: 1 / -1; padding: var(--pad); display: flex; flex-direction: column; gap: 0.75rem; }
+.pts li { padding-top: 0.5rem; border-top: 1px solid var(--on-brand); font-size: 1rem; }
+.pts { display: grid; gap: 0.75rem; margin-top: 0.5rem; }
+.frm { grid-column: 1 / -1; margin: 0 var(--pad) var(--pad); background: var(--surface); color: var(--on-surface); padding: var(--pad) var(--pad) 0; display: grid; gap: 1rem; align-content: start; }
+.fld label { display: block; font-weight: 500; margin-bottom: 0.375rem; }
+.fld span.in { display: block; min-height: 3rem; box-shadow: inset 0 0 0 1px var(--on-surface-muted); background: var(--surface); padding: 0.625rem 0.875rem; color: var(--on-surface-muted); }
+.fld span.in.big { min-height: 6.5rem; }
+.frm .b { margin: 0.5rem calc(var(--pad) * -1) 0 auto; }
+.ft .p { gap: 0.5rem; }
+.fnav { padding: 0; }
+.fnav a { display: flex; align-items: center; min-height: 2.75rem; padding-inline: var(--pad); color: var(--on-surface); text-decoration: none; }
+.fnav a + a { border-top: 1px solid var(--border); }
+@container (min-width: 64rem) {
+  .sh, .fqh, .rh { grid-column: span 4; } .sv, .fq, .rl { grid-column: span 8; }
+  .phd { grid-column: span 4; } .stp { grid-column: span 8; }
+  .askp { grid-column: 1 / -1; flex-direction: row; align-items: flex-end; justify-content: space-between; gap: 2rem; }
+  .askp > p { padding-bottom: var(--pad); }
+  .askp .b { flex: none; width: calc((100% + 2 * var(--pad)) * 5 / 12); margin: 0 calc(var(--pad) * -1) 0 0; }
+  .chd { grid-column: 8 / -1; grid-row: 1; } .frm { grid-column: 1 / 8; grid-row: 1; margin: var(--pad); }
+  .f1 { grid-column: span 5; } .fnav { grid-column: span 3; } .f3 { grid-column: span 4; }
+}
+@container (min-width: 80rem) {
+  .sh, .fqh, .rh { grid-column: span 3; } .sv, .fq, .rl { grid-column: span 9; }
+  .sr { grid-template-columns: repeat(9, minmax(0, 1fr)); padding: 0; }
+  .sr > h3 { grid-column: 1 / 4; padding: var(--pad); } .sr > div { grid-column: 4 / 10; padding: var(--pad); display: grid; gap: 0.5rem; }
+  .abp { grid-column: span 6; } .abt { grid-column: span 6; }
+  .phd, .stp { grid-column: 1 / span 8; }
+  .askp { grid-column: 9 / -1; grid-row: 1 / span 2; flex-direction: column; align-items: stretch; justify-content: flex-start; gap: 1.25rem; }
+  .askp > p { padding-bottom: 0; }
+  .askp .b { width: calc(100% + 2 * var(--pad)); margin: auto calc(var(--pad) * -1) 0; }
+  .chd { grid-column: 9 / -1; } .frm { grid-column: 1 / 9; }
+}
+
+/* Buttons: each is a small window, a label light and an arrow light split by a mullion. Hover inverts the
+   arrow light by fading a pseudo-element's opacity; press scales; focus is a 2 px ring inset 6 px, in the
+   button's own text colour. Primary on clear ground, inverse inside a colour pane, secondary for Menu. */
+.b { --bf: var(--brand-deeper); --bt: var(--on-brand); --bh: var(--brand-deepest); position: relative; isolation: isolate; display: inline-grid; grid-template-columns: minmax(0, 1fr) 3.5rem; min-height: 3.5rem; max-width: 100%; background: var(--bf); color: var(--bt); border: 0; font: 500 1.0625rem/1.25 var(--fb); text-align: left; text-decoration: none; cursor: pointer; transition: transform 0.15s var(--settle); }
+.b::before { content: ''; position: absolute; inset: 0; z-index: -1; background: var(--bh); opacity: 0; transition: opacity 0.15s var(--settle); }
+.b .bl { display: flex; align-items: center; padding: 0.625rem 1.25rem; }
+.b .ar { display: grid; place-items: center; border-left: 1px solid var(--bt); }
+.b .ar i { font-style: normal; }
+.b:hover::before, .b.is-h::before { opacity: 1; }
+.b:active, .b.is-p { transform: scale(0.98); }
+.b:focus-visible, .b.is-f { outline: 2px solid var(--bt); outline-offset: -6px; }
+/* Inverse: on-brand inside a colour pane. Its hover is the declared on-brand on brand-deepest pair, switched at once
+   (no fade, so the label never passes through a low-contrast mix), with a 1 px on-brand edge against the pane. */
+.inv { --bf: var(--on-brand); --bt: var(--brand-deeper); }
+.inv::before { transition: none; }
+.inv:hover, .inv.is-h { --bt: var(--on-brand); box-shadow: inset 0 0 0 1px var(--on-brand); }
+.sec { --bf: var(--surface); --bt: var(--on-surface); --bh: var(--accent); box-shadow: inset 0 0 0 1px var(--on-surface); grid-template-columns: auto; }
+.lk { display: inline-flex; align-items: center; min-height: 2.75rem; color: var(--brand-deeper); font-weight: 500; text-decoration: underline 1px; text-underline-offset: 0.3em; }
+.lk:hover, .lk.is-h { text-decoration-thickness: 2px; }
+.lk:active, .lk.is-p { text-decoration-thickness: 3px; }
+.lk:focus-visible, .lk.is-f { outline: 2px solid var(--on-surface); outline-offset: 2px; }
+.col .lk { color: var(--on-brand); }
+/* Topic chips: a native radio group; the input stays in the tab order, invisible over its label. */
+.chips { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.chips legend { font-weight: 500; margin-bottom: 0.5rem; float: left; width: 100%; }
+.ch { position: relative; display: inline-flex; align-items: center; gap: 0.375rem; min-height: 2.75rem; padding: 0 1rem; background: var(--surface); color: var(--on-surface); box-shadow: inset 0 0 0 1px var(--on-surface-muted); font: 500 1rem/1.2 var(--fb); cursor: pointer; }
+.ch input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
+.ch:has(:checked) { background: var(--accent); box-shadow: inset 0 0 0 2px var(--on-surface); }
+.ch:has(:checked)::before { content: '\2713'; }
+.ch:has(:focus-visible), .ch.is-f { outline: 2px solid var(--on-surface); outline-offset: 2px; }
+
+/* Tile furniture: grids, scaled screens, swatches, chips, minis, stills. */
+.gr { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--m, 13rem)), 1fr)); }
+.row { display: flex; flex-wrap: wrap; gap: 0.5rem 0.75rem; align-items: center; }
+.scr { overflow: hidden; position: relative; outline: 1px solid var(--border); }
+.scr .site, .scr > .shot { transform-origin: 0 0; position: absolute; top: 0; left: 0; }
+figure, dl { display: grid; gap: 0.75rem; align-content: start; }
+figcaption { font-size: 1rem; line-height: 1.5; }
+.st { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); gap: 1rem; align-items: end; }
+.st > div { display: grid; gap: 0.375rem; justify-items: start; }
+.sw { display: grid; grid-template-columns: 2.75rem 1fr; gap: 0 0.75rem; align-items: center; font-size: 1rem; line-height: 1.3; }
+.sw i { grid-row: span 2; height: 2.75rem; box-shadow: inset 0 0 0 1px var(--on-surface-muted); }
+.sw small { font-size: 1rem; color: var(--on-surface-muted); }
+.chip { padding: 0.75rem 1rem; box-shadow: inset 0 0 0 1px var(--border); font-size: 1rem; line-height: 1.35; }
+.chip b { display: block; font: 600 1.5rem/1.2 var(--fd); }
+.pairsw { display: inline-flex; vertical-align: -4px; margin-right: 0.375rem; box-shadow: 0 0 0 1px var(--on-surface-muted); }
+.pairsw i { width: 1.25rem; height: 1.25rem; }
+.bars { display: flex; height: 3rem; border: 1px solid var(--on-surface); }
+.bars i + i { border-left: 1px solid var(--on-surface); }
+.figs { border-collapse: collapse; width: min(100%, 30rem); }
+.figs th, .figs td { padding: 0.5rem 0; border-bottom: 1px solid var(--border); text-align: left; font-weight: 400; }
+.figs td { text-align: right; font: 600 2rem/1.1 var(--fd); font-variant-numeric: tabular-nums; }
+.mini { position: relative; aspect-ratio: 4 / 3; background: var(--surface); box-shadow: inset 0 0 0 1px var(--on-surface); overflow: hidden; }
+.mini i, .mini canvas { position: absolute; }
+.mini::after { content: ''; position: absolute; inset: 0; box-shadow: inset 0 0 0 1px var(--on-surface); pointer-events: none; }
+.stills { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 9rem), 1fr)); gap: 1rem; }
+.stills canvas { width: 100%; height: auto; display: block; background: var(--brand-deeper); }
+.ord { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr)); border-top: 1px solid var(--border); border-left: 1px solid var(--border); }
+.ord div { padding: 1rem; display: grid; gap: 0.25rem; align-content: start; border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.ord .ask { background: var(--brand-deeper); color: var(--on-brand); }
+@container (width < 48rem) { [data-pal] .gr { --m: 9rem; } [data-pal] .chip b { font-size: 1.25rem; } }
+.cell-demo { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr)); gap: 1rem; }
+.live-wide { display: flex !important; }
+.live-wide .fz { flex: 1 0 auto; min-height: calc(3 * var(--t) + 3.5rem); grid-column: auto; }
+.live-wide .fz .b { width: 75%; }
+@media (prefers-reduced-motion: reduce) { .b, .b::before, .akf::after, .hd .ak::after, .call canvas { transition: none; } }
+@media (forced-colors: active) { .call canvas, .stills { display: none; } .p::before, .p::after { background: CanvasText; } }
+</style>
+  </head>
+  <body>
+    <div class="pg">
+      <div class="fr">
+        <section class="rw" aria-labelledby="t-title">
+          <div class="p w8" style="gap: 1.25rem">
+            <p>
+              <b>Style tile.</b> Multi-industry direction 1 of 2; id t10-mullion if the set grows to
+              ten.
+            </p>
+            <h1 id="t-title" class="h" style="font-size: clamp(3.5rem, 1rem + 7cqi, 8rem)">
+              Mullion
+            </h1>
+            <p class="ld" style="max-width: 52ch">
+              A small business's page as one ruled frame of panes. Colour means one thing: act here.
+              From 64rem the ask runs as one coloured column, from the header cell through the
+              hero's call pane, and the contact block at the close grows out of it.
+            </p>
+            <div class="row" id="swap">
+              <fieldset class="row" aria-label="Brand colour">
+                <span><b>Swap the colour:</b></span>
+              </fieldset>
+              <fieldset class="row" aria-label="Scheme">
+                <span><b>Scheme:</b></span>
+              </fieldset>
+            </div>
+          </div>
+          <div class="p w4 tint">
+            <dl>
+              <div>
+                <dt>Template</dt>
+                <dd>
+                  Multi-industry: any service business whose site has one job, a first enquiry. No
+                  sector icons, ids or fields.
+                </dd>
+              </div>
+              <div>
+                <dt>Target visitor</dt>
+                <dd>
+                  The business's customer on a phone, comparing two or three local providers; and
+                  the prospect judging their preview.
+                </dd>
+              </div>
+              <div>
+                <dt>Primary conversion</dt>
+                <dd>
+                  One first enquiry from the form in #contact, the last section. Every ask lands
+                  there and none points back up.
+                </dd>
+              </div>
+              <div>
+                <dt>Primary CTA</dt>
+                <dd>
+                  The brief's ctaLabel (4 to 22 characters) plus a 4 to 14 character askShort for
+                  the header cell. Example: Book a survey.
+                </dd>
+              </div>
+            </dl>
+          </div>
+        </section>
+
+        <section class="rw" aria-labelledby="t-hero">
+          <figure class="p" style="grid-column: 1 / -1">
+            <p class="sm">
+              <b>Example page faces: Schibsted Grotesk 600 over Source Serif 4.</b> No visitor gets
+              a serif body; the visitor pages further down use the four preview pairs.
+            </p>
+            <div class="scr" data-demo="ex" data-w="1440" data-h="1000"></div>
+            <figcaption>
+              <strong id="t-hero">Hero, example: Kestrel Sash Windows, York, at 1440.</strong>
+              Scaled to fit, with the 56 px StudioBar and the fold. The kicker is the h1's first
+              deck, the foot of the h1 pane indexes the services, and the ask is the call pane's
+              bottom-right cell. Slot 0 is a stand-in from the repo's licensed example photos (no
+              sash photo exists there). Swap the colour above and this restyles.
+            </figcaption>
+          </figure>
+          <figure class="p w4">
+            <div class="scr" data-demo="ex" data-w="375" data-h="800"></div>
+            <figcaption>
+              Phone, 375. One filled ask on screen, the call pane's; the header cell stays clear
+              until the call pane leaves. <span data-m="ex"></span>
+            </figcaption>
+          </figure>
+          <div class="p w8">
+            <h2 class="h h3">Why the first screen converts</h2>
+            <p class="tx">
+              What and where (the kicker deck), the value (h1), the supporting line, a trust line
+              and the ask, all server text. The coloured column is the only saturated thing on
+              screen, so the eye lands where the visitor acts. The service index gives the foot of
+              the h1 pane a job: three or four links down to #services, no claims.
+            </p>
+            <p class="tx">
+              On a visitor's page the trust line restates the brief, never a figure; only the
+              example may say <q>Rated 4.9 from 212 reviews</q>. With no photo the hero's row B
+              shows the company name as a wordmark (Pellow &amp; Garth, below), never a repeat of
+              the text beside it.
+            </p>
+            <p class="tx">
+              <b>Small phones.</b> At 375 × 548, Safari's visible height with its bars (an
+              assumption to confirm on a device), the call pane's ask can fall below the fold on
+              long briefs; there the header ask cell carries the first-screen ask. The measures are
+              in the spec.
+            </p>
+          </div>
+        </section>
+
+        <section class="rw" aria-labelledby="t-w">
+          <div class="p" style="grid-column: 1 / -1">
+            <h2 id="t-w" class="h h2">Every width, composed</h2>
+            <p class="tx">
+              The same example at 768, 1024 and 1920, each from its own container rules: 4, 8 and 12
+              columns, the header re-cut at 64rem and 80rem, and the photo at 16:9 then 21:9.
+            </p>
+          </div>
+          <figure class="p w5">
+            <div class="scr" data-demo="ex" data-w="768" data-h="1024"></div>
+            <figcaption>
+              <b>768.</b> Eight columns. Header: logo 4, Menu 1, ask 3, the ask cell clear with its
+              3 px rule while the call pane is on screen (the phone rule). The h1 pane spans 8 with
+              the service index at its foot. The call pane runs full width: text in columns 1 to 5,
+              the ask as the bottom cell of columns 6 to 8, where the tiles run. Photo 16:9.
+            </figcaption>
+          </figure>
+          <figure class="p w7">
+            <div class="scr" data-demo="ex" data-w="1024" data-h="900"></div>
+            <figcaption>
+              <b>1024.</b> Twelve columns, 7 and 5. The nav moves into the Menu cell (logo 6, Menu
+              1, ask 5), so the ask cell stands exactly over the call pane. The call pane's ask
+              spans 4 of its 5 columns, flush right. Photo 16:9 beside the caption.
+            </figcaption>
+          </figure>
+          <figure class="p" style="grid-column: 1 / -1">
+            <div class="scr" data-demo="ex" data-w="1920" data-h="1080"></div>
+            <figcaption>
+              <b>1920.</b> The frame holds at 1560 px, centred; type stops at its caps, so the
+              poster margin grows instead. From 80rem: logo 3, nav 5, ask 4 over 8 and 4, and the
+              ask spans 3 of the call pane's 4 columns. Photo 21:9.
+            </figcaption>
+          </figure>
+          <figure class="p" style="grid-column: 1 / -1">
+            <div class="gr" style="--m: 17rem" id="heads"></div>
+            <figcaption>
+              <b>The header with long names.</b> Three wordmark steps: up to 18 characters, 19 to 28
+              (two lines), 29 to 80 (14 px, up to three lines from 48rem). The header stays 56 px on
+              phones and 64 px from 48rem at every step. Below 48rem a name over 28 characters takes
+              its own row above the bar, and only the bar sticks. The nav holds three labels of up
+              to 14 characters from 80rem. The 1440 strip shows the ask cell with keyboard focus: a
+              2 px on-brand ring inset 6 px.
+            </figcaption>
+          </figure>
+        </section>
+
+        <section class="rw" aria-labelledby="t-ind">
+          <div class="p" style="grid-column: 1 / -1">
+            <h2 id="t-ind" class="h h2">Visitor pages: three businesses, one mechanism</h2>
+            <p class="tx">
+              Same markup, a different brief, preview pair and token set. Every photo here is an
+              off-topic or loose stand-in from the repo's licensed example files, to test the claim
+              that any photo sits beside the colour pane without a clash.
+            </p>
+          </div>
+          <figure class="p w8">
+            <div class="scr" data-demo="bake" data-w="1440" data-h="1000"></div>
+            <figcaption>
+              <b>Hollin Lane Bakehouse, Hebden Bridge.</b> Warm pair (Fraunces 600, Instrument
+              Sans), #b0562a light. The owner's sentence (339 of 400 characters):
+              <q
+                >Hollin Lane Bakehouse is a sourdough bakery on Hollin Lane in Hebden Bridge, open
+                every day but Monday. We bake overnight in the room behind the counter: sourdough
+                loaves, seeded rye, pastries and celebration bakes. Order online by the evening
+                before, or a few days ahead for celebration trays, and pay when you collect; no
+                account needed.</q
+              >
+              Every fact on this page, in the hero and below it, restates that sentence; the rest is
+              the site's own flow (how to order, what happens after sending).
+            </figcaption>
+          </figure>
+          <figure class="p w4">
+            <div class="scr" data-demo="bake" data-w="375" data-h="800"></div>
+            <figcaption>Phone. <span data-m="bake"></span></figcaption>
+          </figure>
+          <figure class="p w8">
+            <div class="scr" data-demo="law" data-w="1440" data-h="1000"></div>
+            <figcaption>
+              <b>Pellow &amp; Garth Solicitors, Harrogate.</b> Minimal pair (Manrope 600, Inter),
+              #1e3a8a light, 90-character h1 at step 3. No photo: row B shows the company name as a
+              wordmark in a tint pane, the only place it is set large.
+            </figcaption>
+          </figure>
+          <figure class="p w4">
+            <div class="scr" data-demo="law" data-w="375" data-h="800"></div>
+            <figcaption>Phone, the longest headline. <span data-m="law"></span></figcaption>
+          </figure>
+          <figure class="p w8">
+            <div class="scr" data-demo="sound" data-w="1440" data-h="1000"></div>
+            <figcaption>
+              <b>Low Moor Sound, Leeds.</b> Dark style (Sora 600, Inter), #c75b7a, forced dark: pale
+              rose panes with near-black text, beside an off-topic, saturated blue photo.
+            </figcaption>
+          </figure>
+          <figure class="p w4">
+            <div class="scr" data-demo="sound" data-w="375" data-h="800"></div>
+            <figcaption>
+              Phone, in Sora, the widest preview face. <span data-m="sound"></span>
+            </figcaption>
+          </figure>
+          <div class="p" style="grid-column: 1 / -1">
+            <h3 class="h h3">The worst accents, without a click</h3>
+            <div class="gr" style="--m: 20rem">
+              <figure>
+                <div class="scr" data-demo="yellow" data-w="1440" data-h="900"></div>
+                <figcaption>
+                  #f5c400 light: olive panes (#796000), 6.02:1 for on-brand. Photo: a saturated food
+                  still.
+                </figcaption>
+              </figure>
+              <figure>
+                <div class="scr" data-demo="grey" data-w="1440" data-h="900"></div>
+                <figcaption>
+                  #808080 light: a greyscale page (#636363 panes, 6:1); the asks are still the only
+                  filled blocks. Photo: red and orange gym kit.
+                </figcaption>
+              </figure>
+              <figure>
+                <div class="scr" data-demo="lime" data-w="1440" data-h="900"></div>
+                <figcaption>
+                  #84cc16 light: dark olive-green panes (#477200, 5.71:1). Photo: a dark gym
+                  interior.
+                </figcaption>
+              </figure>
+            </div>
+          </div>
+        </section>
+
+        <section class="rw" aria-labelledby="t-below">
+          <div class="p" style="grid-column: 1 / -1">
+            <h2 id="t-below" class="h h2">Below the hero</h2>
+            <p class="tx">
+              The bakery's visitor page from the services down, at 1440: no figures, no quotes, a
+              worded trust line, and the contact block in its decision-5 demo state.
+            </p>
+          </div>
+          <figure class="p" style="grid-column: 1 / -1">
+            <div class="scr" data-page="bake" data-w="1440" data-h="99999"></div>
+            <figcaption>
+              Services: heading in 1 to 3, rows in 4 to 12, the name in 4 to 6 and the text in 7 to
+              12. Process: the heading and a ruled list of steps in 1 to 8, the ask pane in 9 to 12,
+              the hero's column again. About: slot 1 in 1 to 6. Reasons on the muted band under a 2
+              px rule, as run-in rows. FAQ beside a tint pane. Contact: the form in 1 to 8, the
+              heading in the ask column. Footer: the business email as plain text.
+            </figcaption>
+          </figure>
+          <figure class="p w4">
+            <div class="scr" data-page="bake" data-w="375" data-parts="0,1" data-h="99999"></div>
+            <figcaption>
+              <b>Phone: services and process.</b> Every row stacks and each service keeps its own
+              ask. The ask pane follows the steps, its ask the pane's full-width bottom cell.
+            </figcaption>
+          </figure>
+          <figure class="p w4">
+            <div class="scr" data-page="bake" data-w="375" data-parts="4,5,6" data-h="99999"></div>
+            <figcaption>
+              <b>Phone: FAQ, contact and footer.</b> The contact heading comes first on colour, then
+              the form pane; the submit is the form pane's bottom-right cell.
+            </figcaption>
+          </figure>
+          <div class="p w4">
+            <h3 class="h h3">The close: nothing waits</h3>
+            <p class="tx">
+              The contact heading and the form are never hidden. The heading sits in the ask column
+              on colour from the start; the form is a surface pane, legible on any ground. Only the
+              decorative colour layer widens, from that column to the frame, behind content that is
+              already there.
+            </p>
+            <p class="tx">
+              The widening is skipped when #contact is reached from any in-page link, when the
+              address carries #contact, and when the block is already on screen as motion arms.
+              Every row that intersects the viewport when motion arms is marked shown without
+              animating, so the hero never flashes. Below 48rem there is no widening at all.
+            </p>
+          </div>
+          <figure class="p" style="grid-column: 1 / -1">
+            <div class="scr" data-about="law" data-w="1440" data-h="600"></div>
+            <figcaption>
+              <b>About, slot 1 null</b> (Pellow &amp; Garth, minimal pair). One upload is common,
+              and then slot 1 is null: the row re-spans, heading in 1 to 5 and story in 6 to 12. No
+              twin, no repeated heading.
+            </figcaption>
+          </figure>
+        </section>
+
+        <section class="rw" aria-labelledby="t-type">
+          <div class="p w4">
+            <h2 id="t-type" class="h h2">Type</h2>
+            <dl>
+              <div>
+                <dt>Example display: Schibsted Grotesk 600</dt>
+                <dd>
+                  Bakken &amp; Bæck, SIL OFL 1.1. h1 to h3, service names, the wordmark, the
+                  example's figures. tabular-nums measured at 600: 0s and 1s both 625.38 px at 96 px
+                  (proportional 634.47 and 381.63).
+                </dd>
+              </div>
+              <div>
+                <dt>Example body: Source Serif 4, 400 and 500</dt>
+                <dd>
+                  Adobe, SIL OFL 1.1. Figures already tabular (523.84 px both). Example page only.
+                </dd>
+              </div>
+              <div>
+                <dt>What visitors get</dt>
+                <dd>
+                  One of the four pairs below, sans body in every case. The contrast of faces is a
+                  display face at poster size over a plain text face, whichever pair it is.
+                </dd>
+              </div>
+            </dl>
+          </div>
+          <div class="p w8" id="scale"></div>
+          <div class="p" style="grid-column: 1 / -1">
+            <h3 class="h h3">The same hero deck and ask under the four preview pairs</h3>
+            <div class="gr" style="--m: 15rem" id="pairs"></div>
+          </div>
+        </section>
+
+        <section class="rw" aria-labelledby="t-pal">
+          <div class="p w4">
+            <h2 id="t-pal" class="h h2">Palette</h2>
+            <p class="tx">
+              Example hex #0f7a6c, viridian; light is the default. Four grounds: clear (surface),
+              tint (accent), muted (surface-muted) and colour (brand-deeper), which holds only asks.
+              Ratios are the palette tool's, floored, each beside the worst over its 17-hex corpus.
+            </p>
+          </div>
+          <div class="p w8">
+            <p><b>Estimated share of a 1440 light page.</b></p>
+            <div class="bars" aria-hidden="true">
+              <i style="width: 55%; background: var(--surface)"></i
+              ><i style="width: 15%; background: var(--brand-deeper)"></i
+              ><i style="width: 10%; background: var(--accent)"></i
+              ><i style="width: 10%; background: var(--surface-muted)"></i
+              ><i style="width: 10%; background: var(--on-surface)"></i>
+            </div>
+            <p class="tx mut">
+              Surface 55%, brand-deeper 15% (header cell, call pane, the pane after the steps, the
+              contact block), accent 10%, surface-muted 10%, rules and type the rest. Unused: brand,
+              glow, glow-secondary, scrim, on-scrim. No gradients, shadows, radii or text on photos.
+            </p>
+          </div>
+          <div class="p w6" data-set="#0f7a6c/light" data-pal="light"></div>
+          <div class="p w6" data-set="#0f7a6c/dark" data-pal="dark"></div>
+        </section>
+
+        <section class="rw" aria-labelledby="t-btn">
+          <div class="p w4">
+            <h2 id="t-btn" class="h h2">Buttons, links and chips</h2>
+            <p class="tx">
+              A Mullion button is a small window: a label light and a square arrow light split by a
+              1 px mullion in the text colour. Where it can, it is its pane's own bottom-right cell,
+              flush to the pane's edges. Hover deepens the fill to brand-deepest in 150 ms, an
+              opacity cross-fade on a pseudo-element; the inverse switches at once to on-brand on
+              brand-deepest. Press scales to 0.98; focus is a 2 px ring inset 6 px in the button's
+              text colour. Nothing is revealed by hover alone.
+            </p>
+          </div>
+          <div class="p w8" id="states" style="gap: 1.5rem"></div>
+          <div class="p w4">
+            <h3 class="h h3">Live</h3>
+            <p class="tx mut">
+              Tab, hover and press these. The topic chips are a native radio group, so they work
+              without JavaScript and submit a value. Each "Ask about this" carries its service in
+              its accessible name, after the visible words.
+            </p>
+          </div>
+          <div class="p w4">
+            <a class="b" href="#t-btn"
+              ><span class="bl">Book a survey</span
+              ><span class="ar" aria-hidden="true"><i>→</i></span></a
+            >
+            <button class="b sec" type="button"><span class="bl">Menu</span></button>
+            <a class="lk" href="#t-btn">Ask about this<span class="vh">: Draught-proofing</span></a>
+            <fieldset class="chips">
+              <legend>What is it about?</legend>
+              <label class="ch"><input type="radio" name="topic" checked />Repair</label>
+              <label class="ch"><input type="radio" name="topic" />Draught-proofing</label>
+              <label class="ch"><input type="radio" name="topic" />Something else</label>
+            </fieldset>
+          </div>
+          <div class="p w4 col" style="padding-bottom: 0">
+            <p>Inside a colour pane the ask inverts and sits flush in the corner.</p>
+            <a class="b inv" href="#t-btn" style="margin: auto calc(var(--pad) * -1) 0 auto"
+              ><span class="bl">Book a survey</span
+              ><span class="ar" aria-hidden="true"><i>→</i></span></a
+            >
+          </div>
+        </section>
+
+        <section class="rw" aria-labelledby="t-sig">
+          <div class="p w4">
+            <h2 id="t-sig" class="h h2">The moment: tiles lean toward the ask</h2>
+            <p class="tx">
+              One WebGL canvas, in the hero's call pane, from 48rem only. Its rest frame is the
+              plain pane, pixel for pixel, so at rest it is simply hidden and the text keeps its
+              subpixel smoothing. On first intent a diagonal front of square tiles crosses the pane
+              from its top-left, the headline's side, to the ask in the bottom-right corner in 1.4
+              s; as it lands, an L of tiles one module out from the ask lifts for 0.38 s, then all
+              of it settles back to the plain pane and stops.
+            </p>
+            <p class="tx">
+              After that, tiles under a pointer lift a step and spring back, and hovering or
+              focusing the ask lights the same L round it. Under text the tiles deepen toward
+              brand-deepest; round the ask they lift toward on-brand, and the ring touching the ask
+              never moves.
+            </p>
+            <div class="row">
+              <button class="b sec" type="button" id="replay">
+                <span class="bl">Replay the front</span>
+              </button>
+            </div>
+            <p id="gl-note" aria-live="polite"></p>
+          </div>
+          <div class="p w4 col call live-wide" id="live" style="height: 30rem; align-self: start">
+            <canvas aria-hidden="true"></canvas>
+            <div class="ct">
+              <p class="ld">We repair, draught-proof and remake timber sash windows across York.</p>
+              <p class="rs">A written quote before any work starts</p>
+            </div>
+            <div class="fz">
+              <a class="b inv" href="#t-sig"
+                ><span class="bl">Book a survey</span
+                ><span class="ar" aria-hidden="true"><i>→</i></span></a
+              >
+            </div>
+          </div>
+          <div class="p w4">
+            <h3 class="h h3">Real frames from that canvas</h3>
+            <div class="stills" id="stills">
+              <figure>
+                <canvas data-t="0.3"></canvas>
+                <figcaption>0.3 s</figcaption>
+              </figure>
+              <figure>
+                <canvas data-t="0.7"></canvas>
+                <figcaption>0.7 s</figcaption>
+              </figure>
+              <figure>
+                <canvas data-t="1.1"></canvas>
+                <figcaption>1.1 s</figcaption>
+              </figure>
+              <figure>
+                <canvas data-t="1.4"></canvas>
+                <figcaption>1.4 s, the landing L</figcaption>
+              </figure>
+            </div>
+            <p class="tx sm">
+              Drawn by the live shader at load, one frame each, copied out of the same context; the
+              white block marks the ask and the bars mark the text lines, which are DOM over the
+              canvas. The static state and the settled frame are the plain pane, so they match by
+              construction.
+            </p>
+            <p class="tx sm">
+              <b>What WebGL adds over CSS.</b> A CSS mask sweeping a static tile pattern could draw
+              the front at no script cost. WebGL adds the per-tile pointer response and the landing
+              L, both quantised to whole tiles on one spring, and it reads the tokens live. If the
+              owner reads it as decoration, the CSS sweep is the fallback plan.
+            </p>
+          </div>
+          <div class="p" style="grid-column: 1 / -1">
+            <h3 class="h h3">Storyboard: set into the frame (GSAP from 48rem, CSS below)</h3>
+          </div>
+          <div id="story" style="display: contents"></div>
+        </section>
+
+        <section class="rw" aria-labelledby="t-ord">
+          <div class="p" style="grid-column: 1 / -1">
+            <h2 id="t-ord" class="h h2">Section order</h2>
+            <p class="tx">
+              Ten sections, one job each. A coloured cell holds an ask; every ask lands on the form
+              in #contact, below all of them.
+            </p>
+            <div class="ord" id="order"></div>
+          </div>
+        </section>
+      </div>
+    </div>
+    <script>
+      const K =
+        'surface surface-muted on-surface on-surface-muted border accent brand brand-deeper brand-deepest on-brand glow glow-secondary scrim on-scrim'.split(
+          ' ',
+        )
+      // deriveTokens(hex, scheme, Mullion's ten pairs) from the lab palette tool, 14 values in K order.
+      // The tenth pair (brand-deeper on accent, the link on a tint pane) moved no token in any set here.
+      const SETS = Object.fromEntries(
+        [
+          '#0f7a6c/light f6fbfa eaf2f0 121716 505755 d8e0de e5edeb 0f7a6c 007466 006055 ffffff 51d7c2 e9884c 030706 ffffff',
+          '#0f7a6c/dark 090f0d 141a18 ecf4f2 9fa6a5 292f2e 1d2322 1f8374 56b1a1 6ac4b4 070c0b 00c6af e26c00 010202 ffffff',
+          '#c8412c/light fef9f8 f8edeb 1d1311 5f524f e8dad7 f7e7e4 c8412c b12a15 9a1500 ffffff ffa18f 70a3ff 0b0403 ffffff',
+          '#c8412c/dark 120b0a 1f1614 f8efee afa19e 362b28 291f1c c8412c f86d55 ff8c76 120807 ff8069 508dff 040101 ffffff',
+          '#808080/light fafafa f0f0f0 161616 555555 dedede ebebeb 808080 636363 525252 ffffff bebebe a4a4a4 060606 ffffff',
+          '#808080/dark 0d0d0d 181818 f2f2f2 a4a4a4 2e2e2e 222222 808080 9e9e9e b1b1b1 0b0b0b ababab 929292 020202 ffffff',
+          '#f5c400/light fcfaf6 f3f0e7 19160d 59554b e2ded2 efebdf f5c400 796000 655000 ffffff e6b800 d37de6 080601 ffffff',
+          '#f5c400/dark 0f0d08 1b1810 f4f2ea a9a499 312e24 252118 f5c400 f5c400 ffda71 0e0b04 cfa500 c267d5 030200 ffffff',
+          '#84cc16/light f9fbf7 edf2ea 13180e 51584c dae0d5 e7eee0 84cc16 477200 3a5f00 ffffff 8ed72b ff689e 040702 ffffff',
+          '#b0562a/light fef9f7 f8eeea 1b1411 5c534f e6dbd7 f3e9e4 b0562a 9d4516 883500 ffffff ffa47b 8b9cfc 090503 ffffff',
+          '#1e3a8a/light f8fafe ecf0f9 13161c 52555d dadee7 e7ebf5 304fa1 1e3a8a 102877 ffffff 9fbdff 7cb85b 04060b ffffff',
+          '#c75b7a/dark 120b0d 1e1617 f8eff1 ada1a3 342b2d 281f21 c75b7a e57694 fa89a7 10090a ff789e 009ed9 040101 ffffff',
+        ].map((s) => [s.slice(0, s.indexOf(' ')), s.split(' ').slice(1)]),
+      )
+      const apply = (el, key) =>
+        SETS[key].forEach((v, i) => el.style.setProperty(`--${K[i]}`, `#${v}`))
+      const split = (list) => list.map((s) => s.split('|'))
+      const esc = (s) => s.replace(/&/g, '&amp;')
+
+      // Photos: stand-ins from the repo's licensed example files (THIRD_PARTY_NOTICES.md).
+      const PH = {
+        room: [
+          '../../templates/t05-ember/example/restro-timing.png',
+          'A room with tall arched windows',
+        ],
+        food: ['../../templates/t05-ember/example/about.png', 'A plated dish on a table'],
+        chef: ['../../templates/t05-ember/example/chef.png', 'A cook at work in a kitchen'],
+        run: [
+          '../../templates/t06-harbor/example/unsplash-1552674605.jpg',
+          'Runners against a blue sky',
+        ],
+        kit: [
+          '../../templates/t06-harbor/example/unsplash-1571019614242.jpg',
+          'A trainer and client in a gym',
+        ],
+        bowl: [
+          '../../templates/t06-harbor/example/unsplash-1490645935967.jpg',
+          'A bowl of food on a wooden table',
+        ],
+        gym: [
+          '../../templates/t06-harbor/example/unsplash-1534438327276.jpg',
+          'Racks of dumbbells in a gym',
+        ],
+      }
+      const EX = {
+        set: 'swap',
+        fd: 'Schibsted Grotesk',
+        fb: 'Source Serif 4',
+        co: 'Kestrel Sash Windows',
+        nav: ['Services', 'How it works', 'Questions'],
+        short: 'Book a survey',
+        kicker: 'Sash window repair in York',
+        h1: 'Old sash windows, working like new',
+        lead: 'We repair, draught-proof and remake timber sash windows across York, so they open, close and keep the heat in.',
+        trust: 'Rated 4.9 from 212 reviews',
+        ask: 'Book a survey',
+        sv: ['Repair and re-cord', 'Draught-proofing', 'New sashes', 'Doors'],
+        photo: PH.room,
+        cap: 'Georgian and Victorian sashes, repaired in the frames they were built for.',
+      }
+      const DEMOS = {
+        ex: EX,
+        bake: {
+          set: '#b0562a/light',
+          fd: 'Fraunces',
+          fb: 'Instrument Sans',
+          co: 'Hollin Lane Bakehouse',
+          nav: ['Bakes', 'Ordering', 'Questions'],
+          short: 'Order',
+          kicker: 'Sourdough bakery in Hebden Bridge',
+          h1: 'Bread worth the early start',
+          lead: 'Sourdough loaves, seeded rye, pastries and celebration bakes, baked overnight in the room behind the counter.',
+          trust: 'Pay when you collect, no account needed',
+          ask: 'Order for collection',
+          sv: ['Sourdough loaves', 'Seeded rye', 'Pastries', 'Celebration bakes'],
+          photo: PH.food,
+          cap: 'Baked overnight in the room behind the counter on Hollin Lane.',
+        },
+        law: {
+          set: '#1e3a8a/light',
+          fd: 'Manrope',
+          fb: 'Inter',
+          co: 'Pellow & Garth Solicitors',
+          nav: ['Services', 'How it works', 'Questions'],
+          short: 'Get advice',
+          kicker: 'Family and property law in Harrogate',
+          h1: 'Plain-spoken legal advice for families buying a home, writing a will or settling an estate',
+          lead: 'Advice from a named solicitor, with the scope and cost set out in writing before any work starts.',
+          trust: 'A named solicitor handles each case',
+          ask: 'Book a consultation',
+          sv: ['Wills and probate', 'Buying a home', 'Family matters'],
+          photo: null,
+          cap: 'Wills, probate, conveyancing and family matters, explained in plain English.',
+        },
+        sound: {
+          set: '#c75b7a/dark',
+          fd: 'Sora',
+          fb: 'Inter',
+          co: 'Low Moor Sound',
+          nav: ['Rooms', 'How it works', 'Questions'],
+          short: 'Book a day',
+          kicker: 'Recording studio in Leeds',
+          h1: 'Record the way you sound on a good night',
+          lead: 'A live room, two vocal booths and an engineer at the desk, for demos, singles and whole records.',
+          trust: 'An engineer at the desk for every session',
+          ask: 'Book a studio day',
+          sv: ['Live room', 'Vocal booths', 'Mixing'],
+          photo: PH.run,
+          cap: 'Track live together, then overdub in the booths.',
+        },
+        yellow: { ...EX, set: '#f5c400/light', photo: PH.bowl },
+        grey: { ...EX, set: '#808080/light', photo: PH.kit },
+        lime: { ...EX, set: '#84cc16/light', photo: PH.gym },
+      }
+      // h1 step by length, one step down when the longest word is over 11 characters.
+      const step = (s) => {
+        const n = s.length <= 28 ? 1 : s.length <= 56 ? 2 : 3
+        return Math.min(3, n + (Math.max(...s.split(' ').map((w) => w.length)) > 11 ? 1 : 0))
+      }
+      const mark = (co) => (co.length <= 18 ? '' : co.length <= 28 ? 'm2' : 'm3')
+      const twinStep = (co) => (co.length <= 18 ? 1 : co.length <= 28 ? 2 : 3)
+      const btn = (label, cls = '', tag = 'span') =>
+        `<${tag} class="b ${cls}"><span class="bl">${label}</span><span class="ar" aria-hidden="true"><i>→</i></span></${tag}>`
+      const header = (
+        d,
+        focus = false,
+      ) => `<header class="rw hd${mark(d.co) === 'm3' ? ' long' : ''}">
+  <span class="p lgp"><span class="lg ${mark(d.co)}">${esc(d.co)}</span></span>
+  <span class="p nv">${d.nav.map((n) => `<span>${n}</span>`).join('')}</span>
+  <span class="p mn">Menu</span>
+  <span class="p ak${focus ? ' is-f' : ''}"><span class="bl">${d.short}</span><span class="ar" aria-hidden="true"><i>→</i></span></span></header>`
+      const hero = (d) => {
+        const rowB = d.photo
+          ? `<div class="p ph0"><img src="${d.photo[0]}" alt="${d.photo[1]}"></div>`
+          : `<div class="p twin"><p class="h s${twinStep(d.co)}">${esc(d.co)}</p></div>`
+        return `<section class="rw">
+  <div class="p hl"><h1 class="h s${step(d.h1)}"><span class="kk">${d.kicker}</span>${d.h1}</h1>
+  <ul class="ix">${d.sv.map((s) => `<li><a href="#services">${s}</a></li>`).join('')}</ul></div>
+  <div class="p col call"><div class="ct"><p class="ld">${d.lead}</p><p class="rs">${d.trust}</p></div><div class="fz">${btn(d.ask, 'inv')}</div></div>
+  ${rowB}<div class="p cap"><p class="tx sm">${d.cap}</p></div></section>`
+      }
+      const site = (d, w, extra = '') =>
+        `<div class="site" ${d.set === 'swap' ? '' : `data-set="${d.set}"`} style="width:${w}px;--fd:'${d.fd}';--fb:'${d.fb}'" inert>
+  <div class="bar"><span>PinnaclePX StudioBar, 56 px</span><span>Book a call</span></div>
+  <div class="fr">${header(d)}${hero(d)}${extra}</div>
+  ${w > 700 ? `<div class="fold" style="top:${w >= 1900 ? 1080 : w >= 1400 ? 900 : w >= 1000 ? 768 : 1024}px"><b>Fold, ${w} × ${w >= 1900 ? 1080 : w >= 1400 ? 900 : w >= 1000 ? 768 : 1024}</b></div>` : '<div class="fold" style="top:548px"><b>Fold, 375 × 548 (Safari, assumed)</b></div><div class="fold" style="top:667px"><b>375 × 667</b></div>'}</div>`
+      document.querySelectorAll('[data-demo]').forEach((el) => {
+        el.innerHTML = site(DEMOS[el.dataset.demo], +el.dataset.w)
+      })
+
+      // Header strips with long names at four widths; the 1440 strip shows the ask cell focused.
+      const LONG = [
+        'The Hebden Bridge Sourdough and Pastry Company',
+        'Ashgrove Physio and Sport Clinic for all the Runners, Riders and Walkers of Hull',
+      ]
+      const NAV14 = ['Visit the shop', 'How we work it', 'Your questions']
+      document.getElementById('heads').innerHTML = [375, 768, 1024, 1440]
+        .flatMap((w) =>
+          LONG.map(
+            (
+              co,
+              i,
+            ) => `<figure${w > 400 ? ' style="grid-column: 1 / -1"' : ''}><div class="scr" data-w="${w}" data-h="400"><div class="site" style="width:${w}px" inert>
+  <div class="fr">${header({ ...EX, co, nav: NAV14 }, w === 1440 && i === 0)}</div></div></div>
+  <figcaption>${w}, ${co.length} characters</figcaption></figure>`,
+          ),
+        )
+        .join('')
+
+      // The bakery's visitor page below the hero. Every fact restates the owner's sentence in the
+      // caption above; the rest (steps 1 and 3's flow, what happens after sending) is the site's own.
+      const BAKE = {
+        sh: ['What we bake', 'Open every day but Monday. Ask about any of these.'],
+        sv: [
+          [
+            'Sourdough loaves',
+            'Baked overnight in the room behind the counter. Order online by the evening before and collect.',
+          ],
+          [
+            'Seeded rye',
+            'From the same overnight bake. Order it online by the evening before and pay when you collect.',
+          ],
+          [
+            'Pastries',
+            'Baked overnight with the bread. Order ahead online, collect any day but Monday and pay then.',
+          ],
+          [
+            'Celebration bakes',
+            'Order celebration trays a few days ahead, then collect and pay; no account is needed.',
+          ],
+        ],
+        steps: [
+          [
+            'Choose your bakes',
+            'Tell us what you would like and how many, from the list or something else.',
+          ],
+          ['Pick a day', 'Say which day you will collect. The shop is open every day but Monday.'],
+          ['Collect and pay', 'Pay when you collect your order. You do not need an account.'],
+        ],
+        prompt: 'Ordering for a celebration? Ask a few days ahead.',
+        about: [
+          'Baked overnight on Hollin Lane',
+          'Hollin Lane Bakehouse is a sourdough bakery on Hollin Lane in Hebden Bridge. The baking happens overnight in the room behind the counter: sourdough loaves, seeded rye, pastries and, when ordered a few days ahead, celebration bakes. The shop is open every day but Monday.',
+        ],
+        reasons: [
+          [
+            'Baked overnight.',
+            'Everything is baked in the room behind the counter during the night before it reaches the shelf.',
+          ],
+          [
+            'No account needed.',
+            'Order online without signing up for anything, and pay only when you collect.',
+          ],
+          [
+            'Room for celebrations.',
+            'Celebration trays can be ordered a few days ahead, so they are ready on the day you collect.',
+          ],
+        ],
+        faq: [
+          [
+            'How far ahead should I order?',
+            'By the evening before for most bakes, or a few days ahead for celebration trays.',
+          ],
+          [
+            'When do I pay?',
+            'When you collect. Ordering online needs no account and takes no payment.',
+          ],
+          [
+            'Which days can I collect?',
+            'Any day but Monday, when the shop is closed. Say which day in your order.',
+          ],
+          [
+            'What happens after I send the form?',
+            'Your order reaches us, and we reply to the email address you give.',
+          ],
+        ],
+        contact: [
+          'Order for collection',
+          'Tell us what you would like and which day you will collect.',
+          ['Order by the evening before', 'Pay when you collect', 'No account needed'],
+        ],
+        desc: 'A sourdough bakery on Hollin Lane, Hebden Bridge, baking overnight in the room behind the counter.',
+      }
+      const rowsBelow = (d, P, withPhoto = true) => `
+  <section class="rw"><div class="p sh"><h2 class="h h2">${P.sh[0]}</h2><p class="tx mut">${P.sh[1]}</p></div>
+  <ol class="p flush sv">${P.sv.map(([n, t]) => `<li class="sr"><h3 class="h h3">${n}</h3><div><p class="tx">${t}</p><a class="lk" href="#contact">Ask about this<span class="vh">: ${n}</span></a></div></li>`).join('')}</ol></section>
+  <section class="rw"><div class="p phd"><h2 class="h h2">How ordering works</h2><p class="tx mut">Three steps from choosing to collecting.</p></div>
+  <ol class="p flush stp">${P.steps.map(([t, x], i) => `<li><span class="n">${i + 1}</span><h3 class="h h3">${t}</h3><p class="tx">${x}</p></li>`).join('')}</ol>
+  <div class="p col askp"><p class="h h3">${P.prompt}</p>${btn(d.ask, 'inv')}</div></section>
+  ${withPhoto ? `<section class="rw"><div class="p abp"><img src="${PH.chef[0]}" alt="${PH.chef[1]}"></div><div class="p abt"><h2 class="h h2">${P.about[0]}</h2><p class="tx">${P.about[1]}</p></div></section>` : ''}
+  <section class="rw muted heavy"><div class="p rh"><h2 class="h h2">Why order ahead</h2></div>
+  <ul class="p flush rl">${P.reasons.map(([t, x]) => `<li><p class="tx"><b>${t}</b> ${x}</p></li>`).join('')}</ul></section>
+  <section class="rw"><div class="p tint fqh"><h2 class="h h2">Questions</h2><p class="tx">Ordering, collecting and what happens next.</p><a class="lk" href="#contact">Ask us something else</a></div>
+  <div class="p flush fq">${P.faq.map(([q, a], i) => `<details${i === 0 ? ' open' : ''}><summary>${q}<i aria-hidden="true"></i></summary><p class="tx">${a}</p></details>`).join('')}</div></section>
+  <section class="rw"><div class="p col cb"><div class="chd"><h2 class="h h2">${P.contact[0]}</h2><p class="tx">${P.contact[1]}</p><ul class="pts">${P.contact[2].map((x) => `<li>${x}</li>`).join('')}</ul></div>
+  <form class="frm"><div class="fld"><label>Your name</label><span class="in"></span></div><div class="fld"><label>Email</label><span class="in"></span></div>
+  <fieldset class="chips"><legend>What is it about?</legend>${[...P.sv.map(([n]) => n), 'Something else'].map((n, i) => `<label class="ch"><input type="radio" name="t" ${i === 0 ? 'checked' : ''}>${n}</label>`).join('')}</fieldset>
+  <div class="fld"><label>Your message</label><span class="in big"></span></div>
+  <p class="tx sm mut">This is a preview: on the live site your message would reach ${esc(d.co)}. Nothing is sent from here.</p>${btn('Send', '', 'span')}</form></div></section>
+  <footer class="rw ft"><div class="p f1"><p class="lg ${mark(d.co)}">${esc(d.co)}</p><p class="tx mut sm">${P.desc}</p></div>
+  <nav class="p fnav">${d.nav.map((n) => `<a>${n}</a>`).join('')}</nav>
+  <div class="p f3"><p>hello@hollinlanebakehouse.example</p><p class="sm mut">© 2026 ${esc(d.co)}. All rights reserved.</p></div></footer>`
+      document.querySelectorAll('[data-page]').forEach((el) => {
+        const d = DEMOS[el.dataset.page]
+        const t = document.createElement('template')
+        t.innerHTML = rowsBelow(d, BAKE)
+        const keep = el.dataset.parts?.split(',').map(Number)
+        if (keep) [...t.content.children].forEach((c, i) => keep.includes(i) || c.remove())
+        el.innerHTML = `<div class="site" data-set="${d.set}" style="width:${+el.dataset.w}px;--fd:'${d.fd}';--fb:'${d.fb}'" inert><div class="fr">${t.innerHTML}</div></div>`
+      })
+      document.querySelectorAll('[data-about]').forEach((el) => {
+        const d = DEMOS[el.dataset.about]
+        el.innerHTML = `<div class="site" data-set="${d.set}" style="width:${+el.dataset.w}px;--fd:'${d.fd}';--fb:'${d.fb}'" inert><div class="fr"><section class="rw"><div class="p abh"><h2 class="h h2">A small firm, on purpose</h2></div><div class="p abs"><p class="tx">Pellow &amp; Garth is two solicitors and a small team above a shop on the high street. Each case stays with the solicitor who first takes it, from the first call to the last letter, so you never have to explain your situation twice. We keep the firm small so that stays true.</p></div></section></div></div>`
+      })
+
+      // Specimens, generated from data so each label carries its value.
+      const SCALE = split([
+        's1|h1, step 1, up to 28 characters|clamp(2.75rem, 1.5rem + 5vw, 7rem): 44 / 96 / 112 px at 375 / 1440 / 1920|Bread worth the early start',
+        's2|h1, step 2, 29 to 56 characters|clamp(2.25rem, 1.25rem + 3.75vw, 5.5rem): 36 / 74 / 88 px|Old sash windows, working like new',
+        's3|h1, step 3, 57 to 90 characters|clamp(1.625rem, 0.9rem + 3vw, 4.25rem): 26 / 58 / 68 px|Plain-spoken legal advice for families buying a home, writing a will or settling an estate',
+        'h2|h2|clamp(1.75rem, 1.1rem + 2.4vw, 3.5rem): 28 / 52 / 56 px|How a survey works',
+        'h3|h3, service names, the kicker deck (clamp(1.125rem, 1rem + 0.6vw, 1.625rem))|clamp(1.25rem, 1.05rem + 0.8vw, 1.75rem): 20 / 28 / 28 px|Draught-proofing',
+      ])
+      document.getElementById('scale').innerHTML =
+        `${SCALE.map(([c, n, v, t]) => `<div><p class="sm"><b>${n}.</b> ${v}. Weight 600, leading 1.04, tracking -0.025em.</p><p class="h ${c}">${t}</p></div>`).join('')}
+  <div><p class="sm"><b>Lead, Source Serif 4 400.</b> clamp(1.125rem, 1.02rem + 0.45vw, 1.375rem): 18 / 22 / 22 px, leading 1.45, a 2 to 4 line standfirst held at 40ch in the call pane.</p><p class="ld" style="max-width:40ch">We repair, draught-proof and remake timber sash windows across York, so they open, close and keep the heat in.</p></div>
+  <div><p class="sm"><b>Body, Source Serif 4 400.</b> 1.0625rem (17 px), leading 1.6, 45 to 62ch.</p><p class="tx">A survey takes about an hour. We check every sash for rot, loose joints and failed cords, measure the gaps that let the draught in, and photograph anything we would need to replace. You get a written quote, window by window, so you can choose to do the worst ones first.</p></div>
+  <div><p class="sm"><b>Figures, the optional proof row, example page only.</b> Schibsted Grotesk 600, tabular-nums, right-aligned so the digits stack.</p>
+  <table class="figs"><tr><th>Windows restored since 2009</th><td>1,240</td></tr><tr><th>Reviews, rated 4.9</th><td>212</td></tr><tr><th>Sashes refitted this year</th><td>96</td></tr></table></div>`
+      const PAIRS_UI = split([
+        'Warm|Fraunces|Instrument Sans|#0f7a6c/light|An editorial poster over a plain grotesque. Fraunces ignores tabular-nums (measured); a visitor page has no figures, so it never shows.',
+        'Minimal|Manrope|Inter|#0f7a6c/light|Crisp and quiet: the frame and the colour column carry the character.',
+        'Bold|Bricolage Grotesque|DM Sans|#0f7a6c/light|Chunky posters for trades and cafes. DM Sans ignores tabular-nums (measured).',
+        'Dark|Sora|Inter|#0f7a6c/dark|Forced dark: pale colour panes on near-black. Sora is the widest face, so the h1 steps are fitted to it.',
+      ])
+      document.getElementById('pairs').innerHTML = PAIRS_UI.map(
+        ([
+          n,
+          d,
+          b,
+          set,
+          note,
+        ]) => `<figure data-set="${set}" style="--fd:'${d}';--fb:'${b}';font-family:var(--fb);background:var(--surface);box-shadow:inset 0 0 0 1px var(--on-surface);gap:0">
+  <div style="padding:1rem;display:grid;gap:.5rem;min-height:11rem;align-content:start"><p class="sm"><b>${n}:</b> ${d} 600 with ${b} 400 and 500</p><p class="h" style="font-size:2rem"><span class="kk" style="font-size:1.125rem">Sash window repair in York</span>Old sash windows, working like new</p></div>
+  <div class="col" style="display:grid;gap:.75rem;padding:1rem 0 0 1rem"><p style="padding-right:1rem">We repair, draught-proof and remake timber sashes.</p><span class="b inv" style="justify-self:end;width:85%"><span class="bl">Book a survey</span><span class="ar" aria-hidden="true"><i>→</i></span></span></div>
+  <figcaption style="padding:1rem">${note}</figcaption></figure>`,
+      ).join('')
+
+      // Ratios from the palette tool: ex = #0f7a6c, worst = over its corpus; ui is non-text, un never text.
+      const PAIRS =
+        'on-surface:surface on-surface-muted:surface on-surface:accent on-surface-muted:accent on-surface:surface-muted on-surface-muted:surface-muted brand-deeper:surface on-brand:brand-deeper on-brand:brand-deepest brand-deeper:accent'.split(
+          ' ',
+        )
+      const nums = (s) => s.split(' ').map(Number)
+      const R = {
+        light: {
+          ex: nums('17.32 7.08 15.21 6.22 15.91 6.5 5.44 5.69 7.48 4.78'),
+          worst: nums('17.23 7.01 15.12 6.18 15.84 6.43 5.39 5.62 7.33 4.75'),
+          ui: nums('7.08 5.44 5.69 17.32'),
+          un: nums('1.28 1.12 1.31'),
+          alpha: ['#848988', 3.39, 'fails 4.5 on light'],
+        },
+        dark: {
+          ex: nums('17.3 7.8 14.28 6.43 15.77 7.11 7.55 7.68 9.53 6.23'),
+          worst: nums('17.2 7.74 14.13 6.38 15.69 7.06 6.21 6.29 8.27 5.15'),
+          ui: nums('7.8 7.55 7.68 17.3'),
+          un: nums('1.41 1.17 1.24'),
+          alpha: ['#7b8280', 4.92, 'passes here, fails on light'],
+        },
+      }
+      const ROLE =
+        'clear panes, the page|the muted ground: reasons band|text, frame and section rules, focus ring|secondary text, input edges|pane rules, a decorative step|tint panes: the twin, the FAQ side|unused (the joints are gone)|colour panes: every ask; link text|the front under text|text and buttons on colour; the lift round the ask|unused|unused|unused (the StudioBar here)|unused (the StudioBar here)'.split(
+          '|',
+        )
+      const UI = split([
+        'on-surface-muted|surface|input edges',
+        'brand-deeper|surface|the clear ask cell rule; link text',
+        'on-brand|brand-deeper|focus ring and mullion inside colour',
+        'on-surface|surface|frame and section rules, focus ring',
+      ])
+      const UN = split([
+        'border|surface|pane rules: decorative, exempt from 3:1',
+        'border|accent|a pane rule on tint',
+        'brand-deepest|brand-deeper|one step of the front, decoration only',
+      ])
+      const chip = (bg, fg, big, text, ring = '') =>
+        `<div class="chip" style="background:var(--${bg});color:var(--${fg});${ring}"><b>${big}</b>${text}</div>`
+      document.querySelectorAll('[data-pal]').forEach((el) => {
+        const s = el.dataset.pal
+        const r = R[s]
+        const sw = K.map(
+          (k, i) =>
+            `<div class="sw"><i style="background:var(--${k})"></i><span>${k} #${SETS[el.dataset.set][i]}</span><small>${ROLE[i]}</small></div>`,
+        )
+        const tp = PAIRS.map((p, i) =>
+          chip(
+            p.split(':')[1],
+            p.split(':')[0],
+            `${r.ex[i]} / ${r.worst[i]}`,
+            p.replace(':', ' on '),
+          ),
+        )
+        const ui = UI.map(([f, b, why], i) =>
+          chip(
+            b,
+            b === 'surface' ? 'on-surface' : 'on-brand',
+            r.ui[i],
+            `${f} on ${b}: ${why}`,
+            `box-shadow:inset 0 0 0 3px var(--${f})`,
+          ),
+        )
+        const un = UN.map(([f, b, why], i) =>
+          chip(
+            'surface',
+            'on-surface',
+            r.un[i],
+            `<span class="pairsw"><i style="background:var(--${f})"></i><i style="background:var(--${b})"></i></span>${f} on ${b}: ${why}`,
+          ),
+        )
+        // The alpha case as a painted swatch, never as live text.
+        const alpha = `<div class="chip"><b>${r.alpha[1]}</b><span class="pairsw"><i style="background:${r.alpha[0]}"></i><i style="background:var(--surface)"></i></span>on-surface at 50% paints ${r.alpha[0]}: ${r.alpha[2]}. Alpha text is banned.</div>`
+        el.innerHTML = `<h3 class="h h3">#0f7a6c, ${s} (fixed)</h3><div class="gr">${sw.join('')}</div>
+    <p><b>Declared text pairs, 4.5:1 minimum</b> (${s} / corpus worst)</p><div class="gr">${tp.join('')}</div>
+    <p><b>Non-text, 3:1 minimum</b></p><div class="gr">${ui.join('')}</div>
+    <p><b>Unsolved, never text</b></p><div class="gr">${un.join('')}${alpha}</div>`
+      })
+
+      // Button states, drawn statically with the state forced by a class, one kind per row.
+      const KINDS = split([
+        'Primary on clear ground||',
+        'Inverse, inside a colour pane|inv|col',
+        'Secondary (Menu)|sec|',
+      ])
+      const STATES = split(['Default|', 'Hover|is-h', 'Focus-visible|is-f', 'Pressed|is-p'])
+      document.getElementById('states').innerHTML =
+        KINDS.map(
+          ([
+            n,
+            c,
+            g,
+          ]) => `<div class="${g}" style="padding:${g ? '1rem' : '0'};display:grid;gap:.75rem"><p><b>${n}</b></p>
+  <div class="st">${STATES.map(([s, k]) => `<div><span class="sm">${s}</span>${c === 'sec' ? `<span class="b sec ${k}"><span class="bl">Menu</span></span>` : btn('Book a survey', `${c} ${k}`)}</div>`).join('')}</div></div>`,
+        ).join('') +
+        `<div style="display:grid;gap:.75rem"><p><b>Text link</b></p><div class="st">${STATES.map(([s, k]) => `<div><span class="sm">${s}</span><span class="lk ${k}">Ask about this</span></div>`).join('')}</div></div>
+  <div style="display:grid;gap:.75rem"><p><b>Header ask cell:</b> filled from 64rem (default, hover, focus), then clear below 64rem with its 3 px rule (focus)</p><div class="st">${STATES.slice(
+    0,
+    3,
+  )
+    .map(
+      ([s, k]) =>
+        `<div><span class="sm">${s}</span><span class="ak akf ${k}"><span class="bl">Book a survey</span><span class="ar" aria-hidden="true"><i>→</i></span></span></div>`,
+    )
+    .join(
+      '',
+    )}<div><span class="sm">Clear, focus-visible</span><span class="ak is-f" style="display:flex;align-items:center;width:10rem;height:3.5rem">Book a survey</span></div></div></div>`
+
+      // The storyboard: four frames drawn with boxes, "left top width height token" per box.
+      const box = (spec) =>
+        spec
+          .split(';')
+          .map((b) => {
+            const [l, t, w, h, bg] = b.trim().split(' ')
+            return `<i style="left:${l}%;top:${t}%;width:${w}%;height:${h}%;background:var(--${bg})"></i>`
+          })
+          .join('')
+      const STORY = split([
+        `1. Rows assemble, 0.5 s|When a row enters, its pane rules draw: vertical rules scaleY down from the section rule, the bottom rule scaleX from the left. Each pane's content rises one 8 px module, staggered 0.06 s by column.|0 20 100 .7 on-surface; 66.6 20 .5 48 border; 33.3 20 .5 26 border; 5 34 24 4 on-surface; 5 41 18 4 on-surface; 38 37 22 4 on-surface-muted; 70 40 24 4 on-surface-muted; 0 80 58 .5 border`,
+        `2. Colour lands first, 0.7 s|An ask pane's colour slides in by one column; its text and ask appear only once the colour has landed, so contrast never breaks mid-move.|0 0 100 .7 on-surface; 58 0 42 100 brand-deeper; 66.6 0 .5 100 border; 5 20 30 5 on-surface; 5 29 24 5 on-surface`,
+        `3. The front runs, 1.4 s|In the call pane a diagonal band of tiles crosses from the top-left to the ask in the corner; an L of tiles lifts round the ask as it lands, then all of it settles to the plain pane.|still`,
+        `4. The close widens, 1.1 s|The contact heading (right, on colour) and the form (a surface pane) are there from the start. Only the colour layer widens from the ask column to the frame behind them. Skipped when #contact is reached by a link.|0 0 100 100 surface; 30 0 70 100 brand-deeper; 66.6 0 .5 100 on-surface; 6 12 56 76 surface; 10 20 30 4 on-surface-muted; 10 30 48 7 on-surface-muted; 10 42 48 7 on-surface-muted; 10 56 48 18 on-surface-muted; 40 80 22 8 brand-deeper; 71 14 24 6 on-brand; 71 24 18 3 on-brand; 71 32 20 3 on-brand`,
+      ])
+      document.getElementById('story').innerHTML = STORY.map(
+        ([t, d, spec]) =>
+          `<div class="p w3"><div class="mini" aria-hidden="true">${spec === 'still' ? '<canvas class="story-still" style="inset:0;width:100%;height:100%"></canvas>' : box(spec)}</div><p><b>${t}</b></p><p class="tx sm">${d}</p></div>`,
+      ).join('')
+      const ORDER = split([
+        'Header|Wayfinding and an ask at every width, the phone bar included|askShort in the top-right cell|1',
+        'Intro|What, where and for whom, the first ask, a trust line and the service index|the call pane|1',
+        'Services|Find your need; ask about it|Ask about this, on every row|',
+        'Process|Three steps, then an ask at the decision point|the pane beside the steps|1',
+        'About|A person and a place behind the offer||',
+        'Reasons|Why this business over the next, in words||',
+        'Proof|Quotes and figures, example page only; null on a visitor page||',
+        'FAQ|Ordering, timing and what happens next, before the last ask|Ask us something else|',
+        'Contact|The conversion point: the form, with topic chips|the form|1',
+        'Footer|A last route and wayfinding||',
+      ])
+      document.getElementById('order').innerHTML = ORDER.map(
+        ([n, j, a, c], i) =>
+          `<div class="${c ? 'ask' : ''}"><span>${i + 1}</span><strong class="h h3">${n}</strong><span>${j}</span><span>${a ? `Ask: ${a}` : 'No ask'}</span></div>`,
+      ).join('')
+
+      // The tile grid for the shader. A tile's ring is its whole-tile Chebyshev distance from the ask,
+      // counted from the ask's bottom-left corner; the ask sits flush in the pane's bottom-right corner.
+      function field(pane) {
+        const W = pane.offsetWidth
+        const H = pane.offsetHeight
+        const T = parseFloat(getComputedStyle(pane).getPropertyValue('--t'))
+        const pr = pane.getBoundingClientRect()
+        const k = pr.width / W
+        const br = pane.querySelector('.fz .b').getBoundingClientRect()
+        const F = (pr.bottom - pane.querySelector('.fz').getBoundingClientRect().top) / k
+        const b = {
+          x0: (br.left - pr.left) / k,
+          y0: (pr.bottom - br.bottom) / k,
+          x1: (br.right - pr.left) / k,
+          y1: (pr.bottom - br.top) / k,
+        }
+        const bw = Math.ceil((b.x1 - b.x0) / T - 1e-6)
+        const bh = Math.ceil((b.y1 - b.y0) / T - 1e-6)
+        const ox = (b.x0 % T) - T
+        const oy = (b.y0 % T) - T
+        const cols = Math.ceil((W - ox) / T)
+        const rows = Math.ceil((H - oy) / T)
+        const i0 = Math.round((ox - b.x0) / T)
+        const j0 = Math.round((oy - b.y0) / T)
+        const M = new Uint8Array(cols * rows)
+        for (let y = 0; y < rows; y++) {
+          for (let x = 0; x < cols; x++) {
+            const i = x + i0
+            const j = y + j0
+            M[y * cols + x] = Math.min(6, Math.max(0, -i, i - bw + 1, -j, j - bh + 1)) * 40
+          }
+        }
+        return { W, H, T, F, b, cols, rows, ox, oy, M }
+      }
+      // Screens are laid out at their design width and scaled to fit; the phones report the ask's foot.
+      function layout() {
+        document.querySelectorAll('.scr').forEach((w) => {
+          const s = w.firstElementChild
+          const k = Math.min(1, w.clientWidth / +w.dataset.w)
+          s.style.transform = `scale(${k})`
+          w.style.height = `${Math.min(s.offsetHeight, +w.dataset.h) * k}px`
+        })
+        document.querySelectorAll('[data-m]').forEach((m) => {
+          const s = document
+            .querySelector(`.scr[data-demo="${m.dataset.m}"][data-w="375"] .site`)
+            .getBoundingClientRect()
+          const b = document
+            .querySelector(`.scr[data-demo="${m.dataset.m}"][data-w="375"] .fz .b`)
+            .getBoundingClientRect()
+          m.textContent = `Measured here: the ask's foot at ${Math.round(((b.bottom - s.top) * 375) / s.width)} px.`
+        })
+      }
+
+      // The swap control: two native radio groups; they restyle everything that has no set of its own.
+      const cur = { hex: '#0f7a6c', scheme: 'light' }
+      const swap = () => {
+        apply(document.documentElement, `${cur.hex}/${cur.scheme}`)
+        window.glRecolour?.()
+      }
+      const [gHex, gScheme] = document.querySelectorAll('#swap fieldset')
+      const radios = (g, name, list, on) =>
+        g.insertAdjacentHTML(
+          'beforeend',
+          list
+            .map(
+              ([v, n]) =>
+                `<label class="ch"><input type="radio" name="${name}" value="${v}" ${v === on ? 'checked' : ''}>${n}</label>`,
+            )
+            .join(''),
+        )
+      radios(
+        gHex,
+        'hex',
+        split(['#0f7a6c|Viridian', '#c8412c|Vermilion', '#808080|Grey', '#f5c400|Yellow']),
+        cur.hex,
+      )
+      radios(gScheme, 'scheme', split(['light|Light', 'dark|Dark']), cur.scheme)
+      document.getElementById('swap').addEventListener('change', (e) => {
+        cur[e.target.name] = e.target.value
+        swap()
+      })
+      swap()
+      document.querySelectorAll('[data-set]').forEach((el) => apply(el, el.dataset.set))
+      document.fonts.ready.then(layout)
+      new ResizeObserver(() => requestAnimationFrame(layout)).observe(document.querySelector('.pg'))
+      addEventListener('load', layout)
+    </script>
+    <script>
+      // The live moment: raw WebGL1, one triangle, one fragment shader, drawn only while something moves.
+      // At rest it draws the plain pane, so it matches the static state by construction.
+      ;(() => {
+        const pane = document.getElementById('live')
+        const cv = pane.querySelector('canvas')
+        const note = document.getElementById('gl-note')
+        const reduce = matchMedia('(prefers-reduced-motion: reduce)')
+        const st = {
+          raf: 0,
+          t0: 0,
+          P: -1,
+          h: 0,
+          ht: 0,
+          ms: 0,
+          mx: 0,
+          my: 0,
+          vis: false,
+          hov: false,
+          played: false,
+        }
+        const off = (why) => {
+          cancelAnimationFrame(st.raf)
+          cv.remove()
+          note.textContent = `${why}: the static state is shown.`
+        }
+        const gl = reduce.matches
+          ? null
+          : cv.getContext('webgl', { antialias: false, alpha: false, powerPreference: 'low-power' })
+        if (!gl) return off(reduce.matches ? 'Reduced motion' : 'No WebGL')
+        const FS = `precision mediump float;
+uniform sampler2D L; uniform vec2 G, S, O; uniform float T, D, F, P, H; uniform vec3 A, B, C, M; uniform vec4 R;
+void main() {
+  vec2 q = gl_FragCoord.xy / D, c = floor((q - O) / T), f = q - O - c * T, m = O + (c + .5) * T;
+  float r = floor(texture2D(L, (c + .5) / G).r * 6.375 + .5);
+  bool fz = O.y + (c.y + 1.) * T <= F;
+  vec2 s0 = vec2(0., S.y), u = vec2(R.x, R.w) - s0; float len = length(u); u /= len;
+  float k = P < 0. ? 0. : exp(-pow((dot(m - s0, u) - P * len) / (1.4 * T), 2.));
+  float pm = M.z * max(0., 1. - length(m - M.xy) / (2.5 * T));
+  float l = clamp(floor((H * (r == 2. ? 1. : 0.) + k + .5 * pm) * 4. + .5) / 4., 0., 1.);
+  if (fz && r < 2.) l = 0.;
+  if (l <= 0. || f.x >= T - 1. || f.y >= T - 1.) { gl_FragColor = vec4(A, 1.); return; }
+  gl_FragColor = vec4(fz ? mix(A, C, .2 * l) : mix(A, B, l), 1.);
+}`
+        const pr = gl.createProgram()
+        const VS = 'attribute vec2 a; void main() { gl_Position = vec4(a, 0., 1.); }'
+        ;[
+          [gl.VERTEX_SHADER, VS],
+          [gl.FRAGMENT_SHADER, FS],
+        ].forEach(([t, src]) => {
+          const o = gl.createShader(t)
+          gl.shaderSource(o, src)
+          gl.compileShader(o)
+          gl.attachShader(pr, o)
+        })
+        gl.linkProgram(pr)
+        if (!gl.getProgramParameter(pr, gl.LINK_STATUS)) return off('Shader failed')
+        gl.useProgram(pr)
+        gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer())
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW)
+        gl.enableVertexAttribArray(0)
+        gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0)
+        gl.bindTexture(gl.TEXTURE_2D, gl.createTexture())
+        gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1)
+        for (const p of [gl.TEXTURE_MIN_FILTER, gl.TEXTURE_MAG_FILTER])
+          gl.texParameteri(gl.TEXTURE_2D, p, gl.NEAREST)
+        for (const p of [gl.TEXTURE_WRAP_S, gl.TEXTURE_WRAP_T])
+          gl.texParameteri(gl.TEXTURE_2D, p, gl.CLAMP_TO_EDGE)
+        const U = Object.fromEntries(
+          [...'LGSOTDFPHABCMR'].map((n) => [n, gl.getUniformLocation(pr, n)]),
+        )
+        // Token colours from CSS; anything but #rrggbb keeps the static state, never white.
+        const colours = () => {
+          const cs = getComputedStyle(pane)
+          const c = ['brand-deeper', 'brand-deepest', 'on-brand'].map((n) =>
+            /^#([0-9a-f]{6})$/i.exec(cs.getPropertyValue(`--${n}`).trim()),
+          )
+          if (c.includes(null)) return off('Unreadable colour')
+          c.forEach((m, i) =>
+            gl.uniform3fv(
+              U['ABC'[i]],
+              [0, 2, 4].map((j) => parseInt(m[1].slice(j, j + 2), 16) / 255),
+            ),
+          )
+        }
+        const size = () => {
+          const f = field(pane)
+          st.f = f
+          const dpr = Math.min(devicePixelRatio || 1, 1.5)
+          cv.width = Math.round(f.W * dpr)
+          cv.height = Math.round(f.H * dpr)
+          gl.viewport(0, 0, cv.width, cv.height)
+          gl.texImage2D(
+            gl.TEXTURE_2D,
+            0,
+            gl.LUMINANCE,
+            f.cols,
+            f.rows,
+            0,
+            gl.LUMINANCE,
+            gl.UNSIGNED_BYTE,
+            f.M,
+          )
+          gl.uniform2f(U.G, f.cols, f.rows)
+          gl.uniform2f(U.S, f.W, f.H)
+          gl.uniform2f(U.O, f.ox, f.oy)
+          gl.uniform4f(U.R, f.b.x0, f.b.y0, f.b.x1, f.b.y1)
+          ;[
+            ['T', f.T],
+            ['D', dpr],
+            ['F', f.F],
+          ].forEach(([n, v]) => gl.uniform1f(U[n], v))
+        }
+        const draw = (P, H, M = [0, 0, 0]) => {
+          gl.uniform1f(U.P, P)
+          gl.uniform1f(U.H, H)
+          gl.uniform3f(U.M, ...M)
+          gl.drawArrays(gl.TRIANGLES, 0, 3)
+        }
+        // Four stills from the same context, copied out right after each draw.
+        const stills = () => {
+          const all = [...document.querySelectorAll('#stills canvas, .story-still')]
+          all.forEach((c) => {
+            const t = +(c.dataset.t ?? 0.7)
+            c.width = cv.width
+            c.height = cv.height
+            draw(t < 1.4 ? t / 1.4 : -1, t < 1.4 ? 0 : 1)
+            const x = c.getContext('2d')
+            x.drawImage(cv, 0, 0)
+            // Mark where the DOM sits over the canvas: the ask as a block, each text line as a bar.
+            const d = cv.width / st.f.W
+            const pr = pane.getBoundingClientRect()
+            const k = pr.width / st.f.W
+            x.fillStyle = getComputedStyle(pane).getPropertyValue('--on-brand').trim()
+            const b = st.f.b
+            x.fillRect(b.x0 * d, (st.f.H - b.y1) * d, (b.x1 - b.x0) * d, (b.y1 - b.y0) * d)
+            pane.querySelectorAll('.ct p').forEach((el) => {
+              const r = document.createRange()
+              r.selectNodeContents(el)
+              for (const q of r.getClientRects()) {
+                const y = ((q.top - pr.top) / k + (q.height / k) * 0.3) * d
+                x.fillRect(
+                  ((q.left - pr.left) / k) * d,
+                  y,
+                  (q.width / k) * d,
+                  (q.height / k) * 0.4 * d,
+                )
+              }
+            })
+          })
+          draw(-1, 0)
+        }
+        const kick = () => {
+          if (!st.raf && st.vis && !document.hidden) st.raf = requestAnimationFrame(frame)
+        }
+        const aim = (on) => {
+          st.ht = on ? 1 : 0
+          kick()
+        }
+        function frame(t) {
+          st.raf = 0
+          const q = (t - st.t0) / 1400
+          // The front lands on the ask: the L round it lifts, then settles back.
+          if (st.P >= 0 && q > 1) {
+            st.P = -1
+            if (!st.hov) {
+              aim(true)
+              setTimeout(() => st.hov || aim(false), 380)
+            }
+          } else if (st.P >= 0) st.P = q
+          st.h += (st.ht - st.h) * 0.2
+          st.ms *= 0.9
+          draw(st.P, st.h, [st.mx, st.my, st.ms])
+          cv.classList.add('on')
+          if (st.P >= 0 || Math.abs(st.ht - st.h) > 0.005 || st.ms > 0.01) kick()
+          else if (st.ht === 0) cv.classList.remove('on')
+        }
+        const play = () => {
+          st.t0 = performance.now()
+          st.P = 0
+          kick()
+        }
+        new IntersectionObserver(([e]) => {
+          st.vis = e.isIntersecting
+          if (!st.vis) (cancelAnimationFrame(st.raf), (st.raf = 0))
+          else if (!st.played) ((st.played = true), play())
+          else kick()
+        }).observe(pane)
+        document.addEventListener('visibilitychange', () =>
+          document.hidden ? (cancelAnimationFrame(st.raf), (st.raf = 0)) : kick(),
+        )
+        let rs
+        new ResizeObserver(() => {
+          clearTimeout(rs)
+          rs = setTimeout(() => (size(), stills(), kick()), 150)
+        }).observe(pane)
+        pane.addEventListener('pointermove', (e) => {
+          const r = pane.getBoundingClientRect()
+          Object.assign(st, { mx: e.clientX - r.left, my: r.bottom - e.clientY, ms: 1 })
+          kick()
+        })
+        const btn = pane.querySelector('.b')
+        for (const n of ['pointerenter', 'focus'])
+          btn.addEventListener(n, () => aim((st.hov = true)))
+        for (const n of ['pointerleave', 'blur'])
+          btn.addEventListener(n, () => aim((st.hov = false)))
+        cv.addEventListener('webglcontextlost', () => off('Context lost'))
+        reduce.addEventListener('change', () => reduce.matches && off('Reduced motion'))
+        addEventListener('pagehide', () => gl.getExtension('WEBGL_lose_context')?.loseContext())
+        document.getElementById('replay').addEventListener('click', play)
+        window.glRecolour = () => (colours(), stills(), kick())
+        document.fonts.ready.then(() => {
+          size()
+          colours()
+          stills()
+          note.textContent =
+            'WebGL running: one context, DPR capped at 1.5, drawn only while the front, a pointer or the hover spring moves.'
+          kick()
+        })
+      })()
+    </script>
+  </body>
+</html>

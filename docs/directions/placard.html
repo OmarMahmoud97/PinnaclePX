@@ -1,0 +1,3094 @@
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Placard style tile</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Besley:wght@600&family=Public+Sans:wght@400;500;600&family=Fraunces:wght@600&family=Instrument+Sans:wght@400;500;600&family=Manrope:wght@600&family=Inter:wght@400;500;600&family=Bricolage+Grotesque:wght@600&family=DM+Sans:wght@400;500;600&family=Sora:wght@600&display=swap"
+    />
+    <style>
+      /* Throwaway style tile for the Placard direction. Every colour is one of the repo's 14 tokens,
+   derived by the palette tool from the brand hex, or a color-mix of two of them; the controls swap
+   the tokens and nothing else changes. The only other colours are the StudioBar stand-in's. */
+      :root {
+        --surface: #fef9f8;
+        --surface-muted: #f8edec;
+        --on-surface: #1e1311;
+        --on-surface-muted: #5f5250;
+        --border: #e8dad8;
+        --accent: #f7e7e4;
+        --brand: #b3261e;
+        --brand-deeper: #b3251e;
+        --brand-deepest: #9e0405;
+        --on-brand: #ffffff;
+        --glow: #ffa193;
+        --glow-secondary: #6aa5ff;
+        --scrim: #0b0403;
+        --on-scrim: #ffffff;
+        --display: 'Besley', Georgia, serif;
+        --body: 'Public Sans', system-ui, sans-serif;
+        --gutter: clamp(1.5rem, 1rem + 3vw, 6rem);
+        --quick: 0.24s;
+        --settle: 0.9s;
+        --soft: 1.4s;
+        --ease: cubic-bezier(0.16, 0.52, 0.08, 1);
+      }
+      /* The impression, from tokens only. One set of constants serves both schemes: on light paper
+   the shaded walls carry the slot (3.13:1 against the paper at worst), on dark paper the lit lip
+   does (3.04:1); the other edge is near-invisible in each. The shader uses the same mixes. */
+      :root,
+      .screen,
+      .thumbset,
+      .panel,
+      .gcell,
+      .tokset {
+        --wall: color-mix(in srgb, var(--surface-muted), var(--scrim) 42%);
+        --lip: color-mix(in srgb, var(--surface), var(--on-scrim) 34%);
+        --fall: color-mix(in srgb, var(--brand-deeper), var(--scrim) 38%);
+        --fall2: color-mix(in srgb, var(--brand-deepest), var(--scrim) 38%);
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        background: var(--surface);
+      }
+      body {
+        margin: 0;
+        background: var(--surface);
+        color: var(--on-surface);
+        font: 400 clamp(1.0625rem, 1rem + 0.2vw, 1.1875rem)/1.55 var(--body);
+        font-synthesis: none;
+        overflow-x: clip;
+      }
+      :focus-visible,
+      .is-focus {
+        outline: 2px solid var(--on-surface);
+        outline-offset: 3px;
+      }
+      a {
+        color: inherit;
+      }
+      .wrap {
+        max-width: 90rem;
+        margin-inline: auto;
+        padding-inline: var(--gutter);
+      }
+      .vh {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+        white-space: nowrap;
+      }
+
+      /* The heavy rule and the end mark. The mark is struck on the rule under the last word of a
+   headline, and only in a band that carries an ask, so the spot colour always means "act here". */
+      .rule {
+        height: 2px;
+        background: var(--on-surface);
+        margin: var(--rg, 1rem) 0 var(--rg2, 1.25rem);
+        transform-origin: left;
+      }
+      .end {
+        display: inline-block;
+        position: relative;
+        width: 0;
+        height: calc(var(--lh, 1.04) * 1em);
+        vertical-align: top;
+      }
+      .end::before {
+        content: '';
+        position: absolute;
+        right: 0;
+        top: calc(100% + var(--rg, 1rem) - 4px);
+        width: max(2.5rem, 0.9em);
+        height: 6px;
+        background: var(--brand-deeper);
+        transform-origin: top;
+      }
+      /* Load draw: CSS only, only with scripting and motion allowed, released by fill-mode backwards. */
+      @media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+        .load-draw {
+          animation: draw var(--settle) var(--ease) 120ms backwards;
+        }
+        .load-end .end::before {
+          animation: strike var(--quick) var(--ease) calc(120ms + var(--settle)) backwards;
+        }
+      }
+      @keyframes draw {
+        from {
+          transform: scaleX(0);
+        }
+      }
+      @keyframes strike {
+        from {
+          transform: scaleY(0);
+        }
+      }
+      /* In view: nothing hides until the client marks the root armed. */
+      .armed [data-band]:not([data-shown]) > .rule {
+        transform: scaleX(0);
+      }
+      .armed [data-band]:not([data-shown]) .end::before {
+        transform: scaleY(0);
+      }
+      .armed [data-band][data-shown] > .rule {
+        transition: transform var(--settle) var(--ease);
+      }
+      .armed [data-band][data-shown] .end::before {
+        transition: transform var(--quick) var(--ease) var(--settle);
+      }
+
+      /* Controls of the tile itself */
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        min-height: 44px;
+        padding: 0 0.85rem;
+        border: 1px solid var(--on-surface-muted);
+        border-radius: 2px;
+        background: var(--surface);
+        color: var(--on-surface);
+        font: 500 1rem/1 var(--body);
+        cursor: pointer;
+      }
+      .btn[aria-pressed='true'] {
+        background: var(--surface-muted);
+        box-shadow: inset 0 -3px 0 var(--on-surface);
+      }
+      .btn i {
+        width: 0.9rem;
+        height: 0.9rem;
+        border-radius: 1px;
+        outline: 1px solid var(--on-surface-muted);
+      }
+
+      /* The ask: a slug seated in a slot pressed into the paper. No nudging arrow: hover and press
+   sink it deeper, and the wall's shadow falling on its top edge deepens with it. */
+      .ask {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.55rem;
+        min-height: 44px;
+        padding: 0 1rem;
+        border: 0;
+        border-radius: 2px;
+        background: var(--brand-deeper);
+        color: var(--on-brand);
+        font: 600 1rem/1 var(--body);
+        text-decoration: none;
+        white-space: nowrap;
+        cursor: pointer;
+        box-shadow: inset 0 2px 0 var(--fall);
+        transition:
+          background-color var(--quick) var(--ease),
+          box-shadow var(--quick) var(--ease),
+          transform var(--quick) var(--ease);
+      }
+      .ask:hover,
+      .ask.is-hover {
+        background: var(--brand-deepest);
+        box-shadow: inset 0 3px 0 var(--fall2);
+        transform: translateY(1px);
+      }
+      .ask:active,
+      .ask.is-press {
+        background: var(--brand-deepest);
+        box-shadow: inset 0 4px 0 var(--fall2);
+        transform: translateY(2px);
+      }
+      .well {
+        display: inline-flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        max-width: 26rem;
+        padding: 7px 7px 10px;
+        border-radius: 4px;
+        background: var(--surface-muted);
+        /* Four walls, so the light can turn each one: --wt, --wl, --wb and --wr are set per frame
+   by the pressing and absent otherwise, which leaves the static mixes. */
+        box-shadow:
+          inset 0 3px 0 var(--wt, var(--wall)),
+          inset 3px 0 0 var(--wl, var(--wall)),
+          inset 0 -2px 0 var(--wb, var(--lip)),
+          inset -2px 0 0 var(--wr, var(--lip));
+      }
+      .well .ask {
+        min-height: 52px;
+        padding: 0 1.4rem;
+        font-size: 1.0625rem;
+        box-shadow: inset 0 3px 0 var(--fall);
+      }
+      .well .ask:hover,
+      .well .ask.is-hover {
+        box-shadow: inset 0 4px 0 var(--fall2);
+      }
+      .well .ask:active,
+      .well .ask.is-press {
+        box-shadow: inset 0 5px 0 var(--fall2);
+      }
+      .trust {
+        margin: 0 0.3rem;
+        font: 500 1rem/1.4 var(--body);
+        color: var(--on-surface);
+      }
+      .second {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        min-height: 44px;
+        padding: 0 0.1rem;
+        border: 0;
+        background: none;
+        color: var(--on-surface);
+        font: 500 1rem/1 var(--body);
+        text-decoration: none;
+        cursor: pointer;
+        box-shadow: inset 0 -2px 0 var(--on-surface);
+        transition:
+          box-shadow var(--quick) var(--ease),
+          transform var(--quick) var(--ease);
+      }
+      .second:hover,
+      .second.is-hover {
+        box-shadow: inset 0 -4px 0 var(--on-surface);
+      }
+      .second:active,
+      .second.is-press {
+        box-shadow: inset 0 -4px 0 var(--on-surface);
+        transform: translateY(1px);
+      }
+      .tlink {
+        display: inline-flex;
+        align-items: center;
+        min-height: 44px;
+        color: var(--on-surface);
+        text-decoration: underline 1px;
+        text-underline-offset: 0.25em;
+      }
+      .tlink:hover,
+      .tlink.is-hover {
+        text-decoration-thickness: 2px;
+      }
+      .tlink:active,
+      .tlink.is-press {
+        text-decoration-thickness: 2px;
+        text-underline-offset: 0.12em;
+      }
+      .menu {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 44px;
+        min-height: 44px;
+        padding: 0 0.7rem;
+        border: 1px solid var(--on-surface-muted);
+        border-radius: 2px;
+        background: var(--surface);
+        color: var(--on-surface);
+        font: 500 1rem/1 var(--body);
+        cursor: pointer;
+        transition:
+          background-color var(--quick) var(--ease),
+          border-color var(--quick) var(--ease),
+          box-shadow var(--quick) var(--ease);
+      }
+      .menu:hover,
+      .menu.is-hover {
+        background: var(--surface-muted);
+        border-color: var(--on-surface);
+      }
+      .menu:active,
+      .menu.is-press,
+      .menu[aria-expanded='true'] {
+        background: var(--surface-muted);
+        border-color: var(--on-surface);
+        box-shadow: inset 2px 2px 0 var(--wall);
+      }
+
+      /* Title block */
+      .strip {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem 1.5rem;
+        padding-block: 1rem;
+        border-bottom: 1px solid var(--border);
+      }
+      .strip p {
+        margin: 0;
+        font-weight: 500;
+      }
+      .controls {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .controls span {
+        margin-inline: 0.5rem 0.1rem;
+        color: var(--on-surface-muted);
+      }
+      .titleband {
+        --rg: clamp(1rem, 0.6rem + 1.5vw, 2rem);
+        --lh: 0.92;
+      }
+      .name {
+        margin: clamp(1.5rem, 1rem + 2vw, 3rem) 0 0;
+        font: 600 clamp(4rem, 2rem + 10vw, 11rem)/0.92 var(--display);
+        letter-spacing: -0.02em;
+      }
+      .titledeck {
+        display: grid;
+        gap: 1.5rem;
+      }
+      .titledeck .standt {
+        margin: 0;
+        font-size: clamp(1.25rem, 1rem + 1vw, 1.75rem);
+        line-height: 1.4;
+        max-width: 34ch;
+      }
+      .toc {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0 1.5rem;
+        margin-top: 1.5rem;
+      }
+      .parts {
+        margin: 0;
+        display: grid;
+      }
+      .parts p {
+        margin: 0;
+        padding: 0.7rem 0;
+        border-top: 1px solid var(--border);
+        max-width: 60ch;
+      }
+      .parts b {
+        font-weight: 500;
+      }
+      @media (min-width: 64rem) {
+        .titledeck {
+          grid-template-columns: repeat(12, minmax(0, 1fr));
+          column-gap: 1.5rem;
+        }
+        .tleft {
+          grid-column: 1 / 7;
+        }
+        .parts {
+          grid-column: 8 / 13;
+        }
+      }
+
+      /* Proof sections of the tile: heading, heavy rule, then the margin note and the body */
+      .proof {
+        padding-top: clamp(4rem, 3rem + 5vw, 8rem);
+        --rg: 1rem;
+        --rg2: 1.5rem;
+        --lh: 1.06;
+      }
+      .kick {
+        margin: 0 0 0.35rem;
+        font-weight: 500;
+        color: var(--on-surface-muted);
+      }
+      .ph2 {
+        margin: 0;
+        font: 600 clamp(1.875rem, 1.4rem + 2vw, 3.5rem)/1.06 var(--display);
+        letter-spacing: -0.01em;
+        text-wrap: balance;
+        max-width: 30ch;
+      }
+      .note {
+        margin: 0 0 1.5rem;
+        max-width: 45ch;
+        font-size: 1rem;
+        color: var(--on-surface-muted);
+      }
+      .note b {
+        display: block;
+        margin-bottom: 0.3rem;
+        font: 600 1.1875rem/1.3 var(--display);
+        color: var(--on-surface);
+      }
+      @media (min-width: 80rem) {
+        .pgrid {
+          display: grid;
+          grid-template-columns: repeat(12, minmax(0, 1fr));
+          column-gap: 1.5rem;
+          align-items: start;
+        }
+        .pgrid > .note {
+          grid-column: 1 / 5;
+          position: sticky;
+          top: 1.5rem;
+        }
+        .pgrid > .pbody {
+          grid-column: 5 / 13;
+          min-width: 0;
+        }
+      }
+      .cap {
+        margin: 0.6rem 0 0;
+        font-size: 1rem;
+        color: var(--on-surface-muted);
+      }
+      .measure {
+        margin: 0.6rem 0 0;
+        font-size: 1rem;
+        color: var(--on-surface-muted);
+        font-variant-numeric: tabular-nums;
+      }
+
+      /* Frames: each is the real composition at its viewport size, zoomed to fit. The font sits on
+   the inner .site so its cqi resolves against the frame, not the tile's viewport. */
+      .variant {
+        margin-top: clamp(2.5rem, 2rem + 2vw, 4rem);
+      }
+      .variant h3,
+      .sub {
+        margin: 0;
+        font: 600 clamp(1.375rem, 1.2rem + 0.8vw, 1.875rem)/1.2 var(--display);
+      }
+      .variant .meta {
+        margin: 0.35rem 0 1rem;
+        color: var(--on-surface-muted);
+        font-size: 1rem;
+      }
+      .frames,
+      .frames2 {
+        display: grid;
+        gap: 1.5rem;
+        align-items: start;
+      }
+      .frames + .frames,
+      .frames + .frames2,
+      .frames2 + .frames {
+        margin-top: 1.5rem;
+      }
+      @media (min-width: 72rem) {
+        .frames {
+          grid-template-columns: minmax(0, 1fr) 375px;
+        }
+        .frames2 {
+          grid-template-columns: minmax(0, 768fr) minmax(0, 1024fr);
+        }
+      }
+      .shot {
+        margin: 0;
+        min-width: 0;
+      }
+      .shot.phone {
+        width: min(375px, 100%);
+      }
+      .shot.w768 {
+        max-width: 768px;
+      }
+      .shot > div {
+        overflow: hidden;
+        outline: 1px solid var(--on-surface-muted);
+      }
+      .screen {
+        container-type: inline-size;
+        position: relative;
+        overflow: hidden;
+        background: var(--surface);
+        color: var(--on-surface);
+      }
+      .site {
+        /* The gutter, plus the centring offset past 90rem, so every band stops at the 90rem
+           container (gutters included) in wide frames, as the spec says. */
+        --g: calc(clamp(1.5rem, 1rem + 3cqi, 6rem) + max(0px, (100cqi - 90rem) / 2));
+        font: 400 clamp(1.0625rem, 1rem + 0.2cqi, 1.1875rem)/1.55 var(--body);
+        font-synthesis: none;
+      }
+      .offstage {
+        position: absolute;
+        left: -10000px;
+        top: 0;
+        visibility: hidden;
+      }
+      .truesize {
+        overflow-x: auto;
+        margin-top: 1rem;
+        border-block: 1px solid var(--on-surface-muted);
+      }
+      .truesize .screen {
+        margin-inline: auto;
+      }
+      .studio {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        height: 56px;
+        padding: 0 1rem;
+        background: #16181d;
+        color: #ffffff;
+        font:
+          500 0.875rem/1 system-ui,
+          sans-serif;
+      }
+      .studio span:last-child {
+        margin-left: auto;
+        padding: 0.55rem 0.8rem;
+        border: 1px solid #ffffff;
+        white-space: nowrap;
+      }
+
+      /* The masthead: sticky in flow, at most 4.5rem tall. A name over 16 characters leaves the
+   bar below 64rem and opens the lede instead; over 24 it steps down to 1.125rem in the bar. */
+      .mast {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        min-height: 3.5rem;
+        max-height: 4.5rem;
+        padding: 0.4rem var(--g);
+        border-bottom: 1px solid var(--border);
+        background: var(--surface);
+      }
+      .mark {
+        flex: 1 1 0;
+        min-width: 0;
+        font: 600 clamp(1.25rem, 1.1rem + 0.6cqi, 1.625rem)/1.05 var(--display);
+        letter-spacing: -0.01em;
+        overflow-wrap: anywhere;
+      }
+      .mid .mast .mark {
+        font-size: 1.125rem;
+      }
+      .mark2 {
+        margin: 0 0 1rem;
+        font: 600 1.0625rem/1.25 var(--display);
+        overflow-wrap: anywhere;
+      }
+      .mast nav {
+        display: none;
+      }
+      .mast nav a {
+        display: flex;
+        align-items: center;
+        min-height: 44px;
+        padding: 0 1rem;
+        border-left: 1px solid var(--border);
+        text-decoration: none;
+        font-size: 1rem;
+        white-space: nowrap;
+      }
+      .mast .ask {
+        padding: 0 0.8rem;
+      }
+      @container (max-width: 63.89rem) {
+        .long .mast .mark {
+          display: none;
+        }
+        .long .mast nav {
+          margin-left: -1rem;
+        }
+        .long .mast nav a:first-child {
+          border-left: 0;
+        }
+      }
+      @container (max-width: 47.89rem) {
+        .long .mast .ask {
+          flex: 1;
+        }
+      }
+      @container (min-width: 63.9rem) {
+        .mark2 {
+          display: none;
+        }
+      }
+
+      /* The lede */
+      .lede {
+        padding: clamp(1rem, 0.5rem + 3cqi, 3.5rem) var(--g) clamp(3rem, 2rem + 4cqi, 6rem);
+        --rg: clamp(0.875rem, 0.6rem + 1.2cqi, 2rem);
+        --rg2: clamp(1rem, 0.7rem + 1.4cqi, 2rem);
+      }
+      .h1 {
+        margin: 0;
+        max-width: var(--m, none);
+        font: 600 var(--h1) / var(--lh) var(--display);
+        letter-spacing: var(--tr, -0.012em);
+        text-wrap: balance;
+        overflow-wrap: anywhere;
+      }
+      .s1 {
+        --h1: clamp(2.75rem, 1rem + 7.8cqi, 8rem);
+        --lh: 0.98;
+        --tr: -0.02em;
+      }
+      .s2 {
+        --h1: clamp(2.125rem, 0.94rem + 5.07cqi, 6rem);
+        --lh: 1;
+        --tr: -0.016em;
+      }
+      .s3 {
+        --h1: clamp(1.875rem, 1.3rem + 2.8cqi, 4.5rem);
+        --lh: 1.04;
+        --m: 32ch;
+      }
+      .noimg .s3 {
+        --m: 38ch;
+      }
+      .deck {
+        display: grid;
+        gap: 1rem;
+        align-items: start;
+      }
+      .stand {
+        margin: 0;
+        max-width: 46ch;
+        font-size: clamp(1.0625rem, 0.9rem + 0.55cqi, 1.375rem);
+        line-height: 1.45;
+      }
+      .act {
+        display: grid;
+        gap: 0.75rem;
+        justify-items: start;
+      }
+      .terms {
+        display: grid;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        color: var(--on-surface-muted);
+        font-size: 1rem;
+      }
+      .terms li {
+        padding: 0.55rem 0;
+        border-top: 1px solid var(--border);
+      }
+      .plate {
+        margin: 0;
+      }
+      .plate figcaption {
+        margin-top: 0.6rem;
+        padding-top: 0.6rem;
+        border-top: 1px solid var(--border);
+        color: var(--on-surface-muted);
+        font-size: 1rem;
+      }
+      @container (max-width: 47.89rem) {
+        .act .well {
+          justify-self: stretch;
+          max-width: none;
+        }
+        .plate {
+          margin-inline: calc(-1 * var(--g));
+        }
+        .plate figcaption {
+          padding-inline: var(--g);
+        }
+      }
+      @container (min-width: 47.9rem) {
+        .mark {
+          flex: 0 1 auto;
+        }
+        .mast nav {
+          display: flex;
+          margin-right: auto;
+          margin-left: 1rem;
+        }
+        .menu {
+          display: none;
+        }
+        .mast .ask {
+          padding: 0 1rem;
+        }
+        .act {
+          grid-auto-flow: column;
+          justify-content: start;
+          align-items: start;
+          column-gap: 1.75rem;
+        }
+        .act .second {
+          margin-top: 11px;
+        }
+        .terms {
+          grid-auto-flow: column;
+          grid-auto-columns: minmax(0, 1fr);
+          border-top: 1px solid var(--border);
+        }
+        .terms li {
+          padding: 0.6rem 1rem 0 0;
+          border-top: 0;
+        }
+        .terms li + li {
+          padding-left: 1rem;
+          border-left: 1px solid var(--border);
+        }
+        .pic {
+          aspect-ratio: 16 / 9;
+        }
+      }
+      @container (min-width: 63.9rem) {
+        .deck {
+          grid-template-columns: repeat(12, minmax(0, 1fr));
+          /* A slack last row takes the plate's extra height, so the text column stays packed. */
+          grid-template-rows: auto auto auto 1fr;
+          column-gap: 1.5rem;
+          row-gap: 1.25rem;
+        }
+        .stand,
+        .act,
+        .terms {
+          grid-column: 1 / 7;
+        }
+        .plate {
+          grid-column: 8 / 13;
+          grid-row: 1 / span 4;
+        }
+        .plate .pic {
+          aspect-ratio: 4 / 3;
+        }
+        .noimg .terms {
+          grid-column: 8 / 13;
+          grid-row: 1 / span 4;
+          align-self: start;
+          grid-auto-flow: row;
+          border-top: 2px solid var(--on-surface);
+          color: var(--on-surface);
+          font-size: 1.125rem;
+        }
+        .noimg .terms li,
+        .noimg .terms li + li {
+          padding: 0.85rem 0;
+          border-left: 0;
+          border-bottom: 1px solid var(--border);
+        }
+      }
+
+      /* Photographs: one grade from tokens, in CSS, present at first paint. */
+      .pic {
+        position: relative;
+        isolation: isolate;
+        aspect-ratio: 3 / 2;
+        overflow: hidden;
+        background: var(--surface-muted);
+      }
+      .pic img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: 50% 40%;
+      }
+      .pic::before,
+      .pic::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+      }
+      .pic.lead img {
+        filter: saturate(0.85) contrast(1.04);
+      }
+      .pic.detail img {
+        filter: saturate(0.5) contrast(1.06);
+      }
+      .pic.detail::before {
+        background: var(--on-surface);
+        mix-blend-mode: color;
+        opacity: 0.35;
+      }
+      .pic.lead::after,
+      .pic.detail::after,
+      .pic.rejected::after {
+        background: var(--surface);
+        opacity: 0.12;
+      }
+      @supports (color: oklch(from red l c h)) {
+        .pic.lead::after,
+        .pic.detail::after,
+        .pic.rejected::after {
+          opacity: 1;
+          background: oklch(from var(--surface) l c h / calc(0.12 + (1 - l) * 0.12));
+        }
+      }
+      .pic.rejected img {
+        filter: saturate(0.55) contrast(1.06);
+      }
+      .pic.rejected::before {
+        background: var(--brand-deeper);
+        mix-blend-mode: color;
+        opacity: 0.18;
+      }
+      .grades {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0;
+        outline: 1px solid var(--on-surface-muted);
+      }
+      @media (min-width: 48rem) {
+        .grades {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+      }
+      @media (min-width: 64rem) {
+        .grades {
+          grid-template-columns: repeat(6, minmax(0, 1fr));
+        }
+      }
+      .grow {
+        grid-column: 1 / -1;
+        margin: 0;
+        padding: 0.9rem 0.9rem 0.3rem;
+        background: var(--surface);
+        border-top: 1px solid var(--on-surface-muted);
+        font-weight: 500;
+      }
+      .grow span {
+        font-weight: 400;
+        color: var(--on-surface-muted);
+      }
+      .gcell {
+        margin: 0;
+        padding: 0.75rem;
+        background: var(--surface);
+        color: var(--on-surface);
+      }
+      .gcell figcaption {
+        margin-top: 0.45rem;
+        font-size: 1rem;
+        line-height: 1.35;
+        color: var(--on-surface-muted);
+      }
+
+      /* Bands inside frames: services, the pairs kit, the reply slip */
+      .svc,
+      .band {
+        padding: clamp(2rem, 1.5rem + 3cqi, 4rem) var(--g) 0;
+        --rg: 0.75rem;
+        --rg2: 1.25rem;
+        --lh: 1.06;
+      }
+      .svc {
+        padding-bottom: 4rem;
+      }
+      .h2x {
+        margin: 0;
+        font: 600 clamp(1.875rem, 1.4rem + 2cqi, 3.5rem)/1.06 var(--display);
+        letter-spacing: -0.01em;
+        text-wrap: balance;
+      }
+      .svcg {
+        display: grid;
+        gap: 1rem;
+      }
+      .mq {
+        margin: 0;
+        max-width: 45ch;
+        font-size: 1rem;
+        color: var(--on-surface-muted);
+      }
+      .mq b {
+        display: block;
+        margin-bottom: 0.2rem;
+        font: 600 1.1875rem/1.3 var(--display);
+        color: var(--on-surface);
+      }
+      .runin {
+        margin: 0;
+        max-width: 66ch;
+      }
+      .runin b {
+        font-weight: 600;
+      }
+      .runs {
+        margin-top: 1.25rem;
+      }
+      .runs .runin + .runin {
+        margin-top: 1rem;
+      }
+      @container (min-width: 47.9rem) {
+        .runs {
+          column-count: 2;
+          column-gap: 2.5rem;
+          column-rule: 1px solid var(--border);
+        }
+        .runs .runin {
+          break-inside: avoid;
+        }
+      }
+      @container (min-width: 63.9rem) {
+        .svcg {
+          grid-template-columns: repeat(12, minmax(0, 1fr));
+          column-gap: 1.5rem;
+        }
+        .svcg > .mq {
+          grid-column: 1 / 5;
+        }
+        .svcg > .runin {
+          grid-column: 5 / 13;
+        }
+      }
+      .process {
+        margin: 0;
+        max-width: 24ch;
+        font: 600 clamp(1.75rem, 1.15rem + 2.6cqi, 3.5rem)/1.18 var(--display);
+        letter-spacing: -0.01em;
+        text-wrap: pretty;
+      }
+      .process sup,
+      .fn {
+        font: 500 0.45em/1 var(--body);
+        color: var(--on-surface);
+        vertical-align: 0.9em;
+        margin-left: 0.08em;
+      }
+      .notes3 {
+        display: grid;
+        gap: 0.75rem;
+        margin: 1.25rem 0 0;
+        padding: 0;
+        list-style: none;
+        font-size: 1rem;
+        color: var(--on-surface-muted);
+      }
+      .notes3 li {
+        padding-left: 1rem;
+        border-left: 1px solid var(--border);
+      }
+      .notes3 .fn {
+        font-size: 0.8rem;
+        vertical-align: 0.4em;
+        margin: 0 0.3rem 0 0;
+      }
+      @container (min-width: 47.9rem) {
+        .notes3 {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+      }
+      .parts2 {
+        margin: 0;
+        padding-bottom: 2.5rem;
+      }
+      .parts2 div {
+        display: grid;
+        gap: 0.1rem 1.5rem;
+        padding: 0.7rem 0;
+        border-top: 1px solid var(--border);
+      }
+      .parts2 div:last-child {
+        border-bottom: 1px solid var(--border);
+      }
+      .parts2 dt {
+        font-weight: 600;
+      }
+      .parts2 dd {
+        margin: 0;
+      }
+      @container (min-width: 47.9rem) {
+        .parts2 div {
+          grid-template-columns: 11rem minmax(0, 1fr);
+        }
+      }
+
+      /* The reply slip */
+      .slipband {
+        padding: clamp(2.5rem, 2rem + 3cqi, 5rem) var(--g) clamp(2.5rem, 2rem + 3cqi, 5rem);
+        --rg: 0.9rem;
+        --rg2: 1.5rem;
+        --lh: 1.06;
+      }
+      .sgrid {
+        display: grid;
+        gap: 1.5rem;
+        align-items: start;
+      }
+      .sl .stand {
+        max-width: 34ch;
+      }
+      @container (min-width: 63.9rem) {
+        .sgrid {
+          grid-template-columns: repeat(12, minmax(0, 1fr));
+          column-gap: 1.5rem;
+        }
+        .sgrid > .sl {
+          grid-column: 1 / 6;
+        }
+        .sgrid > .slip,
+        .sgrid > .sent {
+          grid-column: 7 / 13;
+        }
+      }
+      .slip {
+        display: grid;
+        gap: 1.1rem;
+        margin: 0;
+        padding: clamp(1.25rem, 1rem + 1.5cqi, 2rem);
+        border-radius: 4px;
+        background: var(--surface-muted);
+      }
+      .f {
+        display: grid;
+        gap: 0.4rem;
+      }
+      .f label {
+        font: 500 1rem/1.3 var(--body);
+        color: var(--on-surface);
+      }
+      .f label span {
+        font-weight: 400;
+        color: var(--on-surface-muted);
+      }
+      .f input,
+      .f select,
+      .f textarea {
+        width: 100%;
+        min-height: 48px;
+        padding: 0.6rem 0.75rem;
+        border: 1px solid var(--on-surface-muted);
+        border-radius: 2px;
+        background: var(--surface);
+        color: var(--on-surface);
+        font: 400 1rem/1.4 var(--body);
+      }
+      .f select {
+        appearance: none;
+        padding-right: 2.5rem;
+        background-image:
+          linear-gradient(45deg, transparent 50%, var(--on-surface) 50%),
+          linear-gradient(135deg, var(--on-surface) 50%, transparent 50%);
+        background-position:
+          calc(100% - 1.25rem) 55%,
+          calc(100% - 0.85rem) 55%;
+        background-size: 0.42rem 0.42rem;
+        background-repeat: no-repeat;
+      }
+      .f textarea {
+        min-height: 6.5rem;
+        resize: vertical;
+      }
+      .f .is-focus {
+        outline-offset: 2px;
+      }
+      .f.err input {
+        border: 2px solid var(--on-surface);
+      }
+      .f .msg {
+        margin: 0;
+        padding-left: 0.75rem;
+        border-left: 3px solid var(--on-surface);
+        font: 500 1rem/1.4 var(--body);
+        color: var(--on-surface);
+      }
+      .send {
+        display: grid;
+        gap: 0.6rem;
+        justify-items: start;
+      }
+      .send p {
+        margin: 0;
+        font-size: 1rem;
+        color: var(--on-surface-muted);
+      }
+      .busy .f input,
+      .busy .f select,
+      .busy .f textarea {
+        color: var(--on-surface-muted);
+      }
+      .busy .ask {
+        cursor: progress;
+      }
+      .sent {
+        display: grid;
+        gap: 0.75rem;
+        padding: clamp(1.25rem, 1rem + 1.5cqi, 2rem);
+        border-radius: 4px;
+        background: var(--surface-muted);
+        border-top: 2px solid var(--on-surface);
+      }
+      .sent p {
+        margin: 0;
+      }
+      .sent .lead1 {
+        font: 600 1.25rem/1.3 var(--display);
+      }
+      .sent .small {
+        color: var(--on-surface-muted);
+        font-size: 1rem;
+      }
+      @container (max-width: 47.89rem) {
+        .send .well {
+          justify-self: stretch;
+          max-width: none;
+        }
+      }
+
+      /* The phone menu: a contents page on the paper */
+      .sheet {
+        display: grid;
+        grid-template-rows: auto auto 1fr;
+        height: 100%;
+        background: var(--surface);
+        --rg: 0.9rem;
+        --rg2: 1.25rem;
+      }
+      .sheet .mast {
+        border-bottom: 2px solid var(--on-surface);
+      }
+      .sheet .mast .mark {
+        flex: 1 1 0;
+      }
+      .contents {
+        padding: 1.25rem var(--g);
+      }
+      .contents ol {
+        margin: 0 0 1.5rem;
+        padding: 0;
+        list-style: none;
+      }
+      .contents li {
+        border-bottom: 1px solid var(--border);
+      }
+      .contents a:not(.ask) {
+        display: flex;
+        align-items: center;
+        min-height: 56px;
+        font: 600 1.625rem/1.1 var(--display);
+        text-decoration: none;
+      }
+      .contents .well {
+        display: flex;
+        max-width: none;
+      }
+
+      /* Proof: the four preview pairs, with the whole structural kit */
+      .pairsh {
+        margin: 2.5rem 0 0;
+        padding-top: 1.25rem;
+        border-top: 1px solid var(--border);
+      }
+      .pairsh + p {
+        margin: 0.35rem 0 1rem;
+        color: var(--on-surface-muted);
+        font-size: 1rem;
+        max-width: 70ch;
+      }
+      .pairs {
+        display: grid;
+        gap: 1.5rem;
+        align-items: start;
+      }
+      @media (min-width: 64rem) {
+        .pairs {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+      .pairs figcaption {
+        margin-top: 0.6rem;
+        font-size: 1rem;
+      }
+      .pairs figcaption b {
+        display: block;
+        font-weight: 500;
+      }
+      .pairs figcaption span {
+        color: var(--on-surface-muted);
+      }
+
+      /* Type proof */
+      .spec {
+        padding: 1.25rem 0 1.5rem;
+        border-top: 1px solid var(--border);
+        container-type: inline-size;
+        --rg: 0.9rem;
+      }
+      .spec .lab {
+        margin: 0 0 0.6rem;
+        font-size: 1rem;
+        color: var(--on-surface-muted);
+      }
+      .spec .lab b {
+        font-weight: 500;
+        color: var(--on-surface);
+      }
+      .statement {
+        margin: 0;
+        max-width: 24ch;
+        font: 600 clamp(1.75rem, 1.2rem + 2.2vw, 3.25rem)/1.15 var(--display);
+        letter-spacing: -0.01em;
+      }
+      .sign {
+        display: grid;
+        justify-items: start;
+        gap: 0.5rem;
+        margin: 1.1rem 0 0;
+        font-weight: 600;
+      }
+      .sign::before {
+        content: '';
+        width: 2.5rem;
+        height: 2px;
+        background: var(--on-surface);
+      }
+      .rates {
+        width: 100%;
+        max-width: 34rem;
+        border-collapse: collapse;
+        font-variant-numeric: tabular-nums;
+      }
+      .rates td {
+        padding: 0.6rem 0;
+        border-bottom: 1px solid var(--border);
+        vertical-align: baseline;
+      }
+      .rates td:last-child {
+        padding-left: 1.5rem;
+        text-align: right;
+        white-space: nowrap;
+      }
+      .record {
+        margin: 0;
+        max-width: 30ch;
+        font: 600 clamp(1.5rem, 1.1rem + 1.6vw, 2.5rem)/1.2 var(--display);
+      }
+      .record b {
+        font: 600 1.08em/1 var(--body);
+        font-variant-numeric: tabular-nums;
+      }
+      .review {
+        position: relative;
+        margin: 0;
+        max-width: 30ch;
+        font: 600 clamp(1.375rem, 1.1rem + 1vw, 2rem)/1.25 var(--display);
+      }
+      .review .qm {
+        position: absolute;
+        right: 100%;
+        margin-right: 0.08em;
+      }
+      .review + p {
+        margin: 0.6rem 0 0;
+        font-size: 1rem;
+        color: var(--on-surface-muted);
+      }
+
+      /* Palette proof */
+      .pal {
+        display: grid;
+        gap: 1.5rem;
+      }
+      @media (min-width: 64rem) {
+        .pal {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+      .panel {
+        padding: clamp(1rem, 0.5rem + 2vw, 2rem);
+        background: var(--surface);
+        color: var(--on-surface);
+        outline: 1px solid var(--on-surface-muted);
+      }
+      .panel h3 {
+        margin: 0 0 0.25rem;
+        font: 600 1.5rem/1.2 var(--display);
+      }
+      .panel h4 {
+        margin: 1.75rem 0 0.75rem;
+        font: 500 1rem/1.3 var(--body);
+      }
+      .bar {
+        display: flex;
+        height: 0.9rem;
+        margin: 1rem 0 0.4rem;
+        outline: 1px solid var(--on-surface-muted);
+      }
+      .toks {
+        display: grid;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+      .toks li {
+        display: grid;
+        grid-template-columns: 2.75rem minmax(0, 1fr) auto;
+        column-gap: 0.85rem;
+        align-items: center;
+        padding: 0.45rem 0;
+        border-top: 1px solid var(--border);
+        font-size: 1rem;
+      }
+      .toks i {
+        width: 2.75rem;
+        height: 2.75rem;
+        outline: 1px solid var(--on-surface-muted);
+        outline-offset: -1px;
+        grid-row: span 2;
+      }
+      .toks b {
+        font-weight: 500;
+      }
+      .toks code {
+        font: 400 1rem var(--body);
+        font-variant-numeric: tabular-nums;
+      }
+      .toks small {
+        grid-column: 2 / 4;
+        font-size: 1rem;
+        color: var(--on-surface-muted);
+        line-height: 1.35;
+      }
+      .toks .off b,
+      .toks .off code {
+        color: var(--on-surface-muted);
+      }
+      .samples {
+        display: grid;
+        gap: 0.5rem;
+      }
+      .sample {
+        margin: 0;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 0.25rem 1rem;
+        padding: 0.7rem 0.9rem;
+        outline: 1px solid var(--on-surface-muted);
+        outline-offset: -1px;
+        font-size: 1rem;
+      }
+      .sample strong {
+        font: 600 1.375rem/1.1 var(--display);
+      }
+      .sample span {
+        font-variant-numeric: tabular-nums;
+        font-weight: 500;
+      }
+      .ui {
+        display: grid;
+        gap: 0.6rem;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        font-size: 1rem;
+      }
+      .ui li {
+        display: grid;
+        grid-template-columns: 4.5rem minmax(0, 1fr);
+        gap: 0.85rem;
+        align-items: center;
+      }
+      .ui i {
+        display: block;
+        height: 2.5rem;
+      }
+
+      /* Buttons proof */
+      .brow {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(min(100%, 8.5rem), 1fr));
+        gap: 1rem 1.25rem;
+        padding: 1.25rem 0;
+        border-top: 1px solid var(--border);
+        align-items: end;
+      }
+      .brow.wide {
+        grid-template-columns: repeat(auto-fill, minmax(min(100%, 13rem), 1fr));
+      }
+      .brow > p {
+        grid-column: 1 / -1;
+        margin: 0;
+        font-weight: 500;
+      }
+      .brow > p span {
+        display: block;
+        font-weight: 400;
+        font-size: 1rem;
+        color: var(--on-surface-muted);
+      }
+      .cell {
+        display: grid;
+        gap: 0.5rem;
+        justify-items: start;
+      }
+      .cell small {
+        font-size: 1rem;
+        color: var(--on-surface-muted);
+      }
+      @media (min-width: 60rem) {
+        .brow {
+          grid-template-columns: 11rem repeat(4, minmax(0, 1fr));
+        }
+        .brow > p {
+          grid-column: auto;
+          align-self: center;
+        }
+        /* A slot needs about 190 px, so its rows put the label above four full columns. */
+        .brow.wide {
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+        }
+        .brow.wide > p {
+          grid-column: 1 / -1;
+        }
+      }
+      .live {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 1.25rem 2rem;
+        padding: 1.5rem 0;
+        border-top: 2px solid var(--on-surface);
+      }
+      .menuproof {
+        display: grid;
+        gap: 1.5rem;
+        margin-top: 2rem;
+        align-items: start;
+      }
+      @media (min-width: 64rem) {
+        .menuproof {
+          grid-template-columns: 375px minmax(0, 1fr);
+        }
+      }
+
+      /* The pressing */
+      .stages {
+        display: grid;
+        gap: 1.5rem;
+      }
+      @media (min-width: 64rem) {
+        .stages {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+      .stages figure {
+        margin: 0;
+        min-width: 0;
+      }
+      .stage {
+        container-type: inline-size;
+        position: relative;
+        isolation: isolate;
+        padding: clamp(1.5rem, 1rem + 2vw, 2.75rem);
+        background: var(--surface);
+        outline: 1px solid var(--on-surface-muted);
+        --rg: 1rem;
+        --rg2: 1.25rem;
+      }
+      .stage canvas {
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+      }
+      .stage[data-gl='on'] canvas {
+        opacity: 1;
+      }
+      .stage .h1 {
+        --h1: clamp(1.875rem, 1.1rem + 3cqi, 3.25rem);
+        --lh: 1;
+      }
+      .stage .deck {
+        gap: 1.1rem;
+      }
+      .stage .act .second {
+        margin-top: 11px;
+      }
+      .board2 {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 1rem 2rem;
+        margin-top: 1.25rem;
+      }
+      .board2 p {
+        margin: 0;
+        font-size: 1rem;
+        color: var(--on-surface-muted);
+        font-variant-numeric: tabular-nums;
+      }
+      .story {
+        display: grid;
+        gap: 1.25rem;
+        margin: 2rem 0 0;
+        padding: 0;
+        list-style: none;
+      }
+      @media (min-width: 48rem) {
+        .story {
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+        }
+      }
+      .story li {
+        padding-top: 0.75rem;
+        border-top: 2px solid var(--on-surface);
+        font-size: 1rem;
+      }
+      .story b {
+        display: block;
+        font-weight: 500;
+      }
+
+      /* Order proof */
+      .order {
+        display: grid;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        column-gap: 1.5rem;
+      }
+      @media (min-width: 64rem) {
+        .order {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          grid-auto-flow: column;
+          grid-template-rows: repeat(6, auto);
+        }
+      }
+      .order li {
+        display: grid;
+        grid-template-columns: 2rem minmax(0, 1fr);
+        gap: 0 0.75rem;
+        padding: 0.9rem 0;
+        border-top: 1px solid var(--border);
+      }
+      .order .n {
+        font-weight: 500;
+        color: var(--on-surface-muted);
+        font-variant-numeric: tabular-nums;
+      }
+      .order h3 {
+        margin: 0;
+        font: 600 1.3125rem/1.25 var(--display);
+      }
+      .order p {
+        grid-column: 2;
+        margin: 0.2rem 0 0;
+        font-size: 1rem;
+      }
+      .tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        margin-left: 0.5rem;
+        font: 500 1rem/1 var(--body);
+        vertical-align: 0.1em;
+      }
+      .tag::before {
+        content: '';
+        width: 1.1rem;
+        height: 5px;
+        background: var(--brand-deeper);
+      }
+      .tag.ex {
+        color: var(--on-surface-muted);
+      }
+      .tag.ex::before {
+        width: 0.55rem;
+        height: 0.55rem;
+        background: none;
+        outline: 1px solid var(--on-surface-muted);
+      }
+      .foldt {
+        width: 100%;
+        margin-top: 1.5rem;
+        border-collapse: collapse;
+        font-size: 1rem;
+        font-variant-numeric: tabular-nums;
+      }
+      .foldt th,
+      .foldt td {
+        padding: 0.5rem 0.75rem 0.5rem 0;
+        border-bottom: 1px solid var(--border);
+        text-align: left;
+        vertical-align: top;
+      }
+      .foldt th {
+        font-weight: 500;
+      }
+      .foldwrap {
+        overflow-x: auto;
+      }
+      @media (max-width: 40rem) {
+        .foldt .opt {
+          display: none;
+        }
+        .foldt th,
+        .foldt td {
+          padding-right: 0.5rem;
+        }
+      }
+      .colophon {
+        margin-top: clamp(4rem, 3rem + 5vw, 8rem);
+        padding-bottom: 3rem;
+      }
+      .colophon p {
+        margin: 0 0 0.75rem;
+        max-width: 70ch;
+        font-size: 1rem;
+        color: var(--on-surface-muted);
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          transition-property: color, background-color, opacity !important;
+        }
+      }
+      @media (forced-colors: active) {
+        .stage canvas {
+          display: none;
+        }
+        .well {
+          border: 1px solid CanvasText;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="tilebar wrap">
+      <div class="strip">
+        <p>PinnaclePX, Phase 2 style tile: multi-industry, direction 2 of 2</p>
+        <div class="controls" role="group" aria-label="Swap the tile's tokens">
+          <span>Scheme</span>
+          <button class="btn" data-scheme="l" aria-pressed="true">Light</button>
+          <button class="btn" data-scheme="d" aria-pressed="false">Dark</button>
+          <span>Brand hex</span>
+        </div>
+      </div>
+      <div class="titleband">
+        <h1 class="name load-end">Placard<span class="end" aria-hidden="true"></span></h1>
+        <div class="rule load-draw"></div>
+      </div>
+      <div class="titledeck">
+        <div class="tleft">
+          <p class="standt">
+            Any business's one-page site, set as a well-made printed bill: a banner headline, a
+            heavy rule struck once in the spot colour where there is something to do, margin notes
+            that answer the reader's next question, and one ask pressed into the paper with its
+            undertaking beside it.
+          </p>
+          <nav class="toc" aria-label="Proofs on this tile">
+            <a class="tlink" href="#lede">1 The lede</a
+            ><a class="tlink" href="#photos">2 Photographs</a
+            ><a class="tlink" href="#type">3 Type</a><a class="tlink" href="#palette">4 Palette</a
+            ><a class="tlink" href="#buttons">5 Buttons</a
+            ><a class="tlink" href="#slip">6 The slip</a
+            ><a class="tlink" href="#pressing">7 The pressing</a
+            ><a class="tlink" href="#order">8 Order</a>
+          </nav>
+        </div>
+        <div class="parts">
+          <p><b>Template.</b> Multi-industry; <code>t10-placard</code> if the set grows to ten.</p>
+          <p>
+            <b>For.</b> The business's next customer, usually on a phone from search, a map listing
+            or a friend's link, who wants to know what the business does, whether it is for them and
+            how to start.
+          </p>
+          <p>
+            <b>Primary ask.</b> One enquiry, sent from the reply slip at the foot of the page. The
+            label is the business's own first step, and a risk-reversal line sits in the slot with
+            it. Example: Book a sweep, with "A fixed price agreed before we start".
+          </p>
+          <p>
+            <b>Example.</b> Kestrel Sweeps, a fictional chimney sweep and stove fitter in the Calder
+            Valley.
+          </p>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="proof wrap" id="lede" data-band>
+        <p class="kick">Proof 1 of 8</p>
+        <h2 class="ph2">The lede, for three businesses and the worst case</h2>
+        <div class="rule"></div>
+        <p class="note">
+          <b>Will my headline and my name fit?</b> Three copyfit steps are chosen at render from the
+          character count. A name over 16 characters leaves the phone bar and opens the lede. Each
+          frame is the real composition at its viewport size, StudioBar included, and the numbers
+          under each are measured in this page.
+        </p>
+        <div id="variants"></div>
+        <h3 class="sub" style="margin-top: 3rem">The phone fold, measured here</h3>
+        <p class="cap">
+          A 375 by 667 phone shows about 548 px in Safari with its toolbars, and a 360 by 640 phone
+          about 560 px in Chrome (assumed, to confirm on devices). "Screen" tests the trust line
+          against 667 or 640, "Toolbars" against 548 or 560. The ask in the masthead is in view at
+          every height; this table is about the lede's four items.
+        </p>
+        <div class="foldwrap"><table class="foldt" id="foldt"></table></div>
+        <div class="offstage" id="offstage" aria-hidden="true" inert></div>
+      </section>
+
+      <section class="proof wrap" id="photos" data-band>
+        <p class="kick">Proof 2 of 8</p>
+        <h2 class="ph2">Any photograph, printed on the same stock</h2>
+        <div class="rule"></div>
+        <div>
+          <p class="note">
+            <b>Will my own photos look like they belong?</b> Four deliberately mismatched pictures
+            through the exact CSS grade: warm food with empty copy space, a dark gym, a cold clinic
+            and an uploaded screenshot. Lead strength keeps colour; detail strength pulls a set
+            together. The last column is the brand tone first specified, now dropped: it tints food.
+          </p>
+          <div class="grades" id="grades"></div>
+        </div>
+      </section>
+      <div class="wrap">
+        <h3 class="sub" style="margin-top: 2.5rem">
+          One lede at true size: 1440 by 900, 100% zoom, a real plate 0
+        </h3>
+        <p class="cap">
+          The bakery frame with a stand-in photograph at the lead grade. Scroll sideways inside the
+          frame on a narrower screen. Judge it on a real monitor.
+        </p>
+      </div>
+      <div class="truesize" id="truesize"></div>
+
+      <section class="proof wrap" id="type" data-band>
+        <p class="kick">Proof 3 of 8</p>
+        <h2 class="ph2">Type</h2>
+        <div class="rule"></div>
+        <div class="pgrid">
+          <p class="note">
+            <b>Why a slab, if most visitors never see it?</b> The example is set in Besley, a
+            Clarendon revival. A visitor's page gets one of the four preview pairs, and the bill
+            survives in them because it lives in the rules, end marks, run-ins, margin notes and
+            footnotes, not in the face. The pairs below carry that whole kit.
+          </p>
+          <div class="pbody">
+            <div class="spec">
+              <p class="lab">
+                <b>h1, up to 36 characters: the banner.</b> Besley 600, clamp(2.75rem, 1rem + 7.8vw,
+                8rem): 45 px at 375, 128 px at 1440. Set solid (leading 0.98), tracking -0.02em,
+                across the full measure, balanced
+              </p>
+              <p class="h1 s1" style="--h1: clamp(2.75rem, 1rem + 7.8vw, 8rem)">
+                Bread worth getting up for.<span class="end" aria-hidden="true"></span>
+              </p>
+              <div class="rule"></div>
+            </div>
+            <div class="spec">
+              <p class="lab">
+                <b>h1, 37 to 64 characters.</b> clamp(2.125rem, 0.94rem + 5.07vw, 6rem): 34 px at
+                375, 88 px at 1440, 96 px from 1600; leading 1
+              </p>
+              <p class="h1 s2" style="--h1: clamp(2.125rem, 0.94rem + 5.07vw, 6rem)">
+                Chimneys swept and stoves fitted, with no soot left behind.<span
+                  class="end"
+                  aria-hidden="true"
+                ></span>
+              </p>
+              <div class="rule"></div>
+            </div>
+            <div class="spec">
+              <p class="lab">
+                <b>h1, 65 to 90 characters.</b> clamp(1.875rem, 1.3rem + 2.8vw, 4.5rem): 31 px at
+                375, 61 px at 1440; 32ch, 38ch with no plate
+              </p>
+              <p class="h1 s3" style="--h1: clamp(1.875rem, 1.3rem + 2.8vw, 4.5rem)">
+                Wills, probate and lasting powers of attorney, explained plainly and settled without
+                fuss.<span class="end" aria-hidden="true"></span>
+              </p>
+              <div class="rule"></div>
+            </div>
+            <div class="spec">
+              <p class="lab">
+                <b>The end mark.</b> brand-deeper, 6 px tall and max(2.5rem, 0.9em) wide, struck on
+                the rule under the headline's last word, in a band that carries an ask only. It
+                moves with the copy, so no two headlines place it alike.
+              </p>
+            </div>
+            <div class="spec">
+              <p class="lab">
+                <b>The process sentence.</b> clamp(1.75rem, 1.15rem + 2.6vw, 3.5rem). No underlines:
+                the clauses are marked by footnote numerals only (aria-hidden), and the notes carry
+                the details
+              </p>
+              <p class="process">
+                You pick a morning,<sup aria-hidden="true">1</sup> we sheet the room and sweep,<sup
+                  aria-hidden="true"
+                  >2</sup
+                >
+                and you get a written report before we leave.<sup aria-hidden="true">3</sup>
+              </p>
+              <ol class="notes3">
+                <li>
+                  <span class="fn" aria-hidden="true">1</span>Weekday mornings; we confirm the time
+                  the day before.
+                </li>
+                <li>
+                  <span class="fn" aria-hidden="true">2</span>Dust sheets down first, and the room
+                  hoovered after.
+                </li>
+                <li>
+                  <span class="fn" aria-hidden="true">3</span>What we found, what we did and when to
+                  call us again.
+                </li>
+              </ol>
+            </div>
+            <div class="spec">
+              <p class="lab">
+                <b>The statement.</b> clamp(1.75rem, 1.2rem + 2.2vw, 3.25rem). Unquoted and signed:
+                quotation marks belong to other people's words only
+              </p>
+              <p class="statement">
+                We started because nobody local would put a sheet down before they swept.
+              </p>
+              <p class="sign">Kestrel Sweeps</p>
+            </div>
+            <div class="spec">
+              <p class="lab">
+                <b>Standfirst and body.</b> Public Sans 400, 500 and 600. Standfirst
+                clamp(1.0625rem, 0.9rem + 0.55vw, 1.375rem) at 46ch; body clamp(1.0625rem, 1rem +
+                0.2vw, 1.1875rem), leading 1.55, 66ch; run-in heads 600
+              </p>
+              <p class="stand">
+                Sweeping, smoke tests and stove fitting by a two-person firm that sheets the room
+                first and hoovers after.
+              </p>
+              <p class="runin" style="margin-top: 1rem">
+                <b>Stove fitting.</b> We survey the room and the flue first, then fit the stove,
+                line the chimney where it needs it and leave the paperwork with you. Nothing is
+                ordered until you have agreed the price in writing.
+                <a class="tlink" href="#type"
+                  >Ask about this<span class="vh">: stove fitting</span></a
+                >
+              </p>
+              <p class="cap">
+                Notes, captions and terms: Public Sans 400 at 1rem in on-surface-muted. No running
+                text below 16 px. Each "Ask about this" carries the service's name for screen
+                readers.
+              </p>
+            </div>
+            <div class="spec">
+              <p class="lab">
+                <b>Record, example page only.</b> One sentence in the display face; the figures in
+                Public Sans 600 with tabular-nums, in on-surface, never the spot colour
+              </p>
+              <p class="record">
+                Since <b>2012</b> we have swept <b>4,300</b> chimneys across the valley, and
+                <b>260</b> customers rate us <b>4.9</b> of 5.
+              </p>
+            </div>
+            <div class="spec">
+              <p class="lab"><b>Reviews, example page only.</b> Third-party words, so quoted</p>
+              <blockquote class="review">
+                <span class="qm" aria-hidden="true">&ldquo;</span>They sheeted the whole hearth and
+                you would never know they had been.&rdquo;
+              </blockquote>
+              <p>Aoife, Heptonstall</p>
+            </div>
+            <div class="spec">
+              <p class="lab">
+                <b>Rates, example page only.</b> Public Sans 400 with tabular-nums (measured: 0s and
+                1s both 688 px at 96 px), right-aligned, no leaders
+              </p>
+              <table class="rates">
+                <tbody>
+                  <tr>
+                    <td>Sweep, with a smoke test</td>
+                    <td>£75</td>
+                  </tr>
+                  <tr>
+                    <td>Second chimney, same visit</td>
+                    <td>£40</td>
+                  </tr>
+                  <tr>
+                    <td>Bird nest removal</td>
+                    <td>from £95</td>
+                  </tr>
+                  <tr>
+                    <td>Stove fitting, supplied and installed</td>
+                    <td>from £2,400</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="spec">
+              <p class="lab"><b>Ask labels at 16 px, weight 600, measured in this page</b></p>
+              <p class="cap" id="askw" style="margin: 0"></p>
+            </div>
+          </div>
+        </div>
+      </section>
+      <div class="wrap">
+        <h3 class="sub pairsh">The same page under the four preview pairs</h3>
+        <p>
+          A visitor's style picks the pair; the template only knows two variables. Each frame is 800
+          px wide and carries the whole kit: banner and end mark, the slot, a margin-note question,
+          two run-ins with a column rule, the footnoted process and a particulars row.
+        </p>
+        <div class="pairs" id="pairs"></div>
+      </div>
+
+      <section class="proof wrap" id="palette" data-band>
+        <p class="kick">Proof 4 of 8</p>
+        <h2 class="ph2">Palette, derived from #b3261e</h2>
+        <div class="rule"></div>
+        <p class="note">
+          <b>What happens to my colour?</b> Only brand-deeper is painted, on the ask and on the end
+          mark of a band with an ask, and the engine solves it against the paper: 5.39:1 or better
+          on light and 6.21:1 on dark across the 17-hex corpus. The slot's walls and lip are mixes
+          of the paper with scrim and on-scrim. Ratios are the palette tool's, floored.
+        </p>
+        <div class="pal" id="pal"></div>
+      </section>
+
+      <section class="proof wrap" id="buttons" data-band>
+        <p class="kick">Proof 5 of 8</p>
+        <h2 class="ph2">
+          Buttons, links and the phone menu<span class="end" aria-hidden="true"></span>
+        </h2>
+        <div class="rule"></div>
+        <div class="pgrid">
+          <p class="note">
+            <b>Which thing do I press?</b> Only the ask is filled, and only the ask sits in a slot.
+            It never nudges: hover sinks it 1 px and press 2 px, and the wall's shadow on its top
+            edge deepens. Everything else is a rule or an underline in ink. Every target is at least
+            44 px; the focus ring is on-surface, 17.39:1.
+          </p>
+          <div class="pbody">
+            <div id="board"></div>
+            <div class="live">
+              <span class="well"
+                ><a class="ask" href="#buttons"
+                  >Book a sweep <span aria-hidden="true">&rarr;</span></a
+                ><span class="trust">A fixed price agreed before we start</span></span
+              ><a class="second" href="#buttons"
+                >How it works <span aria-hidden="true">&darr;</span></a
+              ><a class="tlink" href="#buttons">Ask about this<span class="vh">: sweeping</span></a
+              ><button class="menu" type="button" aria-expanded="false" id="livemenu">Menu</button>
+            </div>
+            <p class="cap">Live row: hover, tab to and press each one.</p>
+          </div>
+        </div>
+        <div class="menuproof" id="menuproof"></div>
+      </section>
+
+      <section class="proof wrap" id="slip" data-band>
+        <p class="kick">Proof 6 of 8</p>
+        <h2 class="ph2">
+          The reply slip, in every state<span class="end" aria-hidden="true"></span>
+        </h2>
+        <div class="rule"></div>
+        <p class="note">
+          <b>What happens when I press send?</b> Boxed fields, surface on the slip's surface-muted
+          with a 1 px on-surface-muted edge (6.43:1 at worst), labels above, required fields marked
+          in words. Errors are in ink: a 2 px edge, a rule and a sentence, never a new colour. On a
+          visitor's page the send ends in the decision-5 preview note; nothing is sent.
+        </p>
+        <div id="slips"></div>
+      </section>
+
+      <section class="proof wrap" id="pressing" data-band>
+        <p class="kick">Proof 7 of 8</p>
+        <h2 class="ph2">
+          The pressing: one light, once, across the slot<span class="end" aria-hidden="true"></span>
+        </h2>
+        <div class="rule"></div>
+        <p class="note">
+          <b>Is the light worth its bytes?</b> The slot reads without it: the right-hand stage is
+          what phones, reduced motion and every visitor before intent get. From 48rem, after the
+          first pointer move, scroll or key, one light crosses the paper grain and comes to rest
+          above the ask, and the slot's walls answer it.
+        </p>
+        <div class="stages">
+          <figure>
+            <div class="stage" id="live" data-gl="off">
+              <canvas aria-hidden="true"></canvas>
+              <p class="h1 s2" data-text>
+                Chimneys swept and stoves fitted, with no soot left behind.<span
+                  class="end"
+                  aria-hidden="true"
+                ></span>
+              </p>
+              <div class="rule"></div>
+              <div class="deck">
+                <p class="stand" data-text>
+                  Sweeping, smoke tests and stove fitting by a two-person firm that sheets the room
+                  first.
+                </p>
+                <div class="act">
+                  <span class="well" data-well
+                    ><a class="ask" href="#pressing"
+                      >Book a sweep <span aria-hidden="true">&rarr;</span></a
+                    ><span class="trust" data-text>A fixed price agreed before we start</span></span
+                  ><a class="second" href="#pressing" data-text
+                    >How it works <span aria-hidden="true">&darr;</span></a
+                  >
+                </div>
+                <ul class="terms">
+                  <li data-text>Dust sheets down, room hoovered after</li>
+                  <li data-text>A written report on every flue</li>
+                </ul>
+              </div>
+            </div>
+            <figcaption class="cap">
+              Live: raw WebGL1, one context, DPR 1, colours read from the tokens; arms on intent,
+              plays once, pauses off screen and in a hidden tab, and releases its context when the
+              stage leaves view.
+            </figcaption>
+          </figure>
+          <figure>
+            <div class="stage">
+              <p class="h1 s2">
+                Chimneys swept and stoves fitted, with no soot left behind.<span
+                  class="end"
+                  aria-hidden="true"
+                ></span>
+              </p>
+              <div class="rule"></div>
+              <div class="deck">
+                <p class="stand">
+                  Sweeping, smoke tests and stove fitting by a two-person firm that sheets the room
+                  first.
+                </p>
+                <div class="act">
+                  <span class="well"
+                    ><a class="ask" href="#pressing"
+                      >Book a sweep <span aria-hidden="true">&rarr;</span></a
+                    ><span class="trust">A fixed price agreed before we start</span></span
+                  ><a class="second" href="#pressing"
+                    >How it works <span aria-hidden="true">&darr;</span></a
+                  >
+                </div>
+                <ul class="terms">
+                  <li>Dust sheets down, room hoovered after</li>
+                  <li>A written report on every flue</li>
+                </ul>
+              </div>
+            </div>
+            <figcaption class="cap">
+              Static: the slot in CSS from tokens. Used on phones, under reduced motion, without
+              WebGL, with the flag off, after context loss, before intent and with JavaScript off.
+            </figcaption>
+          </figure>
+        </div>
+        <div class="board2">
+          <button class="second" type="button" id="replay">
+            Replay the light <span aria-hidden="true">&#8635;</span>
+          </button>
+          <p id="glstate" aria-live="polite">Waiting for intent and for the stage to be in view.</p>
+        </div>
+        <ol class="story">
+          <li>
+            <b>First paint.</b> The static slot, in CSS at every pixel ratio. The canvas starts as
+            the flat sheet and the walls at 0%, so arming never flashes.
+          </li>
+          <li>
+            <b>On intent, from 48rem.</b> A pointer move, scroll or key while the stage is in view.
+            The light enters from the upper left.
+          </li>
+          <li>
+            <b>0.2 to 1.1 s.</b> It rakes across the paper grain, capped at border, and the slot's
+            walls turn as it passes: the right lip darkens, the left wall lifts.
+          </li>
+          <li>
+            <b>1.4 s, at rest.</b> Above and left of the ask; the walls settle deeper than the CSS.
+            Hover, focus or press relights them in 140 ms. Nothing loops.
+          </li>
+        </ol>
+      </section>
+
+      <section class="proof wrap" id="order" data-band>
+        <p class="kick">Proof 8 of 8</p>
+        <h2 class="ph2">Section order</h2>
+        <div class="rule"></div>
+        <div class="pgrid">
+          <p class="note">
+            <b>Does every ask lead somewhere?</b> Every ask points down to the reply slip, the last
+            section; none points back up. A red end mark appears only in a band with an ask.
+          </p>
+          <div class="pbody"><ol class="order" id="orderlist"></ol></div>
+        </div>
+      </section>
+
+      <footer class="colophon wrap">
+        <div class="rule"></div>
+        <p>
+          Placard style tile, a throwaway file for the owner's review. Tokens from the repo's own
+          <code>deriveTokens</code> through the Phase 2 palette tool; the slot's mixes and the
+          texture cap measured over the same corpus; licences and tabular figures from the font
+          tool, 27 Sept 2026.
+        </p>
+        <p>
+          Photographs are stand-ins already in the repo, not Pexels picks: the PrebuiltUI Restro and
+          MediCare builds' own files (MIT, THIRD_PARTY_NOTICES.md), one Unsplash photograph from the
+          Forged build (Unsplash License) and, as the uploaded screenshot, a fictional booking app
+          drawn as an SVG in this file, with no brand. Kestrel Sweeps, Oxlip Bakehouse, Quillet
+          &amp; Rowe and the Calder Valley firm are fictional.
+        </p>
+      </footer>
+    </main>
+
+    <script>
+      // Token sets from palette.mjs (repo deriveTokens, Placard's seven pairs). Order: KEYS.
+      const KEYS = [
+        'surface',
+        'surface-muted',
+        'on-surface',
+        'on-surface-muted',
+        'border',
+        'accent',
+        'brand',
+        'brand-deeper',
+        'brand-deepest',
+        'on-brand',
+        'glow',
+        'glow-secondary',
+        'scrim',
+        'on-scrim',
+      ]
+      const SETS = {
+        '#b3261e': {
+          l: 'fef9f8 f8edec 1e1311 5f5250 e8dad8 f7e7e4 b3261e b3251e 9e0405 ffffff ffa193 6aa5ff 0b0403 ffffff',
+          d: '120b0a 1f1614 f8efee b0a19e 362b29 2a1f1d c4382e f96a5b ff8b7c 120807 ff7f6f 478ffe 040101 ffffff',
+        },
+        '#b45309': {
+          l: 'fef9f7 f7eee9 1c1410 5c534e e7dbd6 f4e9e3 b45309 9d4600 843a00 ffffff ffa473 9299fe 0a0503 ffffff',
+          d: '120c09 1e1612 f8f0ec ada29d 342c27 28201c b45309 e58044 fa9257 100906 ff8436 7d81fd 040100 ffffff',
+        },
+        '#57534e': {
+          l: 'fafaf9 f0f0ef 161616 555555 dededd ebebea 595550 57534e 47433e ffffff c1bdb7 a6a3aa 060605 ffffff',
+          d: '0d0d0d 191818 f2f2f1 a5a4a4 2e2e2d 222121 75716c a29e98 b5b0ab 0b0b0b afaaa4 939197 020202 ffffff',
+        },
+        '#0e7490': {
+          l: 'f6fbfd eaf2f5 121719 505659 d8dfe2 e5edf0 0e7490 006e8a 005c73 ffffff 56cef6 c3a11f 030608 ffffff',
+          d: '090e10 14191b ebf3f6 9fa6a9 292f31 1d2325 1e7d99 55abc9 68bedd 070c0e 00bdea af8f00 010203 ffffff',
+        },
+        '#f5c400': {
+          l: 'fcfaf6 f3f0e7 19160d 59554b e2ded2 efebdf f5c400 796000 655000 ffffff e6b800 d37de6 080601 ffffff',
+          d: '0f0d08 1b1810 f4f2ea a9a499 312e24 252118 f5c400 f5c400 ffda71 0e0b04 cfa500 c267d5 030200 ffffff',
+        },
+      }
+      const tok = (hex, s) =>
+        Object.fromEntries(SETS[hex][s].split(' ').map((v, i) => [KEYS[i], '#' + v]))
+      const vars = (hex, s) =>
+        KEYS.map((k) => `--${k}:${tok(hex, s)[k]}`).join(';') +
+        `;color-scheme:${s === 'd' ? 'dark' : 'light'}`
+      const font = (d, b) => `;--display:'${d}',Georgia,serif;--body:'${b}',system-ui,sans-serif`
+      const state = { hex: '#b3261e', s: 'l' }
+      const $ = (q, r = document) => r.querySelector(q)
+      const esc = (t) => t.replace(/&/g, '&amp;')
+      const IMG = {
+        room: '../../templates/t05-ember/example/restro-timing.png',
+        food: '../../templates/t05-ember/example/hero-banner.png',
+        gym: '../../templates/t06-harbor/example/unsplash-1534438327276.jpg',
+        clinic: '../../templates/t07-summit/example/facility-1.png',
+        // A fictional app with no brand, drawn here, standing in for a visitor's uploaded screenshot:
+        // flat colour and small type, the case the grade handles worst.
+        shot:
+          'data:image/svg+xml,' +
+          encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" width="1200" height="900" font-family="Arial, sans-serif">
+<rect width="1200" height="900" fill="#f4f6fb"/><rect width="220" height="900" fill="#1f2a44"/>
+<circle cx="48" cy="52" r="18" fill="#5b8def"/><rect x="76" y="44" width="96" height="16" rx="4" fill="#c9d3ea"/>
+<rect x="16" y="160" width="188" height="44" rx="8" fill="#2e3b5e"/>
+<g fill="#c9d3ea" font-size="18"><text x="36" y="136">Overview</text><text x="36" y="188">Bookings</text><text x="36" y="240">Customers</text><text x="36" y="292">Invoices</text><text x="36" y="344">Settings</text></g>
+<rect x="220" width="980" height="80" fill="#ffffff"/><text x="260" y="50" font-size="26" font-weight="700" fill="#1f2a44">Bookings this week</text>
+<rect x="1010" y="20" width="160" height="40" rx="8" fill="#5b8def"/><text x="1034" y="46" font-size="16" fill="#ffffff">New booking</text>
+<g fill="#ffffff" stroke="#e2e6f0"><rect x="260" y="110" width="280" height="120" rx="10"/><rect x="580" y="110" width="280" height="120" rx="10"/><rect x="900" y="110" width="270" height="120" rx="10"/><rect x="260" y="260" width="600" height="300" rx="10"/><rect x="900" y="260" width="270" height="600" rx="10"/><rect x="260" y="590" width="600" height="270" rx="10"/></g>
+<g font-size="16" fill="#6b7489"><text x="284" y="146">Booked</text><text x="604" y="146">Waiting</text><text x="924" y="146">Moved</text></g>
+<g font-size="42" font-weight="700" fill="#1f2a44"><text x="284" y="202">42</text><text x="604" y="202">7</text><text x="924" y="202">2</text></g>
+<g fill="#5b8def"><rect x="300" y="380" width="44" height="140"/><rect x="380" y="330" width="44" height="190"/><rect x="460" y="410" width="44" height="110"/><rect x="540" y="300" width="44" height="220"/><rect x="620" y="360" width="44" height="160"/><rect x="700" y="450" width="44" height="70"/><rect x="780" y="480" width="44" height="40"/></g>
+<g font-size="14" fill="#6b7489"><text x="306" y="544">Mon</text><text x="388" y="544">Tue</text><text x="464" y="544">Wed</text><text x="548" y="544">Thu</text><text x="632" y="544">Fri</text><text x="710" y="544">Sat</text><text x="788" y="544">Sun</text><text x="284" y="296">Visits by day</text></g>
+<g font-size="15" fill="#1f2a44"><text x="284" y="630">Mon 6 Oct, 09:00</text><text x="484" y="630">Survey, front room</text><text x="284" y="680">Mon 6 Oct, 13:30</text><text x="484" y="680">Repair, two windows</text><text x="284" y="730">Tue 7 Oct, 10:00</text><text x="484" y="730">Quote visit</text><text x="284" y="780">Wed 8 Oct, 08:30</text><text x="484" y="780">Fitting, one day</text></g>
+<g font-size="13"><rect x="740" y="613" width="96" height="24" rx="12" fill="#d7f3e7"/><text x="758" y="630" fill="#1d7a55">Confirmed</text><rect x="740" y="663" width="96" height="24" rx="12" fill="#fdecc8"/><text x="764" y="680" fill="#8a5a00">Waiting</text><rect x="740" y="713" width="96" height="24" rx="12" fill="#d7f3e7"/><text x="758" y="730" fill="#1d7a55">Confirmed</text><rect x="740" y="763" width="96" height="24" rx="12" fill="#d7f3e7"/><text x="758" y="780" fill="#1d7a55">Confirmed</text></g>
+<text x="924" y="296" font-size="16" fill="#6b7489">Today</text>
+<g fill="#e2e6f0"><circle cx="940" cy="340" r="16"/><circle cx="940" cy="410" r="16"/><circle cx="940" cy="480" r="16"/><circle cx="940" cy="550" r="16"/></g>
+<g fill="#c9d0de"><rect x="968" y="330" width="150" height="10" rx="5"/><rect x="968" y="348" width="96" height="8" rx="4"/><rect x="968" y="400" width="170" height="10" rx="5"/><rect x="968" y="418" width="80" height="8" rx="4"/><rect x="968" y="470" width="130" height="10" rx="5"/><rect x="968" y="488" width="110" height="8" rx="4"/><rect x="968" y="540" width="160" height="10" rx="5"/><rect x="968" y="558" width="70" height="8" rx="4"/></g>
+</svg>`),
+      }
+
+      // The businesses. Trust lines are risk-reversal undertakings, the visitor mechanism, on the
+      // example too; the rating lives in Record.
+      const V = {
+        A: {
+          name: 'Kestrel Sweeps',
+          trade: 'chimney sweep and stove fitter',
+          hex: '#b3261e',
+          s: 'l',
+          pair: ['Besley', 'Public Sans'],
+          faces: 'Besley 600 with Public Sans 400, 500 and 600',
+          kind: 'Example page: 59-character headline, middle step, the firm’s own photograph (a stand-in room)',
+          nav: ['Services', 'How it works', 'Questions'],
+          ask: 'Book a sweep',
+          askShort: 'Book a sweep',
+          step: 2,
+          h1: 'Chimneys swept and stoves fitted, with no soot left behind.',
+          stand:
+            'Sweeping, smoke tests and stove fitting by a two-person firm that sheets the room first and hoovers after.',
+          trust: 'A fixed price agreed before we start',
+          terms: ['Dust sheets down, room hoovered after', 'A written report on every flue'],
+          plate: { src: IMG.room, cap: 'The room is sheeted before the brush goes up.' },
+          svc: [
+            'What we sweep, and what we fit',
+            'What do you actually do?',
+            ' Sweeping, smoke tests, bird nest removal and stove fitting, for open fires and wood burners across the valley.',
+            'Sweeping.',
+            'Every flue is swept from the room below, with the fireplace sheeted and a vacuum running at the hearth.',
+          ],
+        },
+        B: {
+          name: 'Oxlip Bakehouse',
+          trade: 'bakery',
+          hex: '#b45309',
+          s: 'l',
+          pair: ['Fraunces', 'Instrument Sans'],
+          faces: 'warm pair, Fraunces 600 with Instrument Sans',
+          kind: 'Visitor page: 27-character headline, the banner step, a food photograph with empty copy space, no figures',
+          nav: ['What we bake', 'How to order', 'Questions'],
+          ask: 'Order a cake',
+          askShort: 'Order a cake',
+          step: 1,
+          h1: 'Bread worth getting up for.',
+          stand:
+            'Sourdough, pastries and celebration cakes, baked overnight in a small kitchen and sold from the door at seven.',
+          trust: 'Order by Thursday, collect on Saturday, pay on collection',
+          terms: ['Every allergen listed on the label', 'Everything baked the same morning'],
+          plate: {
+            src: IMG.food,
+            cap: 'Everything on the shelf was baked before the door opened.',
+          },
+          svc: [
+            'What we bake',
+            'Is it just bread?',
+            ' Bread every day, pastries at the weekend and cakes to order for birthdays and weddings.',
+            'Sourdough.',
+            'A slow loaf, proved overnight and baked in the small hours, ready when the door opens.',
+          ],
+        },
+        C: {
+          name: 'Quillet & Rowe',
+          trade: 'solicitors for wills and probate',
+          hex: '#57534e',
+          s: 'd',
+          pair: ['Sora', 'Inter'],
+          faces: 'dark pair, Sora 600 with Inter, forced dark',
+          kind: 'Visitor page: 90-character headline, smallest step, no photograph, grey brand',
+          nav: ['What we do', 'How it works', 'Questions'],
+          ask: 'Book a consultation',
+          askShort: 'Book a call',
+          step: 3,
+          h1: 'Wills, probate and lasting powers of attorney, explained plainly and settled without fuss.',
+          stand:
+            'A two-solicitor practice for wills, estates and family property, with a fixed quote once we have talked.',
+          trust: 'A fixed quote agreed before any work starts',
+          terms: ['Home visits when travel is hard', 'Every step confirmed in writing'],
+          plate: null,
+          svc: [
+            'What we do',
+            'Do I need a solicitor for this?',
+            ' For a will or a power of attorney, often not; we say so plainly when you do not.',
+            'Wills.',
+            'We take instructions at a first meeting, send a draft in plain English and arrange the signing.',
+          ],
+        },
+        D: {
+          name: 'Calder Valley Chimney Sweeping, Stove Fitting and Flue Lining Service UK Limited',
+          trade: 'the worst case the schema accepts',
+          hex: '#0e7490',
+          s: 'd',
+          pair: ['Sora', 'Inter'],
+          faces: 'dark pair, Sora 600 with Inter (the widest display face)',
+          kind: '80-character name, 90-character headline, 140-character standfirst, a two-line trust line, a 14-character askShort and a 22-character ask',
+          nav: ['Services', 'How it works', 'Questions'],
+          ask: 'Request a callback now',
+          askShort: 'Request a call',
+          step: 3,
+          h1: 'Chimneys swept, stoves fitted and flues lined across the valley, with no soot left behind.',
+          stand:
+            'Sweeping, smoke tests, stove fitting and flue lining by a family firm that sheets the room first, hoovers after and writes up what it found.',
+          trust: 'A fixed price agreed in writing before any work starts on your chimney',
+          terms: ['Dust sheets down, room hoovered after', 'A written report on every flue'],
+          plate: { src: IMG.room, cap: 'The room is sheeted before the brush goes up.' },
+          svc: [
+            'What we sweep, fit and line across the valley',
+            'What do you actually do?',
+            ' Sweeping, smoke tests, bird nest removal, stove fitting and flue lining.',
+            'Flue lining.',
+            'We survey the flue, fit a liner where it needs one and leave the certificate with you.',
+          ],
+        },
+      }
+
+      // Parts shared by every frame
+      const well = (ask, trust, cls = '', arrow = true) =>
+        `<span class="well"><a class="ask ${cls}" href="#">${ask}${arrow ? ' <span aria-hidden="true">&rarr;</span>' : ''}</a>${trust ? `<span class="trust">${trust}</span>` : ''}</span>`
+      const pic = (p, grade = 'lead', ratio = '') =>
+        `<div class="pic ${grade}"${ratio ? ` style="aspect-ratio:${ratio}"` : ''}><img src="${p}" alt=""></div>`
+      const studio = `<div class="studio"><span>PinnaclePX StudioBar, design 1 of 3</span><span>Book a call</span></div>`
+      const mast = (v, menuState = '') =>
+        `<header class="mast"><span class="mark">${esc(v.name)}</span><nav>${v.nav.map((n) => `<a href="#">${n}</a>`).join('')}</nav><a class="ask" href="#">${v.askShort}</a><button class="menu ${menuState}" type="button">Menu</button></header>`
+      const siteCls = (v) =>
+        `site${v.name.length > 16 ? ' long' : ''}${v.name.length > 24 ? ' mid' : ''}${v.plate ? '' : ' noimg'}`
+      const lede = (
+        v,
+      ) => `<section class="lede">${v.name.length > 16 ? `<p class="mark2">${esc(v.name)}</p>` : ''}
+  <p class="h1 s${v.step}">${esc(v.h1)}<span class="end"></span></p><div class="rule"></div>
+  <div class="deck"><p class="stand">${v.stand}</p><div class="act">${well(v.ask, v.trust)}<a class="second" href="#">How it works <span>&darr;</span></a></div>
+  <ul class="terms">${v.terms.map((t) => `<li>${t}</li>`).join('')}</ul>
+  ${v.plate ? `<figure class="plate">${pic(v.plate.src)}<figcaption>${v.plate.cap}</figcaption></figure>` : ''}</div></section>`
+      const svc = (v) =>
+        `<section class="svc"><p class="h2x">${v.svc[0]}<span class="end"></span></p><div class="rule"></div><div class="svcg"><p class="mq"><b>${v.svc[1]}</b>${v.svc[2]}</p>
+  <p class="runin"><b>${v.svc[3]}</b> ${v.svc[4]} <a class="tlink" href="#">Ask about this<span class="vh">: ${v.svc[3].replace('.', '')}</span></a></p></div></section>`
+      const site = (v) => `<div class="${siteCls(v)}">${studio}${mast(v)}${lede(v)}${svc(v)}</div>`
+
+      const frame = (v, w, h, body, cls = '', extra = '') =>
+        `<figure class="shot ${cls}"><div><div class="screen" data-w="${w}"${h ? ` data-h="${h}"` : ''}${extra} style="width:${w}px;${h ? `height:${h}px;` : ''}${vars(v.hex, v.s)}${font(...v.pair)}" aria-hidden="true" inert>${body}</div></div><p class="measure">${w}${h ? ` by ${h}` : ''}</p></figure>`
+
+      // Proof 1: the lede frames
+      const variantHtml = (
+        k,
+        v,
+        extraRows,
+      ) => `<article class="variant"><h3>${k}. ${v.name.length > 30 ? 'The worst case the schema accepts' : `${esc(v.name)}, ${v.trade}`}</h3>
+  <p class="meta">${v.hex}, ${v.s === 'd' ? 'dark' : 'light'} scheme, ${v.faces}. ${v.kind}.</p>
+  <div class="frames">${frame(v, 1440, 900, site(v), 'desk', ` data-v="${k}"`)}${frame(v, 375, 667, site(v), 'phone', ` data-v="${k}"`)}</div>${extraRows}</article>`
+      $('#variants').innerHTML =
+        variantHtml(
+          'A',
+          V.A,
+          `<div class="frames2">${frame(V.A, 768, 1024, site(V.A), '', ' data-v="A"')}${frame(V.A, 1024, 768, site(V.A), '', ' data-v="A"')}</div><div class="frames" style="grid-template-columns:1fr">${frame(V.A, 1920, 1080, site(V.A), '', ' data-v="A"')}</div>`,
+        ) +
+        variantHtml('B', V.B, '') +
+        variantHtml(
+          'C',
+          V.C,
+          `<div class="frames2">${frame(V.C, 768, 1024, site(V.C), '', ' data-v="C"')}${frame(V.C, 1024, 768, site(V.C), '', ' data-v="C"')}</div><div class="frames" style="grid-template-columns:1fr">${frame(V.C, 1920, 1080, site(V.C), '', ' data-v="C"')}</div>`,
+        ) +
+        variantHtml(
+          'D',
+          V.D,
+          `<div class="frames" style="grid-template-columns:1fr">${frame(V.D, 768, 1024, site(V.D), 'w768', ' data-v="D"')}</div>`,
+        )
+      // Hidden 360 frames, measured for the fold table only
+      $('#offstage').innerHTML = ['A', 'B', 'C', 'D']
+        .map(
+          (k) =>
+            `<div class="screen" data-w="360" data-h="640" data-v="${k}" data-off style="width:360px;height:640px;${vars(V[k].hex, V[k].s)}${font(...V[k].pair)}">${site(V[k])}</div>`,
+        )
+        .join('')
+      // One lede at true size
+      $('#truesize').innerHTML =
+        `<div class="screen" data-w="1440" data-h="900" data-true style="width:1440px;height:900px;${vars(V.B.hex, V.B.s)}${font(...V.B.pair)}" aria-hidden="true" inert>${site(V.B)}</div>`
+
+      function fit() {
+        for (const s of document.querySelectorAll('.shot .screen'))
+          s.style.zoom = Math.min(1, s.parentElement.parentElement.clientWidth / +s.dataset.w)
+      }
+      function measure() {
+        const rows = []
+        for (const s of document.querySelectorAll('.screen[data-v]')) {
+          const z = s.style.zoom
+          s.style.zoom = '1'
+          const top = s.getBoundingClientRect().top
+          const y = (el, e) => Math.round(el.getBoundingClientRect()[e] - top)
+          const h1 = $('.lede .h1', s),
+            ask = $('.lede .well .ask', s),
+            trust = $('.lede .trust', s),
+            mastEl = $('.mast', s),
+            nav = $('.mast nav', s)
+          const w = +s.dataset.w,
+            fold = +s.dataset.h
+          const navShown = nav && getComputedStyle(nav).display !== 'none'
+          const navWraps =
+            navShown && [...nav.children].some((a) => a.getBoundingClientRect().height > 46)
+          const r = {
+            v: s.dataset.v,
+            w,
+            fold,
+            off: 'off' in s.dataset,
+            bar: Math.round(mastEl.getBoundingClientRect().height),
+            h1: [y(h1, 'top'), y(h1, 'bottom')],
+            ask: [y(ask, 'top'), y(ask, 'bottom')],
+            trust: y(trust, 'bottom'),
+            navWraps,
+          }
+          s.style.zoom = z
+          const out = s.closest('figure')?.querySelector('.measure')
+          if (out)
+            out.textContent = `${w} by ${fold}, measured here: bar ${r.bar} px; headline ${r.h1[0]} to ${r.h1[1]}; ask ${r.ask[0]} to ${r.ask[1]}; trust line ends ${r.trust}; fold ${fold}${navShown ? (navWraps ? '; the nav wraps' : '; the nav sits on one line') : ''}.`
+          rows.push(r)
+        }
+        window.tileMeasures = rows
+        const ph = rows.filter((r) => r.w === 375 || r.w === 360)
+        const yes = (n, f) => (n <= f ? 'in' : 'below')
+        $('#foldt').innerHTML =
+          `<thead><tr><th>Frame</th><th class="opt">Bar</th><th class="opt">Headline</th><th>Ask</th><th>Trust ends</th><th>Screen</th><th>Toolbars</th></tr></thead><tbody>` +
+          ph
+            .map(
+              (r) =>
+                `<tr><td>${r.v}, ${r.w}</td><td class="opt">${r.bar}</td><td class="opt">${r.h1[0]} to ${r.h1[1]}</td><td>${r.ask[0]}&ndash;${r.ask[1]}</td><td>${r.trust}</td><td>${yes(r.trust, r.w === 375 ? 667 : 640)}</td><td>${yes(r.trust, r.w === 375 ? 548 : 560)}</td></tr>`,
+            )
+            .join('') +
+          '</tbody>'
+      }
+
+      // Proof 2: the grade grid
+      const COLS = [
+        ['none', '#b3261e', 'l', 'As supplied'],
+        ['lead', '#b3261e', 'l', 'Lead, light, #b3261e'],
+        ['detail', '#b3261e', 'l', 'Detail, light, #b3261e'],
+        ['lead', '#0e7490', 'd', 'Lead, dark, #0e7490'],
+        ['detail', '#0e7490', 'd', 'Detail, dark, #0e7490'],
+        ['rejected', '#0e7490', 'l', 'Dropped: brand tone 18%, light, #0e7490'],
+      ]
+      const ROWS = [
+        [IMG.food, 'Food on marble', 'warm, bright, the dish at one edge of empty copy space'],
+        [IMG.gym, 'A gym', 'dark and contrasty, cool light'],
+        [IMG.clinic, 'A clinic bench', 'cold blue, almost white'],
+        [
+          IMG.shot,
+          'An uploaded screenshot',
+          'flat colour and small type, graded like a photograph',
+        ],
+      ]
+      $('#grades').innerHTML = ROWS.map(
+        ([src, t, d]) =>
+          `<p class="grow">${t} <span>${d}</span></p>` +
+          COLS.map(
+            ([g, h, s, l]) =>
+              `<figure class="gcell" style="${vars(h, s)}">${pic(src, g, '4 / 3')}<figcaption>${l}</figcaption></figure>`,
+          ).join(''),
+      ).join('')
+
+      // Proof 3: the four preview pairs, with the whole kit
+      const P = [
+        ['Warm', 'Fraunces', 'Instrument Sans', 'l', 'A soft printed bill, nearest the example.'],
+        ['Minimal', 'Manrope', 'Inter', 'l', 'A Swiss broadsheet.'],
+        ['Bold', 'Bricolage Grotesque', 'DM Sans', 'l', 'A poster.'],
+        ['Dark', 'Sora', 'Inter', 'd', 'A night edition; the dark style forces dark.'],
+      ]
+      const kit = () => `<div class="site">${mast(V.A)}
+  <section class="lede"><p class="h1 s2">${V.A.h1}<span class="end"></span></p><div class="rule"></div><div class="deck"><p class="stand">${V.A.stand}</p><div class="act">${well(V.A.ask, V.A.trust)}<a class="second" href="#">How it works <span>&darr;</span></a></div></div></section>
+  <section class="band"><p class="h2x">What we sweep, and what we fit<span class="end"></span></p><div class="rule"></div>
+  <p class="mq"><b>What do you actually do?</b> Sweeping, smoke tests, bird nest removal and stove fitting, for open fires and wood burners across the valley.</p>
+  <div class="runs"><p class="runin"><b>Sweeping.</b> Every flue is swept from the room below, with the fireplace sheeted and a vacuum running at the hearth. <a class="tlink" href="#">Ask about this</a></p><p class="runin"><b>Stove fitting.</b> We survey the room and the flue first, then fit the stove and line the chimney where it needs it. <a class="tlink" href="#">Ask about this</a></p></div></section>
+  <section class="band"><p class="process">You pick a morning,<sup>1</sup> we sheet the room and sweep,<sup>2</sup> and you get a written report before we leave.<sup>3</sup></p>
+  <ol class="notes3"><li><span class="fn">1</span>Weekday mornings; we confirm the time the day before.</li><li><span class="fn">2</span>Dust sheets down first, and the room hoovered after.</li><li><span class="fn">3</span>What we found, what we did and when to call us again.</li></ol></section>
+  <section class="band"><dl class="parts2"><div><dt>What we do</dt><dd>Sweeping, smoke tests and stove fitting</dd></div><div><dt>Where</dt><dd>Hebden Bridge, Todmorden and the Calder Valley</dd></div><div><dt>How to start</dt><dd>Book a morning here, or ring</dd></div></dl></section></div>`
+      function pairs() {
+        $('#pairs').innerHTML = P.map(
+          ([n, d, b, s, c]) =>
+            `<figure class="shot" style="margin:0"><div><div class="screen thumbset" data-w="800" style="width:800px;${vars(state.hex, s === 'd' ? 'd' : state.s)}${font(d, b)}" aria-hidden="true" inert>${kit()}</div></div>
+  <figcaption><b>${n}: ${d} 600 with ${b} 400, 500 and 600.</b><span>${c} <span data-askw="${b}"></span></span></figcaption></figure>`,
+        ).join('')
+        fit()
+      }
+      function askWidths() {
+        const ctx = document.createElement('canvas').getContext('2d')
+        const L = [
+          'Book a sweep',
+          'Order a cake',
+          'Book a call',
+          'Request a call',
+          'Book a consultation',
+        ]
+        const line = (f) => {
+          ctx.font = `600 16px '${f}'`
+          return L.map((t) => `'${t}' ${Math.round(ctx.measureText(t).width)} px`).join(', ')
+        }
+        for (const el of document.querySelectorAll('[data-askw]'))
+          el.textContent = `Masthead labels at 16 px, 600: ${line(el.dataset.askw)} (cap 7.5rem, 120 px).`
+        $('#askw').textContent = ['Public Sans', 'Instrument Sans', 'Inter', 'DM Sans']
+          .map((f) => `${f}: ${line(f)}.`)
+          .join(' ')
+        window.tileAskWidths = Object.fromEntries(
+          ['Public Sans', 'Instrument Sans', 'Inter', 'DM Sans'].map((f) => [f, line(f)]),
+        )
+      }
+
+      // Proof 4: palette panels, ratios from palette.mjs and placard-mix.mjs
+      const R = {
+        l: {
+          'on-surface:surface': 17.39,
+          'on-surface-muted:surface': 7.16,
+          'on-surface:surface-muted': 15.83,
+          'on-surface-muted:surface-muted': 6.51,
+          'brand-deeper:surface': 6.28,
+          'on-brand:brand-deeper': 6.56,
+          'on-brand:brand-deepest': 8.49,
+          ui: [6.28, 5.72, '3.18 (worst 3.13)', 17.39, 6.51, 1.3, '5.49 (worst 5.45)'],
+        },
+        d: {
+          'on-surface:surface': 17.22,
+          'on-surface-muted:surface': 7.82,
+          'on-surface:surface-muted': 15.69,
+          'on-surface-muted:surface-muted': 7.13,
+          'brand-deeper:surface': 6.71,
+          'on-brand:brand-deeper': 6.8,
+          'on-brand:brand-deepest': 8.68,
+          ui: [6.71, 6.11, '3.05 (worst 3.04)', 17.22, 7.13, 1.42, '5.49 (worst 5.44)'],
+        },
+      }
+      const ROLE = {
+        surface: 'The sheet, about 85%',
+        'surface-muted': 'The slot floor and the reply slip, about 2.5%',
+        'on-surface': 'All type, the 2 px heavy rules, the focus ring, error edges, about 9%',
+        'on-surface-muted': 'Notes, captions, terms, field edges, the Menu outline, about 2%',
+        border: 'Hairlines and column rules (decorative), and the limit of the paper texture',
+        'brand-deeper': 'The ask fill and the end mark of a band with an ask, under 1%',
+        'brand-deepest': "The ask's hover and pressed fill",
+        'on-brand': 'The ask label',
+        scrim:
+          "Mixed into the slot's shaded walls and the shadow on the ask's top edge; never a text ground",
+        'on-scrim': "Mixed into the slot's lit lip; never text",
+      }
+      const USE = {
+        'on-surface:surface': 'Body and headlines',
+        'on-surface-muted:surface': 'Notes and terms',
+        'on-surface:surface-muted': 'The slip, the trust line',
+        'on-surface-muted:surface-muted': 'Optional-field words',
+        'brand-deeper:surface': 'Unpainted as text; kept solved',
+        'on-brand:brand-deeper': 'The ask',
+        'on-brand:brand-deepest': 'The ask, hovered',
+      }
+      function palette() {
+        $('#pal').innerHTML = ['l', 'd']
+          .map((s) => {
+            const t = tok('#b3261e', s),
+              r = R[s]
+            const bar = [
+              ['surface', 85],
+              ['on-surface', 9],
+              ['surface-muted', 2.5],
+              ['on-surface-muted', 2],
+              ['border', 1],
+              ['brand-deeper', 0.5],
+            ]
+              .map(([k, p]) => `<i style="flex:${p};background:var(--${k})"></i>`)
+              .join('')
+            return `<div class="panel" style="${vars('#b3261e', s)}"><h3>${s === 'l' ? 'Light, the default' : 'Dark, the night edition'}</h3>
+      <p class="cap">Painted in proportion: surface, on-surface, surface-muted, on-surface-muted, border, brand-deeper.</p><div class="bar" aria-hidden="true">${bar}</div>
+      <ul class="toks">${KEYS.map((k) => `<li class="${ROLE[k] ? '' : 'off'}"><i style="background:${t[k]}"></i><b>${k}</b><code>${t[k]}</code><small>${ROLE[k] || 'Not painted'}</small></li>`).join('')}</ul>
+      <h4>The seven declared text pairs, each set in its own colours</h4><div class="samples">${Object.keys(
+        USE,
+      )
+        .map((p) => {
+          const [f, b] = p.split(':')
+          return `<p class="sample" style="background:var(--${b});color:var(--${f})"><strong>${USE[p]}</strong><span>${f} on ${b}: ${r[p].toFixed(2)}:1</span></p>`
+        })
+        .join('')}</div>
+      <h4>Non-text parts, 3:1 needed where they identify a control</h4><ul class="ui">
+      <li><i style="background:var(--brand-deeper)"></i><span>Ask fill against the paper: ${r.ui[0].toFixed(2)}:1</span></li>
+      <li><i style="background:var(--surface-muted);box-shadow:inset 0 0 0 9px var(--surface-muted),inset 0 0 0 40px var(--brand-deeper)"></i><span>Ask fill against the slot floor: ${r.ui[1].toFixed(2)}:1</span></li>
+      <li><i style="background:var(--surface-muted);box-shadow:inset 3px 3px 0 var(--wall),inset -2px -2px 0 var(--lip)"></i><span>The slot's carrying edge against the paper (${s === 'l' ? 'shaded walls, 42% scrim' : 'lit lip, 34% on-scrim'}): ${r.ui[2]}:1</span></li>
+      <li><i style="outline:2px solid var(--on-surface);outline-offset:-8px"></i><span>Focus ring, on-surface: ${r.ui[3].toFixed(2)}:1</span></li>
+      <li><i style="background:var(--surface-muted);box-shadow:inset 0 0 0 8px var(--surface-muted),inset 0 0 0 9px var(--on-surface-muted),inset 0 0 0 40px var(--surface)"></i><span>Field edge on the slip: ${r.ui[4].toFixed(2)}:1</span></li>
+      <li><i style="border-top:1px solid var(--border)"></i><span>Border on the paper: ${r.ui[5].toFixed(2)}:1, so hairlines only, never a control's edge</span></li>
+      <li><i style="background:var(--border)"></i><span>The paper texture never passes border, so text it reaches unmasked stays at ${r.ui[6]}:1 (on-surface-muted on border)</span></li></ul></div>`
+          })
+          .join('')
+      }
+
+      // Proof 5: every control in every state, and the phone menu open
+      const B = [
+        [
+          'Primary',
+          'The ask in its slot, with its undertaking',
+          (c) =>
+            `<span class="well"><a class="ask ${c}" href="#buttons" tabindex="-1">Book a sweep <span aria-hidden="true">&rarr;</span></a></span>`,
+        ],
+        [
+          'Primary, grey brand',
+          '#57534e, dark: the slot and the label weight carry it',
+          (c) =>
+            `<span class="tokset" style="display:inline-block;padding:0.5rem;${vars('#57534e', 'd')};background:var(--surface)"><span class="well"><a class="ask ${c}" href="#buttons" tabindex="-1">Book a call <span aria-hidden="true">&rarr;</span></a></span></span>`,
+        ],
+        [
+          'Masthead ask',
+          'The bar at every width',
+          (c) => `<a class="ask ${c}" href="#buttons" tabindex="-1">Book a sweep</a>`,
+        ],
+        [
+          'Secondary',
+          'A ruled link in ink, never filled',
+          (c) =>
+            `<a class="second ${c}" href="#buttons" tabindex="-1">How it works <span aria-hidden="true">&darr;</span></a>`,
+        ],
+        [
+          'Text link',
+          'Always underlined, in ink',
+          (c) => `<a class="tlink ${c}" href="#buttons" tabindex="-1">Ask about this</a>`,
+        ],
+        [
+          'Menu',
+          'Phone bar only; pressed is also its open state',
+          (c) => `<button class="menu ${c}" type="button" tabindex="-1">Menu</button>`,
+        ],
+      ]
+      $('#board').innerHTML = B.map(
+        ([n, d, f], i) =>
+          `<div class="brow${i < 2 ? ' wide' : ''}"><p>${n}<span>${d}</span></p>${[
+            ['', 'Default'],
+            ['is-hover', 'Hover'],
+            ['is-focus', 'Focus-visible'],
+            ['is-press', 'Pressed'],
+          ]
+            .map(([c, l]) => `<div class="cell"><small>${l}</small>${f(c)}</div>`)
+            .join('')}</div>`,
+      ).join('')
+      const menuSheet = (v) =>
+        `<div class="site sheet">${studio}<header class="mast"><span class="mark">${esc(v.name)}</span><button class="menu" type="button" aria-expanded="true">Close</button></header>
+  <nav class="contents"><ol><li><a href="#" class="is-focus">Services</a></li><li><a href="#">How it works</a></li><li><a href="#">Questions</a></li><li><a href="#">Get in touch</a></li></ol>${well(v.ask, v.trust)}</nav></div>`
+      $('#menuproof').innerHTML =
+        frame(V.A, 375, 667, menuSheet(V.A), 'phone') +
+        `<div><h3 class="sub">The phone menu, open</h3><p class="cap">A 100dvh paper dialog set as a contents page: links in the display face on hairlines, 56 px rows, then the ask in its slot. Focus moves to the first link (ringed here) and returns to Menu on Escape or Close; the page behind is inert and Lenis stops. Menu shows its pressed state while open.</p></div>`
+
+      // Proof 6: the reply slip in its states
+      const TOPICS = ['Sweeping', 'Stove fitting', 'Bird nest removal', 'Something else']
+      const slip = (v, st) => {
+        const f = (id, label, input, cls = '') =>
+          `<div class="f ${cls}"><label>${label}</label>${input}</div>`
+        const head = `<div class="sl"><p class="h2x" style="--lh:1.06">Book a morning, or ask us anything<span class="end"></span></p><div class="rule"></div><p class="stand">${v === V.C ? 'Tell us what you need and we will reply by email to arrange a first conversation.' : 'Tell us which room and which flue, and we will reply by email with a morning and a price.'}</p></div>`
+        if (st === 'sent')
+          return `<section class="slipband">${`<div class="sgrid">${head}<div class="sent" role="status"><p class="lead1">This is a preview, so nothing was sent.</p><p>On ${esc(v.name)}'s live site, this enquiry would arrive in their inbox, and their reply would go to the address you gave.</p><p class="small">To have a site like this made for real, use Book a call at the top of this page.</p></div></div>`}</section>`
+        const busy = st === 'busy'
+        return `<section class="slipband"><div class="sgrid">${head}<form class="slip${busy ? ' busy' : ''}"${busy ? ' aria-busy="true"' : ''}>
+  ${f('n', 'Your name <span>(required)</span>', `<input autocomplete="name" value="${st === 'default' ? '' : 'Aoife Byrne'}">`)}
+  ${f('e', 'Email <span>(required)</span>', `<input type="email" autocomplete="email" class="${st === 'default' ? 'is-focus' : ''}" value="${st === 'error' ? 'aoife.byrne' : st === 'busy' ? 'aoife@example.org' : ''}"${st === 'error' ? ' aria-invalid="true"' : ''}>${st === 'error' ? '<p class="msg">Enter an email address with an @, so we can reply.</p>' : ''}`, st === 'error' ? 'err' : '')}
+  ${f('t', 'What is it about?', `<select>${(v === V.C ? ['Wills', 'Probate', 'Lasting powers of attorney', 'Something else'] : TOPICS).map((t, i) => `<option${i === 1 ? ' selected' : ''}>${t}</option>`).join('')}</select>`)}
+  ${f('m', 'Message <span>(optional)</span>', `<textarea>${st === 'busy' ? 'The front room flue, before the winter.' : ''}</textarea>`)}
+  <div class="send">${well(busy ? 'Sending your enquiry' : v.ask, '', '', !busy)}<p>${busy ? 'Please wait; your words stay here if it fails.' : 'We reply by email. Nothing you type goes into the page address.'}</p></div></form></div></section>`
+      }
+      $('#slips').innerHTML =
+        `<div class="frames">${frame(V.A, 1440, null, `<div class="site">${slip(V.A, 'default')}</div>`, 'desk')}${frame({ ...V.A, s: 'l' }, 375, null, `<div class="site">${slip(V.A, 'busy')}</div>`, 'phone')}</div>
+  <p class="measure">Left: 1440, light, default with the email field focused. Right: 375, light, submitting.</p>
+  <div class="frames">${frame({ ...V.A, s: 'd' }, 1440, null, `<div class="site">${slip(V.A, 'error')}</div>`, 'desk')}${frame(V.C, 375, null, `<div class="site">${slip(V.C, 'sent')}</div>`, 'phone')}</div>
+  <p class="measure">Left: 1440, dark, an email error. Right: 375, dark (Quillet &amp; Rowe), the decision-5 preview note after send.</p>`
+
+      // Proof 8: the order
+      const O = [
+        [
+          'Masthead',
+          'Orient, and keep the ask one tap away at every width, the phone bar included.',
+          'ask',
+        ],
+        [
+          'The lede',
+          'State the value and make the first ask, with its risk-reversal line in the slot.',
+          'ask',
+        ],
+        [
+          'Services',
+          "Show what the business does in one scan. Each run-in ends in 'Ask about this'.",
+          'ask',
+        ],
+        ['Statement', "The business's own voice, unquoted and signed."],
+        ['Process', "One sentence removes 'what happens next', then the second ask.", 'ask'],
+        ['Particulars', 'Practical answers as a short run-in spec, the ask at its foot.', 'ask'],
+        ['Record', 'Proof by figures, as one sentence.', 'ex'],
+        ['Reviews', 'Third-party proof before the objections; the only quotation marks.', 'ex'],
+        ['Questions', 'Cost, timing and how to start, answered before the final ask.'],
+        ['The reply slip', 'Convert. Last, so every ask moves down to it.', 'target'],
+        ['Colophon', 'The essentials under a heavy rule; every link 44 px.'],
+      ]
+      $('#orderlist').innerHTML = O.map(
+        ([n, j, t], i) =>
+          `<li><span class="n">${String(i + 1).padStart(2, '0')}</span><div><h3>${n}${t === 'ask' ? '<span class="tag">end mark, ask</span>' : t === 'target' ? '<span class="tag">every ask lands here</span>' : t === 'ex' ? '<span class="tag ex">example only</span>' : ''}</h3></div><p>${j}</p></li>`,
+      ).join('')
+
+      // Controls: a rebrand is a token swap
+      const ctr = $('.controls')
+      for (const h of ['#b3261e', '#0e7490', '#57534e', '#f5c400'])
+        ctr.insertAdjacentHTML(
+          'beforeend',
+          `<button class="btn" data-hex="${h}" aria-pressed="${h === state.hex}"><i style="background:${h}"></i>${h}</button>`,
+        )
+      function apply() {
+        document.documentElement.setAttribute('style', vars(state.hex, state.s))
+        for (const b of ctr.querySelectorAll('button'))
+          b.setAttribute(
+            'aria-pressed',
+            b.dataset.hex ? b.dataset.hex === state.hex : b.dataset.scheme === state.s,
+          )
+        pairs()
+        askWidths()
+        press.retint()
+      }
+      ctr.addEventListener('click', (e) => {
+        const b = e.target.closest('button')
+        if (!b) return
+        if (b.dataset.hex) state.hex = b.dataset.hex
+        else state.s = b.dataset.scheme
+        apply()
+      })
+      const lm = $('#livemenu')
+      lm.addEventListener('click', () =>
+        lm.setAttribute('aria-expanded', String(lm.getAttribute('aria-expanded') !== 'true')),
+      )
+
+      // Bands draw as they enter; nothing is hidden until the root is armed
+      const motionOK = matchMedia('(prefers-reduced-motion: no-preference)')
+      if (motionOK.matches) document.documentElement.classList.add('armed')
+      const io = new IntersectionObserver(
+        (es) => {
+          for (const e of es)
+            if (e.isIntersecting) {
+              e.target.dataset.shown = ''
+              io.unobserve(e.target)
+            }
+        },
+        { threshold: 0 },
+      )
+      document.querySelectorAll('[data-band]').forEach((el) => io.observe(el))
+
+      // Proof 7: the pressing. Raw WebGL1, colours from the tokens, draws only while the light moves.
+      const press = (() => {
+        const stage = $('#live'),
+          status = $('#glstate'),
+          askEl = $('[data-well] .ask', stage),
+          wellEl = $('[data-well]', stage)
+        const wide = matchMedia('(min-width: 48rem)')
+        let canvas = $('canvas', stage)
+        const say = (t) => {
+          status.textContent = t
+        }
+        // The canvas draws only the paper: grain lit toward border and never past it, with every
+        // text rect held between surface and surface-muted. The slot stays CSS at every DPR; the
+        // same light, computed in draw(), turns its four walls through --wt, --wl, --wb and --wr.
+        const FS = `precision mediump float;
+uniform vec2 uRes; uniform vec3 uLight; uniform float uI, uSgn, uLaid;
+uniform vec3 uSurf, uMuted, uBorder;
+uniform vec4 uText[16]; uniform int uN;
+float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+float noise(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(hash(i),hash(i+vec2(1.,0.)),f.x),mix(hash(i+vec2(0.,1.)),hash(i+vec2(1.,1.)),f.x),f.y);}
+float box(vec2 p,vec4 r,float k){vec2 q=abs(p-(r.xy+r.zw*.5))-r.zw*.5+k;return length(max(q,0.))+min(max(q.x,q.y),0.)-k;}
+float tex(vec2 p){
+  float laid=.5+.5*cos(6.2832*p.y/4.);
+  float chain=exp(-pow(mod(p.x,96.)-48.,2.)/4.);
+  return laid*.11*uLaid+chain*.45+noise(p/2.5)*.3+noise(vec2(p.x/16.,p.y/2.))*.25;}
+void main(){
+  vec2 p=vec2(gl_FragCoord.x,uRes.y-gl_FragCoord.y);
+  vec3 Lv=uLight-vec3(p,0.); float d=length(Lv); vec3 L=Lv/d;
+  float fall=uI/(1.+pow(d/(.28*uRes.x+150.),2.));
+  float a=tex(p);
+  vec3 nT=normalize(vec3(a-tex(p+vec2(1.,0.)),a-tex(p+vec2(0.,1.)),1.));
+  float tT=(max(dot(nT,L),0.)-L.z)*fall*4.5;
+  float m=0.;
+  for(int i=0;i<16;i++){if(i>=uN)break;m=max(m,smoothstep(24.,0.,box(p,uText[i]+vec4(-12.,-12.,24.,24.),0.)));}
+  gl_FragColor=vec4(mix(uSurf,mix(uBorder,uMuted,m),clamp(tT*uSgn,0.,1.)),1.);}`
+        const hex = (v) => {
+          const m = /^#([0-9a-f]{6})$/i.exec(v.trim())
+          return m && [0, 2, 4].map((i) => parseInt(m[1].slice(i, i + 2), 16) / 255)
+        }
+        const lum = (c) => c[0] * 0.2126 + c[1] * 0.7152 + c[2] * 0.0722
+        const rect = (el) => {
+          const a = el.getBoundingClientRect(),
+            s = stage.getBoundingClientRect()
+          return [a.left - s.left, a.top - s.top, a.width, a.height]
+        }
+        let gl = null,
+          prog = null,
+          buf = null,
+          U = null,
+          ok = false,
+          W = 0,
+          H = 0,
+          well = [0, 0, 0, 0]
+        let elapsed = 0,
+          last = 0,
+          t01 = 0,
+          running = false,
+          hot = 0,
+          hotTo = 0,
+          visible = false,
+          ratio = 0,
+          raf = 0,
+          frames = 0,
+          played = false,
+          armed = false
+        function fresh() {
+          // A released or lost context cannot be reused, so the canvas remounts.
+          const c = document.createElement('canvas')
+          c.setAttribute('aria-hidden', 'true')
+          canvas.replaceWith(c)
+          canvas = c
+          canvas.addEventListener('webglcontextlost', (e) => {
+            e.preventDefault()
+            // A deliberate release already remounted the canvas; only a live one reports a loss.
+            if (c !== canvas) return
+            ok = false
+            gl = null
+            running = false
+            stage.dataset.gl = 'lost'
+            unwall()
+            say('Context lost: the static slot stands.')
+            fresh()
+          })
+        }
+        fresh()
+        // The context is created on the first run only, so reduced motion and phones never get one.
+        function init() {
+          gl = canvas.getContext('webgl', { antialias: false })
+          if (!gl) {
+            say('No WebGL here: the static slot stands.')
+            return false
+          }
+          gl.getExtension('KHR_parallel_shader_compile')
+          const sh = (type, src) => {
+            const x = gl.createShader(type)
+            gl.shaderSource(x, src)
+            gl.compileShader(x)
+            return x
+          }
+          prog = gl.createProgram()
+          gl.attachShader(
+            prog,
+            sh(gl.VERTEX_SHADER, 'attribute vec2 a;void main(){gl_Position=vec4(a,0.,1.);}'),
+          )
+          gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, FS))
+          gl.linkProgram(prog)
+          if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) {
+            gl = null
+            say('The shader did not compile: the static slot stands.')
+            return false
+          }
+          gl.useProgram(prog)
+          buf = gl.createBuffer()
+          gl.bindBuffer(gl.ARRAY_BUFFER, buf)
+          gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW)
+          gl.enableVertexAttribArray(0)
+          gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0)
+          const cache = {}
+          U = (n) => cache[n] ?? (cache[n] = gl.getUniformLocation(prog, n))
+          layout()
+          retint()
+          return ok
+        }
+        function layout() {
+          if (!gl) return
+          W = Math.round(stage.clientWidth)
+          H = Math.round(stage.clientHeight)
+          canvas.width = W
+          canvas.height = H
+          gl.viewport(0, 0, W, H)
+          gl.uniform2f(U('uRes'), W, H)
+          // Every text box the canvas sits under, re-measured on every layout.
+          const texts = [...stage.querySelectorAll('[data-text]')]
+          if (texts.length > 16) {
+            ok = false
+            stage.dataset.gl = 'off'
+            say('More than 16 text boxes: the static slot stands.')
+            return
+          }
+          const arr = new Float32Array(64)
+          texts.forEach((el, i) => arr.set(rect(el), i * 4))
+          gl.uniform4fv(U('uText'), arr)
+          gl.uniform1i(U('uN'), texts.length)
+          well = rect(wellEl)
+        }
+        function retint() {
+          if (!gl) return
+          const cs = getComputedStyle(stage),
+            c = ['--surface', '--surface-muted', '--border'].map((k) => hex(cs.getPropertyValue(k)))
+          ok = c.every(Boolean)
+          if (!ok) {
+            stage.dataset.gl = 'off'
+            say('A token did not parse: the static slot stands.')
+            return
+          }
+          ;['uSurf', 'uMuted', 'uBorder'].forEach((n, i) => gl.uniform3fv(U(n), c[i]))
+          const light = lum(c[2]) < lum(c[0])
+          gl.uniform1f(U('uSgn'), light ? -1 : 1)
+          // Laid lines only on light paper, at half the first strength; on dark they read as scanlines.
+          gl.uniform1f(U('uLaid'), light ? 1 : 0)
+          draw()
+        }
+        const ease = (x) => 1 - Math.pow(1 - x, 3)
+        function draw() {
+          if (!gl || !ok) return
+          const e = ease(t01),
+            [wx, wy] = well
+          const p0 = [-0.1 * W, -0.25 * H],
+            p1 = [1.1 * W, 0.05 * H],
+            p2 = [wx - 44, wy - 52]
+          const q = (a, b, c) => (1 - e) * (1 - e) * a + 2 * (1 - e) * e * b + e * e * c
+          const lx = q(p0[0], p1[0], p2[0]),
+            ly = q(p0[1], p1[1], p2[1]),
+            lz = 0.5 * W + (110 - 0.5 * W) * e
+          gl.uniform3f(U('uLight'), lx, ly, lz)
+          const on = Math.min(1, t01 / 0.2),
+            I = on * (1 + 0.6 * hot),
+            deep = Math.max(0, (t01 - 0.55) / 0.45)
+          gl.uniform1f(U('uI'), I)
+          gl.drawArrays(gl.TRIANGLES, 0, 3)
+          frames++
+          walls(lx, ly, lz, I, deep)
+          // The canvas starts as the flat sheet and the walls at 0%, so showing it never flashes.
+          stage.dataset.gl = 'on'
+        }
+        // The same light turns the slot's four CSS walls: each wall's Lambert term against the flat
+        // sheet's, through the shader's falloff, mixed toward on-scrim (lit) or scrim (shaded).
+        const WALLS = [
+          ['--wt', 0, 0.7071, (x, y, w, h) => [x + w / 2, y + 1.5]],
+          ['--wl', 0.7071, 0, (x, y, w, h) => [x + 1.5, y + h / 2]],
+          ['--wb', 0, -0.7071, (x, y, w, h) => [x + w / 2, y + h - 1]],
+          ['--wr', -0.7071, 0, (x, y, w, h) => [x + w - 1, y + h / 2]],
+        ]
+        function walls(lx, ly, lz, I, deep) {
+          for (const [k, nx, ny, at] of WALLS) {
+            const [px, py] = at(...well),
+              dx = lx - px,
+              dy = ly - py,
+              d = Math.hypot(dx, dy, lz)
+            const fall = I / (1 + (d / (0.28 * W + 150)) ** 2)
+            const s = ((nx * dx + ny * dy + 0.7071 * lz) / d - (0.7071 * lz) / d) * fall
+            const v = Math.max(-0.55, Math.min(0.55, s * (0.9 + 0.6 * deep)))
+            const base = k === '--wt' || k === '--wl' ? 'var(--wall)' : 'var(--lip)'
+            wellEl.style.setProperty(
+              k,
+              `color-mix(in srgb, ${base}, var(${v > 0 ? '--on-scrim' : '--scrim'}) ${Math.round(Math.abs(v) * 1000) / 10}%)`,
+            )
+          }
+        }
+        const unwall = () => WALLS.forEach(([k]) => wellEl.style.removeProperty(k))
+        function loop(now) {
+          raf = 0
+          if (!visible || document.hidden || !gl) return
+          const dt = Math.min(50, now - (last || now))
+          last = now
+          if (running) {
+            elapsed += dt
+            t01 = Math.min(1, elapsed / 1400)
+            if (t01 >= 1) running = false
+          }
+          hot = hotTo > hot ? Math.min(hotTo, hot + dt / 140) : Math.max(hotTo, hot - dt / 140)
+          draw()
+          if (running || hot !== hotTo) raf = requestAnimationFrame(loop)
+          else {
+            last = 0
+            say(`At rest above the ask. ${frames} frames drawn, none since.`)
+          }
+        }
+        const kick = () => {
+          if (!raf && visible && ok && gl) raf = requestAnimationFrame(loop)
+        }
+        function release(why) {
+          if (!gl) return
+          cancelAnimationFrame(raf)
+          raf = 0
+          gl.deleteBuffer(buf)
+          gl.deleteProgram(prog)
+          gl.getExtension('WEBGL_lose_context')?.loseContext()
+          gl = null
+          ok = false
+          stage.dataset.gl = 'off'
+          unwall()
+          fresh()
+          say(why)
+        }
+        function start() {
+          if (!motionOK.matches) {
+            stage.dataset.gl = 'off'
+            say('Reduced motion: the static slot is shown and no WebGL context is created.')
+            return
+          }
+          if (!wide.matches) {
+            stage.dataset.gl = 'off'
+            say('Below 48rem the slot stays static: no context on phones.')
+            return
+          }
+          if (!gl && !init()) return
+          played = true
+          elapsed = 0
+          t01 = 0
+          running = true
+          frames = 0
+          say('The light is raking across the sheet.')
+          kick()
+        }
+        const maybe = () => {
+          if (armed && !played && ratio >= 0.6) start()
+        }
+        const arm = () => {
+          if (armed) return
+          armed = true
+          maybe()
+        }
+        for (const ev of ['pointermove', 'wheel', 'keydown', 'touchstart', 'scroll'])
+          addEventListener(ev, arm, { once: true, passive: true })
+        new IntersectionObserver(
+          ([e]) => {
+            visible = e.isIntersecting
+            ratio = e.intersectionRatio
+            if (visible) {
+              maybe()
+              kick()
+            } else if (played && !running)
+              release('Released after the moment: the context is gone and the static slot shows.')
+          },
+          { threshold: [0, 0.6] },
+        ).observe(stage)
+        document.addEventListener('visibilitychange', kick)
+        new ResizeObserver(() => {
+          clearTimeout(layout.t)
+          layout.t = setTimeout(() => {
+            layout()
+            draw()
+          }, 150)
+        }).observe(stage)
+        for (const [ev, v] of [
+          ['pointerenter', 1],
+          ['focus', 1],
+          ['pointerleave', 0],
+          ['blur', 0],
+        ])
+          askEl.addEventListener(ev, () => {
+            if (played && !running && gl) {
+              hotTo = v
+              kick()
+            }
+          })
+        motionOK.addEventListener('change', () => {
+          if (!motionOK.matches) release('Reduced motion: the static slot is shown.')
+        })
+        $('#replay').addEventListener('click', () => {
+          played = false
+          armed = true
+          start()
+        })
+        addEventListener('pagehide', () => release('Released on page hide.'))
+        return { retint }
+      })()
+
+      palette()
+      apply()
+      // Every face is loaded by name, and every picture decoded, before anything is measured.
+      const FACES = ['Besley', 'Fraunces', 'Manrope', 'Bricolage Grotesque', 'Sora']
+        .map((f) => `600 16px '${f}'`)
+        .concat(
+          ['Public Sans', 'Instrument Sans', 'Inter', 'DM Sans'].flatMap((f) => [
+            `400 16px '${f}'`,
+            `500 16px '${f}'`,
+            `600 16px '${f}'`,
+          ]),
+        )
+      fit()
+      window.tileReady = Promise.all([
+        ...FACES.map((f) => document.fonts.load(f)),
+        ...[...document.images].map((i) => i.decode().catch(() => {})),
+      ]).then(() => {
+        fit()
+        measure()
+        askWidths()
+      })
+      document.fonts.addEventListener('loadingdone', () => {
+        measure()
+        askWidths()
+      })
+      addEventListener('resize', () => {
+        fit()
+        measure()
+      })
+    </script>
+  </body>
+</html>

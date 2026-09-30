@@ -16,21 +16,35 @@ import { summitContract } from './t07-summit/contract'
 import { meta as t07 } from './t07-summit/meta'
 import { vectorContract } from './t08-vector/contract'
 import { meta as t08 } from './t08-vector/meta'
+import { inegroContract } from './t09-inegro/contract'
+import { meta as t09 } from './t09-inegro/meta'
 
-// Single source of truth for the eight templates (ADR 0038), and the one file under templates/
-// that lib may import. Metadata and contracts only: components live in templates/render.tsx for
-// the preview pages, so the pipeline never bundles a section.
-// Compile-time: exactly eight entries (TemplateTuple is an eight-element tuple).
-export const TEMPLATES = [t01, t02, t03, t04, t05, t06, t07, t08] as const satisfies TemplateTuple
+// Single source of truth for the nine templates (ADR 0041, amending ADR 0038's eight), and the
+// one file under templates/ that lib may import. Metadata and contracts only: components live in
+// templates/render.tsx for the preview pages, so the pipeline never bundles a section.
+// Compile-time: exactly nine entries (TemplateTuple is a nine-element tuple).
+export const TEMPLATES = [
+  t01,
+  t02,
+  t03,
+  t04,
+  t05,
+  t06,
+  t07,
+  t08,
+  t09,
+] as const satisfies TemplateTuple
 
 // The templates the selector may choose from. While fewer than the configured concept count are
-// ready, a submission builds fewer concepts (lib/select). Every template is ready today, so the
-// parameter is widened to TemplateMeta: `ready: false` must still take one out of rotation.
+// ready, a submission builds fewer concepts (lib/select). Inegro (t09) is not ready: it stays out
+// of rotation, so a returning email still meets the eight of ADR 0038's implicit two-visit cap
+// until an explicit cap lands (ADR 0041). The parameter is widened to TemplateMeta so
+// `ready: false` takes a template out of rotation.
 export const READY_TEMPLATES: readonly TemplateMeta[] = TEMPLATES.filter(
   (t: TemplateMeta) => t.ready,
 )
 
-// One contract per ready template.
+// One contract per template; every ready template must have one.
 const CONTRACTS: ReadonlyMap<string, TemplateContract> = new Map([
   [auroraContract.meta.id, auroraContract],
   [monolithContract.meta.id, monolithContract],
@@ -40,6 +54,7 @@ const CONTRACTS: ReadonlyMap<string, TemplateContract> = new Map([
   [harborContract.meta.id, harborContract],
   [summitContract.meta.id, summitContract],
   [vectorContract.meta.id, vectorContract],
+  [inegroContract.meta.id, inegroContract],
 ])
 
 // Checked at module load: fail fast.

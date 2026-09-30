@@ -1,0 +1,2811 @@
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Intaglio style tile</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400;500&family=Fraunces:opsz,wght@9..144,500&family=Instrument+Sans:wght@400;500&family=Manrope:wght@500&family=Inter:wght@400;500&family=Bricolage+Grotesque:opsz,wght@12..96,500&family=DM+Sans:opsz,wght@9..40,400;9..40,500&family=Sora:wght@500&display=swap"
+    />
+    <!-- prettier-ignore -->
+    <style>
+      /* Throwaway style tile for Phase 2. Every colour is a token derived by lib/tokens/derive.ts from one brand hex
+         (values from the palette tool, pasted into DATA below); a rebrand is a token swap. */
+      :root { --surface: #fbf9fd; --surface-muted: #f2eef6; --on-surface: #17151a; --on-surface-muted: #56545a; --border: #dfdce4; --accent: #ede9f1; --brand: #634386; --brand-deeper: #4a2a6a; --brand-deepest: #3a1958; --on-brand: #ffffff; --glow: #cfaafc; --glow-secondary: #00c09f; --scrim: #060509; --on-scrim: #ffffff; --display: 'Newsreader', Georgia, serif; --body: 'IBM Plex Sans', system-ui, sans-serif; --figure: 'IBM Plex Mono', ui-monospace, monospace; --vw: 1vw; --gutter: clamp(1rem, 0.25rem + 3vw, 6rem); --quick: 0.24s; --settle: 0.9s; --soft: 1.4s; --spring: cubic-bezier(0.16, 0.52, 0.08, 1); }
+      @supports (transition-timing-function: linear(0, 1)) {
+        :root { --spring: linear( 0, 0.079, 0.236, 0.403, 0.551, 0.671, 0.764, 0.833, 0.883, 0.919, 0.944, 0.962, 0.974, 0.983, 0.988, 0.992, 0.995, 0.997, 0.998, 0.999, 1 ); }
+      }
+      [data-faces='warm'] { --display: 'Fraunces', serif; --body: 'Instrument Sans', sans-serif; }
+      [data-faces='minimal'] { --display: 'Manrope', sans-serif; --body: 'Inter', sans-serif; }
+      [data-faces='bold'] { --display: 'Bricolage Grotesque', sans-serif; --body: 'DM Sans', sans-serif; }
+      [data-faces='dark'] { --display: 'Sora', sans-serif; --body: 'Inter', sans-serif; }
+      *, *::before, *::after { box-sizing: border-box; margin: 0; }
+      html { background: var(--surface); }
+      body { background: var(--surface); color: var(--on-surface); font-family: var(--body); font-size: clamp(1.0625rem, calc(1rem + 0.25 * var(--vw)), 1.1875rem); line-height: 1.55; overflow-x: clip; font-synthesis: none; }
+      .wrap { max-width: 90rem; margin-inline: auto; padding-inline: var(--gutter); }
+      .vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+      /* Mono prints digit runs only: amounts, references, times. Words, labels and worded values stay in the body face. */
+      .fig, .amt, .ref { font-family: var(--figure); font-variant-numeric: tabular-nums lining-nums; }
+      .val { font-weight: 500; font-variant-numeric: tabular-nums lining-nums; }
+      .nw { white-space: nowrap; }
+      :focus-visible, .is-focus { outline: 2px solid var(--on-surface); outline-offset: 3px; }
+      .muted { color: var(--on-surface-muted); }
+
+      /* Type scale. --vw is 1vw on the page and 1cqi inside a frame, so each frame sizes as its own viewport. */
+      .h1 { font: 500 clamp(2.375rem, calc(1.5rem + 3.9 * var(--vw)), 5.5rem) / 1.02 var(--display); letter-spacing: -0.015em; text-wrap: balance; }
+      .h1.b { font-size: clamp(2.125rem, calc(1.4rem + 3.1 * var(--vw)), 4.5rem); }
+      .h1.c { font-size: clamp(2rem, calc(1.3rem + 2.4 * var(--vw)), 3.75rem); }
+      .h2 { font: 500 clamp(2rem, calc(1.4rem + 2 * var(--vw)), 3.5rem) / 1.08 var(--display); letter-spacing: -0.015em; text-wrap: balance; }
+      .h3 { font: 500 clamp(1.25rem, calc(1.05rem + 0.8 * var(--vw)), 1.625rem) / 1.2 var(--display); letter-spacing: -0.01em; }
+      .lead { font-size: clamp(1.125rem, calc(1rem + 0.5 * var(--vw)), 1.375rem); line-height: 1.5; max-width: 36rem; color: var(--on-surface-muted); text-wrap: pretty; }
+
+      /* Tile chrome */
+      .title { display: grid; gap: 2rem 4rem; padding-block: clamp(1.5rem, 1rem + 3vw, 4rem) 2rem; align-items: end; }
+      .title-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; }
+      .title-word { font: 500 clamp(4rem, 1.5rem + 9vw, 9.5rem) / 0.9 var(--display); letter-spacing: -0.03em; }
+      .title-sub { margin-top: 1.25rem; font-weight: 500; }
+      .title-concept { margin-top: 0.75rem; max-width: 40rem; color: var(--on-surface); }
+      .title .seal { flex: none; width: clamp(4.5rem, 2rem + 7vw, 10rem); }
+      .register { display: grid; border-top: 1px solid var(--on-surface); }
+      .register > div { display: grid; gap: 0.125rem 1.5rem; padding-block: 0.625rem; border-bottom: 1px solid var(--border); }
+      .register dt { font-weight: 500; }
+      .register dd { max-width: 64ch; }
+      .controls { display: flex; flex-wrap: wrap; gap: 0.75rem 1.75rem; padding-block: 0.75rem; border-block: 4px double var(--on-surface); background: var(--surface); }
+      .controls fieldset { border: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.375rem; align-items: center; }
+      .controls legend { float: left; font-weight: 500; margin-right: 0.375rem; padding-block: 0.6rem; }
+      .chip { position: relative; display: inline-flex; align-items: center; gap: 0.5rem; min-height: 2.75rem; padding: 0 0.75rem; border: 1px solid var(--on-surface-muted); border-radius: 2px; cursor: pointer; font-size: 1rem; }
+      .chip input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+      .chip:has(:checked) { background: var(--brand-deeper); color: var(--on-brand); border-color: var(--brand-deeper); }
+      .chip:has(:focus-visible) { outline: 2px solid var(--on-surface); outline-offset: 3px; }
+      .chip i { width: 1rem; height: 1rem; border: 1px solid currentColor; }
+      .plate { padding-top: clamp(3.5rem, 2rem + 5vw, 7rem); }
+      .plate-head { display: grid; gap: 0.5rem 2rem; border-top: 4px double var(--on-surface); padding-top: 1.25rem; margin-bottom: clamp(1.75rem, 1rem + 2vw, 3rem); }
+      .plate-no { font-weight: 500; color: var(--on-surface-muted); }
+      .plate-head p { max-width: 64ch; color: var(--on-surface-muted); margin-top: 0.75rem; }
+      .cap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0 1rem; margin-bottom: 0.625rem; font-weight: 500; }
+      .cap span { font-weight: 400; color: var(--on-surface-muted); }
+      .meas { margin-top: 0.5rem; font-size: 1rem; color: var(--on-surface-muted); }
+      .meas b { font-weight: 500; color: var(--on-surface); }
+      .frames { display: grid; gap: 3rem 2rem; }
+      .frames > div, .row-phones > div, .duo > div { min-width: 0; }
+      .row-phones { display: grid; gap: 3rem 2rem; align-items: start; }
+      .duo { display: grid; gap: 3rem 2rem; align-items: start; }
+      .notes { list-style: none; padding: 0; border-top: 1px solid var(--on-surface); }
+      .notes li { padding-block: 0.875rem; border-bottom: 1px solid var(--border); max-width: 64ch; }
+      .notes b { font-weight: 500; }
+      .source { border: 1px solid var(--on-surface); padding: clamp(1rem, 0.5rem + 2vw, 2rem); display: grid; gap: 1.25rem 3rem; }
+      .source blockquote { font: 500 clamp(1.125rem, 1rem + 0.5vw, 1.375rem) / 1.5 var(--body); max-width: 60ch; }
+      .source u { text-decoration: underline 1.5px var(--on-surface-muted); text-underline-offset: 0.2em; }
+      .source sup { font: 500 0.75rem/1 var(--body); margin-left: 0.1em; color: var(--on-surface); }
+      .source dl { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 0.375rem 1.25rem; align-content: start; }
+      .source dt { font-weight: 500; }
+      .source .count { font-size: 1rem; color: var(--on-surface-muted); }
+
+      /* Frames */
+      .frame { position: relative; border: 1px solid var(--on-surface); background: var(--surface); overflow: clip; }
+      .desk-wrap { overflow: clip; }
+      .desk { width: calc(var(--w, 1440px) + 2px); transform-origin: 0 0; transform: scale(var(--z, 1)); }
+      .phone { width: 377px; max-height: var(--max, 1240px); }
+      .fold { position: absolute; left: 0; right: 0; top: calc(var(--fold) + 1px); border-top: 1px dashed var(--on-surface); pointer-events: none; z-index: 3; }
+      .fold span { position: absolute; right: 0; top: 0; padding: 0.15rem 0.5rem; background: var(--on-surface); color: var(--surface); font: 500 0.8125rem/1.3 var(--body); }
+      .cut { position: absolute; left: 0; right: 0; bottom: 0; padding: 0.5rem 1rem; background: var(--on-surface); color: var(--surface); font: 500 0.875rem/1.3 system-ui, sans-serif; z-index: 3; }
+
+      /* The site inside a frame */
+      .site { container: site / inline-size; --vw: 1cqi; --gut: clamp(1.5rem, calc(1rem + 3 * var(--vw)), 6rem); --pad: clamp(1.25rem, calc(0.5rem + 2 * var(--vw)), 3rem); --seal: clamp(8.5rem, calc(3rem + 8 * var(--vw)), 12rem); background: var(--surface); color: var(--on-surface); font-family: var(--body); line-height: 1.55; }
+      /* Set on the children: 1cqi on .site itself would resolve against the tile's viewport, not the frame. */
+      .site > * { font-size: clamp(1.0625rem, calc(1rem + 0.25 * var(--vw)), 1.1875rem); }
+      .studio { height: 56px; display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding-inline: 16px; background: #0b0f1c; color: #ffffff; font: 500 13px/1.2 system-ui, sans-serif; }
+      .studio b { background: #ffffff; color: #0b0f1c; padding: 0.45rem 0.8rem; border-radius: 999px; font-weight: 600; }
+      .s-head { border-bottom: 1px solid var(--border); background: var(--surface); }
+      .s-in, .hero, .sec { max-width: 90rem; margin-inline: auto; padding-inline: var(--gut); }
+      .s-in { display: flex; align-items: center; gap: 0.5rem; min-height: 4.25rem; }
+      .wordmark { flex: 0 1 auto; min-width: 0; margin-right: auto; display: inline-flex; align-items: center; min-height: 2.75rem; font: 500 1.125rem/1.12 var(--display); letter-spacing: -0.01em; color: inherit; text-decoration: none; text-wrap: balance; }
+      .s-nav { display: none; }
+      .s-nav a { display: inline-flex; align-items: center; justify-content: center; min-height: 2.75rem; min-width: 2.75rem; color: inherit; text-decoration: none; font-weight: 500; font-size: 1rem; }
+      .menu-t { flex: none; min-height: 2.75rem; min-width: 2.75rem; padding: 0 0.75rem; border: 1px solid var(--on-surface-muted); border-radius: 2px; background: none; color: var(--on-surface); font: 500 1rem var(--body); }
+      @container site (max-width: 29.99rem) {
+        .s-in { gap: 0.375rem; }
+        .wordmark.long { font-size: 1rem; }
+        .wordmark.xlong { font-size: 0.9375rem; line-height: 1.15; }
+        .s-in .ask--bar { padding: 0 0.625rem; }
+        .s-in .menu-t { padding: 0 0.5rem; }
+      }
+      @container site (min-width: 30rem) {
+        .wordmark { font-size: 1.375rem; }
+      }
+      @container site (min-width: 64rem) {
+        .s-nav { display: flex; gap: 2.25rem; margin-left: 3.5rem; margin-right: auto; }
+        .wordmark { margin-right: 0; }
+        .menu-t { display: none; }
+      }
+
+      /* The ask: one cell, the label and an arrow that nudges on hover, focus and press */
+      .ask { position: relative; display: inline-flex; align-items: center; justify-content: space-between; gap: 0.875rem; min-height: 3rem; padding: 0.625rem 1.125rem 0.625rem 1.25rem; border: 1px solid transparent; border-radius: 2px; background: var(--brand-deeper); color: var(--on-brand); font: 500 1.0625rem/1.25 var(--body); text-decoration: none; transition: scale var(--quick) var(--spring), background-color var(--quick); }
+      .ask-label { display: flex; flex-direction: column; }
+      .ask-label small { font-size: 1rem; font-weight: 400; margin-top: 0.125rem; }
+      .ask.two { min-height: 4rem; }
+      .ask-arr { display: grid; flex: none; }
+      .ask-arr svg { width: 1.25rem; height: 1.25rem; transition: translate var(--quick) var(--spring); }
+      .ask:is(:hover, :focus-visible, :active, .is-hover, .is-focus, .is-active) { background: var(--brand-deepest); }
+      .ask:is(:hover, :focus-visible, :active, .is-hover, .is-focus, .is-active) .ask-arr svg { translate: 0.25rem 0; }
+      .ask:is(:active, .is-active) { scale: 0.98; }
+      /* The header ask: outlined while any in-page ask is in view; the fill is a second, aria-hidden layer faded by opacity */
+      .ask--bar { flex: none; min-height: 2.75rem; padding: 0 1rem; background: var(--surface); color: var(--brand-deeper); border-color: var(--brand-deeper); font-size: 1rem; white-space: nowrap; }
+      .ask--bar:is(:hover, :focus-visible, :active, .is-hover, .is-focus, .is-active) { background: var(--surface); }
+      .ask-fill { position: absolute; inset: -1px; display: grid; place-items: center; border-radius: inherit; background: var(--brand-deeper); color: var(--on-brand); opacity: 0; transition: opacity 0.3s linear, background-color var(--quick); }
+      .ask--bar:is(:hover, :focus-visible, :active, .is-hover, .is-focus, .is-active) .ask-fill, .ask--bar.is-filled .ask-fill { opacity: 1; }
+      .ask--bar.is-filled:is(:hover, :focus-visible, :active, .is-hover, .is-focus, .is-active) .ask-fill { background: var(--brand-deepest); }
+      .more { display: inline-flex; align-items: center; min-height: 2.75rem; color: var(--on-surface); font-weight: 500; text-decoration: underline dotted 1.5px; text-underline-offset: 0.3em; }
+      .more:is(:hover, .is-hover) { text-decoration-style: solid; }
+      .more:is(:active, .is-active) { text-decoration-style: solid; text-decoration-thickness: 2.5px; }
+      .ph { border-bottom: 1px dashed var(--on-surface-muted); color: var(--on-surface); }
+      .ph::before { content: 'Placeholder' / ''; display: inline-block; margin-right: 0.35em; padding: 0 0.3em; border: 1px solid var(--on-surface-muted); font-size: 0.75rem; line-height: 1.4; vertical-align: 0.12em; color: var(--on-surface-muted); }
+
+      /* The tear line: a fine dashed rule with a half-circle notch cut into the paper's outline at each end */
+      .tear { position: relative; height: 1px; background: repeating-linear-gradient(90deg, var(--on-surface-muted) 0 6px, transparent 6px 11px); }
+      .tear::before, .tear::after { content: ''; position: absolute; top: -8px; width: 17px; height: 17px; border: 1px solid var(--on-surface); border-radius: 50%; background: var(--surface); }
+      .tear::before { left: -9px; clip-path: inset(0 0 0 8px); }
+      .tear::after { right: -9px; clip-path: inset(0 8px 0 0); }
+
+      /* The seal */
+      .seal { position: relative; aspect-ratio: 1; rotate: -8deg; }
+      .seal svg, .seal canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+      .seal .n2 { display: none; }
+      @media (min-resolution: 2dppx) {
+        .seal .n1 { display: none; }
+        .seal .n2 { display: inline; }
+      }
+      .sb-ground { fill: var(--accent); }
+      .sb-a, .sb-c, .sb-rim { stroke: var(--brand-deeper); fill: none; }
+      .sb-b { stroke: var(--on-surface-muted); fill: none; }
+      .sb-d { stroke: var(--brand); fill: none; }
+      .sb-disc { fill: var(--accent); stroke: var(--brand-deeper); }
+      .sb-hatch { stroke: var(--brand-deeper); }
+      .sb-init { fill: var(--brand-deeper); font-family: var(--display); font-weight: 500; }
+
+      /* The hero: a counterfoil. Stub (words and the ask) and body (the run), one sheet, split by the tear line. */
+      .hero { padding-block: 0.75rem clamp(3rem, calc(2rem + 5 * var(--vw)), 7rem); }
+      .cf { --ask-h: 3rem; --ask-gap: 1.75rem; position: relative; background: var(--accent); border-block: 1px solid var(--on-surface); margin-inline: calc(-1 * var(--gut)); }
+      .cf:has(.ask.two) { --ask-h: 4rem; }
+      .cf-stub { display: flex; flex-direction: column; align-items: flex-start; padding: 1.5rem var(--gut) 1.25rem; }
+      .kicker { font-weight: 500; color: var(--on-surface-muted); margin-bottom: 1rem; }
+      .cf-top .lead { margin-top: 1rem; }
+      .asks { display: contents; }
+      .cf-stub .ask { margin-top: 1.5rem; width: 100%; }
+      .cf-trust { order: 1; margin-top: 1rem; }
+      .trust { list-style: none; padding: 0; color: var(--on-surface-muted); font-size: 1rem; }
+      .trust b { color: var(--on-surface); font-weight: 500; }
+      .trust li { text-wrap: pretty; }
+      .cf-stub .more { order: 2; margin-top: 0.25rem; }
+      .cf-body { padding: 1.25rem var(--gut) 1.5rem; }
+      .cf-run { display: flex; flex-direction: column; }
+      .cf-run > :last-child { border-bottom: 1px solid var(--on-surface); }
+      .run-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 0.25rem 1rem; padding-bottom: 0.75rem; }
+      .slip-title { font-weight: 500; }
+      .slip-date { font-size: 1rem; color: var(--on-surface-muted); }
+      .ref { font-size: 1rem; color: var(--on-surface-muted); }
+      .line { display: grid; grid-template-columns: minmax(0, 1fr) auto 1.25rem; grid-template-areas: 'who amt mark' 'ref . .'; column-gap: 0.75rem; align-items: baseline; padding-block: 0.5rem; border-top: 1px solid var(--border); }
+      .who { grid-area: who; font-weight: 500; }
+      .ref { grid-area: ref; }
+      .line .amt { grid-area: amt; }
+      .mark { grid-area: mark; }
+      .amt { font-weight: 500; text-align: right; }
+      .line.more-rows .who { font-weight: 400; color: var(--on-surface-muted); }
+      .mark svg { width: 1rem; height: 1rem; vertical-align: -0.15em; }
+      .kv { display: grid; grid-template-columns: auto minmax(1.5rem, 1fr) auto; column-gap: 0.5rem; align-items: baseline; padding-block: 0.6rem; border-top: 1px solid var(--border); }
+      .kv::after { content: ''; grid-column: 2; grid-row: 1; border-bottom: 1.5px dotted var(--on-surface-muted); translate: 0 -0.3em; transform-origin: 0 50%; }
+      .kv dt { color: var(--on-surface-muted); }
+      .kv dd { grid-column: 3; font-weight: 500; text-align: right; }
+      .note { font-size: 1.125rem; line-height: 1.5; padding-bottom: 1rem; max-width: 36rem; }
+      .cf-close { display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: 1rem; align-items: end; padding-top: 1rem; }
+      .cf-close .seal { grid-row: 1 / 3; width: clamp(7rem, calc(5rem + 6 * var(--vw)), 8.5rem); }
+      .cf-foot { justify-self: end; text-align: right; }
+      .sum { display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: baseline; gap: 0.25rem 0.875rem; font-weight: 500; }
+      .sum .amt, .sig-name { padding-bottom: 0.2rem; border-bottom: 4px double var(--on-surface); }
+      .sum .amt { font-size: clamp(1.25rem, calc(1rem + 0.6 * var(--vw)), 1.625rem); }
+      .sig-name { display: inline-block; font: 500 1.375rem/1.2 var(--display); letter-spacing: -0.01em; }
+      .cf-sign { margin-top: 0.5rem; text-align: right; font-size: 1rem; color: var(--on-surface-muted); }
+      .photo { display: grid; place-items: center; aspect-ratio: 3 / 2; width: 100%; margin-bottom: 1rem; padding: 0.75rem; border: 1px solid var(--on-surface); background: var(--surface-muted); text-align: center; font-size: 1rem; line-height: 1.35; color: var(--on-surface); }
+      .cf-tear { margin-inline: 0; }
+      @container site (max-width: 29.99rem) {
+        .line { grid-template-areas: 'who who who' 'ref amt mark'; }
+        .kv { grid-template-columns: minmax(1.5rem, 1fr) auto; }
+        .kv dt { grid-column: 1 / -1; }
+        .kv::after { grid-column: 1; grid-row: 2; }
+        .kv dd { grid-column: 2; grid-row: 2; }
+      }
+      @container site (max-width: 47.99rem) {
+        .kicker { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+      }
+      @container site (min-width: 48rem) {
+        .hero { padding-top: clamp(0.75rem, calc(0.25rem + 2 * var(--vw)), 2.5rem); }
+        .cf { margin-inline: 0; border: 1px solid var(--on-surface); }
+        .cf-stub { padding: var(--pad); }
+        .cf-body { padding: var(--pad); }
+        .asks { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 2rem; margin-top: var(--ask-gap); }
+        .cf-stub .ask { margin-top: 0; width: auto; }
+        .cf-stub .more { order: 0; margin-top: 0; }
+        .cf-trust { order: 0; margin-top: 1.25rem; }
+        .trust { display: flex; flex-wrap: wrap; row-gap: 0.25rem; margin-left: calc(-1.75rem - 1px); clip-path: inset(0 0 0 calc(1.75rem + 1px)); }
+        .trust li { border-left: 1px solid var(--on-surface-muted); margin-left: 0.875rem; padding-left: 0.875rem; }
+        .run-head.with-photo { display: grid; grid-template-columns: minmax(0, 1fr) 12rem; align-items: start; }
+        .run-head.with-photo .photo { grid-column: 2; grid-row: 1 / 3; margin: 0; }
+      }
+      @container site (min-width: 64rem) {
+        .cf { display: grid; grid-template-columns: minmax(0, 7fr) 0 minmax(0, 5fr); grid-template-rows: auto auto minmax(calc(var(--seal) / 2 - var(--ask-h) / 2 + 1.5rem), auto); }
+        .cf-stub, .cf-body, .cf-close, .asks-wrap { display: contents; }
+        .cf-top { grid-area: 1 / 1; padding: var(--pad) calc(var(--seal) / 2 + 1rem) 0 var(--pad); }
+        .asks { grid-area: 2 / 1; align-self: start; margin: 0; padding: var(--ask-gap) calc(var(--seal) / 2 + 1rem) 0 var(--pad); }
+        .cf-trust { grid-area: 3 / 1; margin: 0; padding: 1.25rem calc(var(--seal) / 2 + 1rem) var(--pad) var(--pad); }
+        .cf-tear { grid-area: 1 / 2 / 4 / 3; justify-self: center; width: 1px; height: auto; background: repeating-linear-gradient(180deg, var(--on-surface-muted) 0 6px, transparent 6px 11px); }
+        .cf-tear::before, .cf-tear::after { left: -8px; right: auto; }
+        .cf-tear::before { top: -9px; clip-path: inset(8px 0 0 0); }
+        .cf-tear::after { top: auto; bottom: -9px; clip-path: inset(0 0 8px 0); }
+        /* The run ends at least a seal radius plus 1rem above the seal's centre, so no row can reach the stamp. */
+        .cf-run { grid-area: 1 / 3; padding: var(--pad) var(--pad) max(1rem, calc(var(--seal) / 2 + 1rem - var(--ask-gap) - var(--ask-h) / 2)) var(--pad); }
+        /* Centred on the ask; the negative margins keep its box the ask row's height, so it never sizes the row. */
+        .cf-close .seal { grid-area: 2 / 2; justify-self: center; align-self: start; width: var(--seal); margin-top: calc(var(--ask-gap) + var(--ask-h) / 2 - var(--seal) / 2); margin-bottom: calc(var(--ask-h) / 2 - var(--seal) / 2); z-index: 1; }
+        .cf-foot { grid-area: 2 / 3; align-self: end; padding: 0 var(--pad) 0 calc(var(--seal) / 2 + 1rem); }
+        .cf-sign { grid-area: 3 / 3; margin: 0; padding: 0.75rem var(--pad) var(--pad) calc(var(--seal) / 2 + 1rem); }
+        .run-head.with-photo { grid-template-columns: minmax(0, 1fr) 10rem; }
+      }
+      @container site (min-width: 75rem) {
+        .line { grid-template-columns: minmax(0, 1fr) auto auto 1.25rem; grid-template-areas: 'who ref amt mark'; }
+        .run-head.with-photo { grid-template-columns: minmax(0, 1fr) 12rem; }
+      }
+      /* Short laptops: (min-width: 64rem) and (max-height: 50rem) in the build. The frames flag it with data-short. */
+      @container site (min-width: 64rem) {
+        .site[data-short] .hero { padding-top: 0.75rem; }
+        .site[data-short] .cf { --ask-gap: 1.25rem; --pad: 1.25rem; }
+        .site[data-short] .line, .site[data-short] .kv { padding-block: 0.3125rem; }
+        .site[data-short] .run-head { padding-bottom: 0.5rem; }
+        .site[data-short] .cf-top { padding-top: 1.25rem; }
+        .site[data-short] .kicker { margin-bottom: 0.625rem; }
+        .site[data-short] .h1 { font-size: min(3.75rem, clamp(2.375rem, calc(1.5rem + 3.9 * var(--vw)), 5.5rem)); }
+        .site[data-short] .h1.b { font-size: min(3.25rem, clamp(2.125rem, calc(1.4rem + 3.1 * var(--vw)), 4.5rem)); }
+        .site[data-short] .h1.c { font-size: min(2.875rem, clamp(2rem, calc(1.3rem + 2.4 * var(--vw)), 3.75rem)); }
+        .site[data-short] .cf-top .lead { font-size: 1.125rem; max-width: 40rem; margin-top: 0.75rem; }
+        .site[data-short] .cf-trust { padding-top: 1rem; }
+      }
+
+      /* Sections below the hero (roughs): the booking form and FAQ, the assurance register */
+      .sec { padding-block: clamp(3rem, calc(2rem + 5 * var(--vw)), 7rem); }
+      .ct-in { display: grid; gap: 3rem; align-items: start; }
+      .faq .h2 { margin-bottom: 1.5rem; }
+      .faq details { border-top: 1px solid var(--on-surface); }
+      .faq details:last-child { border-bottom: 1px solid var(--on-surface); }
+      .faq summary { display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-height: 3.5rem; padding-block: 0.75rem; font-weight: 500; cursor: pointer; list-style: none; }
+      .faq summary::-webkit-details-marker { display: none; }
+      .faq summary svg { flex: none; width: 1.25rem; height: 1.25rem; }
+      .faq details[open] .pv { display: none; }
+      .faq details p { max-width: 64ch; padding-bottom: 1.25rem; }
+      .bk { position: relative; background: var(--accent); border: 1px solid var(--on-surface); }
+      .bk-stub { padding: var(--pad); }
+      .bk-stub .h3 { font-size: clamp(1.5rem, calc(1.2rem + 1 * var(--vw)), 2rem); }
+      .next { list-style: none; padding: 0; margin-top: 0.75rem; display: grid; gap: 0.25rem; font-size: 1rem; }
+      .next li { display: flex; gap: 0.625rem; align-items: baseline; }
+      .next li::before { content: ''; flex: none; width: 0.75rem; border-top: 1.5px solid var(--on-surface); translate: 0 -0.3em; }
+      .bk-body { padding: var(--pad); display: grid; gap: 1.125rem; }
+      .bk .seal { position: absolute; right: -1.25rem; top: -1.5rem; width: 6rem; }
+      .bk-stub { padding-right: 5.5rem; }
+      .fld label, .fld legend { display: block; font-weight: 500; margin-bottom: 0.375rem; font-size: 1rem; }
+      .fld input, .fld select, .fld textarea { display: block; width: 100%; min-height: 3rem; padding: 0.625rem 0.875rem; border: 1px solid var(--on-surface-muted); border-radius: 2px; background: var(--surface); color: var(--on-surface); font: inherit; font-size: 1.0625rem; }
+      .fld textarea { min-height: 7rem; resize: vertical; }
+      .fld fieldset { border: 0; padding: 0; display: grid; gap: 0.5rem; }
+      .radio { display: flex; align-items: center; gap: 0.75rem; min-height: 3rem; padding: 0 0.875rem; border: 1px solid var(--on-surface-muted); border-radius: 2px; background: var(--surface); font-size: 1.0625rem; }
+      .fld .radio { display: flex; margin: 0; font-weight: 400; }
+      .fld .radio input { appearance: none; flex: none; width: 1.25rem; height: 1.25rem; min-height: 0; padding: 0; border: 1px solid var(--on-surface-muted); border-radius: 50%; display: grid; place-items: center; margin: 0; background: var(--surface); }
+      .radio input:checked::before { content: ''; width: 0.625rem; height: 0.625rem; border-radius: 50%; background: var(--on-surface); }
+      .bk-note, .bk-call { font-size: 1rem; color: var(--on-surface-muted); }
+      .bk .ask { width: 100%; }
+      .msg, .bk-alert, .bk-receipt, .bk-sending { display: none; }
+      .msg { gap: 0.5rem; align-items: baseline; margin-top: 0.375rem; font-weight: 500; font-size: 1rem; }
+      .msg svg, .bk-alert svg { flex: none; width: 1.125rem; height: 1.125rem; translate: 0 0.2em; }
+      [data-state='error'] .bk-alert { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 0.75rem; padding: 0.875rem 1rem; border: 2px solid var(--on-surface); background: var(--surface); font-size: 1rem; }
+      [data-state='error'] .bad .msg { display: flex; }
+      [data-state='error'] .bad input { border: 2px solid var(--on-surface); }
+      [data-state='sending'] .bk-go { display: none; }
+      [data-state='sending'] .bk-sending { display: inline; }
+      [data-state='sending'] .ask { background: var(--brand-deepest); }
+      [data-state='sending'] .fld input, [data-state='sending'] .fld select, [data-state='sending'] .radio { background: var(--accent); }
+      :is([data-state='success'], [data-state='demo']) .bk-body > :not(.bk-receipt) { display: none; }
+      :is([data-state='success'], [data-state='demo']) .bk-receipt { display: grid; gap: 1rem; }
+      .bk-receipt .seal { position: relative; right: auto; top: auto; width: 7.5rem; justify-self: center; }
+      .bk-receipt .sum-line { display: flex; justify-content: space-between; gap: 1rem; padding-bottom: 0.2rem; border-bottom: 4px double var(--on-surface); font-weight: 500; }
+      .chrome { display: flex; gap: 0.625rem; align-items: baseline; padding: 0.75rem 0.875rem; background: var(--surface-muted); border: 1px solid var(--on-surface-muted); font-size: 1rem; }
+      .chrome i { flex: none; font-style: normal; font-size: 0.75rem; line-height: 1.4; padding: 0 0.3em; border: 1px solid var(--on-surface-muted); color: var(--on-surface-muted); translate: 0 -0.1em; }
+      @keyframes stamp {
+        from { opacity: 0; scale: 1.35; rotate: -20deg; }
+      }
+      @media (prefers-reduced-motion: no-preference) {
+        :is([data-state='success'], [data-state='demo']) .bk-receipt .seal { animation: stamp 0.5s var(--spring) backwards 0.15s; }
+      }
+      .states-grid { display: grid; gap: 2rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr)); align-items: start; }
+      .states-grid .frame { max-width: 26rem; }
+      .as-in { display: grid; gap: 2rem 1.5rem; }
+      .reg { border: 1px solid var(--on-surface); }
+      .reg-row { display: grid; grid-template-columns: 2.5rem minmax(0, 1fr); gap: 0.25rem 1rem; padding: 1rem 1.25rem; border-top: 1px solid var(--border); align-items: baseline; }
+      .reg-row:first-child { border-top: 0; }
+      .reg-row .sect { grid-row: span 2; font: 500 1.125rem/1.3 var(--display); }
+      .reg-row b { font-weight: 500; }
+      .reg-row p { grid-column: 2; font-size: 1rem; color: var(--on-surface-muted); max-width: 60ch; }
+      .reg-row .st { grid-column: 2; display: inline-flex; gap: 0.375rem; align-items: center; font-size: 1rem; font-weight: 500; }
+      .reg-row .st svg { width: 1rem; height: 1rem; }
+      .reg-foot { padding: 1rem 1.25rem; border-top: 1px solid var(--on-surface); display: grid; gap: 0.5rem; font-size: 1rem; }
+      @container site (min-width: 48rem) {
+        .reg-row { grid-template-columns: 2.5rem minmax(0, 13rem) minmax(0, 1fr) auto; }
+        .reg-row .sect { grid-row: auto; }
+        .reg-row p { grid-column: 3; }
+        .reg-row .st { grid-column: 4; }
+      }
+      @container site (min-width: 64rem) {
+        .ct-in, .as-in { grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 1.5rem; }
+        .faq { grid-column: 1 / span 6; }
+        .bk { grid-column: 8 / span 5; position: sticky; top: 5rem; }
+        .as-head { grid-column: 1 / span 4; }
+        .reg { grid-column: 5 / span 8; }
+      }
+
+      /* Plate 4: type */
+      .spec { display: grid; border-top: 1px solid var(--on-surface); }
+      .spec > div { display: grid; gap: 0.5rem 2rem; padding-block: 1.25rem; border-bottom: 1px solid var(--border); }
+      .spec .meta { font-size: 1rem; color: var(--on-surface-muted); }
+      .spec .meta b { display: block; color: var(--on-surface); font-weight: 500; }
+      .spec .body-sample { max-width: 64ch; }
+      .tabs { display: grid; gap: 1.5rem; }
+      .tabcol { border: 1px solid var(--on-surface); background: var(--accent); padding: 1rem 1.25rem; }
+      .tabcol ol { list-style: none; padding: 0; margin-top: 0.5rem; }
+      .tabcol li { text-align: right; font-size: 1.25rem; padding-block: 0.2rem; border-bottom: 1px solid var(--border); }
+      .tabcol li:last-child { border-bottom: 4px double var(--on-surface); font-weight: 500; }
+      .tabcol.bad li { font-family: 'Fraunces', serif; font-variant-numeric: tabular-nums; }
+      .guide { background-image: repeating-linear-gradient( 90deg, transparent 0 calc(0.6em - 1px), var(--border) calc(0.6em - 1px) 0.6em ); background-position: right top; }
+      .pairs { display: grid; gap: 1rem; margin-top: 2.5rem; }
+      .pcard { border: 1px solid var(--on-surface); background: var(--accent); color: var(--on-surface); font-family: var(--body); padding: 1.25rem; display: flex; flex-direction: column; gap: 0.875rem; }
+      .pcard .t { font: 500 1.75rem/1.05 var(--display); letter-spacing: -0.015em; }
+      .pcard .fig { font-size: 1.125rem; font-weight: 500; border-bottom: 4px double var(--on-surface); align-self: flex-end; }
+      .pcard p { font-size: 1rem; }
+      .pcard .ask { align-self: flex-start; }
+
+      /* Plate 5: palette */
+      .pals { display: grid; gap: 2rem; }
+      .pal { container: pal / inline-size; border: 1px solid var(--on-surface); background: var(--surface); color: var(--on-surface); padding: clamp(1rem, 0.5rem + 2vw, 2rem); }
+      @container pal (min-width: 34rem) {
+        .sw { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 1.5rem; }
+      }
+      .pal h3 { margin-bottom: 1rem; }
+      .pal h4 { font-weight: 500; font-size: 1rem; margin: 1.75rem 0 0.5rem; }
+      .sw { list-style: none; padding: 0; display: grid; border-top: 1px solid var(--on-surface); }
+      .sw li { display: grid; grid-template-columns: 2.5rem minmax(0, 1fr) auto; gap: 0.125rem 0.875rem; align-items: center; padding-block: 0.5rem; border-bottom: 1px solid var(--border); font-size: 1rem; }
+      .sw i { grid-row: span 2; width: 2.5rem; height: 2.5rem; border: 1px solid var(--on-surface); }
+      .sw span:last-child { grid-column: 2 / -1; color: var(--on-surface-muted); font-size: 1rem; }
+      .pl { list-style: none; padding: 0; display: grid; gap: 0.375rem; }
+      .pl li { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0 1rem; padding: 0.625rem 0.875rem; border: 1px solid var(--on-surface); font-size: 1rem; }
+      .pl li b { font-family: var(--figure); font-weight: 500; }
+      .ui li { display: grid; grid-template-columns: 3.5rem minmax(0, 1fr) auto; align-items: center; gap: 0 0.875rem; border-color: var(--border); }
+      .ui .demo { height: 2rem; }
+
+      /* Plate 6: buttons */
+      .states { display: grid; gap: 0; border-top: 1px solid var(--on-surface); }
+      .states > div { display: grid; gap: 1rem; padding-block: 1.25rem; border-bottom: 1px solid var(--border); align-items: center; }
+      .states .cells { display: grid; grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr)); gap: 1.25rem 1rem; align-items: start; }
+      .states figure { display: grid; gap: 0.5rem; justify-items: start; }
+      .states figcaption { font-size: 1rem; color: var(--on-surface-muted); }
+      .on-paper { background: var(--accent); border: 1px solid var(--on-surface); padding: 1rem; }
+      .fc { background: Canvas; color: CanvasText; padding: 1rem; border: 1px solid CanvasText; display: flex; flex-wrap: wrap; gap: 1rem 2rem; align-items: center; forced-color-adjust: none; }
+      .fc.fc .ask.ask { background: ButtonFace; color: ButtonText; border-color: ButtonText; }
+      .fc.fc .ask-fill { display: none; }
+      .fc.fc .more { color: LinkText; }
+
+      /* Plate 7: the signature */
+      .sig { display: grid; gap: 2rem; }
+      .stage { border: 1px solid var(--on-surface); background: var(--surface); padding: 1.5rem clamp(1rem, 0.5rem + 2vw, 2rem); display: grid; gap: 1.25rem; justify-items: center; position: relative; }
+      .mini { --seal: clamp(8.5rem, 3rem + 8vw, 12rem); position: relative; width: 100%; display: grid; grid-template-columns: minmax(0, 3fr) 0 minmax(0, 2fr); align-items: center; background: var(--accent); border: 1px solid var(--on-surface); min-height: calc(var(--seal) + 3rem); }
+      .mini-l { padding: 1rem calc(var(--seal) / 2 + 1rem) 1rem 1.25rem; }
+      .mini-r { grid-column: 3; padding: 1rem 1.25rem 1rem calc(var(--seal) / 2 + 1rem); text-align: right; }
+      .mini .tear-v { grid-area: 1 / 2; align-self: stretch; justify-self: center; width: 1px; position: relative; background: repeating-linear-gradient(180deg, var(--on-surface-muted) 0 6px, transparent 6px 11px); }
+      .mini .tear-v::before, .mini .tear-v::after { content: ''; position: absolute; left: -8px; width: 17px; height: 17px; border: 1px solid var(--on-surface); border-radius: 50%; background: var(--surface); }
+      .mini .tear-v::before { top: -9px; clip-path: inset(8px 0 0 0); }
+      .mini .tear-v::after { bottom: -9px; clip-path: inset(0 0 8px 0); }
+      .mini .seal { grid-area: 1 / 2; justify-self: center; width: var(--seal); z-index: 1; }
+      .mini .sum { justify-content: flex-end; }
+      .stage canvas { opacity: 0; transition: opacity 240ms linear; }
+      .stage.live canvas { opacity: 1; }
+      .stage.live .mini .seal svg { opacity: 0; transition: opacity 240ms linear 240ms; }
+      .status { font-size: 1rem; color: var(--on-surface-muted); text-align: center; max-width: 44ch; }
+      .tool { min-height: 2.75rem; padding: 0 1rem; border: 1px solid var(--on-surface-muted); border-radius: 2px; background: var(--surface); color: var(--on-surface); font: 500 1rem var(--body); cursor: pointer; }
+      .static-seal { width: min(100%, 14rem); }
+      .story { list-style: none; padding: 0; border-top: 1px solid var(--on-surface); }
+      .story li { display: grid; gap: 0.25rem 1rem; padding-block: 0.75rem; border-bottom: 1px solid var(--border); }
+      .story b { font-weight: 500; }
+      .sched { container: sched / inline-size; max-width: 44rem; }
+      .paper { position: relative; background: var(--accent); border: 1px solid var(--on-surface); }
+      .paper-in { padding: 1.75rem clamp(1rem, 0.5rem + 2vw, 2rem) 1.25rem; }
+      .paper h4 { font-weight: 500; margin: 1.5rem 0 0.25rem; }
+      .rows { display: grid; }
+      .rows > div { display: grid; grid-template-columns: auto minmax(1.5rem, 1fr) auto; column-gap: 0.5rem; align-items: baseline; padding-block: 0.5rem; border-top: 1px solid var(--border); }
+      .rows > div::after { content: ''; grid-column: 2; grid-row: 1; border-bottom: 1.5px dotted var(--on-surface-muted); translate: 0 -0.3em; transform-origin: 0 50%; }
+      .rows dd { grid-column: 3; text-align: right; }
+      .rows .earn dt { font-weight: 500; }
+      .signed { margin-top: 1rem; font-size: 1rem; color: var(--on-surface-muted); }
+      .stub { background: var(--surface-muted); padding: 1.5rem clamp(1rem, 0.5rem + 2vw, 2rem) 1.25rem; }
+      .bottomline { position: relative; display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 1rem 1.5rem; padding-bottom: 0.75rem; }
+      .bottomline::before, .bottomline::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 1px; background: var(--on-surface); transform-origin: 0 50%; }
+      .bottomline::before { bottom: 3px; }
+      .tot { display: flex; flex-direction: column; font-weight: 500; overflow: clip; }
+      .tot .amt { font-size: clamp(1.5rem, 1.1rem + 1.2vw, 2.25rem); line-height: 1.1; text-align: left; }
+      .fine { margin-top: 0.75rem; font-size: 1rem; color: var(--on-surface-muted); }
+      @container sched (max-width: 30rem) {
+        .rows > div { grid-template-columns: minmax(1.5rem, 1fr) auto; }
+        .rows dt { grid-column: 1 / -1; }
+        .rows > div::after { grid-column: 1; grid-row: 2; }
+        .rows dd { grid-column: 2; grid-row: 2; }
+      }
+      @keyframes draw {
+        from { scale: 0 1; }
+      }
+      @keyframes land {
+        from { opacity: 0; translate: 0 6px; }
+      }
+      @keyframes rise {
+        from { translate: 0 110%; }
+      }
+      @keyframes settle {
+        from { opacity: 0; translate: 0 8px; }
+      }
+      @keyframes nudge {
+        0%, 100% { translate: 0 0; }
+        35% { translate: 0.4rem 0; }
+      }
+      @media (prefers-reduced-motion: no-preference) {
+        .printing .rows > div::after { animation: draw 0.5s var(--spring) backwards; animation-delay: calc(var(--i) * 70ms); }
+        .printing .rows dd { animation: land 0.5s var(--spring) backwards; animation-delay: calc(var(--i) * 70ms + 180ms); }
+        .printing .bottomline::before { animation: draw 0.5s var(--spring) backwards 1.05s; }
+        .printing .bottomline::after { animation: draw 0.5s var(--spring) backwards 1.11s; }
+        .printing .tot .amt { animation: rise 0.6s var(--spring) backwards 1.2s; }
+        .printing .stub { animation: settle 0.6s var(--spring) backwards 0.95s; }
+        .printing .stub .ask-arr svg { animation: nudge 0.7s var(--spring) 1.6s; }
+        .ask.nudge .ask-arr svg { animation: nudge 0.7s var(--spring); }
+      }
+
+      /* Plate 9: sections */
+      .order { list-style: none; padding: 0; border-top: 1px solid var(--on-surface); counter-reset: n; }
+      .order li { display: grid; gap: 0.25rem 1.5rem; padding-block: 1rem; border-bottom: 1px solid var(--border); counter-increment: n; }
+      .order-head { display: none; gap: 1.5rem; padding-bottom: 0.5rem; font-weight: 500; color: var(--on-surface-muted); }
+      .order li::before { content: counter(n); font: 500 1.5rem/1 var(--display); }
+      .order h3 { font: 500 1.0625rem/1.4 var(--body); }
+      .order p { max-width: 64ch; }
+      .order .v { color: var(--on-surface-muted); }
+      del { text-decoration: line-through 1.5px var(--on-surface); color: var(--on-surface-muted); }
+      ins { text-decoration: none; font-weight: 500; }
+      footer.end { margin-block: 5rem 3rem; padding-top: 1.25rem; border-top: 4px double var(--on-surface); color: var(--on-surface-muted); max-width: 90rem; }
+
+      #p2 { padding-top: 2rem; }
+      #p2 .plate-head { margin-bottom: 1.25rem; }
+      @media (min-width: 48rem) {
+        .register > div { grid-template-columns: 8rem minmax(0, 1fr); }
+        .spec > div { grid-template-columns: 15rem minmax(0, 1fr); align-items: baseline; }
+        .story li { grid-template-columns: 7.5rem minmax(0, 1fr); }
+        .tabs { grid-template-columns: repeat(2, minmax(0, 20rem)); }
+        .pairs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .order li, .order-head { grid-template-columns: 2.5rem 9rem minmax(0, 1fr) minmax(0, 1fr); }
+        .order-head { display: grid; }
+        .states > div { grid-template-columns: 12rem minmax(0, 1fr); }
+      }
+      @media (min-width: 64rem) {
+        .title { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); }
+        .plate-head { grid-template-columns: 11rem minmax(0, 1fr); }
+        .row-phones { grid-template-columns: 377px 377px minmax(0, 1fr); }
+        .duo { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .source { grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); }
+        .pals { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .pairs { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+        .sig { grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); align-items: start; }
+      }
+      @media (min-width: 88rem) {
+        .controls { position: sticky; top: 0; z-index: 5; }
+      }
+      @media (max-width: 25.99rem) {
+        .phone { width: auto; margin-inline: calc(-1 * var(--gutter)); border-inline: 0; }
+      }
+      /* The stage shows the desktop row; below 48rem the tile stacks it (the template has no such row there). */
+      @media (max-width: 47.99rem) {
+        .mini { grid-template-columns: minmax(0, 1fr); justify-items: center; gap: 1rem; padding: 1.5rem 1rem; }
+        .mini .tear-v { display: none; }
+        .mini .seal, .mini-r { grid-area: auto; }
+        .mini-l, .mini-r { padding: 0; text-align: center; }
+      }
+      @media (forced-colors: active) {
+        .stage canvas { display: none; }
+        .stage .seal svg { opacity: 1 !important; }
+        .ask { border-color: ButtonText; }
+        .ask-fill { display: none; }
+        .tear, .cf-tear, .tear-v { outline: 1px dashed CanvasText; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header class="title">
+        <div>
+          <div class="title-row">
+            <h1 class="title-word">Intaglio</h1>
+            <div class="seal" data-initial="W"></div>
+          </div>
+          <p class="title-sub">
+            Fintech template, direction 1 of 2. Id t09-intaglio if the set grows to ten.
+          </p>
+          <p class="lead title-concept">
+            Money that is built to be hard to forge: engraved line-work, a counterfoil's tear line
+            and the accountant's double rule, on plain paper. The hero is one sheet torn in two,
+            with the words and the ask on the stub, the payment run on the body, and the seal
+            stamped across the tear beside the ask. The fees are a worked month whose total and ask
+            share one double rule.
+          </p>
+        </div>
+        <dl class="register">
+          <div>
+            <dt>Segment</dt>
+            <dd>
+              B2B accounts payable: supplier payments for UK firms of 50 to 500 staff. Sales-led.
+            </dd>
+          </div>
+          <div>
+            <dt>Visitor</dt>
+            <dd>
+              A financial controller after an invoice-fraud scare or a week-long month-end. Reads
+              fees line by line; must justify the switch to a board.
+            </dd>
+          </div>
+          <div>
+            <dt>Conversion</dt>
+            <dd>
+              One booked demo, from the form at #contact, the last section. Every ask points down to
+              it.
+            </dd>
+          </div>
+          <div>
+            <dt>Primary CTA</dt>
+            <dd>Book a demo</dd>
+          </div>
+          <div>
+            <dt>Example</dt>
+            <dd>
+              Whimbrel Payments Ltd, fictional. Brand hex <span class="fig">#4a2a6a</span>,
+              engraving violet; jade and oxblood to compare.
+            </dd>
+          </div>
+        </dl>
+      </header>
+    </div>
+
+    <form class="controls wrap" id="controls" aria-label="Tile controls">
+      <fieldset>
+        <legend>Scheme</legend>
+        <label class="chip"><input type="radio" name="scheme" value="light" checked />Light</label>
+        <label class="chip"><input type="radio" name="scheme" value="dark" />Dark</label>
+      </fieldset>
+      <fieldset>
+        <legend>Faces</legend>
+        <label class="chip"
+          ><input type="radio" name="faces" value="example" checked />Example</label
+        >
+        <label class="chip"><input type="radio" name="faces" value="warm" />Warm</label>
+        <label class="chip"><input type="radio" name="faces" value="minimal" />Minimal</label>
+        <label class="chip"><input type="radio" name="faces" value="bold" />Bold</label>
+        <label class="chip"><input type="radio" name="faces" value="dark" />Dark</label>
+      </fieldset>
+      <fieldset>
+        <legend>Hex</legend>
+        <label class="chip"
+          ><input type="radio" name="hex" value="#4a2a6a" checked /><i
+            style="background: #4a2a6a"
+          ></i
+          ><span>Violet</span></label
+        >
+        <label class="chip"
+          ><input type="radio" name="hex" value="#1f6b52" /><i style="background: #1f6b52"></i
+          ><span>Jade</span></label
+        >
+        <label class="chip"
+          ><input type="radio" name="hex" value="#6b1e2c" /><i style="background: #6b1e2c"></i
+          ><span>Oxblood</span></label
+        >
+        <label class="chip"
+          ><input type="radio" name="hex" value="#f5c400" /><i style="background: #f5c400"></i
+          ><span class="fig">#F5C400</span></label
+        >
+        <label class="chip"
+          ><input type="radio" name="hex" value="#808080" /><i style="background: #808080"></i
+          ><span class="fig">#808080</span></label
+        >
+      </fieldset>
+    </form>
+
+    <main class="wrap">
+      <section class="plate" id="p2" aria-labelledby="p2h">
+        <header class="plate-head">
+          <span class="plate-no">Plate 2</span>
+          <div>
+            <h2 class="h2" id="p2h">
+              The hero: a counterfoil, as the example and as a visitor's page
+            </h2>
+            <p>
+              Each frame sizes its type from its own width and is measured live: the figures under
+              each frame are the top and bottom of each part in frame pixels, StudioBar included.
+              Dashed lines are the folds.
+            </p>
+          </div>
+        </header>
+        <div class="frames">
+          <div>
+            <p class="cap">
+              Example page, 1440 × 900 <span>Whimbrel, every optional block filled</span>
+            </p>
+            <div class="desk-wrap">
+              <div
+                class="frame desk"
+                data-tpl="tpl-example"
+                data-measure
+                style="--w: 1440px; --fold: 900px"
+              ></div>
+            </div>
+            <p class="meas" data-meas></p>
+          </div>
+          <div class="duo">
+            <div>
+              <p class="cap">Laptop, 1366 × 657 <span>short rules on</span></p>
+              <div class="desk-wrap">
+                <div
+                  class="frame desk"
+                  data-tpl="tpl-example"
+                  data-measure
+                  data-short
+                  style="--w: 1366px; --fold: 657px"
+                ></div>
+              </div>
+              <p class="meas" data-meas></p>
+            </div>
+            <div>
+              <p class="cap">Laptop, 1280 × 720 <span>short rules on</span></p>
+              <div class="desk-wrap">
+                <div
+                  class="frame desk"
+                  data-tpl="tpl-example"
+                  data-measure
+                  data-short
+                  style="--w: 1280px; --fold: 720px"
+                ></div>
+              </div>
+              <p class="meas" data-meas></p>
+            </div>
+          </div>
+          <div class="row-phones">
+            <div>
+              <p class="cap">Example page, 375 × 667</p>
+              <div
+                class="frame phone"
+                data-tpl="tpl-example"
+                data-measure
+                style="--fold: 667px"
+              ></div>
+              <p class="meas" data-meas></p>
+            </div>
+            <div>
+              <p class="cap">Visitor page, 375 <span data-pair-cap="minimal">minimal pair</span></p>
+              <div
+                class="frame phone"
+                data-tpl="tpl-bakery"
+                data-visitor="minimal"
+                data-measure
+                style="--fold: 667px"
+              ></div>
+              <p class="meas" data-meas></p>
+            </div>
+            <div>
+              <p class="cap">What changes on a visitor's page</p>
+              <ul class="notes">
+                <li>
+                  <b>No figures, and no invented facts.</b> The run becomes an 'At a glance' sheet
+                  of at most three rows, each restating a phrase of the owner's sentence. A row with
+                  no source is dropped, never padded.
+                </li>
+                <li>
+                  <b>The body's bottom line is the business's signature</b> on the double rule,
+                  never an invented total. The ask stays on the stub, beside the seal.
+                </li>
+                <li>
+                  <b>A trust line of at most two items,</b> never filler and never repeating a row.
+                  One item, or none, is fine.
+                </li>
+                <li>
+                  <b>One photo, if there is one,</b> sits inside the body's top corner at 3:2, lazy
+                  and small, so the headline stays the LCP. With no photo the title takes the row.
+                </li>
+                <li>
+                  <b>Faces and scheme</b> come from the visitor's style. The figure face loads only
+                  for a digit the owner typed.
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div>
+            <p class="cap">
+              Visitor page, 1440 × 900
+              <span data-pair-cap="minimal"
+                >Hollinby Bakehouse, built only from the sentence below, minimal pair</span
+              >
+            </p>
+            <div class="desk-wrap">
+              <div
+                class="frame desk"
+                data-tpl="tpl-bakery"
+                data-visitor="minimal"
+                data-measure
+                style="--w: 1440px; --fold: 900px"
+              ></div>
+            </div>
+            <p class="meas" data-meas></p>
+          </div>
+          <figure class="source">
+            <div>
+              <p class="cap">The fact budget, shown on a realistic, full-length sentence</p>
+              <blockquote id="bakery-sentence">
+                Hollinby Bakehouse is a
+                <u>family bakery on the high street in Hebden Bridge<sup>1</sup></u
+                >. We bake
+                <u>sourdough, pastries and celebration cakes by hand every morning<sup>2</sup></u
+                >, and <u>cakes are made to order<sup>3</sup></u
+                >, with <u>gluten-free on request<sup>4</sup></u
+                >. <u>Order by noon to collect the next day<sup>5</sup></u
+                >, or <u>we deliver around the valley<sup>6</sup></u
+                >.
+                <u
+                  >My grandmother opened the shop in the seventies, and we still bake from her
+                  recipes<sup>7</sup></u
+                >
+                with <u>Yorkshire flour<sup>8</sup></u
+                >.
+              </blockquote>
+              <p class="count" id="bakery-count"></p>
+            </div>
+            <dl>
+              <dt>Kicker</dt>
+              <dd>1</dd>
+              <dt>h1</dt>
+              <dd>2</dd>
+              <dt>Lead</dt>
+              <dd>7</dd>
+              <dt>Trust line</dt>
+              <dd>5, 6 (never a row's fact)</dd>
+              <dt>Sheet rows</dt>
+              <dd>2, 3, 4 (at most three)</dd>
+              <dt>Signature</dt>
+              <dd>the name, and the place from 1</dd>
+              <dt>Not used</dt>
+              <dd>8: there was no slot left, so nothing is padded</dd>
+              <dt>What's included</dt>
+              <dd>null: no terms left over after the hero</dd>
+              <dt>Corrections</dt>
+              <dd>null: the sentence states no before and after</dd>
+            </dl>
+          </figure>
+        </div>
+      </section>
+
+      <section class="plate" id="p3" aria-labelledby="p3h">
+        <header class="plate-head">
+          <span class="plate-no">Plate 3</span>
+          <div>
+            <h2 class="h2" id="p3h">Stress cases: any business, any name, the fallback</h2>
+            <p>
+              The same template for two more fixtures. A physio with a 34-character name, a
+              14-character askShort, a step-c headline, no photo and one digit the owner typed. Then
+              the fallback copy the pipeline writes when the model fails: no rows, the sentence's
+              first clause as the headline and the rest as a signed note, and a fixed claim-free
+              trust line.
+            </p>
+          </div>
+        </header>
+        <div class="frames">
+          <div>
+            <p class="cap">
+              Physio, 1440 × 900
+              <span data-pair-cap="bold">Calder Valley Sports Physiotherapy, bold pair</span>
+            </p>
+            <div class="desk-wrap">
+              <div
+                class="frame desk"
+                data-tpl="tpl-physio"
+                data-visitor="bold"
+                data-measure
+                style="--w: 1440px; --fold: 900px"
+              ></div>
+            </div>
+            <p class="meas" data-meas></p>
+          </div>
+          <div class="row-phones">
+            <div>
+              <p class="cap">Physio, 375 <span data-pair-cap="bold">bold pair</span></p>
+              <div
+                class="frame phone"
+                data-tpl="tpl-physio"
+                data-visitor="bold"
+                data-measure
+                style="--fold: 667px; --max: 1400px"
+              ></div>
+              <p class="meas" data-meas></p>
+            </div>
+            <div>
+              <p class="cap">Fallback copy, 375 <span data-pair-cap="warm">warm pair</span></p>
+              <div
+                class="frame phone"
+                data-tpl="tpl-fallback"
+                data-visitor="warm"
+                data-measure
+                style="--fold: 667px; --max: 1100px"
+              ></div>
+              <p class="meas" data-meas></p>
+            </div>
+            <div>
+              <p class="cap">What the stress cases show</p>
+              <ul class="notes">
+                <li>
+                  <b>A long name</b> wraps with balanced lines at 15 px in the phone bar and never
+                  breaks inside a word; the bar keeps the ask and the Menu toggle at 44 px.
+                </li>
+                <li>
+                  <b>An owner-typed digit.</b> '45 minutes' came from the sentence, so rules.ts lets
+                  it through and the figure face prints the 45. DM Sans cannot set tabular figures;
+                  the third variable can.
+                </li>
+                <li>
+                  <b>One trust item, two rows.</b> The sentence had six facts; the rest are already
+                  on the page, so nothing is padded.
+                </li>
+                <li>
+                  <b>The fallback</b> takes the first sentence's first clause as the headline when
+                  the sentence is longer than 90 characters, seals the rest of it as a note, and
+                  keeps a trust signal in the first screen with a fixed claim-free line. It repeats
+                  no words. Only a sentence with no clause of 12 to 90 characters falls back to the
+                  name.
+                </li>
+              </ul>
+              <p class="muted" style="margin-top: 1rem; max-width: 64ch">
+                Physio: 'Calder Valley Sports Physiotherapy treats back, neck and sports injuries
+                from a clinic in Todmorden. Every appointment is 45 minutes with the same physio
+                each time, on weekday evenings and Saturday mornings. You can refer yourself, so no
+                GP letter is needed.' (258 characters)
+              </p>
+            </div>
+          </div>
+          <div>
+            <p class="cap">
+              Fallback copy, 1440 × 900
+              <span data-pair-cap="warm">Ashworth &amp; Pell, warm pair</span>
+            </p>
+            <div class="desk-wrap">
+              <div
+                class="frame desk"
+                data-tpl="tpl-fallback"
+                data-visitor="warm"
+                data-measure
+                style="--w: 1440px; --fold: 900px"
+              ></div>
+            </div>
+            <p class="meas" data-meas></p>
+          </div>
+        </div>
+      </section>
+
+      <section class="plate" id="p4" aria-labelledby="p4h">
+        <header class="plate-head">
+          <span class="plate-no">Plate 4</span>
+          <div>
+            <h2 class="h2" id="p4h">
+              Type: a serif that engraves, a sans that explains, a mono that prints the money
+            </h2>
+            <p>
+              Newsreader, IBM Plex Sans and IBM Plex Mono, all SIL Open Font License 1.1 (Plex
+              carries the reserved font name 'Plex'). Newsreader ships as one self-hosted file, its
+              optical-size axis at weight 500 (60,724 B), through next/font/local: next/font/google
+              cannot pair a fixed weight with an axis. Plex Sans 400 and 500; Plex Mono 400 and 500,
+              for digit runs only. No italics anywhere.
+            </p>
+          </div>
+        </header>
+        <div class="spec" id="spec">
+          <div>
+            <p class="meta">
+              <b>h1, up to 44 characters</b>clamp(2.375rem, 1.5rem + 3.9vw, 5.5rem), leading 1.02;
+              3.75rem at most on short laptops
+            </p>
+            <p class="h1" data-count>Pay every supplier on time. Pay nobody else.</p>
+          </div>
+          <div>
+            <p class="meta">
+              <b>h1, 45 to 64 characters</b>clamp(2.125rem, 1.4rem + 3.1vw, 4.5rem); 3.25rem at most
+              on short laptops
+            </p>
+            <p class="h1 b" data-count>
+              Every supplier paid on time, and every bank detail checked.
+            </p>
+          </div>
+          <div>
+            <p class="meta">
+              <b>h1, 65 to 90 characters</b>clamp(2rem, 1.3rem + 2.4vw, 3.75rem); 2.875rem at most
+              on short laptops. The step is chosen in assemble by length.
+            </p>
+            <p class="h1 c" data-count>
+              Pay suppliers on time, check every new bank detail and match each payment to its
+              invoice.
+            </p>
+          </div>
+          <div>
+            <p class="meta"><b>h2</b>clamp(2rem, 1.4rem + 2vw, 3.5rem), leading 1.08</p>
+            <p class="h2">Where your money sits, and who can move it</p>
+          </div>
+          <div>
+            <p class="meta"><b>h3</b>clamp(1.25rem, 1.05rem + 0.8vw, 1.625rem)</p>
+            <p class="h3">Two approvers on every run</p>
+          </div>
+          <div>
+            <p class="meta">
+              <b>Lead</b>Plex Sans 400, clamp(1.125rem, 1rem + 0.5vw, 1.375rem), max 36rem
+            </p>
+            <p class="lead">
+              Whimbrel checks every new bank detail, puts each run in front of two approvers and
+              matches every payment to its invoice. Friday's run takes twenty minutes, not a day.
+            </p>
+          </div>
+          <div>
+            <p class="meta">
+              <b>Body, at 64ch</b>Plex Sans 400, clamp(1.0625rem, 1rem + 0.25vw, 1.1875rem), line
+              height 1.55. Labels, nav, buttons and worded values 500. Nothing on the page is under
+              16 px except the 12 px Placeholder and Preview tags (chrome) and the 15 px wordmark
+              step for names over 24 characters below 30rem.
+            </p>
+            <p class="body-sample">
+              Whimbrel sits between your bank and your ledger. It checks every new supplier bank
+              detail against the account name before the first payment, puts each run in front of
+              two approvers who cannot be the same person, pays the run and matches each payment to
+              its invoice, so month-end starts reconciled. Fees are per payment, listed in full, and
+              there is no contract.
+            </p>
+          </div>
+          <div>
+            <p class="meta">
+              <b>Figures: digit runs only</b>Plex Mono 400 and 500, in value cells: amounts,
+              references and times. Words in a value cell ('Unlimited', 'each') stay in the body
+              face.
+            </p>
+            <div class="tabs">
+              <div class="tabcol">
+                <p class="slip-title">Plex Mono: aligned</p>
+                <p class="muted" style="font-size: 1rem">
+                  Measured: 0s and 1s both 592 px wide at 96 px
+                </p>
+                <ol class="amt guide">
+                  <li>£3,120.00</li>
+                  <li>£12,480.50</li>
+                  <li>£864.00</li>
+                  <li>£1,205.90</li>
+                  <li>£30,540.00</li>
+                  <li>£48,210.40</li>
+                </ol>
+              </div>
+              <div class="tabcol bad">
+                <p class="slip-title">Fraunces with tabular-nums</p>
+                <p class="muted" style="font-size: 1rem">
+                  Measured: 0s 651.53 px, 1s 456.17 px. The warm pair cannot align money.
+                </p>
+                <ol class="guide">
+                  <li>£3,120.00</li>
+                  <li>£12,480.50</li>
+                  <li>£864.00</li>
+                  <li>£1,205.90</li>
+                  <li>£30,540.00</li>
+                  <li>£48,210.40</li>
+                </ol>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="pairs" id="pairs">
+          <figure>
+            <div class="pcard" data-faces="warm">
+              <p class="t">Pay every supplier on time. Pay nobody else.</p>
+              <p>Every payment checked, approved and matched.</p>
+              <a class="ask" href="#p4"
+                ><span class="ask-label">Book a demo</span><span class="ask-arr"></span></a
+              ><span class="fig">£48,210.40</span>
+            </div>
+            <figcaption class="cap">
+              <span>Warm: Fraunces 500 with Instrument Sans. A heritage statement.</span>
+            </figcaption>
+          </figure>
+          <figure>
+            <div class="pcard" data-faces="minimal">
+              <p class="t">Pay every supplier on time. Pay nobody else.</p>
+              <p>Every payment checked, approved and matched.</p>
+              <a class="ask" href="#p4"
+                ><span class="ask-label">Book a demo</span><span class="ask-arr"></span></a
+              ><span class="fig">£48,210.40</span>
+            </div>
+            <figcaption class="cap">
+              <span>Minimal: Manrope 500 with Inter. A Swiss instrument.</span>
+            </figcaption>
+          </figure>
+          <figure>
+            <div class="pcard" data-faces="bold">
+              <p class="t">Pay every supplier on time. Pay nobody else.</p>
+              <p>Every payment checked, approved and matched.</p>
+              <a class="ask" href="#p4"
+                ><span class="ask-label">Book a demo</span><span class="ask-arr"></span></a
+              ><span class="fig">£48,210.40</span>
+            </div>
+            <figcaption class="cap">
+              <span>Bold: Bricolage Grotesque 500 with DM Sans. A financial magazine.</span>
+            </figcaption>
+          </figure>
+          <figure>
+            <div class="pcard" data-faces="dark" data-scheme="dark">
+              <p class="t">Pay every supplier on time. Pay nobody else.</p>
+              <p>Every payment checked, approved and matched.</p>
+              <a class="ask" href="#p4"
+                ><span class="ask-label">Book a demo</span><span class="ask-arr"></span></a
+              ><span class="fig">£48,210.40</span>
+            </div>
+            <figcaption class="cap">
+              <span>Dark: Sora 500 with Inter, dark scheme forced. A night print.</span>
+            </figcaption>
+          </figure>
+        </div>
+        <p class="muted" style="margin-top: 1rem; max-width: 64ch">
+          Figures under every pair are Plex Mono through a third variable,
+          <span class="fig">--template-font-figure</span> (decision 7), because Fraunces and DM Sans
+          ignore tabular-nums.
+        </p>
+      </section>
+
+      <section class="plate" id="p5" aria-labelledby="p5h">
+        <header class="plate-head">
+          <span class="plate-no">Plate 5</span>
+          <div>
+            <h2 class="h2" id="p5h">Palette: fourteen tokens from one hex, ten declared pairs</h2>
+            <p id="pal-note">
+              Derived by lib/tokens/derive.ts. Every ratio is the palette tool's (culori
+              wcagContrast, the solver's own function, floored to two decimals). The solver moved
+              nothing for these pairs on 27 hexes, and solving them beside any of the eight
+              templates moved none of their tokens (540 of 540 solves). Brand colour marks action
+              only: asks, links and the seal. Figures and totals are always on-surface.
+            </p>
+          </div>
+        </header>
+        <div class="pals" id="pals">
+          <div class="pal" data-scheme="light"></div>
+          <div class="pal" data-scheme="dark"></div>
+        </div>
+      </section>
+
+      <section class="plate" id="p6" aria-labelledby="p6h">
+        <header class="plate-head">
+          <span class="plate-no">Plate 6</span>
+          <div>
+            <h2 class="h2" id="p6h">Buttons and links</h2>
+            <p>
+              One filled ask, one square cell: the label and an arrow that nudges 4 px on hover,
+              focus and press, so mouse, keyboard and touch get the same cue. The header ask carries
+              no glyph. It is outlined while any in-page ask is on screen and filled when none is,
+              so exactly one filled ask is ever in view. Secondary actions are text links. The focus
+              ring is on-surface, 2 px at a 3 px offset.
+            </p>
+          </div>
+        </header>
+        <div class="states" id="states">
+          <div>
+            <p class="slip-title">Primary, on paper</p>
+            <div class="cells on-paper" data-kind="ask"></div>
+          </div>
+          <div>
+            <p class="slip-title">Header ask, while an in-page ask is in view</p>
+            <div class="cells" data-kind="outline"></div>
+          </div>
+          <div>
+            <p class="slip-title">Header ask, when none is</p>
+            <div class="cells" data-kind="filled"></div>
+          </div>
+          <div>
+            <p class="slip-title">Text link</p>
+            <div class="cells on-paper" data-kind="link"></div>
+          </div>
+          <div>
+            <p class="slip-title">Live</p>
+            <div class="cells">
+              <figure>
+                <a class="ask two" href="#p6"
+                  ><span class="ask-label"
+                    >Book a demo<small>25 minutes. No obligation.</small></span
+                  ><span class="ask-arr"></span
+                ></a>
+                <figcaption>The hero ask; the second line is example only</figcaption>
+              </figure>
+              <figure>
+                <a class="ask ask--bar" href="#p6" id="handoff"
+                  ><span class="ask-label">Book a demo</span
+                  ><span class="ask-fill" aria-hidden="true">Book a demo</span></a
+                >
+                <figcaption>
+                  Header ask. The filled layer is a second, aria-hidden span faded in over 0.3 s;
+                  <button class="tool" type="button" id="handoff-t" style="margin-top: 0.5rem">
+                    Scroll every in-page ask away
+                  </button>
+                </figcaption>
+              </figure>
+              <figure>
+                <a class="more" href="#p6">Request the security pack</a>
+                <figcaption>Text link, a 44 px row</figcaption>
+              </figure>
+            </div>
+          </div>
+          <div>
+            <p class="slip-title">Forced colours, simulated with system colours</p>
+            <div class="fc">
+              <a class="ask" href="#p6"
+                ><span class="ask-label">Book a demo</span><span class="ask-arr"></span></a
+              ><a class="ask ask--bar" href="#p6"
+                ><span class="ask-label">Book a demo</span
+                ><span class="ask-fill" aria-hidden="true">Book a demo</span></a
+              ><a class="more" href="#p6">See the fees</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="plate" id="p7" aria-labelledby="p7h">
+        <header class="plate-head">
+          <span class="plate-no">Plate 7</span>
+          <div>
+            <h2 class="h2" id="p7h">The signature: the seal on the tear line, and the print run</h2>
+            <p>
+              One WebGL moment, at the hero's own scale. The seal's rings are drawn analytically in
+              a shader from the same formula as the static SVG, r = R + A cos(kθ − 2πi/N), in
+              brand-deeper, on-surface-muted and brand, read from the tokens. It starts on the first
+              sign of intent, sweeps one highlight round the rim and stops pointing at the ask, and
+              then the ask's arrow nudges once: the last thing that moves is the button. Below
+              64rem, where the seal and the ask are never on screen together, it stays SVG.
+            </p>
+          </div>
+        </header>
+        <div class="sig">
+          <div class="stage" id="stage">
+            <div class="mini">
+              <div class="mini-l">
+                <a class="ask two" href="#p7" id="press"
+                  ><span class="ask-label"
+                    >Book a demo<small>25 minutes. No obligation.</small></span
+                  ><span class="ask-arr"></span
+                ></a>
+              </div>
+              <span class="tear-v" aria-hidden="true"></span>
+              <div class="seal" data-initial="W"><canvas aria-hidden="true"></canvas></div>
+              <div class="mini-r">
+                <p class="sum"><span>43 payments</span><span class="amt">£48,210.40</span></p>
+              </div>
+            </div>
+            <p class="status" id="gl-status" role="status">
+              Static SVG. The WebGL starts on your first pointer move, scroll or key while this is
+              in view.
+            </p>
+            <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; justify-content: center">
+              <button class="tool" type="button" id="replay">Play the moment again</button
+              ><button class="tool" type="button" id="release">Release the context</button>
+            </div>
+          </div>
+          <div class="stage">
+            <div class="seal static-seal" data-initial="W"></div>
+            <p class="status" id="svg-bytes">
+              The static fallback: the first paint for everyone, and the whole design under reduced
+              motion, without WebGL, with the flag off, after context loss, in print and in forced
+              colours.
+            </p>
+          </div>
+        </div>
+        <ol class="story" style="margin-top: 2rem">
+          <li>
+            <b>0 ms</b
+            ><span
+              >First paint: headline, lead, ask and trust line, plus the SVG seal on the tear.
+              Nothing is hidden and nothing waits for a script.</span
+            >
+          </li>
+          <li>
+            <b>First intent</b
+            ><span
+              >A pointer move, scroll or key, from 64rem only, arms it. The canvas cross-fades in
+              over the identical SVG in 240 ms.</span
+            >
+          </li>
+          <li>
+            <b>0 to 1.4 s</b
+            ><span
+              >The monogram's relief rises and one highlight sweeps round the rim on the spring, one
+              and three-quarter turns, and stops pointing left, at the ask.</span
+            >
+          </li>
+          <li>
+            <b>1.4 to 2.1 s</b
+            ><span>The ask's arrow nudges once, 6 px and back. Then nothing draws.</span>
+          </li>
+          <li>
+            <b>On the ask</b
+            ><span
+              >Hover, focus or press deepens the relief from 1 to 1.25 in 140 ms, released on leave.
+              Pointer movement rakes the light across the relief.</span
+            >
+          </li>
+          <li>
+            <b>Hero gone</b
+            ><span
+              >The canvas fades back to the SVG; program, buffer and texture are deleted and the
+              context is lost on purpose. It is never re-created.</span
+            >
+          </li>
+        </ol>
+        <div class="sig" style="margin-top: 3rem">
+          <div class="sched" id="sched">
+            <div class="paper">
+              <div class="paper-in">
+                <h3 class="h3">Fees, in full</h3>
+                <dl class="rows">
+                  <div>
+                    <dt>Platform, per month</dt>
+                    <dd class="val"><span class="fig">£0</span></dd>
+                  </div>
+                  <div>
+                    <dt>Domestic supplier payment</dt>
+                    <dd class="val"><span class="fig">£0.20</span> each</dd>
+                  </div>
+                  <div>
+                    <dt>International payment</dt>
+                    <dd class="val"><span class="fig">0.35%</span> over mid-market</dd>
+                  </div>
+                  <div>
+                    <dt>Approver seats</dt>
+                    <dd class="val">Unlimited</dd>
+                  </div>
+                  <div>
+                    <dt>Bank detail checks</dt>
+                    <dd class="val">Included</dd>
+                  </div>
+                  <div>
+                    <dt>Setup and migration</dt>
+                    <dd class="val">None</dd>
+                  </div>
+                  <div class="earn">
+                    <dt>What Whimbrel earns</dt>
+                    <dd class="val">
+                      The <span class="fig">0.35%</span> and the <span class="fig">£0.20</span>
+                    </dd>
+                  </div>
+                </dl>
+                <h4>A worked month for a 120-person firm</h4>
+                <dl class="rows">
+                  <div>
+                    <dt>400 domestic payments</dt>
+                    <dd class="val"><span class="fig">£80.00</span></dd>
+                  </div>
+                  <div>
+                    <dt>£60,000.00 abroad at 0.35%</dt>
+                    <dd class="val"><span class="fig">£210.00</span></dd>
+                  </div>
+                  <div>
+                    <dt>Platform</dt>
+                    <dd class="val"><span class="fig">£0.00</span></dd>
+                  </div>
+                </dl>
+                <p class="signed">Checked by Amara Osei, pricing. Last changed 1 September 2026.</p>
+              </div>
+              <div class="tear" aria-hidden="true"></div>
+              <div class="stub">
+                <div class="bottomline">
+                  <p class="tot"><span>Total, a month</span><span class="amt">£290.00</span></p>
+                  <a class="ask" href="#p7"
+                    ><span class="ask-label">Book a demo</span><span class="ask-arr"></span
+                  ></a>
+                </div>
+                <p class="fine">No contract. A month's notice to leave.</p>
+              </div>
+            </div>
+          </div>
+          <div>
+            <h3 class="h3">The print run</h3>
+            <p style="margin-top: 0.75rem; max-width: 60ch">
+              Rules draw, figures land, the total lands last, then the ask. Each leader draws from
+              label to value in 0.5 s and its value settles 6 px, 70 ms apart; the two strokes of
+              the double rule draw 60 ms apart; the total rises inside a clipped row; the stub
+              settles 8 px; the ask's arrow nudges once. About 2.3 s, played once when the schedule
+              enters the viewport, never scrubbed. CSS keyframes only, transform and opacity, on one
+              critically damped spring sampled into linear(). Under reduced motion every rule is
+              drawn and every figure shown.
+            </p>
+            <p style="margin-top: 1.5rem">
+              <button class="tool" type="button" id="reprint">Print it again</button>
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="plate" id="p8" aria-labelledby="p8h">
+        <header class="plate-head">
+          <span class="plate-no">Plate 8</span>
+          <div>
+            <h2 class="h2" id="p8h">The conversion point, and the answer to 'is it safe'</h2>
+            <p>
+              Roughs of the two blocks the buyer decides on. The booking form sits beside the
+              questions, as a counterfoil of its own: the promise on the stub, the fields below the
+              tear. Every state is designed. The assurance register answers where the money sits and
+              who can move it.
+            </p>
+          </div>
+        </header>
+        <div class="frames">
+          <div>
+            <p class="cap">
+              Contact, 1440
+              <span>the FAQ beside the form; the form stays in view when it fits</span>
+            </p>
+            <div class="desk-wrap">
+              <div class="frame desk" data-tpl="tpl-contact" style="--w: 1440px"></div>
+            </div>
+          </div>
+          <div class="states-grid" id="form-states">
+            <div>
+              <p class="cap">375, default</p>
+              <div class="frame" data-form="default"></div>
+            </div>
+            <div>
+              <p class="cap">Sending</p>
+              <div class="frame" data-form="sending"></div>
+            </div>
+            <div>
+              <p class="cap">Error</p>
+              <div class="frame" data-form="error"></div>
+            </div>
+            <div>
+              <p class="cap">Success: the receipt, stamped</p>
+              <div class="frame" data-form="success"></div>
+            </div>
+            <div>
+              <p class="cap">
+                A visitor's page: the demo state <span data-pair-cap="minimal">minimal pair</span>
+              </p>
+              <div class="frame" data-form="demo"></div>
+            </div>
+          </div>
+          <div>
+            <p class="cap">
+              Assurance, 1440
+              <span>example only; a visitor's page gets 'What you can hold us to', or nothing</span>
+            </p>
+            <div class="desk-wrap">
+              <div class="frame desk" data-tpl="tpl-assurance" style="--w: 1440px"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="plate" id="p9" aria-labelledby="p9h">
+        <header class="plate-head">
+          <span class="plate-no">Plate 9</span>
+          <div>
+            <h2 class="h2" id="p9h">Nine sections in the order the buyer asks</h2>
+            <p>
+              What is it, does it work, what does it cost, is our money safe, how hard is switching,
+              who else uses it. Every ask moves down to one form, and none points back up.
+            </p>
+          </div>
+        </header>
+        <p class="order-head" aria-hidden="true">
+          <span></span><span>Section</span><span>Its job, and where it asks</span
+          ><span>On a visitor's page</span>
+        </p>
+        <ol class="order">
+          <li>
+            <h3>header</h3>
+            <p>
+              Wayfinding and the ask at every width, the 375 bar included. Outlined while any
+              in-page ask is in view.
+            </p>
+            <p class="v">Logo or display-face wordmark; askShort of 14 characters or fewer.</p>
+          </li>
+          <li>
+            <h3>intro</h3>
+            <p>
+              The counterfoil: value, first ask and one trust line on the stub; the payment run on
+              the body; the seal on the tear beside the ask.
+            </p>
+            <p class="v">
+              'At a glance' in at most three sourced rows; the body ends on the signature.
+            </p>
+          </li>
+          <li>
+            <h3>terms</h3>
+            <p>
+              Fees second, because hidden charges are the category's main fear. The whole
+              arithmetic, then the ask on the double rule.
+            </p>
+            <p class="v">Only the terms left over after the hero, in words; otherwise null.</p>
+          </li>
+          <li>
+            <h3>offer</h3>
+            <p>
+              Three drawn fragments prove the product is specific: a checked payee, two signatures,
+              an invoice matched to a payment.
+            </p>
+            <p class="v">
+              The brief's offers; a 3:2 detail photo, or a specimen plate when there is none.
+            </p>
+          </li>
+          <li>
+            <h3>assurance</h3>
+            <p>
+              Where the money sits and who can move it: a register of plain rows, documents, and
+              'Request the security pack'.
+            </p>
+            <p class="v">
+              'What you can hold us to' only when the sentence states commitments; otherwise null.
+            </p>
+          </li>
+          <li>
+            <h3>process</h3>
+            <p>Switching feels small: one rule, three ticks, and the rule ends at the ask.</p>
+            <p class="v">The brief's three steps; timings null.</p>
+          </li>
+          <li>
+            <h3>proof</h3>
+            <p>
+              Results for firms like theirs, as corrections:
+              <del><span class="vh">was </span>a day</del>
+              <ins><span class="vh">now </span>20 minutes</ins>. Two signed statements and a ledger
+              follow.
+            </p>
+            <p class="v">
+              Worded corrections only when the sentence states a before and after; otherwise null.
+            </p>
+          </li>
+          <li>
+            <h3>contact</h3>
+            <p>
+              The last doubts beside the booking form, which stays in view when it fits the screen.
+              The only conversion.
+            </p>
+            <p class="v">Name, email and message; the demo state, and the seal stamps.</p>
+          </li>
+          <li>
+            <h3>footer</h3>
+            <p>Wayfinding, contact, and the regulatory slot at 16 px, marked as a placeholder.</p>
+            <p class="v">The slot is null and never generated.</p>
+          </li>
+        </ol>
+      </section>
+      <footer class="end">
+        <p>
+          Throwaway style tile for Phase 2, 27 September 2026. Tokens and ratios from the palette
+          tool over the repo's own colour engine; licences and tabular figures from the font tool.
+          Whimbrel, Hollinby Bakehouse, Calder Valley Sports Physiotherapy, Ashworth &amp; Pell and
+          every supplier named here are fictional.
+        </p>
+      </footer>
+    </main>
+
+    <template id="tpl-example">
+      <div class="site">
+        <div class="studio" aria-hidden="true"><span>StudioBar, 56 px</span><b>Book a call</b></div>
+        <header class="s-head">
+          <div class="s-in">
+            <a class="wordmark" href="#p2">Whimbrel</a>
+            <nav class="s-nav" aria-label="Main">
+              <a href="#p2">Product</a><a href="#p2">Fees</a><a href="#p2">Safeguards</a
+              ><a href="#p2">Questions</a>
+            </nav>
+            <a class="ask ask--bar" href="#p2"
+              ><span class="ask-label">Book a demo</span
+              ><span class="ask-fill" aria-hidden="true">Book a demo</span></a
+            >
+            <button class="menu-t" type="button" aria-expanded="false">Menu</button>
+          </div>
+        </header>
+        <div class="hero">
+          <div class="cf">
+            <div class="cf-stub">
+              <div class="cf-top">
+                <p class="kicker">Supplier payments for finance teams</p>
+                <p class="h1">Pay every supplier on time. Pay nobody else.</p>
+                <p class="lead">
+                  Whimbrel checks every new bank detail, puts each run in front of two approvers and
+                  matches every payment to its invoice. Friday's run takes twenty minutes, not a
+                  day.
+                </p>
+              </div>
+              <div class="asks">
+                <a class="ask two" href="#p2" data-ask
+                  ><span class="ask-label"
+                    >Book a demo<small>25 minutes. No obligation.</small></span
+                  ><span class="ask-arr"></span
+                ></a>
+                <a class="more" href="#p2">See the fees</a>
+              </div>
+              <div class="cf-trust">
+                <ul class="trust">
+                  <li><b>£1.42bn</b> paid to 41,000 suppliers since 2023</li>
+                  <li>Two approvers on every run, always</li>
+                </ul>
+              </div>
+            </div>
+            <div class="cf-tear tear" aria-hidden="true"></div>
+            <div class="cf-body" role="group" aria-label="Example payment run">
+              <div class="cf-run">
+                <div class="run-head">
+                  <span class="slip-title">Friday run</span
+                  ><span class="slip-date">26 Sep 2026</span>
+                </div>
+                <div class="line">
+                  <span class="who">Quillon Steelworks</span><span class="ref">INV-20931</span
+                  ><span class="amt">£3,120.00</span><span class="mark" data-m="ok"></span>
+                </div>
+                <div class="line">
+                  <span class="who">Fenwright &amp; Rye</span><span class="ref">INV-4417</span
+                  ><span class="amt">£12,480.50</span><span class="mark" data-m="ok"></span>
+                </div>
+                <div class="line">
+                  <span class="who">Tolland Freight</span><span class="ref">TF-09-118</span
+                  ><span class="amt">£864.00</span><span class="mark" data-m="ok"></span>
+                </div>
+                <div class="line">
+                  <span class="who">Marrowby Print Co.</span><span class="ref">MP-3302</span
+                  ><span class="amt">£1,205.90</span><span class="mark" data-m="half"></span>
+                </div>
+                <div class="line more-rows">
+                  <span class="who">39 more payments</span><span class="amt">£30,540.00</span
+                  ><span class="mark" data-m="ok"></span>
+                </div>
+              </div>
+              <div class="cf-close">
+                <div class="seal" data-initial="W"></div>
+                <div class="cf-foot">
+                  <p class="sum"><span>43 payments</span><span class="amt">£48,210.40</span></p>
+                </div>
+                <p class="cf-sign">
+                  Approved by <span class="nw">A. Okafor <span class="fig">09:12</span></span> and
+                  <span class="nw">R. Lindqvist <span class="fig">09:40</span></span>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </template>
+
+    <template id="tpl-bakery">
+      <div class="site">
+        <div class="studio" aria-hidden="true"><span>StudioBar, 56 px</span><b>Book a call</b></div>
+        <header class="s-head">
+          <div class="s-in">
+            <a class="wordmark long" href="#p2">Hollinby Bakehouse</a>
+            <nav class="s-nav" aria-label="Main">
+              <a href="#p2">What we bake</a><a href="#p2">How to order</a
+              ><a href="#p2">Questions</a>
+            </nav>
+            <a class="ask ask--bar" href="#p2"
+              ><span class="ask-label">Order a cake</span
+              ><span class="ask-fill" aria-hidden="true">Order a cake</span></a
+            >
+            <button class="menu-t" type="button" aria-expanded="false">Menu</button>
+          </div>
+        </header>
+        <div class="hero">
+          <div class="cf">
+            <div class="cf-stub">
+              <div class="cf-top">
+                <p class="kicker">Family bakery in Hebden Bridge</p>
+                <p class="h1 b">Sourdough, pastries and cakes, baked by hand every morning.</p>
+                <p class="lead">
+                  Still baking from the recipes of the grandmother who opened the shop in the
+                  seventies.
+                </p>
+              </div>
+              <div class="asks">
+                <a class="ask" href="#p2" data-ask
+                  ><span class="ask-label">Order a cake</span><span class="ask-arr"></span
+                ></a>
+                <a class="more" href="#p2">See what we bake</a>
+              </div>
+              <div class="cf-trust">
+                <ul class="trust">
+                  <li>Order by noon, collect the next day</li>
+                  <li>Delivery around the valley</li>
+                </ul>
+              </div>
+            </div>
+            <div class="cf-tear tear" aria-hidden="true"></div>
+            <div class="cf-body" role="group" aria-label="Ordering at a glance">
+              <div class="cf-run">
+                <div class="run-head with-photo">
+                  <span class="slip-title">Ordering at a glance</span>
+                  <div class="photo" role="img" aria-label="Photo placeholder">
+                    Photo slot 0, 3:2: the counter or a loaf
+                  </div>
+                </div>
+                <dl>
+                  <div class="kv">
+                    <dt>Sourdough and pastries</dt>
+                    <dd>Baked every morning</dd>
+                  </div>
+                  <div class="kv">
+                    <dt>Celebration cakes</dt>
+                    <dd>Made to order</dd>
+                  </div>
+                  <div class="kv">
+                    <dt>Gluten-free</dt>
+                    <dd>On request</dd>
+                  </div>
+                </dl>
+              </div>
+              <div class="cf-close">
+                <div class="seal" data-initial="H"></div>
+                <div class="cf-foot"><p class="sig-name">Hollinby Bakehouse</p></div>
+                <p class="cf-sign">Hebden Bridge</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </template>
+
+    <template id="tpl-physio">
+      <div class="site">
+        <div class="studio" aria-hidden="true"><span>StudioBar, 56 px</span><b>Book a call</b></div>
+        <header class="s-head">
+          <div class="s-in">
+            <a class="wordmark long xlong" href="#p3">Calder Valley Sports Physiotherapy</a>
+            <nav class="s-nav" aria-label="Main">
+              <a href="#p3">Treatments</a><a href="#p3">How it works</a><a href="#p3">Questions</a>
+            </nav>
+            <a class="ask ask--bar" href="#p3"
+              ><span class="ask-label">Book a session</span
+              ><span class="ask-fill" aria-hidden="true">Book a session</span></a
+            >
+            <button class="menu-t" type="button" aria-expanded="false">Menu</button>
+          </div>
+        </header>
+        <div class="hero">
+          <div class="cf">
+            <div class="cf-stub">
+              <div class="cf-top">
+                <p class="kicker">Sports physiotherapy in Todmorden</p>
+                <p class="h1 c">
+                  Treatment for back, neck and sports injuries, with the same physio every time.
+                </p>
+                <p class="lead">
+                  A clinic in Todmorden, open on weekday evenings and Saturday mornings.
+                </p>
+              </div>
+              <div class="asks">
+                <a class="ask" href="#p3" data-ask
+                  ><span class="ask-label">Book a session</span><span class="ask-arr"></span
+                ></a>
+                <a class="more" href="#p3">See the treatments</a>
+              </div>
+              <div class="cf-trust">
+                <ul class="trust">
+                  <li>Refer yourself: no GP letter needed</li>
+                </ul>
+              </div>
+            </div>
+            <div class="cf-tear tear" aria-hidden="true"></div>
+            <div class="cf-body" role="group" aria-label="Appointments at a glance">
+              <div class="cf-run">
+                <div class="run-head"><span class="slip-title">Appointments at a glance</span></div>
+                <dl>
+                  <div class="kv">
+                    <dt>Length</dt>
+                    <dd><span class="fig">45</span> minutes</dd>
+                  </div>
+                  <div class="kv">
+                    <dt>Hours</dt>
+                    <dd>Weekday evenings and Saturday mornings</dd>
+                  </div>
+                </dl>
+              </div>
+              <div class="cf-close">
+                <div class="seal" data-initial="C"></div>
+                <div class="cf-foot">
+                  <p class="sig-name">Calder Valley Sports Physiotherapy</p>
+                </div>
+                <p class="cf-sign">Todmorden</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </template>
+
+    <template id="tpl-fallback">
+      <div class="site">
+        <div class="studio" aria-hidden="true"><span>StudioBar, 56 px</span><b>Book a call</b></div>
+        <header class="s-head">
+          <div class="s-in">
+            <a class="wordmark" href="#p3">Ashworth &amp; Pell</a>
+            <nav class="s-nav" aria-label="Main">
+              <a href="#p3">What we do</a><a href="#p3">How to start</a><a href="#p3">Questions</a>
+            </nav>
+            <a class="ask ask--bar" href="#p3"
+              ><span class="ask-label">Get in touch</span
+              ><span class="ask-fill" aria-hidden="true">Get in touch</span></a
+            >
+            <button class="menu-t" type="button" aria-expanded="false">Menu</button>
+          </div>
+        </header>
+        <div class="hero">
+          <div class="cf">
+            <div class="cf-stub">
+              <div class="cf-top">
+                <p class="h1 c">
+                  Ashworth &amp; Pell makes and alters suits by hand in a small workshop in Saltaire
+                </p>
+              </div>
+              <div class="asks">
+                <a class="ask" href="#p3" data-ask
+                  ><span class="ask-label">Get in touch</span><span class="ask-arr"></span
+                ></a>
+                <a class="more" href="#p3">See what we do</a>
+              </div>
+              <div class="cf-trust">
+                <ul class="trust">
+                  <li>A first message commits you to nothing.</li>
+                </ul>
+              </div>
+            </div>
+            <div class="cf-tear tear" aria-hidden="true"></div>
+            <div class="cf-body" role="group" aria-label="About Ashworth &amp; Pell">
+              <div class="cf-run">
+                <p class="note">
+                  With fittings by appointment and most alterations ready within the week.
+                </p>
+              </div>
+              <div class="cf-close">
+                <div class="seal" data-initial="A"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </template>
+
+    <template id="tpl-contact">
+      <div class="site">
+        <section class="sec" id="contact">
+          <div class="ct-in">
+            <div class="faq">
+              <h2 class="h2">Questions, answered</h2>
+              <details open>
+                <summary>
+                  What does Whimbrel cost?<svg viewBox="0 0 20 20" aria-hidden="true">
+                    <path d="M3 10h14" stroke="currentColor" stroke-width="1.5" />
+                    <path class="pv" d="M10 3v14" stroke="currentColor" stroke-width="1.5" />
+                  </svg>
+                </summary>
+                <p>
+                  £0.20 for each domestic payment and 0.35% over the mid-market rate abroad. No
+                  platform fee, no setup fee, and no contract.
+                </p>
+              </details>
+              <details>
+                <summary>
+                  Is there a contract?<svg viewBox="0 0 20 20" aria-hidden="true">
+                    <path d="M3 10h14" stroke="currentColor" stroke-width="1.5" />
+                    <path class="pv" d="M10 3v14" stroke="currentColor" stroke-width="1.5" />
+                  </svg>
+                </summary>
+                <p>No. You pay monthly for what you send, and a month's notice ends it.</p>
+              </details>
+              <details>
+                <summary>
+                  Does it work with our accounting software?<svg
+                    viewBox="0 0 20 20"
+                    aria-hidden="true"
+                  >
+                    <path d="M3 10h14" stroke="currentColor" stroke-width="1.5" />
+                    <path class="pv" d="M10 3v14" stroke="currentColor" stroke-width="1.5" />
+                  </svg>
+                </summary>
+                <p>
+                  It syncs payments and invoice matches both ways with the common UK cloud ledgers.
+                  We check yours on the demo.
+                </p>
+              </details>
+              <details>
+                <summary>
+                  Who pays if a payment reaches a fraudster?<svg
+                    viewBox="0 0 20 20"
+                    aria-hidden="true"
+                  >
+                    <path d="M3 10h14" stroke="currentColor" stroke-width="1.5" />
+                    <path class="pv" d="M10 3v14" stroke="currentColor" stroke-width="1.5" />
+                  </svg>
+                </summary>
+                <p>
+                  Every new bank detail is checked against the account name before the first
+                  payment, and two approvers see each run. The liability terms are in the security
+                  pack.
+                </p>
+              </details>
+              <details>
+                <summary>
+                  Where is our data stored?<svg viewBox="0 0 20 20" aria-hidden="true">
+                    <path d="M3 10h14" stroke="currentColor" stroke-width="1.5" />
+                    <path class="pv" d="M10 3v14" stroke="currentColor" stroke-width="1.5" />
+                  </svg>
+                </summary>
+                <p>In the UK, encrypted in transit and at rest.</p>
+              </details>
+              <details>
+                <summary>
+                  How long does switching take?<svg viewBox="0 0 20 20" aria-hidden="true">
+                    <path d="M3 10h14" stroke="currentColor" stroke-width="1.5" />
+                    <path class="pv" d="M10 3v14" stroke="currentColor" stroke-width="1.5" />
+                  </svg>
+                </summary>
+                <p>
+                  Most teams connect their bank and ledger in an afternoon and send their first run
+                  the same week.
+                </p>
+              </details>
+            </div>
+            <form class="bk" aria-labelledby="bk-h" novalidate>
+              <div class="seal" data-initial="W"></div>
+              <div class="bk-stub">
+                <h2 class="h3" id="bk-h">Book a demo</h2>
+                <ul class="next">
+                  <li>A reply within one working day</li>
+                  <li>25 minutes on your own supplier run</li>
+                  <li>No card, no contract</li>
+                </ul>
+              </div>
+              <div class="tear" aria-hidden="true"></div>
+              <div class="bk-body">
+                <div class="bk-alert" role="alert">
+                  <svg viewBox="0 0 20 20" aria-hidden="true">
+                    <circle
+                      cx="10"
+                      cy="10"
+                      r="8.25"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.5"
+                    />
+                    <path d="M10 5.5v5.5M10 13.5v1.25" stroke="currentColor" stroke-width="1.75" />
+                  </svg>
+                  <p>
+                    <b>Your booking was not sent.</b> Check the field marked below, or call
+                    <span class="nw">0113 496 0000</span>.
+                  </p>
+                </div>
+                <p class="bk-note">All four fields are needed.</p>
+                <div class="fld">
+                  <label for="f-n">Your name</label
+                  ><input id="f-n" autocomplete="name" required value="Amara Osei" />
+                </div>
+                <div class="fld bad">
+                  <label for="f-e">Work email</label
+                  ><input
+                    id="f-e"
+                    type="email"
+                    autocomplete="email"
+                    required
+                    value="amara@quillon"
+                    aria-describedby="f-e-m"
+                  />
+                  <p class="msg" id="f-e-m">
+                    <svg viewBox="0 0 20 20" aria-hidden="true">
+                      <circle
+                        cx="10"
+                        cy="10"
+                        r="8.25"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.5"
+                      />
+                      <path
+                        d="M10 5.5v5.5M10 13.5v1.25"
+                        stroke="currentColor"
+                        stroke-width="1.75"
+                      /></svg
+                    >Enter the whole address, like name@company.co.uk
+                  </p>
+                </div>
+                <div class="fld">
+                  <label for="f-c">Company</label
+                  ><input
+                    id="f-c"
+                    autocomplete="organization"
+                    required
+                    value="Quillon Steelworks"
+                  />
+                </div>
+                <div class="fld">
+                  <label for="f-s">Supplier payments a month</label
+                  ><select id="f-s" required>
+                    <option>Under 100</option>
+                    <option selected>100 to 500</option>
+                    <option>500 to 2,000</option>
+                    <option>Over 2,000</option>
+                  </select>
+                </div>
+                <div class="fld">
+                  <fieldset>
+                    <legend>What you want</legend>
+                    <label class="radio"><input type="radio" name="topic" checked />A demo</label
+                    ><label class="radio"
+                      ><input type="radio" name="topic" />The security pack</label
+                    >
+                  </fieldset>
+                </div>
+                <button class="ask" type="submit">
+                  <span class="ask-label"
+                    ><span class="bk-go">Book a demo</span
+                    ><span class="bk-sending">Sending</span></span
+                  ><span class="ask-arr"></span>
+                </button>
+                <p class="bk-call">Or call <span class="nw">0113 496 0000</span></p>
+                <div class="bk-receipt" role="status">
+                  <div class="seal" data-initial="W"></div>
+                  <p class="h3">Booked. Thank you, Amara.</p>
+                  <p>
+                    We will reply to amara@quillon.co.uk within one working day with a time for your
+                    demo.
+                  </p>
+                  <dl>
+                    <div class="kv">
+                      <dt>Company</dt>
+                      <dd>Quillon Steelworks</dd>
+                    </div>
+                    <div class="kv">
+                      <dt>Payments a month</dt>
+                      <dd>100 to 500</dd>
+                    </div>
+                    <div class="kv">
+                      <dt>Topic</dt>
+                      <dd>A demo</dd>
+                    </div>
+                  </dl>
+                  <p class="sum-line">
+                    <span>Your reference</span><span class="fig">WB-260927-04</span>
+                  </p>
+                </div>
+              </div>
+            </form>
+          </div>
+        </section>
+      </div>
+    </template>
+
+    <template id="tpl-form-visitor">
+      <div class="site">
+        <div class="sec">
+          <form class="bk" aria-labelledby="bkv-h" novalidate>
+            <div class="seal" data-initial="H"></div>
+            <div class="bk-stub">
+              <h2 class="h3" id="bkv-h">Order a cake</h2>
+              <ul class="next">
+                <li>Order by noon, collect the next day</li>
+                <li>Delivery around the valley</li>
+              </ul>
+            </div>
+            <div class="tear" aria-hidden="true"></div>
+            <div class="bk-body">
+              <div class="fld">
+                <label for="v-n">Your name</label><input id="v-n" autocomplete="name" />
+              </div>
+              <div class="fld">
+                <label for="v-e">Your email</label
+                ><input id="v-e" type="email" autocomplete="email" />
+              </div>
+              <div class="fld">
+                <label for="v-m">What would you like?</label><textarea id="v-m"></textarea>
+              </div>
+              <button class="ask" type="submit">
+                <span class="ask-label">Order a cake</span><span class="ask-arr"></span>
+              </button>
+              <div class="bk-receipt" role="status">
+                <div class="seal" data-initial="H"></div>
+                <p class="h3">Your message is ready for Hollinby Bakehouse.</p>
+                <p class="chrome">
+                  <i>Preview</i
+                  ><span
+                    >Nothing was sent. On the live site this message goes straight to Hollinby
+                    Bakehouse.</span
+                  >
+                </p>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </template>
+
+    <template id="tpl-assurance">
+      <div class="site">
+        <section class="sec">
+          <div class="as-in">
+            <div class="as-head">
+              <h2 class="h2">Where your money sits, and who can move it</h2>
+              <p class="lead" style="margin-top: 1rem">
+                Seven safeguards, each in place today. The documents behind them are yours on
+                request.
+              </p>
+            </div>
+            <div class="reg">
+              <div class="reg-row">
+                <span class="sect">§ 1</span><b>Your money, kept apart</b>
+                <p>
+                  Client money is held in segregated safeguarding accounts at partner banks, apart
+                  from Whimbrel's own.
+                </p>
+                <span class="st" data-st></span>
+              </div>
+              <div class="reg-row">
+                <span class="sect">§ 2</span><b>Two people, every run</b>
+                <p>Two-person approval on every payment run. It cannot be switched off.</p>
+                <span class="st" data-st></span>
+              </div>
+              <div class="reg-row">
+                <span class="sect">§ 3</span><b>Bank details checked</b>
+                <p>
+                  Every new bank detail is checked against the account name before a first payment.
+                </p>
+                <span class="st" data-st></span>
+              </div>
+              <div class="reg-row">
+                <span class="sect">§ 4</span><b>Strong sign-in</b>
+                <p>Passkeys or hardware keys for every user.</p>
+                <span class="st" data-st></span>
+              </div>
+              <div class="reg-row">
+                <span class="sect">§ 5</span><b>Data in the UK</b>
+                <p>Encrypted in transit and at rest, and stored in the UK.</p>
+                <span class="st" data-st></span>
+              </div>
+              <div class="reg-row">
+                <span class="sect">§ 6</span><b>Tested every year</b>
+                <p>An independent penetration test every year; the summary on request.</p>
+                <span class="st" data-st></span>
+              </div>
+              <div class="reg-row">
+                <span class="sect">§ 7</span><b>Every action logged</b>
+                <p>Logged and exportable for your auditors.</p>
+                <span class="st" data-st></span>
+              </div>
+              <div class="reg-foot">
+                <p>
+                  <b style="font-weight: 500">Documents:</b> security overview, data processing
+                  agreement, penetration test summary.
+                </p>
+                <p class="muted">
+                  <span class="ph">Legal name</span> is authorised by the
+                  <span class="ph">regulator</span> under the
+                  <span class="ph">regulations</span> for the issuing of electronic money. Firm
+                  reference <span class="ph">000000</span>.
+                </p>
+                <p><a class="more" href="#p8">Request the security pack</a></p>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </template>
+
+    <script>
+      // Tokens pasted from the palette tool: deriveTokens(hex, scheme, INTAGLIO pairs), ten pairs plus UI checks, ratios floored.
+      // prettier-ignore
+      const DATA = {"#4a2a6a|light":{"t":{"surface":"#fbf9fd","surface-muted":"#f2eef6","on-surface":"#17151a","on-surface-muted":"#56545a","border":"#dfdce4","accent":"#ede9f1","brand":"#634386","brand-deeper":"#4a2a6a","brand-deepest":"#3a1958","on-brand":"#ffffff","glow":"#cfaafc","glow-secondary":"#00c09f","scrim":"#060509","on-scrim":"#ffffff"},"p":{"on-surface:surface":17.32,"on-surface-muted:surface":7.13,"on-surface:surface-muted":15.82,"on-surface-muted:surface-muted":6.52,"on-surface:accent":15.12,"on-surface-muted:accent":6.23,"brand-deeper:surface":10.96,"brand-deeper:accent":9.57,"on-brand:brand-deeper":11.47,"on-brand:brand-deepest":14.38,"brand-deepest:surface":13.74,"brand-deepest:accent":12,"border:surface":1.29,"border:accent":1.13,"accent:surface":1.14,"brand:accent":6.54,"on-surface:brand-deeper":1.57},"a":3.39,"m":[]},"#4a2a6a|dark":{"t":{"surface":"#0e0c11","surface-muted":"#19171c","on-surface":"#f3f0f7","on-surface-muted":"#a6a3aa","border":"#2f2c32","accent":"#232026","brand":"#8060a5","brand-deeper":"#ae8dd5","brand-deepest":"#c19fe9","on-brand":"#0c0a0f","glow":"#c38dff","glow-secondary":"#00aa8d","scrim":"#020103","on-scrim":"#ffffff"},"p":{"on-surface:surface":17.24,"on-surface-muted:surface":7.82,"on-surface:surface-muted":15.76,"on-surface-muted:surface-muted":7.14,"on-surface:accent":14.25,"on-surface-muted:accent":6.46,"brand-deeper:surface":7.01,"brand-deeper:accent":5.79,"on-brand:brand-deeper":7.1,"on-brand:brand-deepest":8.82,"brand-deepest:surface":8.71,"brand-deepest:accent":7.19,"border:surface":1.41,"border:accent":1.16,"accent:surface":1.21,"brand:accent":3.16,"on-surface:brand-deeper":2.45},"a":4.86,"m":[]},"#1f6b52|light":{"t":{"surface":"#f6fbf9","surface-muted":"#ebf2ef","on-surface":"#131715","on-surface-muted":"#515754","border":"#d9e0dd","accent":"#e6edea","brand":"#1f6b52","brand-deeper":"#1f6b52","brand-deepest":"#025a42","on-brand":"#ffffff","glow":"#66d6ad","glow-secondary":"#ee8263","scrim":"#040705","on-scrim":"#ffffff"},"p":{"on-surface:surface":17.29,"on-surface-muted:surface":7.06,"on-surface:surface-muted":15.91,"on-surface-muted:surface-muted":6.5,"on-surface:accent":15.21,"on-surface-muted:accent":6.21,"brand-deeper:surface":6.11,"brand-deeper:accent":5.38,"on-brand:brand-deeper":6.39,"on-brand:brand-deepest":8.25,"brand-deepest:surface":7.89,"brand-deepest:accent":6.94,"border:surface":1.28,"border:accent":1.12,"accent:surface":1.13,"brand:accent":5.38,"on-surface:brand-deeper":2.82},"a":3.38,"m":[]},"#1f6b52|dark":{"t":{"surface":"#0a0e0c","surface-muted":"#151a17","on-surface":"#edf4f0","on-surface-muted":"#a0a6a3","border":"#2a2f2d","accent":"#1e2321","brand":"#398167","brand-deeper":"#68af93","brand-deepest":"#7ac3a6","on-brand":"#080c0a","glow":"#00c896","glow-secondary":"#ea6037","scrim":"#010201","on-scrim":"#ffffff"},"p":{"on-surface:surface":17.39,"on-surface-muted:surface":7.84,"on-surface:surface-muted":15.77,"on-surface-muted:surface-muted":7.11,"on-surface:accent":14.26,"on-surface-muted:accent":6.43,"brand-deeper:surface":7.53,"brand-deeper:accent":6.17,"on-brand:brand-deeper":7.62,"on-brand:brand-deepest":9.54,"brand-deepest:surface":9.42,"brand-deepest:accent":7.72,"border:surface":1.42,"border:accent":1.17,"accent:surface":1.21,"brand:accent":3.42,"on-surface:brand-deeper":2.3},"a":4.9,"m":[]},"#6b1e2c|light":{"t":{"surface":"#fef8f9","surface-muted":"#f7edee","on-surface":"#1b1414","on-surface-muted":"#5b5353","border":"#e5dbdc","accent":"#f2e8e9","brand":"#873743","brand-deeper":"#6b1e2c","brand-deepest":"#580a1d","on-brand":"#ffffff","glow":"#ff9ea7","glow-secondary":"#4aadf5","scrim":"#090505","on-scrim":"#ffffff"},"p":{"on-surface:surface":17.29,"on-surface-muted:surface":7.12,"on-surface:surface-muted":15.82,"on-surface-muted:surface-muted":6.52,"on-surface:accent":15.12,"on-surface-muted:accent":6.23,"brand-deeper:surface":10.83,"brand-deeper:accent":9.47,"on-brand:brand-deeper":11.36,"on-brand:brand-deepest":14.22,"brand-deepest:surface":13.55,"brand-deepest:accent":11.85,"border:surface":1.29,"border:accent":1.12,"accent:surface":1.14,"brand:accent":6.58,"on-surface:brand-deeper":1.59},"a":3.39,"m":[]},"#6b1e2c|dark":{"t":{"surface":"#120b0c","surface-muted":"#1d1617","on-surface":"#f8eff0","on-surface-muted":"#aba2a2","border":"#332c2c","accent":"#272020","brand":"#a7545e","brand-deeper":"#d9818a","brand-deepest":"#ee949c","on-brand":"#0f090a","glow":"#ff7b8c","glow-secondary":"#009aed","scrim":"#030101","on-scrim":"#ffffff"},"p":{"on-surface:surface":17.23,"on-surface-muted:surface":7.8,"on-surface:surface-muted":15.76,"on-surface-muted:surface-muted":7.14,"on-surface:accent":14.15,"on-surface-muted:accent":6.41,"brand-deeper:surface":6.91,"brand-deeper:accent":5.67,"on-brand:brand-deeper":7.01,"on-brand:brand-deepest":8.79,"brand-deepest:surface":8.66,"brand-deepest:accent":7.11,"border:surface":1.42,"border:accent":1.17,"accent:surface":1.21,"brand:accent":3.1,"on-surface:brand-deeper":2.49},"a":4.84,"m":[]},"#f5c400|light":{"t":{"surface":"#fcfaf6","surface-muted":"#f3f0e7","on-surface":"#19160d","on-surface-muted":"#59554b","border":"#e2ded2","accent":"#efebdf","brand":"#f5c400","brand-deeper":"#796000","brand-deepest":"#655000","on-brand":"#ffffff","glow":"#e6b800","glow-secondary":"#d37de6","scrim":"#080601","on-scrim":"#ffffff"},"p":{"on-surface:surface":17.33,"on-surface-muted:surface":7.12,"on-surface:surface-muted":15.86,"on-surface-muted:surface-muted":6.52,"on-surface:accent":15.16,"on-surface-muted:accent":6.23,"brand-deeper:surface":5.77,"brand-deeper:accent":5.05,"on-brand:brand-deeper":6.02,"on-brand:brand-deepest":7.77,"brand-deepest:surface":7.45,"brand-deepest:accent":6.52,"border:surface":1.29,"border:accent":1.12,"accent:surface":1.14,"brand:accent":1.37,"on-surface:brand-deeper":3},"a":3.39,"m":[]},"#f5c400|dark":{"t":{"surface":"#0f0d08","surface-muted":"#1b1810","on-surface":"#f4f2ea","on-surface-muted":"#a9a499","border":"#312e24","accent":"#252118","brand":"#f5c400","brand-deeper":"#f5c400","brand-deepest":"#ffda71","on-brand":"#0e0b04","glow":"#cfa500","glow-secondary":"#c267d5","scrim":"#030200","on-scrim":"#ffffff"},"p":{"on-surface:surface":17.32,"on-surface-muted:surface":7.82,"on-surface:surface-muted":15.81,"on-surface-muted:surface-muted":7.13,"on-surface:accent":14.3,"on-surface-muted:accent":6.45,"brand-deeper:surface":11.81,"brand-deeper:accent":9.75,"on-brand:brand-deeper":11.96,"on-brand:brand-deepest":14.52,"brand-deepest:surface":14.35,"brand-deepest:accent":11.85,"border:surface":1.43,"border:accent":1.18,"accent:surface":1.21,"brand:accent":9.75,"on-surface:brand-deeper":1.46},"a":4.91,"m":[]},"#808080|light":{"t":{"surface":"#fafafa","surface-muted":"#f0f0f0","on-surface":"#161616","on-surface-muted":"#555555","border":"#dedede","accent":"#ebebeb","brand":"#808080","brand-deeper":"#636363","brand-deepest":"#525252","on-brand":"#ffffff","glow":"#bebebe","glow-secondary":"#a4a4a4","scrim":"#060606","on-scrim":"#ffffff"},"p":{"on-surface:surface":17.33,"on-surface-muted:surface":7.14,"on-surface:surface-muted":15.87,"on-surface-muted:surface-muted":6.54,"on-surface:accent":15.17,"on-surface-muted:accent":6.25,"brand-deeper:surface":5.75,"brand-deeper:accent":5.03,"on-brand:brand-deeper":6,"on-brand:brand-deepest":7.81,"brand-deepest:surface":7.48,"brand-deepest:accent":6.55,"border:surface":1.28,"border:accent":1.12,"accent:surface":1.14,"brand:accent":3.31,"on-surface:brand-deeper":3.01},"a":3.39,"m":[]},"#808080|dark":{"t":{"surface":"#0d0d0d","surface-muted":"#181818","on-surface":"#f2f2f2","on-surface-muted":"#a4a4a4","border":"#2e2e2e","accent":"#222222","brand":"#808080","brand-deeper":"#9e9e9e","brand-deepest":"#b1b1b1","on-brand":"#0b0b0b","glow":"#ababab","glow-secondary":"#929292","scrim":"#020202","on-scrim":"#ffffff"},"p":{"on-surface:surface":17.36,"on-surface-muted:surface":7.79,"on-surface:surface-muted":15.86,"on-surface-muted:surface-muted":7.12,"on-surface:accent":14.21,"on-surface-muted:accent":6.38,"brand-deeper:surface":7.25,"brand-deeper:accent":5.93,"on-brand:brand-deeper":7.34,"on-brand:brand-deepest":9.17,"brand-deepest:surface":9.06,"brand-deepest:accent":7.41,"border:surface":1.43,"border:accent":1.17,"accent:surface":1.22,"brand:accent":4.02,"on-surface:brand-deeper":2.39},"a":4.92,"m":[]}}
+      const INTAGLIO_WEBGL = true // decision 8: a template-local constant
+      const PAIRS = [
+        ['on-surface', 'surface'],
+        ['on-surface-muted', 'surface'],
+        ['on-surface', 'surface-muted'],
+        ['on-surface-muted', 'surface-muted'],
+        ['on-surface', 'accent'],
+        ['on-surface-muted', 'accent'],
+        ['brand-deeper', 'surface'],
+        ['brand-deeper', 'accent'],
+        ['on-brand', 'brand-deeper'],
+        ['on-brand', 'brand-deepest'],
+      ]
+      const ROLES = {
+        surface: 'Page ground and the opaque header. About 70%.',
+        'surface-muted': 'The schedule stub, FAQ summaries, the footer. About 5%.',
+        'on-surface': 'Text, headings, figures and totals, rules, paper outlines, focus ring.',
+        'on-surface-muted': 'Secondary text, leaders, tear dashes, input edges, seal band B.',
+        border: 'Row hairlines only. Decorative, never a control edge.',
+        accent: 'Paper: the counterfoil, schedule, booking form, seal ground. About 18%.',
+        brand: 'The seal underprint band only. Decoration.',
+        'brand-deeper': 'Asks, links, seal bands A and C, the monogram. Never a figure. 2 to 3%.',
+        'brand-deepest': 'Ask hover and press.',
+        'on-brand': 'Ask labels.',
+        glow: 'Unused on purpose.',
+        'glow-secondary': 'Unused on purpose.',
+        scrim: 'Unused: no text on photographs.',
+        'on-scrim': 'Unused.',
+      }
+      const SVG = {
+        arr: '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 10h13M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.75" fill="none"/></svg>',
+        ok: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7" stroke="currentColor" stroke-width="1.5" fill="none"/></svg><span class="vh">matched</span>',
+        half: '<svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="5.5" stroke="currentColor" stroke-width="1.25" fill="none"/><path d="M8 2.5a5.5 5.5 0 0 1 0 11z" fill="currentColor"/></svg><span class="vh">one approver to go</span>',
+        st: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>In place',
+      }
+      const TAU = Math.PI * 2
+      const $ = (s, r = document) => [...r.querySelectorAll(s)]
+      const state = { scheme: 'light', faces: 'example', hex: '#4a2a6a' }
+      const setTokens = (el, scheme) => {
+        for (const [k, v] of Object.entries(DATA[state.hex + '|' + scheme].t))
+          el.style.setProperty('--' + k, v)
+      }
+
+      // The seal: four rosette bands, r = R + A cos(k theta - 2 pi i / N). The lean build the server would emit:
+      // one path per band, 8 points per wave, one decimal, repeated by rotated use elements, with a 1x and a 2x ring set.
+      const BANDS = [
+        ['d', 94, 3, 32],
+        ['b', 62, 7, 10],
+        ['a', 82, 8, 15],
+        ['c', 45, 5, 8],
+      ]
+      // Ring count per band from the band's height in device px, so strokes keep about 3.2 device px of paper between them.
+      const counts = (dpx) =>
+        Object.fromEntries(
+          BANDS.map(([b, , A]) => [
+            b,
+            Math.max(4, Math.min(24, Math.round((2 * A * dpx) / 200 / 3.2))),
+          ]),
+        )
+      let uid = 0,
+        capY = 0.34
+      const f1 = (x) => (Math.round(x * 10) / 10).toString()
+      function sealSVG(initial, cssPx) {
+        const id = 's' + uid++,
+          sets = [counts(cssPx), counts(cssPx * 2)]
+        let defs = `<pattern id="${id}h" width="4" height="2.4" patternUnits="userSpaceOnUse"><path class="sb-hatch" d="M0 1.2H4" stroke-width=".3"/></pattern>`
+        for (const [b, R, A, k] of BANDS) {
+          const n = 8 * k
+          let d = 'M'
+          for (let i = 0; i < n; i++) {
+            const t = (i / n) * TAU,
+              r = R + A * Math.cos(k * t)
+            d += (i ? ' ' : '') + f1(r * Math.cos(t)) + ' ' + f1(r * Math.sin(t))
+          }
+          defs += `<path id="${id}${b}" d="${d}Z" vector-effect="non-scaling-stroke"/>`
+        }
+        let body = ''
+        sets.forEach((n, s) => {
+          body += `<g class="n${s + 1}" stroke-width=".75">`
+          for (const [b, , , k] of BANDS) {
+            body += `<g class="sb-${b}">`
+            for (let i = 0; i < n[b]; i++)
+              body += `<use href="#${id}${b}"${i ? ` transform="rotate(${f1((i * 360) / (k * n[b]))})"` : ''}/>`
+            body += '</g>'
+          }
+          body += '</g>'
+        })
+        return `<svg viewBox="-100 -100 200 200" aria-hidden="true" focusable="false"><defs>${defs}</defs><circle class="sb-ground" r="99.5"/>${body}<circle class="sb-rim" r="99" stroke-width="1.2" vector-effect="non-scaling-stroke"/><circle class="sb-disc" r="34" stroke-width="1.2" vector-effect="non-scaling-stroke"/><circle r="32.5" fill="url(#${id}h)"/><text class="sb-init" x="0" y="${f1(46 * capY)}" font-size="46" text-anchor="middle">${initial}</text></svg>`
+      }
+      function drawSeals(root = document) {
+        for (const s of $('.seal', root)) {
+          const css = s.clientWidth || 160
+          s.querySelector('svg')?.remove()
+          s.insertAdjacentHTML('afterbegin', sealSVG(s.dataset.initial || 'W', css))
+        }
+      }
+      function fillIcons(root = document) {
+        for (const c of $('.ask-arr', root)) if (!c.firstChild) c.innerHTML = SVG.arr
+        for (const m of $('.mark', root)) m.innerHTML = SVG[m.dataset.m]
+        for (const m of $('[data-st]', root)) m.innerHTML = SVG.st
+      }
+
+      // Frames: clone a template into each; desktop frames scale their composition to fit.
+      for (const f of $('.frame[data-tpl]')) {
+        f.append(document.getElementById(f.dataset.tpl).content.cloneNode(true))
+        const site = f.querySelector('.site')
+        if (f.hasAttribute('data-short')) site.dataset.short = ''
+        const fold = f.style.getPropertyValue('--fold')
+        if (fold) {
+          const w = f.classList.contains('desk')
+            ? f.style.getPropertyValue('--w').replace('px', '')
+            : '375'
+          f.insertAdjacentHTML(
+            'beforeend',
+            `<div class="fold"><span>Fold, ${w} × ${fold.replace('px', '')}</span></div>`,
+          )
+        }
+        if (f.classList.contains('phone'))
+          f.insertAdjacentHTML('beforeend', '<div class="cut">The page continues below</div>')
+      }
+      // Form states: the example form cloned from the contact block, and the visitor form for the demo state.
+      for (const f of $('.frame[data-form]')) {
+        const demo = f.dataset.form === 'demo'
+        const src = document.getElementById(demo ? 'tpl-form-visitor' : 'tpl-contact').content
+        const site = document.createElement('div')
+        site.className = 'site'
+        const sec = document.createElement('div')
+        sec.className = 'sec'
+        sec.style.padding = '1.5rem 1.5rem 2rem'
+        const form = src.querySelector('.bk').cloneNode(true)
+        form.dataset.state = f.dataset.form
+        for (const el of $('[id]', form)) el.id += '-' + f.dataset.form
+        for (const el of $('[for]', form)) el.htmlFor += '-' + f.dataset.form
+        for (const el of $('[aria-labelledby], [aria-describedby]', form)) {
+          for (const a of ['aria-labelledby', 'aria-describedby'])
+            if (el.hasAttribute(a)) el.setAttribute(a, el.getAttribute(a) + '-' + f.dataset.form)
+        }
+        if (f.dataset.form !== 'error')
+          for (const b of $('.bad', form)) {
+            b.classList.remove('bad')
+            b.querySelector('input').value = 'amara@quillon.co.uk'
+          }
+        if (demo) {
+          f.dataset.visitor = 'minimal'
+          form.querySelector('#v-n-demo').value = 'Sam Holt'
+          form.querySelector('#v-e-demo').value = 'sam@example.com'
+          form.querySelector('#v-m-demo').value = 'A lemon cake for twelve, collected on Saturday.'
+        }
+        sec.append(form)
+        site.append(sec)
+        f.append(site)
+      }
+      const fit = () => {
+        for (const f of $('.desk')) {
+          const w = f.parentElement.clientWidth,
+            z = Math.min(1, w / f.offsetWidth)
+          f.style.setProperty('--z', z)
+          f.parentElement.style.height = f.offsetHeight * z + 'px'
+        }
+      }
+      new ResizeObserver(fit).observe(document.body)
+
+      // Live measurements under each frame, in frame px from its top, StudioBar included.
+      function measure() {
+        for (const f of $('.frame[data-measure]')) {
+          const out = (
+            f.classList.contains('desk') ? f.parentElement.parentElement : f.parentElement
+          ).querySelector('[data-meas]')
+          if (!out) continue
+          const z = Number(f.style.getPropertyValue('--z')) || 1,
+            top = f.getBoundingClientRect().top + f.clientTop * z
+          const at = (sel) => {
+            const el = f.querySelector(sel)
+            if (!el || !el.getClientRects().length) return null
+            const r = el.getBoundingClientRect()
+            return [Math.round((r.top - top) / z), Math.round((r.bottom - top) / z)]
+          }
+          const fold = parseFloat(f.style.getPropertyValue('--fold'))
+          const parts = [
+            ['h1', '.h1'],
+            ['ask', '.cf-stub .ask'],
+            ['trust', '.trust'],
+            ['link', '.cf-stub .more'],
+            ['seal', '.cf .seal'],
+          ]
+          const txt = parts
+            .map(([n, s]) => [n, at(s)])
+            .filter(([, v]) => v)
+            .map(
+              ([n, v]) =>
+                `${n} <b>${v[0]}–${v[1]}</b>${n !== 'seal' && v[1] > fold ? ' (below)' : ''}`,
+            )
+          out.innerHTML = txt.join(' · ') + ` · fold <b>${fold}</b>`
+        }
+      }
+
+      // Plate 6: every state side by side, forced with classes.
+      const STATES = [
+        ['Default', ''],
+        ['Hover', 'is-hover'],
+        ['Focus-visible', 'is-focus'],
+        ['Pressed', 'is-active'],
+      ]
+      const MAKE = {
+        ask: (c) =>
+          `<a class="ask ${c}" href="#p6" tabindex="-1"><span class="ask-label">Book a demo</span><span class="ask-arr"></span></a>`,
+        outline: (c) =>
+          `<a class="ask ask--bar ${c}" href="#p6" tabindex="-1"><span class="ask-label">Book a demo</span><span class="ask-fill" aria-hidden="true">Book a demo</span></a>`,
+        filled: (c) =>
+          `<a class="ask ask--bar is-filled ${c}" href="#p6" tabindex="-1"><span class="ask-label">Book a demo</span><span class="ask-fill" aria-hidden="true">Book a demo</span></a>`,
+        link: (c) => `<a class="more ${c}" href="#p6" tabindex="-1">See the fees</a>`,
+      }
+      for (const cell of $('.cells[data-kind]'))
+        cell.innerHTML = STATES.map(
+          ([n, c]) => `<figure>${MAKE[cell.dataset.kind](c)}<figcaption>${n}</figcaption></figure>`,
+        ).join('')
+      document.getElementById('handoff-t').addEventListener('click', (e) => {
+        const on = document.getElementById('handoff').classList.toggle('is-filled')
+        e.target.textContent = on ? 'Bring an in-page ask back' : 'Scroll every in-page ask away'
+      })
+
+      // Plate 4: character counts for the h1 steps, on normalised text.
+      for (const p of $('[data-count]'))
+        p.previousElementSibling.querySelector('b').textContent +=
+          `, sample ${p.textContent.replace(/\s+/g, ' ').trim().length}`
+      {
+        const q = document.getElementById('bakery-sentence').cloneNode(true)
+        for (const sup of q.querySelectorAll('sup')) sup.remove()
+        const s = q.textContent
+          .replace(/\s+/g, ' ')
+          .replace(/ ([.,])/g, '$1')
+          .trim()
+        document.getElementById('bakery-count').textContent =
+          `${s.length} of the 400 characters the brief allows. Eight facts; the hero uses seven.`
+      }
+
+      // Plate 5: palette panels.
+      function drawPalettes() {
+        for (const pal of $('.pal')) {
+          const s = pal.dataset.scheme,
+            d = DATA[state.hex + '|' + s]
+          setTokens(pal, s)
+          const sw = Object.keys(ROLES)
+            .map(
+              (k) =>
+                `<li><i style="background:var(--${k})"></i><span>${k}</span><span class="fig">${d.t[k]}</span><span>${ROLES[k]}</span></li>`,
+            )
+            .join('')
+          const pl = PAIRS.map(
+            ([f, b]) =>
+              `<li style="background:var(--${b});color:var(--${f})"><span>${f} on ${b}</span><b>${d.p[f + ':' + b].toFixed(2)}:1</b></li>`,
+          ).join('')
+          const ui = [
+            [
+              '<span class="demo" style="display:block;background:var(--brand-deeper)"></span>',
+              'Ask fill on the page, the header ask filled (3:1 needed)',
+              d.p['brand-deeper:surface'],
+            ],
+            [
+              '<span class="demo" style="display:block;background:var(--brand-deeper);outline:6px solid var(--accent);outline-offset:-6px"></span>',
+              'Ask fill on paper: hero, schedule, form',
+              d.p['brand-deeper:accent'],
+            ],
+            [
+              '<span class="demo" style="display:block;background:var(--brand-deepest);outline:6px solid var(--accent);outline-offset:-6px"></span>',
+              'Hover and press fill on paper',
+              d.p['brand-deepest:accent'],
+            ],
+            [
+              '<span class="demo" style="display:block;background:var(--surface);border:1px solid var(--on-surface-muted)"></span>',
+              'Input edge, on-surface-muted on paper',
+              d.p['on-surface-muted:accent'],
+            ],
+            [
+              '<span class="demo" style="display:block;background:var(--accent);outline:2px solid var(--on-surface);outline-offset:-6px"></span>',
+              'Focus ring on paper',
+              d.p['on-surface:accent'],
+            ],
+            [
+              '<span class="demo" style="display:block;border-bottom:1px solid var(--border);height:1rem"></span>',
+              'border on surface: hairlines only, never a control edge',
+              d.p['border:surface'],
+            ],
+            [
+              '<span class="demo" style="display:block;background:var(--accent)"></span>',
+              'Paper on the page: too faint alone, so paper is outlined',
+              d.p['accent:surface'],
+            ],
+          ]
+            .map(([demo, t, r]) => `<li>${demo}<span>${t}</span><b>${r.toFixed(2)}:1</b></li>`)
+            .join('')
+          const ok = d.a >= 4.5
+          pal.innerHTML = `<h3 class="h3">${s === 'light' ? 'Light, the default scheme' : 'Dark, the night print'}</h3><ul class="sw">${sw}</ul>
+      <h4>Declared text pairs, solved to 4.5:1 or more</h4><ul class="pl">${pl}</ul>
+      <h4>UI parts and decoration, not solved</h4><ul class="pl ui">${ui}</ul>
+      <h4>Why alpha text is banned</h4><ul class="pl"><li style="background:var(--surface);color:color-mix(in srgb, var(--on-surface) 50%, var(--surface))"><span>on-surface at 50% on surface: ${ok ? 'passes here by luck' : 'fails AA'}. The solver never sees an alpha.</span><b>${d.a.toFixed(2)}:1</b></li></ul>`
+        }
+      }
+
+      // Controls
+      function apply() {
+        const scheme = state.faces === 'dark' ? 'dark' : state.scheme
+        setTokens(document.documentElement, scheme)
+        document.documentElement.style.colorScheme = scheme
+        for (const f of $('.frame'))
+          f.dataset.faces =
+            f.dataset.visitor && state.faces === 'example' ? f.dataset.visitor : state.faces
+        for (const c of $('[data-pair-cap]')) c.hidden = state.faces !== 'example'
+        for (const el of $('.pcard[data-scheme]')) setTokens(el, 'dark')
+        drawPalettes()
+        requestAnimationFrame(() => {
+          drawSeals()
+          fit()
+          measure()
+        })
+        live.refresh()
+      }
+      document.getElementById('controls').addEventListener('change', (e) => {
+        state[e.target.name] = e.target.value
+        apply()
+      })
+
+      // Plate 7: the print run, once in view and on request.
+      const sched = document.getElementById('sched')
+      $('.rows > div', sched).forEach((r, i) => r.style.setProperty('--i', i))
+      const printRun = () => {
+        sched.classList.remove('printing')
+        void sched.offsetWidth
+        sched.classList.add('printing')
+      }
+      new IntersectionObserver((es, io) => {
+        if (es.some((e) => e.isIntersecting)) {
+          printRun()
+          io.disconnect()
+        }
+      }).observe(sched)
+      document.getElementById('reprint').addEventListener('click', printRun)
+
+      // Plate 7: the WebGL engraving. From 64rem only; starts on first intent while in view; draws only when an input changes.
+      const FS = `precision highp float;
+varying vec2 v;
+uniform float px, lw, depth, gAng, gAmt;
+uniform vec2 light;
+uniform vec3 cA, cB, cD, cDisc;
+uniform vec4 band[4];
+uniform sampler2D mask;
+float cover(float d, float w) { return 1.0 - smoothstep(w - px * 0.5, w + px * 0.5, d); }
+float ring(vec4 q, float r, float th) {
+  float d = 1e3;
+  for (int i = 0; i < 32; i++) {
+    if (float(i) >= q.w) break;
+    float ph = q.z * th - 6.2831853 * float(i) / q.w;
+    float s = q.y * q.z * sin(ph) / r;
+    d = min(d, abs(r - q.x - q.y * cos(ph)) / sqrt(1.0 + s * s));
+  }
+  return d;
+}
+float m(vec2 p) { return texture2D(mask, p / 65.0 + 0.5).r; }
+vec4 over(vec4 col, vec3 c, float a) { return vec4(c, 1.0) * a + col * (1.0 - a); }
+void main() {
+  float r = length(v), th = atan(v.y, v.x);
+  float da = abs(mod(th - gAng + 3.1415926, 6.2831853) - 3.1415926);
+  float g = gAmt * exp(-da * da * 6.0);
+  float w = lw * (1.0 + 1.2 * g);
+  vec4 col = vec4(0.0);
+  col = over(col, cDisc, 1.0 - smoothstep(99.5 - px * 0.5, 99.5 + px * 0.5, r));
+  if (r > 36.0) {
+    col = over(col, cD, cover(ring(band[0], r, th), w));
+    col = over(col, cB, cover(ring(band[1], r, th), w));
+    col = over(col, cA, cover(ring(band[2], r, th), w));
+    col = over(col, cA, cover(ring(band[3], r, th), w));
+    col = over(col, cA, cover(abs(r - 99.0), lw * 1.6));
+  }
+  float inside = 1.0 - smoothstep(34.0 - px * 0.5, 34.0 + px * 0.5, r);
+  col = over(col, cDisc, inside);
+  float e = 1.0;
+  vec2 grad = vec2(m(v + vec2(e, 0.0)) - m(v - vec2(e, 0.0)), m(v + vec2(0.0, e)) - m(v - vec2(0.0, e)));
+  float mm = m(v);
+  float y = v.y + depth * 3.5 * dot(grad, light);
+  float f = abs(fract(y / 2.4) - 0.5) * 2.4;
+  float hw = mix(lw * 0.8, 1.05, mm) + depth * 0.25 * mm * dot(grad, light);
+  col = over(col, cA, cover(f, hw) * (1.0 - smoothstep(32.0, 32.5, r)));
+  col = over(col, cA, cover(abs(r - 34.0), lw * 1.6));
+  gl_FragColor = col;
+}`
+      const live = (() => {
+        const stage = document.getElementById('stage'),
+          status = document.getElementById('gl-status'),
+          host = stage.querySelector('.mini .seal'),
+          btn = document.getElementById('press')
+        const reduce = matchMedia('(prefers-reduced-motion: reduce)'),
+          wide = matchMedia('(min-width: 64rem)')
+        let gl,
+          prog,
+          buf,
+          tex,
+          U = {},
+          canvas,
+          visible = false,
+          armed = false,
+          running = false,
+          raf = 0,
+          dpr = 1
+        const END = Math.PI // the highlight stops pointing left, at the ask
+        const s = { depth: 0, dT: 1, gAng: Math.PI / 2, gAmt: 0, light: [-0.7, 0.7], t0: -1 }
+        const say = (t) => (status.textContent = t)
+        const hex = (name) => {
+          const m = /^#([0-9a-f]{6})$/i.exec(
+            getComputedStyle(stage)
+              .getPropertyValue('--' + name)
+              .trim(),
+          )
+          if (!m) throw new Error(name)
+          const n = parseInt(m[1], 16)
+          return [(n >> 16) / 255, ((n >> 8) & 255) / 255, (n & 255) / 255]
+        }
+        function maskTexture() {
+          const c = document.createElement('canvas')
+          c.width = c.height = 256
+          const x = c.getContext('2d'),
+            fam = getComputedStyle(stage).getPropertyValue('--display')
+          x.fillStyle = '#000'
+          x.fillRect(0, 0, 256, 256)
+          x.fillStyle = '#fff'
+          x.textAlign = 'center'
+          x.font = `500 ${(46 * 256) / 65}px ${fam}`
+          x.fillText(host.dataset.initial, 128, 128 + ((46 * 256) / 65) * capY)
+          gl.bindTexture(gl.TEXTURE_2D, tex)
+          gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true)
+          gl.texImage2D(gl.TEXTURE_2D, 0, gl.LUMINANCE, gl.LUMINANCE, gl.UNSIGNED_BYTE, c)
+          for (const [p, val] of [
+            [gl.TEXTURE_MIN_FILTER, gl.LINEAR],
+            [gl.TEXTURE_MAG_FILTER, gl.LINEAR],
+            [gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE],
+            [gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE],
+          ])
+            gl.texParameteri(gl.TEXTURE_2D, p, val)
+        }
+        function uniforms() {
+          dpr = Math.min(devicePixelRatio || 1, 2)
+          const size = Math.round(host.clientWidth * dpr)
+          canvas.width = canvas.height = size
+          const n = counts(size),
+            bands = BANDS.map(([b, R, A, k]) => [R, A, k, n[b]]).flat()
+          gl.useProgram(prog)
+          gl.viewport(0, 0, size, size)
+          gl.uniform1f(U.px, 200 / size)
+          gl.uniform1f(U.lw, 0.375 * dpr * (200 / size))
+          gl.uniform4fv(U.band, bands)
+          gl.uniform3fv(U.cA, hex('brand-deeper'))
+          gl.uniform3fv(U.cB, hex('on-surface-muted'))
+          gl.uniform3fv(U.cD, hex('brand'))
+          gl.uniform3fv(U.cDisc, hex('accent'))
+        }
+        function draw() {
+          raf = 0
+          if (!gl || !visible || document.hidden) return
+          gl.clearColor(0, 0, 0, 0)
+          gl.clear(gl.COLOR_BUFFER_BIT)
+          gl.uniform1f(U.depth, s.depth)
+          gl.uniform1f(U.gAng, s.gAng)
+          gl.uniform1f(U.gAmt, s.gAmt)
+          gl.uniform2fv(U.light, s.light)
+          gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4)
+        }
+        const ask = () => {
+          if (!raf) raf = requestAnimationFrame(tick)
+        }
+        const nudge = () => {
+          btn.classList.remove('nudge')
+          void btn.offsetWidth
+          btn.classList.add('nudge')
+        }
+        btn.addEventListener('animationend', () => btn.classList.remove('nudge'))
+        let last = 0
+        function tick(now) {
+          raf = 0
+          const dt = last ? Math.min(0.05, (now - last) / 1000) : 0.016
+          last = now
+          let more = false
+          if (s.t0 >= 0) {
+            const p = Math.min(1, (now - s.t0) / 1400),
+              e = 1 - (1 + 9.233 * p) * Math.exp(-9.233 * p)
+            s.gAng = Math.PI / 2 - 3.5 * Math.PI * e
+            s.gAmt = p < 1 ? 0.35 + 0.65 * Math.sin(Math.PI * p) : 0.35
+            s.depth = e * s.dT
+            if (p < 1) more = true
+            else {
+              s.t0 = -1
+              s.gAng = END
+              nudge()
+            }
+          } else if (Math.abs(s.depth - s.dT) > 0.002) {
+            s.depth += (s.dT - s.depth) * (1 - Math.exp(-dt / 0.035))
+            more = true
+          }
+          draw()
+          if (more && visible && !document.hidden) raf = requestAnimationFrame(tick)
+          else last = 0
+        }
+        function start() {
+          if (running || !armed || !visible) return
+          if (!INTAGLIO_WEBGL) return say('Static: the flag is off.')
+          if (reduce.matches) return say('Static: reduced motion is on, so WebGL never starts.')
+          if (matchMedia('(forced-colors: active)').matches) return say('Static: forced colours.')
+          if (!wide.matches)
+            return say(
+              'Static: below 64rem the seal and the ask are never on screen together, so no context is created.',
+            )
+          canvas = host.querySelector('canvas')
+          const o = {
+            alpha: true,
+            premultipliedAlpha: true,
+            antialias: false,
+            powerPreference: 'low-power',
+          }
+          gl = canvas.getContext('webgl2', o) || canvas.getContext('webgl', o)
+          if (!gl) return say('Static: this browser has no WebGL.')
+          const sh = (t, src) => {
+            const x = gl.createShader(t)
+            gl.shaderSource(x, src)
+            gl.compileShader(x)
+            return x
+          }
+          prog = gl.createProgram()
+          gl.attachShader(
+            prog,
+            sh(
+              gl.VERTEX_SHADER,
+              'attribute vec2 p;varying vec2 v;void main(){v=p*100.0;gl_Position=vec4(p,0.0,1.0);}',
+            ),
+          )
+          gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, FS))
+          gl.linkProgram(prog)
+          if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) {
+            gl = null
+            return say('Static: the shader did not compile.')
+          }
+          buf = gl.createBuffer()
+          gl.bindBuffer(gl.ARRAY_BUFFER, buf)
+          gl.bufferData(
+            gl.ARRAY_BUFFER,
+            new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]),
+            gl.STATIC_DRAW,
+          )
+          const loc = gl.getAttribLocation(prog, 'p')
+          gl.enableVertexAttribArray(loc)
+          gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0)
+          for (const n of [
+            'px',
+            'lw',
+            'depth',
+            'gAng',
+            'gAmt',
+            'light',
+            'cA',
+            'cB',
+            'cD',
+            'cDisc',
+            'band',
+            'mask',
+          ])
+            U[n] = gl.getUniformLocation(prog, n)
+          tex = gl.createTexture()
+          try {
+            uniforms()
+          } catch {
+            gl = null
+            return say('Static: a token was not a six-digit hex.')
+          }
+          maskTexture()
+          canvas.addEventListener(
+            'webglcontextlost',
+            (e) => {
+              e.preventDefault()
+              stop('Static: the context was lost, so the SVG shows.')
+            },
+            { once: true },
+          )
+          running = true
+          stage.classList.add('live')
+          say(
+            `Live: ${gl instanceof (window.WebGL2RenderingContext || Object) ? 'WebGL2' : 'WebGL1'}, ${canvas.width} by ${canvas.width} device px, DPR ${dpr}. Hover or focus the ask to press the seal.`,
+          )
+          s.t0 = performance.now()
+          s.dT = 1
+          ask()
+        }
+        function stop(msg) {
+          cancelAnimationFrame(raf)
+          raf = 0
+          running = false
+          stage.classList.remove('live')
+          if (gl) {
+            gl.deleteProgram(prog)
+            gl.deleteBuffer(buf)
+            gl.deleteTexture(tex)
+            gl.getExtension('WEBGL_lose_context')?.loseContext()
+          }
+          gl = null
+          say(msg)
+          const fresh = document.createElement('canvas')
+          fresh.setAttribute('aria-hidden', 'true')
+          setTimeout(() => canvas?.replaceWith(fresh), 500)
+        }
+        const press = (on) => {
+          if (!running) return
+          s.dT = on ? 1.25 : 1
+          if (s.t0 < 0) ask()
+        }
+        for (const [ev, on] of [
+          ['pointerenter', 1],
+          ['pointerleave', 0],
+          ['focus', 1],
+          ['blur', 0],
+          ['pointerdown', 1],
+          ['pointerup', 0],
+        ])
+          btn.addEventListener(ev, () => press(on))
+        stage.addEventListener('pointermove', (e) => {
+          if (!running || s.t0 >= 0) return
+          const b = host.getBoundingClientRect(),
+            dx = e.clientX - (b.left + b.width / 2),
+            dy = b.top + b.height / 2 - e.clientY,
+            l = Math.hypot(dx, dy) || 1
+          s.light = [dx / l, dy / l]
+          s.gAng = Math.atan2(dy, dx)
+          ask()
+        })
+        const arm = () => {
+          armed = true
+          start()
+        }
+        for (const ev of ['pointermove', 'scroll', 'keydown', 'touchstart'])
+          addEventListener(ev, arm, { once: true, passive: true })
+        new IntersectionObserver((es) => {
+          visible = es[0].isIntersecting
+          if (visible) {
+            start()
+            ask()
+          }
+        }).observe(stage)
+        document.addEventListener('visibilitychange', () => {
+          if (!document.hidden) ask()
+        })
+        reduce.addEventListener('change', () => {
+          if (reduce.matches && running) stop('Static: reduced motion was turned on.')
+        })
+        wide.addEventListener('change', () => {
+          if (!wide.matches && running) stop('Static: the viewport went below 64rem.')
+        })
+        document.getElementById('replay').addEventListener('click', () => {
+          if (running) {
+            s.t0 = performance.now()
+            ask()
+          } else {
+            armed = true
+            start()
+          }
+        })
+        document
+          .getElementById('release')
+          .addEventListener(
+            'click',
+            () =>
+              running &&
+              stop(
+                'Released: program, buffer and texture deleted, context lost on purpose. Play it again to remount a new canvas.',
+              ),
+          )
+        return {
+          refresh() {
+            if (running) {
+              try {
+                uniforms()
+                maskTexture()
+                ask()
+              } catch {
+                stop('Static: a token was not a six-digit hex.')
+              }
+            }
+          },
+        }
+      })()
+
+      fillIcons()
+      document.fonts.ready.then(() => {
+        const c = document.createElement('canvas').getContext('2d')
+        c.font = '500 100px Newsreader'
+        const m = c.measureText('W')
+        if (m.actualBoundingBoxAscent) capY = m.actualBoundingBoxAscent / 200
+        apply()
+      })
+      apply()
+    </script>
+  </body>
+</html>
