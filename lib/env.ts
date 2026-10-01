@@ -28,6 +28,10 @@ export const env = createEnv({
     // Where the notice of every build goes: the links, the client's answers and the tokens the
     // model calls cost (lib/email/owner-notice.ts).
     OWNER_EMAIL: z.email(),
+    // The owner's password for /admin, which lists every brief with its answers and the addresses
+    // of its designs (proxy.ts, ADR 0045). Long, since HTTP Basic authentication is the whole
+    // door. Unset, /admin does not exist.
+    ADMIN_PASSWORD: z.string().min(16).optional(),
     // Set on the production deployment once the page takes traffic. The home page promises three
     // designs, so under this flag its build fails while fewer templates are ready than it promises
     // (app/page.tsx; docs/home-page-content-plan.md, decision 19). Unset, nothing changes.

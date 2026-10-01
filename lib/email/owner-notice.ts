@@ -1,4 +1,5 @@
 import type { SubmissionAnswers } from '@/lib/brief/submission'
+import { formatLondon } from '@/lib/brief/time'
 import { type EmailMessage, escapeHtml } from '@/lib/email/message'
 import { SITE } from '@/lib/site'
 
@@ -85,12 +86,6 @@ type Input = Readonly<{
 const number = new Intl.NumberFormat('en-GB')
 const n = (value: number) => number.format(value)
 
-const when = new Intl.DateTimeFormat('en-GB', {
-  dateStyle: 'medium',
-  timeStyle: 'short',
-  timeZone: 'Europe/London',
-})
-
 type Line = Readonly<{ label: string; value: string; url?: string }>
 
 function logoLine(answers: SubmissionAnswers): Line {
@@ -147,7 +142,7 @@ export function ownerNoticeEmail(input: Input): EmailMessage {
       ? 'Ready: every stage finished.'
       : `Partial: ${input.fallbackStages.join(', ')} settled with the fallback.`
   const build: Line[] = [
-    { label: 'Submitted', value: `${when.format(input.submittedAt)} (London)` },
+    { label: 'Submitted', value: `${formatLondon(input.submittedAt)} (London)` },
     { label: 'Outcome', value: ending },
     { label: 'Slug', value: input.slug },
   ]

@@ -19,6 +19,8 @@ With `INNGEST_DEV=1` in `.env.local` (see `.env.example`), a submission's event 
 
 Submissions are limited per address and per email (`CONFIG.rateLimit`), a form finished in under three seconds is refused, and a nightly sweep deletes submissions after `CONFIG.retention.days`. To erase or reset one email address, send an `admin/identity.erase` event with `{ "email": "..." }` from the Inngest dashboard (or the dev server's UI at http://localhost:8288): every submission, picture, seen row and the lead for that address are removed.
 
+Every brief the sweep still holds, with its five answers and the addresses of its designs, is listed at `/admin`, behind `ADMIN_PASSWORD` (HTTP Basic authentication: any name, that password; unset, the route does not exist). The same rows are the `brief_overview` view, which the Neon console and `drizzle-kit studio` show as a table (ADR 0045).
+
 Every environment variable is validated in `lib/env.ts` and the build fails fast if one is missing.
 
 ## Scripts
@@ -52,6 +54,7 @@ app/          routes only (thin: validate, delegate, respond)
   api/upload/ api/inngest/     the Blob token route and the Inngest serve handler
   api/status/[slug]/           a submission's status, for the done page, the designs page and a design opened before it is ready (ADR 0037)
   privacy/                     the privacy notice (ADR 0014)
+  admin/                       the owner's list of every brief, behind ADMIN_PASSWORD (proxy.ts, ADR 0045)
 components/   shared UI primitives
   ui/ brand/
   sketch/                      the live sketch: model, parts, browser and phone frames, chips

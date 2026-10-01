@@ -201,6 +201,9 @@ export const CONFIG = {
   // submission points at it (lib/inngest/functions/orphan-upload-sweep.ts), so none outlives two
   // days, which is what /privacy says.
   retention: { days: 30, cron: '0 3 * * *', unsentHours: 24 },
+  // The owner's page at /admin (ADR 0045) lists this many briefs, newest first, and has no second
+  // page: the sweep keeps a month of them, far fewer than this at the studio's scale.
+  admin: { briefs: 200 },
   polling: { statusMs: 3_000 }, // how often the done page asks how the designs are coming along
   // The questionnaire at /start (docs/start-page-journey-plan.md, section 6.1), from its first
   // release: the longest business name and name the form takes, and the longest tab label the
