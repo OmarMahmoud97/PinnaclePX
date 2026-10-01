@@ -20,13 +20,19 @@ export const metadata: Metadata = {
 
 // The owner's list of every brief the sweep still holds (ADR 0045): who sent it, their five
 // answers, and the addresses of the designs built from them, newest first. The door is proxy.ts,
-// which asks the browser for ADMIN_PASSWORD; the same header is checked here before a row is read,
-// so the page shows nothing if the proxy's matcher ever drifts from this route. Reading the header
-// also draws the page at request time, so a build never reaches the database.
+// which asks the browser for OWNER_EMAIL and ADMIN_PASSWORD; the same header is checked here
+// before a row is read, so the page shows nothing if the proxy's matcher ever drifts from this
+// route. Reading the header also draws the page at request time, so a build never reaches the
+// database.
 export default async function AdminPage() {
   const password = env.ADMIN_PASSWORD
   const authorization = (await headers()).get('authorization')
-  if (password === undefined || !basicAuthPasses(authorization, password)) notFound()
+  if (
+    password === undefined ||
+    !basicAuthPasses(authorization, { name: env.OWNER_EMAIL, password })
+  ) {
+    notFound()
+  }
 
   const rows = await readBriefOverview(CONFIG.admin.briefs)
   const briefs = rows.map((row) => briefView(row, env.NEXT_PUBLIC_APP_URL))

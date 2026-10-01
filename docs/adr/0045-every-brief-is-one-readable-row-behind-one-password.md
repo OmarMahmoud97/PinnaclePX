@@ -53,9 +53,11 @@ and a place to read it, not storage.
    is `/admin/:path*` and nothing else; no other route passes through the proxy. Unset, every
    request under `/admin` is a 404, so a deployment that never chose a password shows nothing. A
    request without credentials gets the 401 that makes the browser ask, and the browser then sends
-   the password with every request for the session. Any name is accepted; the password is compared
-   as SHA-256 digests in constant time (`lib/admin/basic-auth.ts`, tested), so neither a wrong
-   password nor a wrong length is told from a near miss by the clock. Nothing of the credentials
+   the credentials with every request for the session. The name is `OWNER_EMAIL` and the password
+   `ADMIN_PASSWORD` (the owner asked for the email as the name, 1 October 2026). Each is compared
+   as SHA-256 digests in constant time (`lib/admin/basic-auth.ts`, tested), and both are always
+   compared, so neither a wrong name, a wrong password nor a wrong length is told from a near miss
+   by the clock; the email's case and the space around it do not count. Nothing of the credentials
    reaches the log: a refused request that carried credentials is counted as `admin.refused` with
    its path; the browser's first request, which carries none, is not. The page checks the same
    header again before it reads a row and answers not-found when it fails, so the matcher is not
@@ -74,7 +76,8 @@ and a place to read it, not storage.
 
 - OD1: Set `ADMIN_PASSWORD` on Vercel for Production (and for Preview, if the page is wanted on
   preview deployments too): at least 16 characters and used for nothing else. Until then `/admin`
-  is a 404 there. Nothing chooses or rotates it; the owner does, in Vercel.
+  is a 404 there. The name to sign in with is `OWNER_EMAIL`. Nothing chooses or rotates the
+  password; the owner does, in Vercel.
 - OD2: The page shows what the sweep still holds and no more. A list that outlived the thirty days,
   a client book, would need the notice to say so and a table of its own; not built.
 - OD3: What each build cost in tokens stays in the notice (ADR 0020) and off the page.
@@ -104,4 +107,6 @@ and a place to read it, not storage.
   database's 17 briefs with 78 design and hub links, with no horizontal overflow at 390 or 1440
   wide. The view's `design_paths` matched `template_ids` on every row and no answer column was
   null. Typecheck, lint, 1,127 unit tests, knip, Prettier, the production build and the byte budget
-  all pass; the proxy and `/admin` are in the build's route table.
+  all pass; the proxy and `/admin` are in the build's route table. After the name rule, on the
+  owner's own dev server: 401 with no credentials, 401 with another name and the right password,
+  200 with the owner's email and the password, listing the same 17 briefs.

@@ -1,40 +1,51 @@
-import { basicAuthPasses, passwordIn } from '@/lib/admin/basic-auth'
+import { basicAuthPasses, credentialsIn } from '@/lib/admin/basic-auth'
 
 const basic = (name: string, password: string) =>
   `Basic ${Buffer.from(`${name}:${password}`).toString('base64')}`
 
-describe('passwordIn', () => {
-  it('reads the password after the first colon, whatever the name', () => {
-    expect(passwordIn(basic('owner', 'correct horse battery'))).toBe('correct horse battery')
-    expect(passwordIn(basic('', 'a:b:c'))).toBe('a:b:c')
+describe('credentialsIn', () => {
+  it('reads the name and the password either side of the first colon', () => {
+    expect(credentialsIn(basic('owner@example.com', 'correct horse battery'))).toEqual({
+      name: 'owner@example.com',
+      password: 'correct horse battery',
+    })
+    expect(credentialsIn(basic('', 'a:b:c'))).toEqual({ name: '', password: 'a:b:c' })
   })
 
   it('takes the scheme in any case', () => {
-    expect(passwordIn(basic('o', 'p').replace('Basic', 'BASIC'))).toBe('p')
+    expect(credentialsIn(basic('o', 'p').replace('Basic', 'BASIC'))).toEqual({
+      name: 'o',
+      password: 'p',
+    })
   })
 
   it('is null without a header, for another scheme, or for a pair with no colon', () => {
-    expect(passwordIn(null)).toBeNull()
-    expect(passwordIn('Bearer abc')).toBeNull()
-    expect(passwordIn('Basic')).toBeNull()
-    expect(passwordIn(`${basic('o', 'p')} extra`)).toBeNull()
-    expect(passwordIn(`Basic ${Buffer.from('no-colon').toString('base64')}`)).toBeNull()
+    expect(credentialsIn(null)).toBeNull()
+    expect(credentialsIn('Bearer abc')).toBeNull()
+    expect(credentialsIn('Basic')).toBeNull()
+    expect(credentialsIn(`${basic('o', 'p')} extra`)).toBeNull()
+    expect(credentialsIn(`Basic ${Buffer.from('no-colon').toString('base64')}`)).toBeNull()
   })
 })
 
 describe('basicAuthPasses', () => {
-  const password = 'a-long-password-the-owner-chose'
+  const owner = { name: 'owner@example.com', password: 'a-long-password-the-owner-chose' }
 
-  it('passes the right password under any name', () => {
-    expect(basicAuthPasses(basic('owner', password), password)).toBe(true)
-    expect(basicAuthPasses(basic('anyone', password), password)).toBe(true)
+  it("passes the owner's email and password, whatever the email's case or spacing", () => {
+    expect(basicAuthPasses(basic('owner@example.com', owner.password), owner)).toBe(true)
+    expect(basicAuthPasses(basic(' Owner@Example.com ', owner.password), owner)).toBe(true)
+  })
+
+  it('refuses another name, or none, with the right password', () => {
+    expect(basicAuthPasses(basic('anyone', owner.password), owner)).toBe(false)
+    expect(basicAuthPasses(basic('', owner.password), owner)).toBe(false)
   })
 
   it('refuses a wrong password, a prefix of it, an empty one and a missing header', () => {
-    expect(basicAuthPasses(basic('owner', password.slice(0, -1)), password)).toBe(false)
-    expect(basicAuthPasses(basic('owner', `${password}!`), password)).toBe(false)
-    expect(basicAuthPasses(basic('owner', ''), password)).toBe(false)
-    expect(basicAuthPasses('Bearer token', password)).toBe(false)
-    expect(basicAuthPasses(null, password)).toBe(false)
+    expect(basicAuthPasses(basic(owner.name, owner.password.slice(0, -1)), owner)).toBe(false)
+    expect(basicAuthPasses(basic(owner.name, `${owner.password}!`), owner)).toBe(false)
+    expect(basicAuthPasses(basic(owner.name, ''), owner)).toBe(false)
+    expect(basicAuthPasses('Bearer token', owner)).toBe(false)
+    expect(basicAuthPasses(null, owner)).toBe(false)
   })
 })
