@@ -115,15 +115,35 @@ async function templateImagery(
 }
 
 // The candidates for a slot, in the order to try them: the first of its queries that finds
-// any, judged by the ranking model, or left in Pexels' order if the judging fails.
+// any, or every query's pictures together for a detail pool (lib/images/plan.ts), judged by
+// the ranking model, or left in Pexels' order if the judging fails. A search that fails lets
+// the next query try; when none found anything, the last failure is the slot's.
 function orderedCandidates(step: SearchStep, slug: string, shared: Shared): Promise<Candidate[]> {
   return once(shared.rankings, `${step.queries.join('\n')}\n${step.purpose}`, async () => {
     let candidates: Candidate[] = []
+    let failure: unknown
     for (const query of step.queries) {
-      candidates = await once(shared.searches, query, () => searchPhotos(query))
+      let found: Candidate[]
+      try {
+        found = await once(shared.searches, query, () => searchPhotos(query))
+      } catch (error) {
+        failure = error
+        continue
+      }
+      if (step.union) {
+        const seen = new Set(candidates.map((c) => c.id))
+        candidates = [...candidates, ...found.filter((c) => !seen.has(c.id))]
+        continue
+      }
+      candidates = found
       if (candidates.length > 0) break
     }
-    if (candidates.length === 0) return []
+    if (candidates.length === 0) {
+      if (failure !== undefined) {
+        throw failure instanceof Error ? failure : new Error('The search failed')
+      }
+      return []
+    }
     let verdicts: Awaited<ReturnType<typeof rankPhotos>> | null = null
     try {
       verdicts = await rankPhotos(candidates, step.purpose, slug)

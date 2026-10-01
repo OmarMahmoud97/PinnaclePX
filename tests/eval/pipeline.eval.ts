@@ -354,12 +354,23 @@ async function rankStage(
         const poolBegun = Date.now()
         let candidates: Candidate[] = []
         for (const query of step.queries) {
+          let found: Candidate[]
           try {
-            candidates = await once(searches, query, () => searchPhotos(query))
+            found = await once(searches, query, () => searchPhotos(query))
           } catch (error) {
             record.errors.push(`search "${query}": ${errorText(error)}`)
             continue
           }
+          // As lib/images/stage.ts: a detail pool is every query's pictures together.
+          if (step.union) {
+            const seen = new Set(candidates.map((c) => c.id))
+            candidates = [...candidates, ...found.filter((c) => !seen.has(c.id))]
+            if (found.length > 0) {
+              record.query = record.query === null ? query : `${record.query} + ${query}`
+            }
+            continue
+          }
+          candidates = found
           if (candidates.length > 0) {
             record.query = query
             break

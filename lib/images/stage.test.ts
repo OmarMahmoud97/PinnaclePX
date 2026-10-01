@@ -178,6 +178,59 @@ describe('imageryFor', () => {
     expect(imagery.t01?.statement?.src).toBe(`${BLOB}/images/pexels-3.webp`)
   })
 
+  it('gathers every detail query into one pool, judged once', async () => {
+    vi.mocked(searchPhotos).mockImplementation((query) =>
+      Promise.resolve(
+        query.startsWith('treatment room')
+          ? [candidate(1)]
+          : query.startsWith('exercise band')
+            ? [candidate(3), candidate(4)]
+            : [candidate(4), candidate(5)],
+      ),
+    )
+    const brief = {
+      ...BRIEF,
+      imageQueries: { hero: ['treatment room'], detail: ['exercise band', 'clinic corridor'] },
+    }
+    const contracts = [contract('t01', ['hero', 'a', 'b', 'c'])]
+    const { imagery } = await imageryFor(contracts, ANSWERS, brief, 'slug')
+
+    expect(vi.mocked(searchPhotos).mock.calls.map(([query]) => query)).toEqual([
+      'treatment room natural light',
+      'exercise band natural light',
+      'clinic corridor natural light',
+    ])
+    expect(rankPhotos).toHaveBeenCalledTimes(2)
+    // The detail pool is both searches' pictures, each once, in the order found.
+    const detailCall = vi
+      .mocked(rankPhotos)
+      .mock.calls.find(([, purpose]) => purpose.startsWith('a supporting picture'))
+    expect(detailCall?.[0].map((c) => c.id)).toEqual([3, 4, 5])
+    expect(imagery.t01?.a?.src).toBe(`${BLOB}/images/pexels-3.webp`)
+    expect(imagery.t01?.c?.src).toBe(`${BLOB}/images/pexels-5.webp`)
+  })
+
+  it('lets the next query serve when a search fails, and keeps the failure when none finds any', async () => {
+    vi.mocked(searchPhotos).mockImplementation((query) =>
+      query.startsWith('empty room')
+        ? Promise.reject(new Error('Pexels returned 500'))
+        : Promise.resolve(query.startsWith('treatment room') ? [candidate(1)] : []),
+    )
+    const brief = {
+      ...BRIEF,
+      imageQueries: { hero: ['empty room', 'treatment room'], detail: ['empty room', 'nothing'] },
+    }
+    const { imagery, unfilled } = await imageryFor(
+      [contract('t01', ['hero', 'statement'])],
+      ANSWERS,
+      brief,
+      'slug',
+    )
+    expect(imagery.t01?.hero?.src).toBe(`${BLOB}/images/pexels-1.webp`)
+    expect(imagery.t01?.statement).toBeNull()
+    expect(unfilled).toEqual(['t01.statement'])
+  })
+
   it('tries the next query when the first finds nothing', async () => {
     vi.mocked(searchPhotos).mockImplementation((query) =>
       Promise.resolve(query.startsWith('treatment room') ? [candidate(1)] : []),

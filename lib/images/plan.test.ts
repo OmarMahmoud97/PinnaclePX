@@ -21,11 +21,14 @@ describe('planImagery', () => {
     expect(plan.hero).toMatchObject({
       kind: 'search',
       queries: ['physiotherapy treatment room natural light', 'clinic natural light'],
+      union: false,
     })
-    // A blank query is dropped; the rest keep the brief's order.
+    // A blank query is dropped; the rest keep the brief's order. A detail slot takes every
+    // query's pictures.
     expect(plan.statement).toMatchObject({
       kind: 'search',
       queries: ['exercise band natural light'],
+      union: true,
     })
     if (plan.hero?.kind === 'search') expect(plan.hero.purpose).toContain('Ashgrove Physio')
   })

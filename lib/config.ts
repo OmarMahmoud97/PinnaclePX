@@ -111,7 +111,9 @@ export const CONFIG = {
   // thinking tokens are billed as output, which on the copy call was most of the bill.
   ai: {
     models: { brief: 'claude-sonnet-5', copy: 'claude-sonnet-5', rank: 'claude-haiku-4-5' },
-    maxTokens: { brief: 4_000, copy: 8_000, rank: 1_000 },
+    // The rank ceiling fits two dozen verdicts with a reason each: a detail pool holds two
+    // searches' pictures (lib/images/plan.ts).
+    maxTokens: { brief: 4_000, copy: 8_000, rank: 2_000 },
     // The SDK would otherwise retry a timed-out or failed request twice inside one call, so a
     // stage's timeout could run three times over and an answer the server finished after the
     // client gave up would be paid for twice. Inngest retries the step on its own cadence.
