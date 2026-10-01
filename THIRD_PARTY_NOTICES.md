@@ -78,6 +78,12 @@ Copyright 2017 The Syne Project Authors (https://gitlab.com/bonjour-monde/fonder
 
 This Font Software is licensed under the SIL Open Font License, Version 1.1. Its body face, Albert Sans (Copyright 2021 The Albert Sans Project Authors), is loaded from Google Fonts under the same licence and is not redistributed.
 
+## t10-lucent, from the owner's own app site
+
+The layout was re-implemented in this codebase from the home page of subscrr.app, the site of the owner's own iPhone app, which the owner made and gave to be built as a template (owner, 1 October 2026; `docs/adr/0043-lucent-ported-from-the-owners-app-site.md`). It was rebuilt from the live page's markup, its stylesheet and its scripts, as a design against this project's own tokens and contract. The phone the hero draws its picture in (`templates/t10-lucent/sections/phone-frame.webp`) is the site's own frame, scaled down, and the network marks in `templates/t10-lucent/sections/icons.tsx` are the site's own drawings of each network's mark, copied verbatim. The example page's words, its logo (`templates/t10-lucent/example/logo.png`) and its pictures (`templates/t10-lucent/example/*.webp`) are the site's own: its photographs and screenshots as published, and stills taken from its own films at the frames its page shows, cropped to what its windows show.
+
+The example page sets Inter and Inter Tight, the site's two families, from Google Fonts through `next/font`, under the SIL Open Font License, Version 1.1 (https://openfontlicense.org): Copyright 2016 The Inter Project Authors (https://github.com/rsms/inter).
+
 ## The hero's ink, from a WebGL fluid simulation
 
 https://codepen.io/ksenia-k/pen/jENEMjN and https://github.com/PavelDoGreat/WebGL-Fluid-Simulation

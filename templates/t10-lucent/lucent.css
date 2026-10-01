@@ -1,0 +1,2675 @@
+/*
+ * Lucent (t10). The source is hand-written CSS in pixels (ADR 0043), so its rules are ported
+ * here one for one, scoped to the template's root and prefixed `lc-` so no class of the site's
+ * can meet them. Each rule keeps the source's numbers; where a value moved, the comment says why.
+ *
+ * Colours are the semantic tokens, so a brand's set recolours everything. The source's warm
+ * paper is surface and its second paper surface-muted, its white cards accent, its ink and its
+ * grey on-surface and on-surface-muted, its orange the brand (brand-deeper wherever it carries
+ * text or is text), its dark footer the scrim with on-scrim on it. Its lines are the ink at a
+ * tenth, as it wrote them. Its other colours are the palette below, each derived from the tokens
+ * unless the page above sets the source's own value as --lucent-set-*, which the example does:
+ * the periwinkle of its small capitals, the black of its one dark card, the peach of the tint
+ * that warms the page around the wide picture, its pure white highlights and the dimmer body
+ * text of three sections.
+ *
+ * The motion is described where it is written (sections/motion.tsx starts it). Every
+ * hidden starting state below applies only while scripts run and motion is allowed, so the page
+ * is complete without either.
+ */
+
+.lucent {
+  /* The faces a preview sets. The source set its headings, buttons and wordmark in its body
+   * face, Inter, at 500 (its owner's call, recorded in its stylesheet), and kept a tighter cut,
+   * Inter Tight, for the statement and the form's heading: a brand's display face takes the
+   * first role and, unless the page sets the tight cut, the second. */
+  --lc-heading:
+    var(--template-font-display, var(--font-site-sans)), ui-sans-serif, system-ui, sans-serif;
+  --lc-body: var(--template-font-body, var(--font-site-sans)), ui-sans-serif, system-ui, sans-serif;
+  --lc-tight: var(--lucent-set-tight, var(--lc-heading));
+
+  --lc-orange: var(--brand-deeper);
+  /* The brand's colour where it sits on the near-black (the footer's big ask, the black feature
+   * card's heading and link): the brand-deeper token is solved against the page, so on the dark
+   * it is lifted to at least 0.66 lightness where the browser can turn a colour, about five to
+   * one on the scrim whatever the brand; elsewhere it is the scrim's own text colour. */
+  --lc-orange-night: var(--lucent-set-orange-night, var(--on-scrim));
+  --lc-line: var(--lucent-set-line, color-mix(in srgb, var(--on-surface) 10%, transparent));
+  --lc-dim: var(--lucent-set-dim, color-mix(in srgb, var(--on-surface) 62%, transparent));
+  --lc-eyebrow: var(--lucent-set-eyebrow, var(--on-surface-muted));
+  --lc-eyebrow-night: var(
+    --lucent-set-eyebrow-night,
+    color-mix(in srgb, var(--on-scrim) 70%, var(--scrim))
+  );
+  --lc-night: var(--lucent-set-night, var(--scrim));
+  --lc-tint: var(--lucent-set-tint, color-mix(in srgb, var(--glow) 55%, var(--surface)));
+  --lc-light: var(--lucent-set-light, var(--on-scrim));
+  --lc-footer-dim: var(
+    --lucent-set-footer-dim,
+    color-mix(in srgb, var(--on-scrim) 60%, var(--scrim))
+  );
+  --lc-shadow-ink: var(--scrim);
+  --lc-shadow-sm: 0 4px 16px -6px color-mix(in srgb, var(--lc-shadow-ink) 16%, transparent);
+  --lc-shadow: 0 26px 60px -28px color-mix(in srgb, var(--lc-shadow-ink) 34%, transparent);
+  --lc-grain-blend: var(--lucent-set-grain-blend, multiply);
+  --lc-grain-op: var(--lucent-set-grain-op, 0.35);
+  /* The bar's glass: its tint before and after the page scrolls, its sheen and its rim. */
+  --lc-nav-tint: var(--lucent-set-nav-tint, color-mix(in srgb, var(--lc-light) 22%, transparent));
+  --lc-nav-tint-scrolled: var(
+    --lucent-set-nav-tint-scrolled,
+    color-mix(in srgb, var(--lc-light) 72%, transparent)
+  );
+  --lc-nav-sheen-a: var(
+    --lucent-set-nav-sheen-a,
+    color-mix(in srgb, var(--lc-light) 35%, transparent)
+  );
+  --lc-nav-sheen-b: var(
+    --lucent-set-nav-sheen-b,
+    color-mix(in srgb, var(--lc-light) 18%, transparent)
+  );
+  --lc-nav-edge-a: var(
+    --lucent-set-nav-edge-a,
+    color-mix(in srgb, var(--lc-light) 90%, transparent)
+  );
+  --lc-nav-edge-b: var(
+    --lucent-set-nav-edge-b,
+    color-mix(in srgb, var(--lc-light) 55%, transparent)
+  );
+  --lc-plan-pro: var(
+    --lucent-set-plan-pro,
+    linear-gradient(
+      180deg,
+      var(--accent),
+      color-mix(in srgb, var(--accent), var(--brand-deeper) 4%)
+    )
+  );
+
+  /* The source's night theme lifted each feature card's picture off the card's foot into a tile
+   * with rounder corners, since its films were shot on white; 1 asks for that, 0 (a brand's
+   * page) keeps the picture running past the foot, which a photograph needs no help with. */
+  --lc-tiles: var(--lucent-set-tiles, 0);
+
+  --lc-wrap: 1320px;
+  --lc-pad: clamp(20px, 5vw, 84px);
+  --lc-r: 26px;
+  --lc-r-lg: 40px;
+  --lc-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --lc-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  position: relative;
+  isolation: isolate;
+  background: var(--surface);
+  color: var(--on-surface);
+  font-family: var(--lc-body);
+  font-size: clamp(16px, 1.05vw, 18px);
+  line-height: 1.6;
+  letter-spacing: -0.01em;
+  text-align: left;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+  /* A brand's own words can run longer than the source's; a word too long for its line breaks
+   * rather than running out of its box. A word that fits is never touched. */
+  overflow-wrap: break-word;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .lucent {
+    --lc-orange-night: var(
+      --lucent-set-orange-night,
+      oklch(from var(--brand-deeper) max(l, 0.66) c h)
+    );
+  }
+}
+
+.lucent *,
+.lucent *::before,
+.lucent *::after {
+  box-sizing: border-box;
+}
+
+/* What the source left to the browser's own defaults, which the site's reset removes. */
+.lucent :where(p) {
+  margin: 1em 0;
+}
+
+.lucent :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.lucent :where(img, video) {
+  display: block;
+  max-width: 100%;
+}
+
+.lucent :where(h1, h2, h3) {
+  margin: 0;
+  font-family: var(--lc-heading);
+  font-weight: 500;
+  line-height: 0.98;
+  letter-spacing: -0.035em;
+}
+
+.lucent :where(h1, h2, h3) em {
+  font-style: normal;
+}
+
+.lucent em {
+  font-style: normal;
+  color: var(--lc-orange);
+}
+
+.lucent .lc-placeholder {
+  display: block;
+  background: var(--surface-muted);
+}
+
+.lucent :where(section) {
+  position: relative;
+  z-index: 2;
+}
+
+.lucent :where(:focus-visible) {
+  outline: 2px solid var(--lc-orange);
+  outline-offset: 3px;
+}
+
+/* ---------------------------------------------------------------------------------------------
+ * The grain over the page and the tint that warms it around the wide picture. The source's
+ * mesh gradient canvas is not ported: its own stylesheet hid it (`#gl { display: none }`).
+ */
+.lucent .lc-grain {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: var(--lc-grain-op);
+  mix-blend-mode: var(--lc-grain-blend);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+}
+
+.lucent .lc-tint {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: var(--lc-tint);
+  opacity: 0;
+  will-change: opacity;
+}
+
+/* ---------------------------------------------------------------------------------------------
+ * The splash: the name's letters rise out of a blur, then the sheet fades. Only while scripts run
+ * and motion is allowed; under reduced motion the script shows the name still for 0.7s.
+ */
+.lucent .lc-loader {
+  display: none;
+}
+
+@media (scripting: enabled) {
+  .lucent .lc-loader {
+    /* Should the page's script never start, the sheet still lifts. */
+    animation: lc-loader-lift 0.4s 5s forwards;
+    position: fixed;
+    inset: 0;
+    z-index: 9000;
+    display: grid;
+    place-content: center;
+    gap: 24px;
+    background: var(--surface);
+    transition:
+      opacity 0.4s var(--lc-ease),
+      visibility 0.4s;
+  }
+}
+
+.lucent .lc-loader.is-done {
+  opacity: 0;
+  visibility: hidden;
+}
+
+@keyframes lc-loader-lift {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+@media (hover: none), (max-width: 900px) {
+  .lucent .lc-loader {
+    transition-duration: 0.3s, 0.3s;
+  }
+}
+
+/* The source's wordmark was a drawing 2717 by 536 units at clamp(200px, 44vw, 560px) wide: the
+ * name is set in the heading face at its heaviest, in the brand's colour as the drawing was, at
+ * the size that gives a name of its seven letters that width (measured: 560, 451, 338 and 200px
+ * at 1535, 1024, 768 and 390px, as the drawing), and smaller for a longer name. */
+.lucent .lc-loader__logo {
+  display: flex;
+  margin: 0;
+  font-family: var(--lc-heading);
+  font-size: min(clamp(55.8px, 12.26vw, 155.8px), calc(169vw / var(--lc-letters, 7)));
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.05em;
+  color: var(--lc-orange);
+  white-space: nowrap;
+  opacity: 0;
+}
+
+.lucent .lc-loader__logo span {
+  display: inline-block;
+  white-space: pre;
+}
+
+/* ---------------------------------------------------------------------------------------------
+ * Buttons.
+ */
+.lucent .lc-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--lc-body);
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 1.6;
+  padding: 15px 26px;
+  border-radius: 100px;
+  border: 1.5px solid transparent;
+  transition:
+    opacity 0.3s var(--lc-ease),
+    transform 0.3s var(--lc-spring),
+    box-shadow 0.3s var(--lc-ease);
+}
+
+.lucent .lc-btn:hover {
+  opacity: 0.88;
+}
+
+.lucent .lc-btn:active {
+  transform: scale(0.96);
+}
+
+.lucent .lc-btn--solid {
+  background: var(--lc-orange);
+  color: var(--on-brand);
+  box-shadow: 0 6px 20px -10px color-mix(in srgb, var(--lc-orange) 45%, transparent);
+}
+
+.lucent .lc-btn--ghost {
+  border-color: var(--lc-line);
+  color: var(--on-surface);
+  background: transparent;
+}
+
+.lucent .lc-btn--sm {
+  padding: 11px 20px;
+  font-size: 14px;
+}
+
+.lucent .lc-btn--lg {
+  padding: 18px 34px;
+  font-size: 16px;
+}
+
+.lucent .lc-btn--block {
+  width: 100%;
+}
+
+.lucent .lc-btn__icon {
+  width: 18px;
+  height: 18px;
+  flex: none;
+  fill: none;
+  stroke: currentcolor;
+  margin: -2px 10px 0 -4px;
+}
+
+.lucent .lc-btn--lg .lc-btn__icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 11px;
+}
+
+/* ---------------------------------------------------------------------------------------------
+ * The button back to the top, shown once the page has scrolled a screen.
+ */
+.lucent .lc-to-top {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 90;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--lc-shadow-ink) 6%, transparent);
+  background: color-mix(in srgb, var(--lc-light) 82%, transparent);
+  color: var(--lc-shadow-ink);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  padding: 0;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(8px);
+  transition:
+    opacity 0.35s,
+    transform 0.35s,
+    visibility 0.35s;
+}
+
+.lucent .lc-to-top.is-on {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+}
+
+.lucent .lc-to-top:hover {
+  opacity: 0.88;
+}
+
+.lucent .lc-to-top svg {
+  width: 18px;
+  height: 18px;
+  display: block;
+}
+
+/* ---------------------------------------------------------------------------------------------
+ * The bar: a glass pill fixed over the page. Its lens (sections/glass.ts) bends the page under
+ * it where the browser can draw an SVG filter behind an element; elsewhere the layer under it
+ * blurs. Its tint thickens once the page scrolls.
+ */
+.lucent .lc-nav {
+  position: fixed;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  width: calc(100% - 28px);
+  max-width: var(--lc-wrap);
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 12px 12px 12px 22px;
+  line-height: 1.6;
+  letter-spacing: -0.16px;
+  border-radius: 100px;
+  transition:
+    transform 0.5s var(--lc-ease),
+    background 0.4s,
+    box-shadow 0.4s,
+    top 0.45s var(--lc-ease);
+}
+
+.lucent .lc-nav__glass {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  overflow: hidden;
+  z-index: -1;
+}
+
+.lucent .lc-nav__glass i {
+  position: absolute;
+  inset: -2%;
+  -webkit-backdrop-filter: blur(9px) saturate(115%);
+  backdrop-filter: blur(9px) saturate(115%);
+}
+
+.lucent .lc-nav > *:not(.lc-nav__glass) {
+  position: relative;
+  z-index: 1;
+}
+
+.lucent .lc-nav::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    135deg,
+    var(--lc-nav-edge-a),
+    color-mix(in srgb, var(--lc-light) 8%, transparent) 38%,
+    color-mix(in srgb, var(--lc-light) 3%, transparent) 62%,
+    var(--lc-nav-edge-b)
+  );
+  -webkit-mask:
+    linear-gradient(black 0 0) content-box,
+    linear-gradient(black 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(black 0 0) content-box,
+    linear-gradient(black 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.lucent .lc-nav::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background:
+    linear-gradient(
+      115deg,
+      var(--lc-nav-sheen-a) 0%,
+      transparent 34%,
+      transparent 66%,
+      var(--lc-nav-sheen-b) 100%
+    ),
+    var(--lc-nav-tint);
+  pointer-events: none;
+  transition: background 0.4s;
+}
+
+.lucent .lc-nav.is-scrolled::before {
+  background:
+    linear-gradient(
+      115deg,
+      var(--lc-nav-sheen-a) 0%,
+      transparent 34%,
+      transparent 66%,
+      var(--lc-nav-sheen-b) 100%
+    ),
+    var(--lc-nav-tint-scrolled);
+}
+
+.lucent .lc-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--lc-heading);
+  font-weight: 700;
+  font-size: 19px;
+  letter-spacing: -0.03em;
+}
+
+.lucent .lc-brand img {
+  width: auto;
+  height: 26px;
+  max-width: 160px;
+  object-fit: contain;
+}
+
+.lucent .lc-brand .lc-mark {
+  width: 26px;
+  border-radius: 8px;
+}
+
+.lucent .lc-nav__links {
+  display: flex;
+  gap: 28px;
+  margin-left: auto;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--on-surface-muted);
+}
+
+.lucent .lc-nav__links a {
+  position: relative;
+  transition: color 0.3s;
+}
+
+.lucent .lc-nav__links a::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 100%;
+  height: 1.5px;
+  background: var(--lc-orange);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.4s var(--lc-ease);
+}
+
+.lucent .lc-nav__links a:hover {
+  color: var(--on-surface);
+}
+
+.lucent .lc-nav__links a:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* ---------------------------------------------------------------------------------------------
+ * The hero: the headline, its lead and two buttons beside the phone.
+ */
+.lucent .lc-hero {
+  position: relative;
+  min-height: 100svh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: clamp(20px, 4vw, 60px);
+  padding: 130px var(--lc-pad) 80px;
+  max-width: var(--lc-wrap);
+  margin-inline: auto;
+}
+
+.lucent .lc-hero__inner,
+.lucent .lc-hero__stage {
+  position: relative;
+  z-index: 1;
+}
+
+/* The words stand above the phone's middle on two columns, by the 222px the source's owner
+ * chose. */
+@media (min-width: 961px) {
+  .lucent .lc-hero__inner {
+    margin-top: -222px;
+  }
+}
+
+.lucent .lc-hero__title {
+  font-size: clamp(42px, 5.4vw, 82px);
+  font-weight: 600;
+  letter-spacing: -0.04em;
+  line-height: 0.9;
+}
+
+.lucent .lc-hero__title .lc-line {
+  display: block;
+  overflow: hidden;
+  padding-top: 0.2em;
+  margin-top: -0.2em;
+  padding-bottom: 0.3em;
+  margin-bottom: -0.3em;
+}
+
+.lucent .lc-hero__title .lc-line > span {
+  display: block;
+}
+
+.lucent .lc-hero__lead {
+  max-width: 460px;
+  color: var(--on-surface-muted);
+  font-size: clamp(16px, 1.2vw, 19px);
+  margin: clamp(22px, 4vh, 34px) 0 0;
+}
+
+.lucent .lc-hero__cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 30px;
+}
+
+.lucent .lc-hero__stage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 60vh;
+}
+
+.lucent .lc-hero__device {
+  position: relative;
+  width: min(86%, 430px);
+  border-radius: 34px;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+/* The phone: the source's frame drawn over the picture on its screen. The frame is tinted to the
+ * brand (its own metal turned grey, the brand's hue laid over it) unless the page asks for the
+ * source's own finish, as the example does. */
+.lucent .lc-hero__frame {
+  position: relative;
+  aspect-ratio: 1350 / 2760;
+  isolation: isolate;
+}
+
+.lucent .lc-hero__screen {
+  position: absolute;
+  left: 5.037%;
+  top: 2.3913%;
+  width: 89.9259%;
+  height: 95.2174%;
+  display: block;
+  object-fit: cover;
+  border-radius: 25px;
+  background: var(--surface-muted);
+}
+
+.lucent .lc-hero__bezel {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  filter: var(--lucent-set-frame-filter, grayscale(1) brightness(1.08));
+}
+
+.lucent .lc-hero__tint {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: var(--lc-orange);
+  mix-blend-mode: color;
+  opacity: var(--lucent-set-frame-tint, 1);
+  -webkit-mask: var(--lc-frame-mask) center / 100% 100% no-repeat;
+  mask: var(--lc-frame-mask) center / 100% 100% no-repeat;
+}
+
+/* ---------------------------------------------------------------------------------------------
+ * The wide film, a picture here, which grows as it nears the top.
+ */
+.lucent .lc-promo {
+  padding: clamp(30px, 6vh, 70px) var(--lc-pad) calc(clamp(30px, 6vh, 70px) + min(5.7vw, 75px));
+  max-width: var(--lc-wrap);
+  margin-inline: auto;
+}
+
+.lucent .lc-promo__media {
+  position: relative;
+  margin: 0;
+  border-radius: var(--lc-r-lg);
+  overflow: hidden;
+  background: var(--scrim);
+  box-shadow: var(--lc-shadow);
+  transform-origin: center center;
+  will-change: transform;
+}
+
+.lucent .lc-promo__video {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+
+/* ---------------------------------------------------------------------------------------------
+ * Small capitals over every block, and the badge some carry.
+ */
+.lucent .lc-eyebrow {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--lc-eyebrow);
+  margin-bottom: 20px;
+}
+
+.lucent .lc-eyebrow--c {
+  color: var(--lc-eyebrow-night);
+}
+
+.lucent .lc-eyebrow .lc-beta {
+  display: inline-block;
+  margin-left: 9px;
+  padding: 3px 8px;
+  border-radius: 100px;
+  background: color-mix(in srgb, var(--lc-orange) 14%, transparent);
+  color: var(--lc-orange);
+  font-style: normal;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: none;
+  vertical-align: 1px;
+}
+
+/* ---------------------------------------------------------------------------------------------
+ * The overview.
+ */
+.lucent .lc-work {
+  padding: clamp(40px, 6vh, 80px) var(--lc-pad) clamp(50px, 8vh, 100px);
+  max-width: var(--lc-wrap);
+  margin-inline: auto;
+}
+
+.lucent .lc-work__head h2 {
+  font-size: clamp(40px, 6.5vw, 104px);
+}
+
+.lucent .lc-lede {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: clamp(30px, 5vw, 80px);
+  align-items: center;
+  margin-top: clamp(36px, 6vh, 80px);
+}
+
+.lucent .lc-lede__media {
+  margin: 0;
+  border-radius: var(--lc-r-lg);
+  overflow: hidden;
+  will-change: transform;
+}
+
+.lucent .lc-lede__img {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  will-change: transform;
+}
+
+.lucent .lc-lede__text p {
+  font-size: clamp(17px, 1.4vw, 22px);
+  margin: 0 0 28px;
+}
+
+.lucent .lc-ticks {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 14px;
+}
+
+.lucent .lc-ticks li {
+  position: relative;
+  padding-left: 38px;
+  color: var(--on-surface-muted);
+}
+
+.lucent .lc-ticks li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: calc(0.8em - 12px);
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--lc-orange) 14%, transparent);
+}
+
+.lucent .lc-ticks li::after {
+  content: '';
+  position: absolute;
+  left: 12px;
+  top: 0.8em;
+  width: 9px;
+  height: 5.5px;
+  border-left: 2.5px solid var(--lc-orange);
+  border-bottom: 2.5px solid var(--lc-orange);
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+/* ---------------------------------------------------------------------------------------------
+ * The white card with its three short lines.
+ */
+.lucent .lc-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: stretch;
+  background: var(--accent);
+  border: 1px solid var(--lc-line);
+  border-radius: var(--lc-r-lg);
+  overflow: hidden;
+  max-width: var(--lc-wrap);
+  margin: 0 auto clamp(30px, 5vh, 60px);
+}
+
+.lucent .lc-split__text {
+  padding: clamp(40px, 6vw, 90px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.lucent .lc-split__text h2 {
+  font-size: clamp(42px, 5vw, 84px);
+}
+
+.lucent .lc-split__text p {
+  color: var(--on-surface-muted);
+  font-size: clamp(16px, 1.2vw, 19px);
+  max-width: 460px;
+  margin: 26px 0 0;
+}
+
+.lucent .lc-split__media {
+  margin: clamp(24px, 3vw, 48px);
+  overflow: hidden;
+  align-self: center;
+  border-radius: var(--lc-r-lg);
+}
+
+.lucent .lc-split__img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1500 / 1125;
+  object-fit: cover;
+  will-change: transform;
+}
+
+/* The heading's lines, each its own block while it rises (sections/rise.ts); at rest they read
+ * as the source's lines broken by <br>, which run on as one sentence on a narrow screen. */
+.lucent .lc-rise-line {
+  display: block;
+}
+
+/* ---------------------------------------------------------------------------------------------
+ * The reminder: a heading over a picture onto which a notice drops.
+ */
+.lucent .lc-reminder {
+  text-align: center;
+  padding: clamp(80px, 14vh, 180px) var(--lc-pad);
+  max-width: 1000px;
+  margin-inline: auto;
+}
+
+.lucent .lc-reminder h2 {
+  font-size: clamp(40px, 6.5vw, 96px);
+}
+
+.lucent .lc-reminder > p {
+  color: var(--on-surface-muted);
+  max-width: 540px;
+  margin: 26px auto 0;
+  font-size: clamp(16px, 1.2vw, 19px);
+}
+
+.lucent .lc-reminder__card {
+  position: relative;
+  margin: clamp(40px, 7vh, 80px) auto 0;
+  max-width: 760px;
+  border-radius: var(--lc-r-lg);
+  overflow: hidden;
+  aspect-ratio: 2000 / 1332;
+  background: var(--surface-muted);
+}
+
+.lucent .lc-reminder__bg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* The notice: the source drew it as a picture (a frosted iOS banner with two more stacked under
+ * it, 1858 by 432); here it is drawn, frosted over whatever picture sits behind it, at the same
+ * proportions, so a business's own words sit in it. Its sizes are fractions of the card's width
+ * through the container unit, as the picture scaled with the card. */
+.lucent .lc-notice {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 82%;
+  aspect-ratio: 1858 / 432;
+  container-type: inline-size;
+  text-align: left;
+  transform: translate(-50%, -50%) scale(1);
+  transition:
+    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+  .lucent .lc-reminder__card:not(.is-in) .lc-notice {
+    opacity: 0;
+    filter: blur(8px);
+    transform: translate(-50%, calc(-50% - 26px)) scale(0.96);
+  }
+}
+
+.lucent .lc-notice__card,
+.lucent .lc-notice__under {
+  position: absolute;
+  border: 1px solid color-mix(in srgb, var(--lc-light) 55%, transparent);
+  background: color-mix(in srgb, var(--lc-light) 12%, transparent);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  backdrop-filter: blur(14px) saturate(140%);
+}
+
+/* The banner: 67 to 1789 across and 30 to 325 down, its corners about 98 round. */
+.lucent .lc-notice__card {
+  left: 3.6%;
+  right: 3.71%;
+  top: 6.94%;
+  height: 68.3%;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 2.75cqw;
+  padding: 0 3.77cqw 0 3.55cqw;
+  border-radius: 5.3cqw;
+  color: var(--lc-light);
+}
+
+/* The two banners stacked under it, showing only below it: 138 to 1719 across down to 357, and
+ * 193 to 1664 down to 398. */
+.lucent .lc-notice__under {
+  border-top: 0;
+}
+
+.lucent .lc-notice__under--1 {
+  left: 7.43%;
+  right: 7.48%;
+  top: 60%;
+  height: 22.6%;
+  z-index: 2;
+  border-radius: 0 0 4cqw 4cqw;
+}
+
+.lucent .lc-notice__under--2 {
+  left: 10.39%;
+  right: 10.44%;
+  top: 70%;
+  height: 22.1%;
+  z-index: 1;
+  border-radius: 0 0 3.6cqw 3.6cqw;
+}
+
+/* The app's icon, 175 square with corners 40 round, centred on the banner's height. */
+.lucent .lc-notice__icon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 9.42cqw;
+  height: 9.42cqw;
+  border-radius: 2.15cqw;
+  overflow: hidden;
+  background: var(--lc-light);
+  color: var(--lc-orange);
+  font-family: var(--lc-heading);
+  font-weight: 800;
+  font-size: 6.2cqw;
+  line-height: 1;
+}
+
+.lucent .lc-notice__icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* The title and its line: each about 62 tall from ascender to descender, their baselines 82
+ * apart, white. */
+.lucent .lc-notice__body {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  line-height: 1.32;
+  letter-spacing: -0.015em;
+}
+
+.lucent .lc-notice__title {
+  font-weight: 600;
+  font-size: 3.34cqw;
+}
+
+.lucent .lc-notice__text {
+  font-size: 3.34cqw;
+}
+
+/* The time, white at a little under half, at the banner's top right, its figures' tops 72 below
+ * the banner's: the line under the title runs on beneath it, as a phone's banner sets it, and
+ * the title keeps clear of it. */
+.lucent .lc-notice__time {
+  position: absolute;
+  top: 3.38cqw;
+  right: 3.77cqw;
+  font-size: 3.6cqw;
+  line-height: 1;
+  opacity: 0.45;
+}
+
+.lucent .lc-notice__title {
+  padding-right: 15cqw;
+}
+
+/* ---------------------------------------------------------------------------------------------
+ * The steps: text beside a tall picture, three numbered pills that clear out of a blur.
+ */
+.lucent .lc-import {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: clamp(32px, 5vw, 80px);
+  max-width: var(--lc-wrap);
+  margin: 0 auto;
+  padding: clamp(90px, 13vh, 170px) var(--lc-pad);
+}
+
+.lucent .lc-import__text {
+  max-width: 560px;
+}
+
+.lucent .lc-import h2 {
+  font-size: clamp(36px, 4.4vw, 68px);
+  margin-top: 18px;
+}
+
+.lucent .lc-import__text > p {
+  color: var(--lc-dim);
+  margin: 24px 0 0;
+  font-size: clamp(16px, 1.2vw, 19px);
+}
+
+.lucent .lc-import__steps {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: clamp(26px, 4vh, 40px) 0 0;
+  padding: 0;
+}
+
+.lucent .lc-import__steps li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 18px 26px 18px 16px;
+  border-radius: 100px;
+  background: var(--accent);
+  border: 1px solid var(--lc-line);
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.lucent .lc-import__steps span {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--lc-orange);
+  color: var(--on-brand);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.lucent .lc-import__media {
+  margin: 0;
+  border-radius: var(--lc-r-lg);
+  overflow: hidden;
+}
+
+.lucent .lc-import__shot {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1096 / 1435;
+  object-fit: cover;
+}
+
+@media (max-width: 900px) {
+  .lucent .lc-import {
+    grid-template-columns: 1fr;
+    gap: 36px;
+  }
+
+  .lucent .lc-import__text {
+    max-width: none;
+  }
+
+  .lucent .lc-import__steps li {
+    flex: 1 1 100%;
+  }
+}
+
+/* ---------------------------------------------------------------------------------------------
+ * The rail of four feature cards: the active card almost the page's width, the next one's edge
+ * showing at the right, snapping as it scrolls sideways, with dots under it.
+ */
+.lucent .lc-ai {
+  padding: clamp(34px, 6vh, 70px) var(--lc-pad);
+}
+
+.lucent .lc-ai__card {
+  --lc-card-pad-block: clamp(44px, 6.5vw, 96px);
+  --lc-orange: var(--lc-orange-night);
+  position: relative;
+  max-width: var(--lc-wrap);
+  margin-inline: auto;
+  background: var(--lc-night);
+  color: var(--on-scrim);
+  border-radius: var(--lc-r-lg);
+  padding: var(--lc-card-pad-block) clamp(40px, 6vw, 90px);
+  overflow: hidden;
+}
+
+.lucent .lc-ai__card--light {
+  --lc-orange: var(--brand-deeper);
+  background: var(--accent);
+  color: var(--on-surface);
+  border: 1px solid var(--lc-line);
+}
+
+.lucent .lc-ai__card--light .lc-ai__text p {
+  color: var(--on-surface-muted);
+}
+
+.lucent .lc-ai__card--light .lc-ai__title {
+  color: var(--on-surface);
+}
+
+.lucent .lc-ai__grid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: clamp(30px, 5vw, 70px);
+  align-items: center;
+}
+
+.lucent .lc-ai__text {
+  position: relative;
+  z-index: 2;
+}
+
+.lucent .lc-ai__text p {
+  color: var(--on-scrim);
+  font-size: clamp(16px, 1.2vw, 20px);
+  margin: 26px 0 0;
+  max-width: 480px;
+}
+
+/* The source set these at 900, but its rule for every heading with a class (h2[class], one
+ * element and one class) outranked this one, so they render at its headings' 500. */
+.lucent .lc-ai__title {
+  font-size: clamp(38px, 5.4vw, 76px);
+  letter-spacing: -0.03em;
+  line-height: 1.04;
+  color: var(--lc-orange);
+}
+
+/* The source's `.ai__text h2` outranks `.ai__title` by its element, so it sets the size. */
+.lucent .lc-ai__text h2 {
+  font-size: clamp(36px, 4.6vw, 76px);
+}
+
+.lucent .lc-ai__title-wrap {
+  position: relative;
+}
+
+.lucent .lc-ai__title-wrap .lc-particles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.lucent .lc-ai__title.is-cloud {
+  opacity: 0;
+}
+
+.lucent .lc-ai__title.is-assembled {
+  opacity: 1;
+}
+
+.lucent .lc-ai__more {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 26px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--lc-orange);
+  text-decoration: none;
+}
+
+.lucent .lc-ai__more svg {
+  width: 17px;
+  height: 17px;
+  fill: none;
+  stroke: currentcolor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform 0.35s var(--lc-ease);
+}
+
+.lucent .lc-ai__more:hover svg {
+  transform: translateX(4px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lucent .lc-ai__more:hover svg {
+    transform: none;
+  }
+}
+
+/* The picture's window runs past the card's foot by the card's bottom padding, so it is cut by
+ * the card's edge as the source's phone was. The source scaled a film inside the window to show
+ * the top of its phone; a picture fills the window from its top. */
+.lucent .lc-ai__media {
+  position: relative;
+  z-index: 1;
+  margin: 0 0 calc(-1 * clamp(44px, 6.5vw, 96px) * (1 - var(--lc-tiles)));
+  align-self: end;
+  display: flex;
+  justify-content: center;
+}
+
+.lucent .lc-ai__phone {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 5 / 6;
+  overflow: hidden;
+  border-radius: calc(32px * var(--lc-tiles));
+}
+
+.lucent .lc-ai__shot {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+  object-position: center top;
+}
+
+@media (min-width: 641px) and (max-width: 1024px) {
+  .lucent .lc-ai {
+    padding: clamp(14px, 2.4vh, 30px) var(--lc-pad);
+  }
+
+  .lucent .lc-ai__card {
+    --lc-card-pad-block: clamp(21px, 2.4vw, 38px);
+    padding: var(--lc-card-pad-block) clamp(32px, 4.8vw, 72px);
+  }
+}
+
+@media (max-width: 640px) {
+  .lucent .lc-ai__phone {
+    aspect-ratio: 1 / 1;
+  }
+}
+
+.lucent .lc-ai--rail {
+  padding-inline: 0;
+}
+
+.lucent .lc-rail {
+  max-width: calc(var(--lc-wrap) + 2 * var(--lc-pad));
+  margin-inline: auto;
+  padding-inline: var(--lc-pad);
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  scroll-padding-inline: var(--lc-pad);
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.lucent .lc-rail::-webkit-scrollbar {
+  display: none;
+}
+
+.lucent .lc-rail__track {
+  display: flex;
+  gap: 20px;
+}
+
+.lucent .lc-rail__slide {
+  flex: 0 0 auto;
+  width: calc(100% - 44px);
+  max-width: none;
+  margin-inline: 0;
+  scroll-snap-align: start;
+  --slide-pad: clamp(34px, 5.1vw, 76px);
+  padding-inline: var(--slide-pad);
+  /* With the pictures lifted into tiles, the space under one matches its sides. */
+  padding-bottom: calc(
+    var(--slide-pad) * var(--lc-tiles) + var(--lc-card-pad-block) * (1 - var(--lc-tiles))
+  );
+  display: flex;
+  flex-direction: column;
+}
+
+.lucent .lc-rail__slide > .lc-ai__grid {
+  flex: 1 1 auto;
+}
+
+.lucent .lc-ai__media--framed {
+  margin: 0;
+  align-self: end;
+  aspect-ratio: 1 / 1;
+  background: var(--surface-muted);
+  border-radius: calc(var(--lc-r) + 6px * var(--lc-tiles));
+  overflow: hidden;
+}
+
+.lucent .lc-rail__slide--tablet {
+  padding-bottom: var(--slide-pad);
+}
+
+.lucent .lc-ai__frame-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center bottom;
+}
+
+.lucent .lc-rail__dots {
+  display: flex;
+  justify-content: center;
+  gap: 9px;
+  margin-top: 24px;
+}
+
+.lucent .lc-rail__dot {
+  width: 8px;
+  height: 8px;
+  padding: 0;
+  border: 0;
+  border-radius: 100px;
+  background: var(--lc-orange);
+  opacity: 0.22;
+  cursor: pointer;
+  transition:
+    width 0.4s var(--lc-ease),
+    opacity 0.4s var(--lc-ease);
+}
+
+.lucent .lc-rail__dot.is-active {
+  width: 26px;
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lucent .lc-rail {
+    scroll-behavior: auto;
+  }
+
+  .lucent .lc-rail__dot {
+    transition: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .lucent .lc-rail__slide .lc-ai__title {
+    font-size: 28px;
+    line-height: 1.08;
+  }
+}
+
+@media (max-width: 860px) {
+  .lucent .lc-rail__slide {
+    width: calc(100% - 28px);
+  }
+
+  .lucent .lc-rail__slide--tablet .lc-ai__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .lucent .lc-rail__track {
+    gap: 12px;
+  }
+
+  .lucent .lc-rail__slide {
+    width: calc(100% - 16px);
+    --slide-pad: 22px;
+  }
+}
+
+/* ---------------------------------------------------------------------------------------------
+ * The wide picture under the tint, the pair of tall pictures, and the statement.
+ */
+.lucent .lc-widgets {
+  position: relative;
+  text-align: center;
+  background: transparent;
+  padding: clamp(110px, 16vh, 200px) var(--lc-pad);
+}
+
+.lucent .lc-widgets h2 {
+  font-size: clamp(40px, 6.5vw, 96px);
+}
+
+.lucent .lc-widgets > p {
+  color: var(--lc-dim);
+  max-width: 560px;
+  margin: 26px auto 0;
+  font-size: clamp(16px, 1.2vw, 19px);
+}
+
+.lucent .lc-widgets__media {
+  position: relative;
+  margin: clamp(40px, 7vh, 80px) auto 0;
+  max-width: 860px;
+  border-radius: var(--lc-r-lg);
+  overflow: hidden;
+  aspect-ratio: 16 / 9;
+  background: var(--surface-muted);
+}
+
+.lucent .lc-widgets__video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.lucent .lc-watch {
+  text-align: center;
+  max-width: var(--lc-wrap);
+  margin: 0 auto;
+  padding: clamp(90px, 13vh, 170px) var(--lc-pad) clamp(60px, 9vh, 110px);
+}
+
+.lucent .lc-watch h2 {
+  font-size: clamp(40px, 6.5vw, 96px);
+  margin-top: 18px;
+}
+
+.lucent .lc-watch > p {
+  color: var(--lc-dim);
+  max-width: 560px;
+  margin: 26px auto 0;
+  font-size: clamp(16px, 1.2vw, 19px);
+}
+
+.lucent .lc-watch__pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(12px, 1.6vw, 22px);
+  margin: clamp(40px, 7vh, 80px) auto 0;
+  max-width: 900px;
+}
+
+.lucent .lc-watch__shot {
+  margin: 0;
+  border-radius: var(--lc-r-lg);
+  overflow: hidden;
+  aspect-ratio: 9 / 16;
+  background: var(--surface-muted);
+}
+
+.lucent .lc-watch__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+@media (max-width: 700px) {
+  .lucent .lc-watch__pair {
+    gap: 10px;
+  }
+}
+
+.lucent .lc-manifesto {
+  padding: clamp(70px, 12vh, 160px) var(--lc-pad);
+  max-width: 1120px;
+  margin-inline: auto;
+}
+
+.lucent .lc-manifesto__text {
+  font-family: var(--lc-tight);
+  font-weight: 600;
+  font-size: clamp(26px, 4.2vw, 60px);
+  line-height: 1.1;
+  letter-spacing: -0.035em;
+}
+
+/* The statement reads as plain text, as the source's did before its script split it, and as it
+ * stayed without scripts or under reduced motion. Where its words rise, each sits in its own
+ * clip, with room above and below to keep the clip off the ascenders and descenders and negative
+ * margins to give the line its place back; a clipped box sits on the line by its foot, so the
+ * lines stand a little further apart, as the source's did once split. */
+@media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+  .lucent .lc-word {
+    display: inline-block;
+    overflow: hidden;
+    padding-top: 0.16em;
+    margin-top: -0.16em;
+    padding-bottom: 0.26em;
+    margin-bottom: -0.26em;
+  }
+
+  .lucent .lc-word > * {
+    display: inline-block;
+  }
+}
+
+/* ---------------------------------------------------------------------------------------------
+ * Pricing.
+ */
+.lucent .lc-pricing {
+  padding: clamp(40px, 6vh, 80px) var(--lc-pad) clamp(60px, 10vh, 120px);
+  max-width: var(--lc-wrap);
+  margin-inline: auto;
+}
+
+.lucent .lc-pricing__head {
+  text-align: center;
+  margin-bottom: clamp(30px, 5vh, 54px);
+}
+
+.lucent .lc-pricing__head h2 {
+  font-size: clamp(36px, 5vw, 80px);
+}
+
+.lucent .lc-toggle {
+  position: relative;
+  display: inline-flex;
+  margin-top: 30px;
+  background: var(--surface-muted);
+  border-radius: 100px;
+  padding: 5px;
+  gap: 4px;
+}
+
+/* The source's buttons and field kept the browser's own line height and letter spacing, which
+ * the site's reset would otherwise replace with the page's. */
+.lucent .lc-toggle__opt {
+  position: relative;
+  z-index: 2;
+  border: 0;
+  background: transparent;
+  font-family: var(--lc-body);
+  font-weight: 600;
+  font-size: 14px;
+  line-height: normal;
+  letter-spacing: normal;
+  color: var(--on-surface-muted);
+  padding: 10px 22px;
+  border-radius: 100px;
+  cursor: pointer;
+  transition: color 0.35s var(--lc-ease);
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.lucent .lc-toggle__opt[aria-pressed='true'] {
+  color: var(--on-brand);
+}
+
+.lucent .lc-toggle__opt i {
+  font-style: normal;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 7px;
+  border-radius: 100px;
+  background: color-mix(in srgb, var(--lc-orange) 16%, transparent);
+  color: var(--lc-orange);
+  transition:
+    background 0.35s,
+    color 0.35s;
+}
+
+.lucent .lc-toggle__opt[aria-pressed='true'] i {
+  background: color-mix(in srgb, var(--on-brand) 25%, transparent);
+  color: var(--on-brand);
+}
+
+@media (scripting: none) {
+  .lucent .lc-toggle__opt[aria-pressed='true'] {
+    background: var(--lc-orange);
+  }
+}
+
+.lucent .lc-toggle__thumb {
+  position: absolute;
+  z-index: 1;
+  top: 5px;
+  left: 5px;
+  height: calc(100% - 10px);
+  border-radius: 100px;
+  background: var(--lc-orange);
+  box-shadow: 0 8px 18px -8px color-mix(in srgb, var(--lc-orange) 70%, transparent);
+  transition:
+    transform 0.45s var(--lc-spring),
+    width 0.45s var(--lc-spring);
+}
+
+.lucent .lc-plans {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 440px));
+  gap: 20px;
+  justify-content: center;
+  align-items: start;
+}
+
+.lucent .lc-plan {
+  position: relative;
+  padding: 40px;
+  border-radius: var(--lc-r-lg);
+  border: 1px solid var(--lc-line);
+  background: var(--accent);
+  transition:
+    transform 0.5s var(--lc-spring),
+    box-shadow 0.5s var(--lc-ease);
+}
+
+.lucent .lc-plan header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 8px;
+}
+
+.lucent .lc-plan h3 {
+  font-size: 24px;
+  font-weight: 500;
+}
+
+.lucent .lc-plan__price {
+  font-family: var(--lc-heading);
+  font-weight: 800;
+  font-size: 40px;
+  letter-spacing: -0.04em;
+}
+
+.lucent .lc-plan__price small {
+  font-size: 16px;
+  color: var(--on-surface-muted);
+  font-weight: 600;
+}
+
+.lucent .lc-plan > p {
+  color: var(--on-surface-muted);
+  font-size: 15px;
+  margin: 0 0 26px;
+  min-height: 22px;
+}
+
+.lucent .lc-plan ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 30px;
+  display: grid;
+  gap: 14px;
+}
+
+.lucent .lc-plan li {
+  position: relative;
+  padding-left: 28px;
+  font-size: 15.5px;
+}
+
+.lucent .lc-plan li::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: var(--lc-orange);
+  font-weight: 700;
+}
+
+.lucent .lc-plan--pro {
+  background: var(--lc-plan-pro);
+  border-color: color-mix(in srgb, var(--lc-orange) 35%, transparent);
+}
+
+.lucent .lc-plan__flag {
+  position: absolute;
+  top: -13px;
+  right: 30px;
+  background: var(--lc-orange);
+  color: var(--on-brand);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.6;
+  padding: 6px 14px;
+  border-radius: 100px;
+  box-shadow: 0 6px 16px -8px color-mix(in srgb, var(--lc-orange) 40%, transparent);
+}
+
+.lucent .lc-plan__amt {
+  display: inline-block;
+}
+
+/* ---------------------------------------------------------------------------------------------
+ * Questions.
+ */
+.lucent .lc-faq {
+  padding: clamp(50px, 9vh, 120px) var(--lc-pad);
+  max-width: var(--lc-wrap);
+  margin-inline: auto;
+  display: grid;
+  grid-template-columns: 0.7fr 1.3fr;
+  gap: clamp(30px, 5vw, 80px);
+}
+
+.lucent .lc-faq__head h2 {
+  font-size: clamp(36px, 4vw, 64px);
+}
+
+.lucent .lc-qa {
+  border-top: 1px solid var(--lc-line);
+}
+
+.lucent .lc-qa:last-child {
+  border-bottom: 1px solid var(--lc-line);
+}
+
+.lucent .lc-qa summary {
+  list-style: none;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  padding: 26px 0;
+  font-family: var(--lc-heading);
+  font-weight: 600;
+  font-size: clamp(18px, 1.7vw, 24px);
+  letter-spacing: -0.02em;
+  transition: color 0.3s;
+}
+
+.lucent .lc-qa summary:hover {
+  color: var(--lc-orange);
+}
+
+.lucent .lc-qa summary::-webkit-details-marker {
+  display: none;
+}
+
+.lucent .lc-qa summary i {
+  position: relative;
+  width: 16px;
+  height: 16px;
+  flex: none;
+}
+
+.lucent .lc-qa summary i::before,
+.lucent .lc-qa summary i::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  background: var(--lc-orange);
+  transition: transform 0.4s var(--lc-spring);
+}
+
+.lucent .lc-qa summary i::before {
+  width: 100%;
+  height: 2px;
+}
+
+.lucent .lc-qa summary i::after {
+  width: 2px;
+  height: 100%;
+}
+
+.lucent .lc-qa[open] summary i::after {
+  transform: scaleY(0);
+}
+
+.lucent .lc-qa[open] summary i::before {
+  transform: rotate(180deg);
+}
+
+.lucent .lc-qa p {
+  margin: 0 0 26px;
+  color: var(--on-surface-muted);
+  max-width: 620px;
+  overflow: hidden;
+}
+
+/* ---------------------------------------------------------------------------------------------
+ * The promise card.
+ */
+.lucent .lc-privacy {
+  padding: 0 var(--lc-pad) clamp(50px, 9vh, 120px);
+  max-width: var(--lc-wrap);
+  margin-inline: auto;
+}
+
+.lucent .lc-privacy__card {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  background: var(--accent);
+  border: 1px solid var(--lc-line);
+  border-radius: var(--lc-r);
+  padding: clamp(18px, 2vw, 24px) clamp(20px, 2.4vw, 28px);
+}
+
+.lucent .lc-privacy__line {
+  margin: 0;
+  flex: 1 1 100%;
+  font-size: clamp(14px, 1.15vw, 16px);
+  line-height: 1.5;
+  color: var(--on-surface-muted);
+}
+
+.lucent .lc-privacy__line strong {
+  color: var(--on-surface);
+  font-weight: 700;
+}
+
+.lucent .lc-privacy__badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.lucent .lc-privacy__badges li {
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 14px;
+  border-radius: 100px;
+  background: var(--surface);
+  border: 1px solid var(--lc-line);
+  white-space: nowrap;
+  transition: transform 0.35s var(--lc-spring);
+}
+
+.lucent .lc-privacy__badges li:hover {
+  transform: translateY(-4px) rotate(-2deg);
+}
+
+/* ---------------------------------------------------------------------------------------------
+ * The picture card with its caption, its round button and the email form on it.
+ */
+.lucent .lc-jrn {
+  padding: clamp(40px, 6vh, 80px) var(--lc-pad) clamp(50px, 8vh, 100px);
+  max-width: var(--lc-wrap);
+  margin-inline: auto;
+}
+
+.lucent .lc-jrn__wrap {
+  position: relative;
+}
+
+.lucent .lc-jrn__card {
+  position: relative;
+  display: block;
+  container-type: inline-size;
+  aspect-ratio: 1672 / 941;
+  border-radius: var(--lc-r-lg);
+  overflow: hidden;
+  background: var(--scrim);
+}
+
+.lucent .lc-jrn__shot {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.7s var(--lc-ease);
+}
+
+.lucent .lc-jrn__card:hover .lc-jrn__shot {
+  transform: scale(1.03);
+}
+
+.lucent .lc-jrn__card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: color-mix(in srgb, var(--scrim) 10%, transparent);
+  pointer-events: none;
+}
+
+.lucent .lc-jrn__hit {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.lucent .lc-jrn__lede {
+  position: absolute;
+  left: 6.5574%;
+  bottom: 7.362%;
+  z-index: 2;
+  max-width: 46%;
+}
+
+.lucent .lc-jrn__cap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.16em;
+  text-decoration: none;
+  font-family: var(--lc-heading);
+  font-weight: 500;
+  line-height: 0.98;
+  letter-spacing: -0.03em;
+  color: var(--lc-light);
+  font-size: clamp(26px, 5.6vw, 84px);
+  font-size: 7cqw;
+}
+
+.lucent .lc-jrn__line {
+  display: flex;
+  align-items: center;
+  gap: 0.216em;
+  white-space: nowrap;
+}
+
+.lucent .lc-jrn__go {
+  position: relative;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: var(--on-brand);
+  background: var(--lc-orange);
+  text-decoration: none;
+  width: clamp(48px, 4.6cqw, 76px);
+  height: clamp(48px, 4.6cqw, 76px);
+  margin-top: clamp(14px, 1.8cqw, 26px);
+  transition:
+    transform 0.35s var(--lc-ease),
+    filter 0.2s;
+}
+
+.lucent .lc-jrn__go svg {
+  width: 44%;
+  height: 44%;
+  fill: none;
+  stroke: currentcolor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform 0.35s var(--lc-ease);
+}
+
+@media (min-width: 900px) {
+  .lucent .lc-jrn__go {
+    width: clamp(96px, 9.2cqw, 152px);
+    height: clamp(96px, 9.2cqw, 152px);
+    margin-top: clamp(22px, 2.4cqw, 36px);
+  }
+}
+
+.lucent .lc-jrn__go:hover {
+  transform: scale(1.07);
+  filter: brightness(1.05);
+}
+
+.lucent .lc-jrn__go:hover svg {
+  transform: translateX(3px);
+}
+
+.lucent .lc-jrn__go::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  opacity: 0;
+  border: 1.5px solid var(--lc-orange);
+  transform: scale(1);
+  pointer-events: none;
+  transition:
+    transform 0.55s var(--lc-ease),
+    opacity 0.55s var(--lc-ease);
+}
+
+.lucent .lc-jrn__go:hover::after {
+  opacity: 0.45;
+  transform: scale(1.32);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lucent .lc-jrn__go:hover,
+  .lucent .lc-jrn__go:hover svg,
+  .lucent .lc-jrn__go:hover::after,
+  .lucent .lc-jrn__card:hover .lc-jrn__shot {
+    transform: none;
+  }
+}
+
+.lucent .lc-jrn__sub {
+  margin: 0.4em 0 0;
+  color: color-mix(in srgb, var(--lc-light) 82%, transparent);
+  line-height: 1.45;
+  max-width: 34ch;
+  font-size: clamp(13px, 3.6vw, 17px);
+  font-size: 1.45cqw;
+}
+
+.lucent .lc-nl {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  max-width: 460px;
+  margin: clamp(30px, 4vh, 54px) auto 0;
+  text-align: left;
+}
+
+/* The source set this in its tighter cut at 600, but its rule for every heading with a class
+ * outranked that, so it renders as its other headings do. */
+.lucent .lc-nl__note {
+  margin: 10px 0 16px;
+  font-size: clamp(20px, 2.2vw, 26px);
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+  color: var(--on-surface);
+}
+
+.lucent .lc-nl__row {
+  display: flex;
+  gap: 8px;
+}
+
+.lucent .lc-nl__input {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 13px 18px;
+  border-radius: 100px;
+  border: 1.5px solid var(--lc-line);
+  background: var(--accent);
+  color: var(--on-surface);
+  font: inherit;
+  font-size: 15px;
+  letter-spacing: normal;
+  transition: border-color 0.2s;
+}
+
+.lucent .lc-nl__input::placeholder {
+  color: var(--on-surface-muted);
+}
+
+.lucent .lc-nl__input:focus {
+  outline: none;
+  border-color: var(--lc-orange);
+}
+
+.lucent .lc-nl__input:focus-visible {
+  outline: 2px solid var(--lc-orange);
+  outline-offset: 2px;
+}
+
+.lucent .lc-nl__btn {
+  flex: 0 0 auto;
+  padding: 13px 24px;
+  border-radius: 100px;
+  border: 1.5px solid transparent;
+  background: var(--lc-orange);
+  color: var(--on-brand);
+  font: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: normal;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.lucent .lc-nl__btn:hover {
+  opacity: 0.88;
+}
+
+.lucent .lc-nl__msg {
+  min-height: 18px;
+  margin: 8px 0 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--on-surface-muted);
+}
+
+.lucent .lc-nl__terms {
+  margin: 10px 0 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--on-surface-muted);
+}
+
+@media (min-width: 900px) {
+  .lucent .lc-jrn__cap {
+    max-width: 46%;
+  }
+
+  /* The source's general margin for this form came later in its stylesheet than this block and
+   * so stood here too: the form sits 4% of the screen's height below the picture's middle. */
+  .lucent .lc-jrn .lc-nl {
+    position: absolute;
+    right: 5.5%;
+    top: 50%;
+    transform: translateY(-50%);
+    width: min(430px, 38%);
+    padding: 26px 28px 24px;
+    border-radius: 26px;
+    background: var(--accent);
+    border: 1px solid var(--lc-line);
+    box-shadow: 0 30px 70px -30px color-mix(in srgb, var(--lc-shadow-ink) 45%, transparent);
+  }
+
+  .lucent .lc-jrn .lc-nl__note {
+    margin: 0 0 18px;
+    font-size: clamp(19px, 1.6vw, 23px);
+  }
+
+  .lucent .lc-jrn .lc-nl__input {
+    background: var(--surface);
+  }
+}
+
+/* On a tablet the picture turns square and the form lies on it, white whatever the page's
+ * scheme, so its colours are the light ones. */
+@media (min-width: 700px) and (max-width: 899px) {
+  .lucent .lc-jrn__card {
+    aspect-ratio: 1 / 1;
+  }
+
+  .lucent .lc-jrn__cap {
+    font-size: clamp(52px, 11vw, 150px);
+    font-size: 14cqw;
+  }
+
+  .lucent .lc-jrn__lede {
+    top: 7.362%;
+    bottom: auto;
+    max-width: 78%;
+  }
+
+  .lucent .lc-jrn .lc-nl {
+    position: absolute;
+    left: 5%;
+    right: 5%;
+    bottom: 5%;
+    width: auto;
+    margin: 0;
+    padding: 20px 22px 18px;
+    border-radius: 22px;
+    background: color-mix(in srgb, var(--lc-light) 94%, transparent);
+    border: 1px solid color-mix(in srgb, var(--lc-light) 70%, transparent);
+    -webkit-backdrop-filter: blur(18px) saturate(1.2);
+    backdrop-filter: blur(18px) saturate(1.2);
+    box-shadow: 0 24px 60px -28px color-mix(in srgb, var(--lc-shadow-ink) 45%, transparent);
+  }
+
+  .lucent .lc-jrn .lc-nl__note {
+    margin: 0 0 14px;
+    font-size: 19px;
+    color: var(--lc-shadow-ink);
+  }
+
+  .lucent .lc-jrn .lc-nl__input {
+    background: var(--lc-light);
+    border-color: color-mix(in srgb, var(--lc-shadow-ink) 14%, transparent);
+    color: var(--lc-shadow-ink);
+  }
+
+  .lucent .lc-jrn .lc-nl__input::placeholder,
+  .lucent .lc-jrn .lc-nl__terms {
+    color: color-mix(in srgb, var(--lc-shadow-ink) 62%, var(--lc-light));
+  }
+}
+
+@media (max-width: 899px) {
+  .lucent .lc-jrn__sub {
+    display: none;
+  }
+}
+
+@media (max-width: 460px) {
+  .lucent .lc-nl__row {
+    flex-wrap: wrap;
+  }
+
+  .lucent .lc-nl__btn {
+    width: 100%;
+  }
+}
+
+/* ---------------------------------------------------------------------------------------------
+ * The footer: a dark slab with the big ask, the white pill, and a row of the brand, its marks
+ * and the small links.
+ */
+.lucent .lc-footer {
+  --lc-orange: var(--lc-orange-night);
+  position: relative;
+  z-index: 2;
+  margin-top: clamp(40px, 8vh, 90px);
+  padding: clamp(80px, 14vh, 170px) var(--lc-pad) 34px;
+  background: var(--scrim);
+  color: var(--on-scrim);
+  border-radius: clamp(28px, 4vw, 48px) clamp(28px, 4vw, 48px) 0 0;
+  overflow: hidden;
+}
+
+.lucent .lc-footer__cta {
+  display: block;
+  text-align: center;
+  font-family: var(--lc-heading);
+  font-weight: 500;
+  font-size: clamp(38px, 7.2vw, 116px);
+  line-height: 1.04;
+  letter-spacing: -0.045em;
+  color: var(--lc-orange);
+  margin-bottom: clamp(90px, 14vh, 170px);
+}
+
+.lucent .lc-footer__cta-line {
+  display: block;
+}
+
+.lucent .lc-footer__cta-line > span {
+  display: block;
+}
+
+.lucent .lc-footer__cta-s {
+  white-space: nowrap;
+}
+
+.lucent .lc-footer__cta img {
+  display: inline-block;
+  width: 0.92em;
+  height: 0.92em;
+  object-fit: contain;
+  border-radius: 0.22em;
+  vertical-align: -0.13em;
+  margin: 0 0.02em 0 0.08em;
+  transition: transform 0.45s var(--lc-spring);
+  box-shadow: 0 12px 40px -8px color-mix(in srgb, var(--lc-eyebrow-night) 35%, transparent);
+}
+
+/* A mark set before the whole name, rather than for its first letter, keeps a word's space. */
+.lucent .lc-footer__cta-s--before img {
+  margin-right: 0.22em;
+}
+
+.lucent .lc-footer__cta:hover img {
+  transform: rotate(-7deg) scale(1.08);
+}
+
+.lucent .lc-footer__cta .lc-footer__cta-w {
+  display: inline-block;
+  transition: transform 0.45s var(--lc-spring);
+}
+
+.lucent .lc-footer__cta:hover .lc-footer__cta-w {
+  transform: translateY(-3px);
+}
+
+.lucent .lc-footer__store {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 26px;
+  margin: calc(-1 * clamp(40px, 7vh, 90px)) 0 clamp(70px, 12vh, 150px);
+}
+
+/* The source's App Store badge, a picture 54px tall in a white pill, is the ask here: the
+ * brand's words in the pill, set to the badge's height. */
+.lucent .lc-footer__badge {
+  display: inline-flex;
+  align-items: center;
+  margin: 14px 0 4px;
+  height: 54px;
+  padding: 0 22px;
+  border-radius: 100px;
+  background: var(--lc-light);
+  color: var(--lc-shadow-ink);
+  font-weight: 600;
+  font-size: 17px;
+  letter-spacing: -0.02em;
+  box-shadow: 0 14px 30px -14px color-mix(in srgb, var(--lc-shadow-ink) 55%, transparent);
+  transition: transform 0.3s var(--lc-ease);
+}
+
+.lucent .lc-footer__badge:hover {
+  transform: translateY(-2px);
+}
+
+.lucent .lc-footer__fine {
+  color: var(--lc-footer-dim);
+  font-size: 14px;
+}
+
+.lucent .lc-footer__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 60px 24px;
+  padding-top: 26px;
+  border-top: 1px solid color-mix(in srgb, var(--lc-light) 14%, transparent);
+}
+
+.lucent .lc-footer__brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--lc-heading);
+  font-weight: 700;
+  color: var(--on-scrim);
+  text-decoration: none;
+}
+
+.lucent .lc-footer__brand img {
+  width: auto;
+  height: 24px;
+  max-width: 140px;
+  object-fit: contain;
+}
+
+.lucent .lc-footer__brand .lc-mark {
+  width: 24px;
+  border-radius: 6px;
+}
+
+.lucent .lc-footer__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  margin-left: auto;
+  color: var(--lc-footer-dim);
+  font-size: 14px;
+}
+
+.lucent .lc-footer__links a,
+.lucent .lc-footer__links button,
+.lucent .lc-footer__links span {
+  white-space: nowrap;
+}
+
+.lucent .lc-footer__links a:hover,
+.lucent .lc-footer__links button:hover {
+  color: var(--lc-light);
+}
+
+.lucent .lc-footer__links button {
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.lucent .lc-footer__social {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.lucent .lc-footer__social a {
+  color: var(--lc-footer-dim);
+  transition: color 0.3s;
+  display: inline-flex;
+}
+
+.lucent .lc-footer__social a:hover {
+  color: var(--lc-light);
+}
+
+.lucent .lc-footer__social svg {
+  width: 18px;
+  height: 18px;
+}
+
+.lucent .lc-footer__credits {
+  margin: 22px 0 0;
+  color: var(--lc-footer-dim);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.lucent .lc-footer__credits a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.lucent .lc-footer__credits a:hover {
+  color: var(--lc-light);
+}
+
+/* ---------------------------------------------------------------------------------------------
+ * Narrower screens, as the source's breakpoints set them.
+ */
+@media (max-width: 960px) {
+  .lucent .lc-nav__links {
+    display: none;
+  }
+
+  .lucent .lc-nav .lc-btn--sm {
+    margin-left: auto;
+  }
+
+  /* One column, which a word too long for it breaks inside rather than widening (the source's
+   * plain 1fr grew to its longest word, past a 320px screen's edge). */
+  .lucent .lc-hero {
+    grid-template-columns: minmax(0, 1fr);
+    padding-top: 100px;
+  }
+
+  .lucent .lc-hero__stage {
+    min-height: 70vh;
+    margin-top: 20px;
+  }
+
+  .lucent .lc-lede,
+  .lucent .lc-split,
+  .lucent .lc-ai__grid,
+  .lucent .lc-faq {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .lucent .lc-plans {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 560px) {
+  .lucent .lc-hero__stage {
+    min-height: auto;
+  }
+
+  .lucent .lc-hero__device {
+    width: min(76%, 380px);
+  }
+
+  .lucent .lc-footer__row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 18px;
+  }
+
+  .lucent .lc-footer__links {
+    margin-left: 0;
+    flex-wrap: wrap;
+    gap: 12px 20px;
+  }
+}
+
+@media (max-width: 900px) {
+  .lucent .lc-widgets__media {
+    max-width: 460px;
+  }
+
+  .lucent .lc-hero__device {
+    width: min(82%, 470px);
+  }
+
+  .lucent .lc-manifesto__text {
+    font-size: clamp(28px, 6vw, 44px);
+    font-weight: 600;
+    line-height: 1.14;
+    letter-spacing: -0.03em;
+  }
+
+  .lucent .lc-hero {
+    min-height: auto;
+    padding-bottom: 30px;
+  }
+
+  .lucent .lc-hero__stage {
+    min-height: auto;
+  }
+
+  .lucent .lc-grain {
+    display: none;
+  }
+}
+
+@media (max-width: 560px) {
+  .lucent .lc-hero__device {
+    width: min(92%, 430px);
+  }
+}
+
+/* One size for every page heading on a phone and a tablet, as the source set it, and the lines a
+ * desktop breaks by hand run on. */
+@media (max-width: 900px) {
+  .lucent h1,
+  .lucent h2 {
+    font-size: 50px !important;
+    font-weight: 500 !important;
+    line-height: 1.02 !important;
+  }
+
+  .lucent h1.lc-hero__title {
+    font-weight: 600 !important;
+    line-height: 0.93 !important;
+  }
+
+  /* Below 360px the source's 50px ran its hero's longest word past a 320px screen; here the
+   * headings shrink with the screen there, and stand at 50px from 360px up. */
+  @media (max-width: 359px) {
+    .lucent h1,
+    .lucent h2 {
+      font-size: 13.8vw !important;
+    }
+  }
+
+  .lucent h1 br,
+  .lucent h2 br {
+    display: none;
+  }
+
+  .lucent .lc-rise-line {
+    display: inline;
+  }
+
+  .lucent .lc-widgets {
+    padding: clamp(50px, 7vh, 90px) var(--lc-pad) 60px;
+  }
+
+  .lucent .lc-manifesto {
+    padding: 60px var(--lc-pad);
+  }
+
+  .lucent .lc-work {
+    padding: 30px var(--lc-pad) 40px;
+  }
+
+  .lucent .lc-reminder {
+    padding: 60px var(--lc-pad);
+  }
+
+  .lucent .lc-ai {
+    padding: 24px var(--lc-pad);
+  }
+
+  .lucent .lc-privacy {
+    padding: 0 var(--lc-pad) 50px;
+  }
+
+  .lucent .lc-pricing {
+    padding: 30px var(--lc-pad) 50px;
+  }
+
+  .lucent .lc-faq {
+    padding: 40px var(--lc-pad);
+  }
+
+  .lucent .lc-footer {
+    margin-top: 40px;
+    padding-top: 70px;
+  }
+
+  .lucent .lc-footer__cta {
+    font-size: clamp(52px, 13vw, 84px);
+    margin-bottom: 70px;
+  }
+}
+
+/* ---------------------------------------------------------------------------------------------
+ * The hidden starting states of the entrances (sections/scroll.ts, mask.ts and hero-entrance.ts),
+ * only while scripts run and motion is allowed. Each block is shown by its script, which then
+ * lets these go.
+ */
+@media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+  .lucent [data-reveal]:not([data-revealed]) {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+
+  /* Unseen, but still read: the lines played over a heading are hidden from readers, its own
+   * words are not. */
+  .lucent [data-mask]:not([data-masked]) > .lc-mask-text,
+  .lucent .lc-hero__title:not([data-shown]) > .lc-mask-text {
+    opacity: 0;
+  }
+
+  .lucent [data-rise]:not([data-risen]) .lc-rise-line {
+    display: block;
+    padding-bottom: 0.12em;
+    margin-bottom: -0.12em;
+  }
+
+  .lucent [data-rise]:not([data-risen]) .lc-rise-line,
+  .lucent [data-rise]:not([data-risen]) .lc-jrn__line {
+    opacity: 0;
+    transform: translate3d(0, 30px, 0);
+    filter: blur(10px);
+  }
+
+  .lucent .lc-manifesto__text:not([data-shown]) .lc-word > * {
+    transform: translateY(110%);
+  }
+
+  .lucent .lc-import__steps:not([data-shown]) li {
+    opacity: 0;
+    filter: blur(10px);
+    transform: translateY(12px);
+  }
+
+  .lucent .lc-plans:not([data-shown]) .lc-plan {
+    opacity: 0;
+    filter: blur(14px);
+    transform: translateY(24px);
+  }
+
+  .lucent .lc-footer__cta:not([data-shown]) .lc-footer__cta-line {
+    overflow: hidden;
+    padding-bottom: 0.14em;
+    margin-bottom: -0.14em;
+  }
+
+  .lucent .lc-footer__cta:not([data-shown]) .lc-footer__cta-line > span {
+    transform: translate3d(0, 110%, 0);
+  }
+
+  .lucent .lc-hero:not([data-shown]) .lc-hero__lead,
+  .lucent .lc-hero:not([data-shown]) .lc-hero__cta,
+  .lucent .lc-hero:not([data-shown]) .lc-hero__device {
+    opacity: 0;
+  }
+}
+
+/* The lines a heading's entrance builds over it while it plays (sections/mask.ts), styled inline
+ * as the source styled them. */
+.lucent .lc-mask-ghost {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.lucent [data-mask],
+.lucent .lc-hero__title {
+  position: relative;
+}
+
+/* A section a link in the page scrolled to takes focus as the browser's jump would have given it,
+ * without a ring, since it is not a control. */
+.lucent [data-lc-focus]:focus {
+  outline: none;
+}
+
+/* The source shortened every transition and animation to nothing under reduced motion. */
+@media (prefers-reduced-motion: reduce) {
+  .lucent *,
+  .lucent *::before,
+  .lucent *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}

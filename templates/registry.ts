@@ -18,11 +18,13 @@ import { vectorContract } from './t08-vector/contract'
 import { meta as t08 } from './t08-vector/meta'
 import { inegroContract } from './t09-inegro/contract'
 import { meta as t09 } from './t09-inegro/meta'
+import { lucentContract } from './t10-lucent/contract'
+import { meta as t10 } from './t10-lucent/meta'
 
-// Single source of truth for the nine templates (ADR 0041, amending ADR 0038's eight), and the
-// one file under templates/ that lib may import. Metadata and contracts only: components live in
-// templates/render.tsx for the preview pages, so the pipeline never bundles a section.
-// Compile-time: exactly nine entries (TemplateTuple is a nine-element tuple).
+// Single source of truth for the ten templates (ADR 0043, amending ADR 0041's nine and ADR 0038's
+// eight), and the one file under templates/ that lib may import. Metadata and contracts only:
+// components live in templates/render.tsx for the preview pages, so the pipeline never bundles a
+// section. Compile-time: exactly ten entries (TemplateTuple is a ten-element tuple).
 export const TEMPLATES = [
   t01,
   t02,
@@ -33,13 +35,14 @@ export const TEMPLATES = [
   t07,
   t08,
   t09,
+  t10,
 ] as const satisfies TemplateTuple
 
 // The templates the selector may choose from. While fewer than the configured concept count are
-// ready, a submission builds fewer concepts (lib/select). Inegro (t09) is not ready: it stays out
-// of rotation, so a returning email still meets the eight of ADR 0038's implicit two-visit cap
-// until an explicit cap lands (ADR 0041). The parameter is widened to TemplateMeta so
-// `ready: false` takes a template out of rotation.
+// ready, a submission builds fewer concepts (lib/select). Inegro (t09) and Lucent (t10) are not
+// ready: they stay out of rotation, so a returning email still meets the eight of ADR 0038's
+// implicit two-visit cap until the explicit cap the owner set lands (ADR 0041, ADR 0043). The
+// parameter is widened to TemplateMeta so `ready: false` takes a template out of rotation.
 export const READY_TEMPLATES: readonly TemplateMeta[] = TEMPLATES.filter(
   (t: TemplateMeta) => t.ready,
 )
@@ -55,6 +58,7 @@ const CONTRACTS: ReadonlyMap<string, TemplateContract> = new Map([
   [summitContract.meta.id, summitContract],
   [vectorContract.meta.id, vectorContract],
   [inegroContract.meta.id, inegroContract],
+  [lucentContract.meta.id, lucentContract],
 ])
 
 // Checked at module load: fail fast.

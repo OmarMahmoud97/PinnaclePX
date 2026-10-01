@@ -14,9 +14,10 @@ export type TemplateMeta = Readonly<{
   tones: readonly string[]
 }>
 
-// Exactly nine templates (ADR 0041, amending ADR 0038's eight: the ninth is registered while not
-// ready). The registry satisfies this tuple, so the count is checked at compile time.
+// Exactly ten templates (ADR 0043, amending ADR 0041's nine: the ninth and tenth are registered
+// while not ready). The registry satisfies this tuple, so the count is checked at compile time.
 export type TemplateTuple = readonly [
+  TemplateMeta,
   TemplateMeta,
   TemplateMeta,
   TemplateMeta,
