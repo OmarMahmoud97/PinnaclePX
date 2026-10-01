@@ -49,21 +49,23 @@ and a place to read it, not storage.
    stamps and nothing else, so it is never wrong: "Link sent <when>", "Finished, no link sent", or
    "No link sent yet". The page is `noindex`, and `robots.txt` disallows `/admin`.
 
-3. **The door is HTTP Basic authentication in `proxy.ts`, against `ADMIN_PASSWORD`.** The matcher
-   is `/admin/:path*` and nothing else; no other route passes through the proxy. Unset, every
-   request under `/admin` is a 404, so a deployment that never chose a password shows nothing. A
-   request without credentials gets the 401 that makes the browser ask, and the browser then sends
-   the credentials with every request for the session. The name is `OWNER_EMAIL` and the password
-   `ADMIN_PASSWORD` (the owner asked for the email as the name, 1 October 2026). Each is compared
-   as SHA-256 digests in constant time (`lib/admin/basic-auth.ts`, tested), and both are always
-   compared, so neither a wrong name, a wrong password nor a wrong length is told from a near miss
-   by the clock; the email's case and the space around it do not count. Nothing of the credentials
-   reaches the log: a refused request that carried credentials is counted as `admin.refused` with
-   its path; the browser's first request, which carries none, is not. The page checks the same
-   header again before it reads a row and answers not-found when it fails, so the matcher is not
-   the only line, as the framework's own guide asks. Why not a login form and a session cookie: one
-   owner, one secret, HTTPS everywhere, and the browser already has the form; a cookie would add a
-   signing key, an expiry and a page for no gain.
+3. **The door is HTTP Basic authentication in `proxy.ts`, against `ADMIN_USERNAME` and
+   `ADMIN_PASSWORD`.** The matcher is `/admin/:path*` and nothing else; no other route passes
+   through the proxy. With either unset, every request under `/admin` is a 404, so a deployment
+   that never chose them shows nothing. A request without credentials gets the 401 that makes the
+   browser ask, and the browser then sends the credentials with every request for the session.
+   Both values are the owner's to choose (first the email as the name, then a variable of its own,
+   1 October 2026), read in one place for the proxy and the page (`lib/admin/credentials.ts`).
+   Each is compared as SHA-256 digests in constant time (`lib/admin/basic-auth.ts`, tested), and
+   both are always compared, so neither a wrong name, a wrong password nor a wrong length is told
+   from a near miss by the clock; the name's case and the space around it do not count, since a
+   phone capitalises the first letter typed. Nothing of the credentials reaches the log: a refused
+   request that carried credentials is counted as `admin.refused` with its path; the browser's
+   first request, which carries none, is not. The page checks the same header again before it
+   reads a row and answers not-found when it fails, so the matcher is not the only line, as the
+   framework's own guide asks. Why not a login form and a session cookie: one owner, one name and
+   password, HTTPS everywhere, and the browser already has the form; a cookie would add a signing
+   key, an expiry and a page for no gain.
 
 4. **The privacy notice does not change.** The page shows the owner what the notice already says
    is collected, and what the owner's notice already emails them, for the same thirty days, to the
@@ -74,10 +76,10 @@ and a place to read it, not storage.
 
 ## Owner decisions
 
-- OD1: Set `ADMIN_PASSWORD` on Vercel for Production (and for Preview, if the page is wanted on
-  preview deployments too): at least 16 characters and used for nothing else. Until then `/admin`
-  is a 404 there. The name to sign in with is `OWNER_EMAIL`. Nothing chooses or rotates the
-  password; the owner does, in Vercel.
+- OD1: Set `ADMIN_USERNAME` and `ADMIN_PASSWORD` on Vercel for Production (and for Preview, if the
+  page is wanted on preview deployments too): the password at least 16 characters and used for
+  nothing else. Until then `/admin` is a 404 there. Nothing chooses or rotates them; the owner
+  does, in Vercel.
 - OD2: The page shows what the sweep still holds and no more. A list that outlived the thirty days,
   a client book, would need the notice to say so and a table of its own; not built.
 - OD3: What each build cost in tokens stays in the notice (ADR 0020) and off the page.
@@ -86,10 +88,12 @@ and a place to read it, not storage.
 
 ## Consequences
 
-- New: `proxy.ts` (+ test), `lib/admin/basic-auth.ts` (+ test), `lib/db/briefs.ts`,
+- New: `proxy.ts` (+ test), `lib/admin/basic-auth.ts` (+ test), `lib/admin/credentials.ts`,
+  `lib/db/briefs.ts`,
   `app/admin/page.tsx`, `app/admin/_components/brief-view.ts` (+ test) and `brief-card.tsx`,
   migration `0008_brief_overview`. Changed: `lib/db/schema.ts` (the view), `lib/env.ts`
-  (`ADMIN_PASSWORD`, optional), `lib/config.ts` (`admin.briefs`), `app/robots.ts`,
+  (`ADMIN_USERNAME` and `ADMIN_PASSWORD`, optional; an empty variable now counts as unset, as
+  `.env.example` leaves every optional one), `lib/config.ts` (`admin.briefs`), `app/robots.ts`,
   `lib/brief/time.ts` (`formatLondon`, which `lib/email/owner-notice.ts` now uses), `.env.example`,
   `README.md`, `PRODUCT.md`.
 - Migrations `0007_stage_times` and `0008_brief_overview` were applied to the database in
@@ -109,4 +113,6 @@ and a place to read it, not storage.
   null. Typecheck, lint, 1,127 unit tests, knip, Prettier, the production build and the byte budget
   all pass; the proxy and `/admin` are in the build's route table. After the name rule, on the
   owner's own dev server: 401 with no credentials, 401 with another name and the right password,
-  200 with the owner's email and the password, listing the same 17 briefs.
+  200 with the owner's name and the password, listing the same 17 briefs. Again with
+  `ADMIN_USERNAME` and `ADMIN_PASSWORD` from `.env.local`: 401 with no credentials, with another
+  name and with a wrong password, and 200 with both right.

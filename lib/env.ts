@@ -28,9 +28,10 @@ export const env = createEnv({
     // Where the notice of every build goes: the links, the client's answers and the tokens the
     // model calls cost (lib/email/owner-notice.ts).
     OWNER_EMAIL: z.email(),
-    // The owner's password for /admin, which lists every brief with its answers and the addresses
-    // of its designs (proxy.ts, ADR 0045); OWNER_EMAIL above is the name. Long, since HTTP Basic
-    // authentication is the whole door. Unset, /admin does not exist.
+    // The owner's name and password for /admin, which lists every brief with its answers and the
+    // addresses of its designs (proxy.ts, ADR 0045). The password is long, since HTTP Basic
+    // authentication is the whole door. With either unset, /admin does not exist.
+    ADMIN_USERNAME: z.string().min(1).optional(),
     ADMIN_PASSWORD: z.string().min(16).optional(),
     // Set on the production deployment once the page takes traffic. The home page promises three
     // designs, so under this flag its build fails while fewer templates are ready than it promises
@@ -58,4 +59,7 @@ export const env = createEnv({
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
     NODE_ENV: process.env.NODE_ENV,
   },
+  // A variable left empty, as .env.example leaves every optional one, counts as unset rather than
+  // as an empty string that fails its rule, so a copied example still starts the dev server.
+  emptyStringAsUndefined: true,
 })

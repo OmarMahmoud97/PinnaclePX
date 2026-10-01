@@ -22,11 +22,12 @@ const digest = (text: string) => createHash('sha256').update(text).digest()
 // one length, so neither a wrong value nor a wrong length is told from a near miss by the clock.
 const same = (given: string, expected: string) => timingSafeEqual(digest(given), digest(expected))
 
-// The name is an email address, so its case and the space around it do not count.
-const normalised = (email: string) => email.trim().toLowerCase()
+// A name is typed by a person, often on a phone that capitalises the first letter, so its case
+// and the space around it do not count.
+const normalised = (name: string) => name.trim().toLowerCase()
 
-// Whether a header carries the owner's credentials: their email as the name and the password
-// exactly. Both are always compared, so a wrong name costs the same time as a wrong password.
+// Whether a header carries the owner's credentials: the name, and the password exactly. Both are
+// always compared, so a wrong name costs the same time as a wrong password.
 export function basicAuthPasses(authorization: string | null, expected: Credentials): boolean {
   const given = credentialsIn(authorization)
   if (given === null) return false

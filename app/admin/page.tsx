@@ -8,6 +8,7 @@ import { briefView, countLine } from '@/app/admin/_components/brief-view'
 import { Logo } from '@/components/brand/logo'
 import { captionStyles } from '@/components/ui/caption'
 import { basicAuthPasses } from '@/lib/admin/basic-auth'
+import { adminCredentials } from '@/lib/admin/credentials'
 import { CONFIG } from '@/lib/config'
 import { readBriefOverview } from '@/lib/db/briefs'
 import { env } from '@/lib/env'
@@ -20,19 +21,14 @@ export const metadata: Metadata = {
 
 // The owner's list of every brief the sweep still holds (ADR 0045): who sent it, their five
 // answers, and the addresses of the designs built from them, newest first. The door is proxy.ts,
-// which asks the browser for OWNER_EMAIL and ADMIN_PASSWORD; the same header is checked here
+// which asks the browser for ADMIN_USERNAME and ADMIN_PASSWORD; the same header is checked here
 // before a row is read, so the page shows nothing if the proxy's matcher ever drifts from this
 // route. Reading the header also draws the page at request time, so a build never reaches the
 // database.
 export default async function AdminPage() {
-  const password = env.ADMIN_PASSWORD
+  const owner = adminCredentials()
   const authorization = (await headers()).get('authorization')
-  if (
-    password === undefined ||
-    !basicAuthPasses(authorization, { name: env.OWNER_EMAIL, password })
-  ) {
-    notFound()
-  }
+  if (owner === null || !basicAuthPasses(authorization, owner)) notFound()
 
   const rows = await readBriefOverview(CONFIG.admin.briefs)
   const briefs = rows.map((row) => briefView(row, env.NEXT_PUBLIC_APP_URL))

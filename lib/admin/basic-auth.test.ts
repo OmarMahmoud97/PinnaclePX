@@ -29,11 +29,11 @@ describe('credentialsIn', () => {
 })
 
 describe('basicAuthPasses', () => {
-  const owner = { name: 'owner@example.com', password: 'a-long-password-the-owner-chose' }
+  const owner = { name: 'omar', password: 'a-long-password-the-owner-chose' }
 
-  it("passes the owner's email and password, whatever the email's case or spacing", () => {
-    expect(basicAuthPasses(basic('owner@example.com', owner.password), owner)).toBe(true)
-    expect(basicAuthPasses(basic(' Owner@Example.com ', owner.password), owner)).toBe(true)
+  it("passes the owner's name and password, whatever the name's case or spacing", () => {
+    expect(basicAuthPasses(basic('omar', owner.password), owner)).toBe(true)
+    expect(basicAuthPasses(basic(' Omar ', owner.password), owner)).toBe(true)
   })
 
   it('refuses another name, or none, with the right password', () => {
