@@ -56,9 +56,9 @@ export const FAQ_ITEMS: readonly FaqItem[] = [
   },
   {
     question: 'What happens to my details?',
-    // Nothing in the code keeps a booked caller's details past the sweep, so the page does not
-    // say so (lib/inngest/functions/retention-sweep.ts).
-    answer: `We store your name, email, company and what you upload. That is what we need to build your designs and send your link. We delete them after ${String(CONFIG.retention.days)} days. The link stays live until then.`,
+    // A booked caller's or a client's details stay while that stands and for keptDays after
+    // (lib/db/retention.ts, ADR 0047), which the privacy notice says in the same words.
+    answer: `We store your name, email, company and what you upload. We also note when we read your brief, what we quote and what you decide. If you book a call, we note when it is. That is what we need to build your designs, send your link and look after your enquiry. We delete it all ${String(CONFIG.retention.days)} days after you send it. If you book a call or hire us, we keep it for six months after that. The link stays live until then.`,
     link: { label: 'Read the privacy notice', href: '/privacy' },
   },
 ]
