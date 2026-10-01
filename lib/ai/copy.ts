@@ -1,7 +1,7 @@
 import 'server-only'
 import type { MessageParam } from '@anthropic-ai/sdk/resources/messages'
-import { zodOutputFormat } from '@anthropic-ai/sdk/helpers/zod'
 import { anthropic } from '@/lib/ai/client'
+import { parseJsonAnswer, skeletonOf } from '@/lib/ai/json'
 import { copyPrompt, retryPrompt, SYSTEM_PROMPT } from '@/lib/ai/prompts'
 import { noteModelCall } from '@/lib/ai/usage'
 import { CONFIG } from '@/lib/config'
@@ -19,10 +19,12 @@ type Input = Readonly<{
   slug: string
 }>
 
-// The copy stage's model call for one template: every text slot in the template's own schema.
-// The model does not honour lengths, so the answer is judged by the template's own limits and
-// the copy rules; a miss is sent back once with what went wrong. A second miss is returned as
-// the violations, and the caller falls back. A network or API failure throws.
+// The copy stage's model call for one template: every text slot in the template's own schema,
+// asked for as JSON of the schema's skeleton and checked with the schema (lib/ai/json.ts; the
+// API refuses the compiled grammar of the larger templates). The model does not honour lengths,
+// so the answer is judged by the template's own limits and the copy rules; a miss, of shape or
+// of limits, is sent back once with what went wrong. A second miss is returned as the
+// violations, and the caller falls back. A network or API failure throws.
 export async function writeCopy({
   brief,
   contract,
@@ -30,33 +32,43 @@ export async function writeCopy({
   slug,
 }: Input): Promise<Result<unknown, readonly CopyViolation[]>> {
   const messages: MessageParam[] = [
-    { role: 'user', content: copyPrompt(brief, contract.meta.name, contract.guide) },
+    {
+      role: 'user',
+      content: copyPrompt(
+        brief,
+        contract.meta.name,
+        contract.guide,
+        skeletonOf(contract.copySchema),
+      ),
+    },
   ]
-  let violations: CopyViolation[] = []
+  let violations: readonly CopyViolation[] = []
   for (let attempt = 0; attempt <= CONFIG.copy.retries; attempt += 1) {
-    const response = await anthropic.messages.parse(
+    const response = await anthropic.messages.create(
       {
         model: CONFIG.ai.models.copy,
         max_tokens: CONFIG.ai.maxTokens.copy,
         system: SYSTEM_PROMPT,
         messages,
         thinking: { type: 'disabled' },
-        output_config: { format: zodOutputFormat(contract.copySchema) },
       },
       { timeout: CONFIG.stageBudgetMs.copy },
     )
     await noteModelCall(response, { slug, stage: 'copy', template: contract.meta.id, attempt })
-    const copy: unknown = response.parsed_output
-    if (copy === null) {
+    const text = response.content.map((block) => (block.type === 'text' ? block.text : '')).join('')
+    if (response.stop_reason !== 'end_turn' || text === '') {
       return err([
         { path: '', reason: `the call ended with ${response.stop_reason ?? 'no output'}` },
       ])
     }
-    violations = [
-      ...contract.copyViolations(copy).map(fromSlotViolation),
-      ...ruleViolationsIn(copy, ownersWords),
-    ]
-    if (violations.length === 0) return ok(copy)
+    const parsed = parseJsonAnswer(text, contract.copySchema)
+    violations = parsed.ok
+      ? [
+          ...contract.copyViolations(parsed.value).map(fromSlotViolation),
+          ...ruleViolationsIn(parsed.value, ownersWords),
+        ]
+      : parsed.reason
+    if (parsed.ok && violations.length === 0) return ok(parsed.value)
     log.warn('copy.violations', {
       slug,
       template: contract.meta.id,
@@ -64,7 +76,7 @@ export async function writeCopy({
       count: violations.length,
     })
     messages.push(
-      { role: 'assistant', content: JSON.stringify(copy) },
+      { role: 'assistant', content: text },
       { role: 'user', content: retryPrompt(violations) },
     )
   }

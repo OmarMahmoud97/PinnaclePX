@@ -37,14 +37,23 @@ Write the brand brief:
 - imageQueries: stock photo searches, two for a hero picture (hero) and two for a detail picture (detail), each two to five plain words describing a place, an object or work being done. No faces, no text, no logos.`
 }
 
-// Every limit a template's copy has, in the template's own words, for the copy call.
-export function copyPrompt(brief: BrandBrief, templateName: string, guide: string): string {
+// Every limit a template's copy has, in the template's own words, for the copy call, and the
+// shape the answer must take (lib/ai/json.ts), since the schema is not sent as a grammar.
+export function copyPrompt(
+  brief: BrandBrief,
+  templateName: string,
+  guide: string,
+  skeleton: string,
+): string {
   return `Brief:
 ${JSON.stringify(brief)}
 
 Write every slot of the "${templateName}" homepage template for ${brief.company}. Use the brief's own words and the owner's sentence; do not add facts. Each slot has a character range; stay inside it.
 
-${guide}`
+${guide}
+
+Answer with JSON of exactly this shape, every string written and each list as long as its slot says:
+${skeleton}`
 }
 
 // The second attempt: the same task, with what went wrong the first time.
