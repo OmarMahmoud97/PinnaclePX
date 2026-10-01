@@ -46,8 +46,9 @@ export function planImagery(
   )
 }
 
-// The order to try candidates in after ranking: the rejected dropped, the rest by score, and
-// the search's own order breaking ties. Without a ranking the search's order stands.
+// The order to try candidates in after ranking: the rejected dropped, the rest by score, the
+// search's own order breaking ties, and a candidate the judge never mentioned last, since
+// nothing vouches for it. Without a ranking the search's order stands.
 export function orderByVerdict<T extends { id: number }>(
   candidates: readonly T[],
   verdicts: readonly { id: number; score: number; reject: string | null }[] | null,
@@ -57,6 +58,6 @@ export function orderByVerdict<T extends { id: number }>(
   return candidates
     .map((candidate, index) => ({ candidate, index, verdict: byId.get(candidate.id) }))
     .filter(({ verdict }) => verdict?.reject === null || verdict === undefined)
-    .sort((a, b) => (b.verdict?.score ?? 0) - (a.verdict?.score ?? 0) || a.index - b.index)
+    .sort((a, b) => (b.verdict?.score ?? -1) - (a.verdict?.score ?? -1) || a.index - b.index)
     .map(({ candidate }) => candidate)
 }

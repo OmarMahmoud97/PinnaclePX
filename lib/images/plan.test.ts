@@ -68,10 +68,14 @@ describe('orderByVerdict', () => {
     expect(ordered.map((c) => c.id)).toEqual([3, 4, 1])
   })
 
-  it('keeps the search order without a ranking, and keeps unjudged candidates', () => {
+  it('keeps the search order without a ranking, and puts unjudged candidates last', () => {
     expect(orderByVerdict(candidates, null).map((c) => c.id)).toEqual([1, 2, 3, 4])
     expect(
       orderByVerdict(candidates, [{ id: 2, score: 9, reject: null }]).map((c) => c.id),
     ).toEqual([2, 1, 3, 4])
+    // A judged candidate, however low its score, comes before one the judge never mentioned.
+    expect(
+      orderByVerdict(candidates, [{ id: 3, score: 0, reject: null }]).map((c) => c.id),
+    ).toEqual([3, 1, 2, 4])
   })
 })
