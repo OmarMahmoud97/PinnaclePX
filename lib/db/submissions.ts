@@ -43,6 +43,10 @@ const SETTLED_AT = {
 // A stage still open: the pipeline or the sweeper may still write it.
 const OPEN: readonly StageState[] = ['pending', 'running']
 
+export function stageIsOpen(state: StageState): boolean {
+  return OPEN.includes(state)
+}
+
 // The database's clock, which also sets createdAt, so a stage's time from the brief's arrival
 // never carries the difference between a function's clock and the database's.
 const NOW = sql`now()`

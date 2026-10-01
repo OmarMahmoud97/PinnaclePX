@@ -21,11 +21,14 @@ describe('planImagery', () => {
     expect(plan.hero).toMatchObject({
       kind: 'search',
       queries: ['physiotherapy treatment room natural light', 'clinic natural light'],
+      union: false,
     })
-    // A blank query is dropped; the rest keep the brief's order.
+    // A blank query is dropped; the rest keep the brief's order. A detail slot takes every
+    // query's pictures.
     expect(plan.statement).toMatchObject({
       kind: 'search',
       queries: ['exercise band natural light'],
+      union: true,
     })
     if (plan.hero?.kind === 'search') expect(plan.hero.purpose).toContain('Ashgrove Physio')
   })
@@ -68,10 +71,14 @@ describe('orderByVerdict', () => {
     expect(ordered.map((c) => c.id)).toEqual([3, 4, 1])
   })
 
-  it('keeps the search order without a ranking, and keeps unjudged candidates', () => {
+  it('keeps the search order without a ranking, and puts unjudged candidates last', () => {
     expect(orderByVerdict(candidates, null).map((c) => c.id)).toEqual([1, 2, 3, 4])
     expect(
       orderByVerdict(candidates, [{ id: 2, score: 9, reject: null }]).map((c) => c.id),
     ).toEqual([2, 1, 3, 4])
+    // A judged candidate, however low its score, comes before one the judge never mentioned.
+    expect(
+      orderByVerdict(candidates, [{ id: 3, score: 0, reject: null }]).map((c) => c.id),
+    ).toEqual([3, 1, 2, 4])
   })
 })

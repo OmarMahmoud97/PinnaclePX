@@ -271,7 +271,7 @@ export const HARBOR_SLOTS = {
 // How many of each list the layout holds.
 const HARBOR_COUNTS = {
   'nav.links': { min: 2, max: 5 },
-  'about.heading.lines': { min: 2, max: 3 },
+  'about.heading.lines': { min: 1, max: 3 },
   'about.paragraphs': { min: 1, max: 2 },
   'about.tags': { min: 3, max: 5 },
   'about.badge.lines': { min: 1, max: 2 },

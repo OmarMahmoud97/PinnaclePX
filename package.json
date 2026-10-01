@@ -25,7 +25,9 @@
     "measure:colour": "python scripts/imgstats.py",
     "measure:ground": "node scripts/pool.mjs",
     "capture:work": "node scripts/capture-work.mjs",
-    "template:compare": "node scripts/template-compare.mjs"
+    "template:compare": "node scripts/template-compare.mjs",
+    "eval": "vitest run --config vitest.eval.config.ts",
+    "eval:shots": "node tests/eval/screenshots.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "0.128.0",

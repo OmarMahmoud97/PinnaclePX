@@ -1,6 +1,6 @@
 import { SQL } from 'drizzle-orm'
 import { PgDialect } from 'drizzle-orm/pg-core'
-import { findSubmission, markStage } from '@/lib/db/submissions'
+import { findSubmission, markStage, stageIsOpen } from '@/lib/db/submissions'
 
 vi.mock('server-only', () => ({}))
 
@@ -97,5 +97,15 @@ describe('findSubmission', () => {
     expect(await findSubmission('hash')).toEqual(existing)
     database.selected = []
     expect(await findSubmission('hash')).toBeNull()
+  })
+})
+
+describe('stageIsOpen', () => {
+  it('is true only while the pipeline or the sweeper may still write the stage', () => {
+    expect(stageIsOpen('pending')).toBe(true)
+    expect(stageIsOpen('running')).toBe(true)
+    expect(stageIsOpen('done')).toBe(false)
+    expect(stageIsOpen('fallback')).toBe(false)
+    expect(stageIsOpen('failed')).toBe(false)
   })
 })

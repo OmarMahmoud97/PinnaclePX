@@ -121,13 +121,21 @@ export default defineConfig([
     },
   },
 
-  // The logging wrapper is the only place console is allowed.
-  { files: ['lib/log.ts'], rules: { 'no-console': 'off' } },
+  // The logging wrapper is the only place console is allowed, and the eval harness, which
+  // reports to the terminal that ran it.
+  { files: ['lib/log.ts', 'tests/eval/**/*.{ts,mjs}'], rules: { 'no-console': 'off' } },
 
   // process.env only inside lib/env.ts (and the config files that run before env exists).
   {
     files: ['**/*.{ts,tsx,mts}'],
-    ignores: ['lib/env.ts', 'next.config.ts', 'drizzle.config.ts', 'playwright.config.ts'],
+    ignores: [
+      'lib/env.ts',
+      'next.config.ts',
+      'drizzle.config.ts',
+      'playwright.config.ts',
+      // The eval harness is a command, not the app: its EVAL_* knobs come from the shell.
+      'tests/eval/**',
+    ],
     rules: {
       'no-restricted-properties': [
         'error',
@@ -271,6 +279,7 @@ export default defineConfig([
       'next.config.ts',
       'drizzle.config.ts',
       'playwright.config.ts',
+      'vitest.eval.config.ts',
     ],
     rules: { 'import/no-default-export': 'error' },
   },

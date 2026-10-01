@@ -2,13 +2,15 @@ import type { SubmissionAnswers } from '@/lib/brief/submission'
 import { CONFIG } from '@/lib/config'
 import type { BrandBrief } from '@/lib/copy-slots/brief'
 
-// What to put in one image slot: the visitor's own photograph, or searches to run in order
-// until one finds pictures. The first slot of a template is its hero and takes the brief's hero
-// queries; the rest take the detail queries. Own photographs go to the slots in the order the
-// visitor added them.
+// What to put in one image slot: the visitor's own photograph, or searches to run. The first
+// slot of a template is its hero and takes the brief's hero queries, run in order until one
+// finds pictures; the rest take the detail queries, every one of them, because the detail
+// slots of three templates (Ember has eleven, Summit twelve) can want more pictures than one
+// search returns, and a slot with nothing left is drawn empty. Own photographs go to the slots
+// in the order the visitor added them.
 export type SlotPlan =
   | Readonly<{ kind: 'own'; url: string; alt: string }>
-  | Readonly<{ kind: 'search'; queries: readonly string[]; purpose: string }>
+  | Readonly<{ kind: 'search'; queries: readonly string[]; purpose: string; union: boolean }>
   | Readonly<{ kind: 'none' }>
 
 // The photographs a template needs, by slot name. Pure, so a test can say what a brief gets.
@@ -36,6 +38,7 @@ export function planImagery(
         {
           kind: 'search',
           queries,
+          union: index !== 0,
           purpose:
             index === 0
               ? `the main picture on the homepage of ${answers.company}: ${brief.positioning}`
@@ -46,8 +49,9 @@ export function planImagery(
   )
 }
 
-// The order to try candidates in after ranking: the rejected dropped, the rest by score, and
-// the search's own order breaking ties. Without a ranking the search's order stands.
+// The order to try candidates in after ranking: the rejected dropped, the rest by score, the
+// search's own order breaking ties, and a candidate the judge never mentioned last, since
+// nothing vouches for it. Without a ranking the search's order stands.
 export function orderByVerdict<T extends { id: number }>(
   candidates: readonly T[],
   verdicts: readonly { id: number; score: number; reject: string | null }[] | null,
@@ -57,6 +61,6 @@ export function orderByVerdict<T extends { id: number }>(
   return candidates
     .map((candidate, index) => ({ candidate, index, verdict: byId.get(candidate.id) }))
     .filter(({ verdict }) => verdict?.reject === null || verdict === undefined)
-    .sort((a, b) => (b.verdict?.score ?? 0) - (a.verdict?.score ?? 0) || a.index - b.index)
+    .sort((a, b) => (b.verdict?.score ?? -1) - (a.verdict?.score ?? -1) || a.index - b.index)
     .map(({ candidate }) => candidate)
 }

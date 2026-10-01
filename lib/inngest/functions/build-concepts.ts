@@ -8,7 +8,7 @@ import { submissionAnswersSchema } from '@/lib/brief/submission'
 import { CONFIG } from '@/lib/config'
 import { type BrandBrief, fallbackBrief } from '@/lib/copy-slots/brief'
 import { revealTemplates } from '@/lib/db/exclusivity'
-import { markStage, readSubmission } from '@/lib/db/submissions'
+import { markStage, readSubmission, stageIsOpen } from '@/lib/db/submissions'
 import { imageryFor } from '@/lib/images/stage'
 import { inngest } from '@/lib/inngest/client'
 import { submissionCreated, submissionReady } from '@/lib/inngest/events'
@@ -141,12 +141,17 @@ type StepTools = GetStepTools<typeof inngest>
 
 type CopyResult = Readonly<{ id: string; copy: unknown; fallback: boolean }>
 
+// What a copy step finds when the sweeper settled the stage before it ran: nothing to write.
+const SETTLED = 'settled'
+
 // The copy stage: one model call per template, each judged on its own, then one write. An
 // answer that still breaks a limit after the in-call retry is asked for again on the next
 // attempt of the step; after CONFIG.copy.attempts the template's fallback stands, because the
 // model is not going to do better. An API failure is retried like any other stage, unless the
 // API will answer the same way every time (a request it rejects, a key it refuses), when the
-// fallback stands at once. The stage is marked fallback if any template fell back, which the
+// fallback stands at once. A step that runs after the sweeper has settled the stage makes no
+// call: its answer could never reach the page (the copy-start step is memoised, so each step
+// reads the row itself). The stage is marked fallback if any template fell back, which the
 // email respects.
 async function copyStage(
   slug: string,
@@ -160,7 +165,9 @@ async function copyStage(
   if (!open) return 'settled'
   const results = await Promise.all(
     templateIds.map((id) =>
-      step.run(`copy-${id}`, async (): Promise<CopyResult> => {
+      step.run(`copy-${id}`, async (): Promise<CopyResult | typeof SETTLED> => {
+        const row = await readSubmission(slug)
+        if (row === null || !stageIsOpen(row.stageCopy)) return SETTLED
         const contract = contractFor(id)
         try {
           const written = await writeCopy({ brief, contract, ownersWords, slug })
@@ -185,10 +192,12 @@ async function copyStage(
       }),
     ),
   )
+  const written = results.filter((result): result is CopyResult => result !== SETTLED)
+  if (written.length < results.length) return 'settled'
   return step.run('copy-finish', async () => {
-    const copy = Object.fromEntries(results.map((result) => [result.id, result.copy]))
-    const state = results.some((result) => result.fallback) ? 'fallback' : 'done'
-    const written = await markStage(slug, 'copy', state, { copy })
-    return written ? state : 'settled'
+    const copy = Object.fromEntries(written.map((result) => [result.id, result.copy]))
+    const state = written.some((result) => result.fallback) ? 'fallback' : 'done'
+    const marked = await markStage(slug, 'copy', state, { copy })
+    return marked ? state : 'settled'
   })
 }
