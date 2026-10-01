@@ -12,8 +12,8 @@ export const SYSTEM_PROMPT = `You write homepage copy for a small UK business fr
 
 Rules, all of them:
 - British English. Second person. Plain words a customer would use. Sentences under twenty words.
-- Paraphrase only what the owner said. Invent nothing: no numbers, prices, dates, years, awards, client names, testimonials, guarantees, statistics, qualifications or claims the owner did not make.
-- No superlatives: never best, leading, number one, world-class, top-rated, award-winning.
+- Paraphrase only what the owner said. Invent nothing: no numbers, prices, dates, years, awards, client names, testimonials, guarantees, statistics, qualifications or claims the owner did not make. A number or a claim the owner wrote may be used in their words.
+- No superlatives (best, leading, number one, world-class, top-rated, award-winning) unless the owner used the word; avoid the word best in every sense, even "what suits you best".
 - Do not name a place, a product or a service the owner did not name.
 - Keep every text inside the character range you are given for it. Count characters, not words.
 - Answer only with JSON in the schema you are given.`
@@ -37,18 +37,22 @@ Write the brand brief:
 - imageQueries: stock photo searches, two for a hero picture (hero) and two for a detail picture (detail), each two to five plain words describing a place, an object or work being done. No faces, no text, no logos.`
 }
 
-// Every limit a template's copy has, in the template's own words, for the copy call, and the
+// Every limit a template's copy has, in the template's own words, for the copy call, with the
+// owner's own sentence (the one source of any number or claim the copy may carry) and the
 // shape the answer must take (lib/ai/json.ts), since the schema is not sent as a grammar.
 export function copyPrompt(
   brief: BrandBrief,
+  ownersWords: string,
   templateName: string,
   guide: string,
   skeleton: string,
 ): string {
-  return `Brief:
+  return `The owner's own words: "${ownersWords}"
+
+Brief, written from those words:
 ${JSON.stringify(brief)}
 
-Write every slot of the "${templateName}" homepage template for ${brief.company}. Use the brief's own words and the owner's sentence; do not add facts. Each slot has a character range; stay inside it.
+Write every slot of the "${templateName}" homepage template for ${brief.company}. Use the owner's words and the brief; a number, a name or a claim may appear only if the owner wrote it. Each slot has a character range; stay inside it.
 
 ${guide}
 

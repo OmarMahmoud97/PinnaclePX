@@ -41,6 +41,7 @@ describe('writeCopy', () => {
     expect(written.ok).toBe(true)
     expect(api.create).toHaveBeenCalledTimes(1)
     expect(request(0).messages[0]?.content).toContain('"brand":{"name":"","legalName":""')
+    expect(request(0).messages[0]?.content).toContain(`The owner's own words: "${SENTENCE}"`)
     expect(request(0).output_config).toBeUndefined()
   })
 

@@ -37,6 +37,7 @@ export async function writeCopy({
       role: 'user',
       content: copyPrompt(
         brief,
+        ownersWords,
         contract.meta.name,
         contract.guide,
         skeletonOf(contract.copySchema),
