@@ -353,3 +353,12 @@ describe('listUnmatchedCalls', () => {
     expect(render(statement.orderBy).sql).toBe('"unmatched_call"."starts_at" asc')
   })
 })
+
+describe('saveNote with nothing to say', () => {
+  it('makes the row without a time, so the panel never dates an empty note', async () => {
+    await saveNote(HASH, '')
+    const statement = theStatement()
+    expect(statement.kind).toBe('insert')
+    expect(statement.values).toMatchObject({ identityHash: HASH, note: '', noteAt: null })
+  })
+})

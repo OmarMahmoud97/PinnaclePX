@@ -57,9 +57,6 @@ export default async function AdminPage() {
             </>
           )}
         </p>
-        <p className="text-on-surface-muted">
-          {countLine(rows.length, CONFIG.admin.briefs, CONFIG.retention.days)}
-        </p>
       </div>
       <NeedsYou items={needsYou(rows, unmatched, now)} />
       {rows.length > 0 && (
@@ -76,6 +73,9 @@ export default async function AdminPage() {
           ))}
         </ol>
       )}
+      <p className={captionStyles}>
+        {countLine(rows.length, CONFIG.admin.briefs, CONFIG.retention.days)}
+      </p>
     </AdminChrome>
   )
 }

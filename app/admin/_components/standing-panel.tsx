@@ -1,16 +1,13 @@
 import type { ReactNode } from 'react'
 import { card, cardHeading, cardPad } from '@/app/_components/section-styles'
 import { PendingButton } from '@/app/admin/_components/pending-button'
+import { NoteField, QuoteField, StartsAtField } from '@/app/admin/_components/standing-fields'
 import { StandingForm } from '@/app/admin/_components/standing-form'
 import { buildLine, callLine, sweepLine } from '@/app/admin/_components/standing'
 import { captionStyles } from '@/components/ui/caption'
 import { addMinutes, formatLondonRelative, nextWholeHour, toLondonLocal } from '@/lib/brief/time'
 import { CONFIG } from '@/lib/config'
 import type { BriefOverviewRow } from '@/lib/db/briefs'
-
-// A field on the panel: the site's tokens, 16px so iOS never zooms it, the authored focus outline.
-const inputStyles =
-  'w-full rounded-xl border border-border bg-surface px-3 py-2 text-base text-on-surface caret-brand-ink placeholder:text-on-surface-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-ink'
 
 const STAGES = [
   ['quoted', 'Quoted'],
@@ -32,7 +29,9 @@ type Props = Readonly<{
 // Where a brief stands and the taps that move it (ADR 0047): how the build ended, the call, the
 // outcome with its quote, and a note, in one form so every button carries the note and the quote
 // with it. The outcome row is never hidden: a quote or a win can be recorded while a call is
-// still ahead. Every word records what the visitor did; the owner's taps undo one another.
+// still ahead. Every word records what the visitor did; the owner's taps undo one another. The
+// form's first submit button is a hidden, disabled one, so Enter in a field does nothing at all
+// rather than pressing whichever button comes first; the buttons are the taps.
 export function StandingPanel({ row, now, unmatched, briefsOfPerson, example = false }: Props) {
   const call = callLine(row, now)
   const ahead = unmatched.find((at) => addMinutes(at, CONFIG.call.minutes) > now)
@@ -44,31 +43,26 @@ export function StandingPanel({ row, now, unmatched, briefsOfPerson, example = f
   const body = (
     <>
       <input type="hidden" name="slug" value={row.slug} />
+      <button type="submit" disabled tabIndex={-1} aria-hidden="true" className="sr-only">
+        Save
+      </button>
       {briefsOfPerson > 1 && (
         <p className={captionStyles}>
           This person has {briefsOfPerson} briefs; the standing below is theirs, shared.
         </p>
       )}
-      <Block label="Build">
+      <Block id="build" label="Build">
         <p>{buildLine(row, now)}</p>
         <p className={captionStyles}>{sweepLine(row, now)}</p>
       </Block>
-      <Block label="Call">
+      <Block id="call" label="Call">
         {call.text !== '' && <p>{call.text}</p>}
         {call.control === 'book' && (
           <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
-            <label className="flex flex-1 flex-col gap-1">
-              <span className={captionStyles}>When (London time, optional)</span>
-              <input
-                type="datetime-local"
-                name="startsAt"
-                defaultValue={toLondonLocal(prefill)}
-                className={inputStyles}
-              />
-              {ahead !== undefined && (
-                <span className={captionStyles}>From a Cal.com booking that matched no brief.</span>
-              )}
-            </label>
+            <StartsAtField
+              initial={toLondonLocal(prefill)}
+              note={ahead === undefined ? null : 'From a Cal.com booking that matched no brief.'}
+            />
             <PendingButton intent="book" variant="outline" size="lg">
               Mark as booked
             </PendingButton>
@@ -92,20 +86,11 @@ export function StandingPanel({ row, now, unmatched, briefsOfPerson, example = f
           </PendingButton>
         )}
       </Block>
-      <Block label="Outcome">
+      <Block id="outcome" label="Outcome">
         {callAhead && row.callStartsAt !== null && (
           <p>Call is {formatLondonRelative(row.callStartsAt, now)}.</p>
         )}
-        <label className="flex max-w-xs flex-col gap-1">
-          <span className={captionStyles}>Quote, whole pounds</span>
-          <input
-            name="quotePounds"
-            inputMode="numeric"
-            pattern="[0-9]*"
-            defaultValue={row.quotePounds ?? CONFIG.price.from}
-            className={inputStyles}
-          />
-        </label>
+        <QuoteField initial={String(row.quotePounds ?? CONFIG.price.from)} />
         <div className="grid grid-cols-3 gap-2 sm:flex sm:flex-wrap">
           {STAGES.map(([intent, label]) => (
             <PendingButton
@@ -124,21 +109,14 @@ export function StandingPanel({ row, now, unmatched, briefsOfPerson, example = f
           quote as a fact.
         </p>
       </Block>
-      <Block label="Note">
-        <textarea
-          name="note"
-          rows={3}
-          maxLength={CONFIG.admin.noteMaxChars}
-          defaultValue={row.note}
-          placeholder="What was agreed. Nothing you would not show them."
-          className={`${inputStyles} field-sizing-content min-h-24`}
-        />
-        <p className={captionStyles}>
+      <Block id="note" label="Note">
+        <NoteField initial={row.note} labelledBy="note-heading" describedBy="note-hint" />
+        <p id="note-hint" className={captionStyles}>
           Deleted with their last brief. They may ask to read it. Keep to the enquiry; no phone
           numbers.
         </p>
         <div className="flex flex-wrap items-center gap-4">
-          <PendingButton intent="note" size="lg">
+          <PendingButton intent="note" variant="outline" size="lg">
             Save note
           </PendingButton>
           {row.noteAt !== null && (
@@ -172,10 +150,16 @@ export function StandingPanel({ row, now, unmatched, briefsOfPerson, example = f
   )
 }
 
-function Block({ label, children }: Readonly<{ label: string; children: ReactNode }>) {
+function Block({
+  id,
+  label,
+  children,
+}: Readonly<{ id: string; label: string; children: ReactNode }>) {
   return (
     <div className="flex flex-col gap-2">
-      <h3 className={captionStyles}>{label}</h3>
+      <h3 id={`${id}-heading`} className={captionStyles}>
+        {label}
+      </h3>
       {children}
     </div>
   )

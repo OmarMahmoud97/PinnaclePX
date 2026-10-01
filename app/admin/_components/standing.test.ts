@@ -9,7 +9,7 @@ import {
   standingOf,
   sweepLine,
 } from '@/app/admin/_components/standing'
-import { daysAfter, formatLondonRelative } from '@/lib/brief/time'
+import { daysAfter, formatLondonRelative, formatLondonDay } from '@/lib/brief/time'
 import { CONFIG } from '@/lib/config'
 import type { BriefOverviewRow } from '@/lib/db/briefs'
 
@@ -463,36 +463,39 @@ describe('keptUntil and isKept', () => {
 
 describe('sweepLine', () => {
   const { keptDays, days } = CONFIG.retention
+  const night = (moment: Date) => formatLondonDay(moment)
 
-  it('says how long the keep holds and why', () => {
-    const until = rel(daysAfter(MARKED, keptDays))
+  it('says how long the keep holds and why, by the night it ends', () => {
+    const until = night(daysAfter(MARKED, keptDays))
     expect(sweepLine(rowOf({ enquiryStage: 'won', stageAt: MARKED }), NOW)).toBe(
-      `Kept until ${until} while won`,
+      `Kept until the night of ${until}, six months after the win`,
     )
-    expect(sweepLine(booked(), NOW)).toBe(`Kept until ${until} while a call is booked`)
+    expect(sweepLine(booked(), NOW)).toBe(
+      `Kept until the night of ${until}, six months after the booking`,
+    )
   })
 
-  it('names the day the retention days run out, once no keep holds', () => {
-    expect(sweepLine(rowOf(), NOW)).toBe(`Deleted ${rel(daysAfter(CREATED, days))}`)
+  it('names the night the retention days run out, once no keep holds', () => {
+    expect(sweepLine(rowOf(), NOW)).toBe(`Goes on the night of ${night(daysAfter(CREATED, days))}`)
     const created = daysBefore(NOW, keptDays + 1)
     const lapsed = rowOf({
       createdAt: created,
       enquiryStage: 'won',
       stageAt: daysBefore(NOW, keptDays),
     })
-    expect(sweepLine(lapsed, NOW)).toBe(`Deleted ${rel(daysAfter(created, days))}`)
+    expect(sweepLine(lapsed, NOW)).toBe(`Goes on the night of ${night(daysAfter(created, days))}`)
   })
 
   it('adds that a booked call falls after the deletion, since Cal.com keeps it', () => {
     // Recorded keptDays ago, so the keep has run out, for a start still ahead of NOW.
     const created = daysBefore(NOW, keptDays + 10)
-    const deleted = rel(daysAfter(created, days))
+    const deleted = night(daysAfter(created, days))
     const stale = booked({ createdAt: created, callAt: daysBefore(NOW, keptDays) })
     expect(sweepLine(stale, NOW)).toBe(
-      `Deleted ${deleted}, the call is after that; Cal.com keeps it`,
+      `Goes on the night of ${deleted}, the call is after that; Cal.com keeps it`,
     )
     const early = booked({ ...stale, callStartsAt: minutesAfter(created, 60) })
-    expect(sweepLine(early, NOW)).toBe(`Deleted ${deleted}`)
+    expect(sweepLine(early, NOW)).toBe(`Goes on the night of ${deleted}`)
   })
 })
 

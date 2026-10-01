@@ -97,7 +97,7 @@ beforeEach(() => {
 describe('setStanding', () => {
   it('refuses without the owner header, and writes nothing', async () => {
     state.authorization = null
-    expect(await setStanding(null, form({ slug: SLUG, intent: 'won' }))).toEqual({
+    expect(await setStanding(null, form({ slug: SLUG, intent: 'won' }))).toMatchObject({
       ok: false,
       reason: 'forbidden',
     })
@@ -106,33 +106,33 @@ describe('setStanding', () => {
   })
 
   it('refuses anything but the form the page sends', async () => {
-    expect(await setStanding(null, { slug: SLUG, intent: 'won' })).toEqual({
+    expect(await setStanding(null, { slug: SLUG, intent: 'won' })).toMatchObject({
       ok: false,
       reason: 'rejected',
     })
-    expect(await setStanding(null, form({ slug: 'not-a-slug', intent: 'won' }))).toEqual({
+    expect(await setStanding(null, form({ slug: 'not-a-slug', intent: 'won' }))).toMatchObject({
       ok: false,
       reason: 'rejected',
     })
-    expect(await setStanding(null, form({ slug: SLUG, intent: 'chase' }))).toEqual({
+    expect(await setStanding(null, form({ slug: SLUG, intent: 'chase' }))).toMatchObject({
       ok: false,
       reason: 'rejected',
     })
     expect(
       await setStanding(null, form({ slug: SLUG, intent: 'won', quotePounds: '12.50' })),
-    ).toEqual({ ok: false, reason: 'rejected' })
+    ).toMatchObject({ ok: false, reason: 'rejected' })
     expect(
       await setStanding(null, form({ slug: SLUG, intent: 'book', startsAt: 'yesterday' })),
-    ).toEqual({ ok: false, reason: 'rejected' })
+    ).toMatchObject({ ok: false, reason: 'rejected' })
     expect(
       await setStanding(null, form({ slug: SLUG, intent: 'note', note: 'x'.repeat(501) })),
-    ).toEqual({ ok: false, reason: 'rejected' })
+    ).toMatchObject({ ok: false, reason: 'rejected' })
     expect(state.calls).toEqual([])
   })
 
   it('answers gone for a brief the sweep has taken', async () => {
     state.identity = null
-    expect(await setStanding(null, form({ slug: SLUG, intent: 'won' }))).toEqual({
+    expect(await setStanding(null, form({ slug: SLUG, intent: 'won' }))).toMatchObject({
       ok: false,
       reason: 'gone',
     })
@@ -144,7 +144,7 @@ describe('setStanding', () => {
       null,
       form({ slug: SLUG, intent: 'quoted', quotePounds: '1429', note: 'Agreed.\r\nStarts soon.' }),
     )
-    expect(result).toEqual({ ok: true, value: null })
+    expect(result).toEqual({ ok: true, value: null, attempt: 1 })
     expect(state.calls).toEqual([
       `saveNote("${IDENTITY}", ${JSON.stringify(NOTE_LINES.join(NEWLINE))})`,
       `setStage("${IDENTITY}", "quoted", 1429)`,
@@ -188,7 +188,7 @@ describe('setStanding', () => {
     state.fail = true
     expect(
       await setStanding(null, form({ slug: SLUG, intent: 'won', note: 'Sarah said yes' })),
-    ).toEqual({ ok: false, reason: 'retry' })
+    ).toMatchObject({ ok: false, reason: 'retry' })
     expect(state.logged).toEqual(['admin.failed {"intent":"won","reason":"TypeError"}'])
     expect(state.logged.join(' ')).not.toContain('Sarah')
     expect(state.refreshed).toBe(0)
@@ -203,5 +203,34 @@ describe('Mark as new', () => {
     expect(state.calls.slice(1)).toEqual([`unopen("${SLUG}")`])
     expect(state.redirected).toBe('/admin')
     expect(state.refreshed).toBe(0)
+  })
+})
+
+describe('what a refusal carries back', () => {
+  it('returns the typed fields and counts the attempt, so the form can show them again', async () => {
+    state.fail = true
+    const result = await setStanding(
+      { ok: true, value: null, attempt: 3 },
+      form({
+        slug: SLUG,
+        intent: 'won',
+        note: 'Sarah said yes',
+        quotePounds: '1429',
+        startsAt: '',
+      }),
+    )
+    expect(result).toEqual({
+      ok: false,
+      reason: 'retry',
+      attempt: 4,
+      fields: { note: 'Sarah said yes', quotePounds: '1429', startsAt: '' },
+    })
+  })
+
+  it('counts a note by its lines as the browser does, so line breaks never push it over', async () => {
+    const note = ['x'.repeat(498), 'y'].join(String.fromCharCode(13, 10))
+    expect(note).toHaveLength(501)
+    const result = await setStanding(null, form({ slug: SLUG, intent: 'note', note }))
+    expect(result).toEqual({ ok: true, value: null, attempt: 1 })
   })
 })

@@ -35,7 +35,9 @@ test('every control on the panel is a thumb target and does nothing on the examp
   page,
 }) => {
   await page.goto(PAGE)
-  const buttons = page.locator('form button')
+  // The form's first submit button is hidden and disabled on purpose, so Enter in a field does
+  // nothing; every visible control is a thumb target.
+  const buttons = page.locator('form button:not([aria-hidden="true"])')
   expect(await buttons.count()).toBeGreaterThanOrEqual(6)
   for (const button of await buttons.all()) {
     await expect(button).toBeDisabled()
@@ -44,4 +46,15 @@ test('every control on the panel is a thumb target and does nothing on the examp
   }
   const strip = page.locator('section[aria-labelledby="needs-you"] li')
   expect(await strip.count()).toBeGreaterThanOrEqual(3)
+})
+
+test('Enter in a field does nothing, so a key press can never press a button', async ({ page }) => {
+  await page.goto(PAGE)
+  const before = page.url()
+  const quote = page.locator('form input[name="quotePounds"]')
+  await quote.focus()
+  await quote.press('Enter')
+  await page.waitForTimeout(300)
+  expect(page.url()).toBe(before)
+  await expect(page.locator('main#main h1')).toBeVisible()
 })

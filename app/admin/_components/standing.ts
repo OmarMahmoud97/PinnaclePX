@@ -1,4 +1,10 @@
-import { addMinutes, daysAfter, formatLondon, formatLondonRelative } from '@/lib/brief/time'
+import {
+  addMinutes,
+  daysAfter,
+  formatLondon,
+  formatLondonDay,
+  formatLondonRelative,
+} from '@/lib/brief/time'
 import { CONFIG } from '@/lib/config'
 import type { BriefOverviewRow } from '@/lib/db/briefs'
 import type { EnquiryStage } from '@/lib/db/schema'
@@ -236,11 +242,11 @@ export function isKept(row: Row, now: Date): boolean {
 export function sweepLine(row: Row, now: Date): string {
   const keep = keepOf(row)
   if (keep !== null && keep.until > now) {
-    const why = keep.reason === 'won' ? 'while won' : 'while a call is booked'
-    return `Kept until ${formatLondonRelative(keep.until, now)} ${why}`
+    const why = keep.reason === 'won' ? 'the win' : 'the booking'
+    return `Kept until the night of ${formatLondonDay(keep.until)}, six months after ${why}`
   }
   const deleted = daysAfter(row.createdAt, CONFIG.retention.days)
-  const line = `Deleted ${formatLondonRelative(deleted, now)}`
+  const line = `Goes on the night of ${formatLondonDay(deleted)}`
   const callAfter =
     row.callState === 'booked' && row.callStartsAt !== null && row.callStartsAt > deleted
   return callAfter ? `${line}, the call is after that; Cal.com keeps it` : line

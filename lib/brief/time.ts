@@ -19,6 +19,19 @@ export function formatLondon(moment: Date): string {
   return london.format(moment)
 }
 
+// A day alone, "Thu, 8 Oct 2026", for what happens on a night rather than at a minute.
+const londonDay = new Intl.DateTimeFormat('en-GB', {
+  weekday: 'short',
+  day: 'numeric',
+  month: 'short',
+  year: 'numeric',
+  timeZone: 'Europe/London',
+})
+
+export function formatLondonDay(moment: Date): string {
+  return londonDay.format(moment)
+}
+
 const MINUTE = 60_000
 const HOUR = 60 * MINUTE
 const DAY = 24 * HOUR

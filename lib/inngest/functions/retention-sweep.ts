@@ -6,6 +6,7 @@ import {
   deleteRateLimitsBefore,
   expiredSlugs,
 } from '@/lib/db/retention'
+import { deleteUnmatchedCallsBefore } from '@/lib/db/calls'
 import { inngest } from '@/lib/inngest/client'
 import { removeSubmission } from '@/lib/inngest/remove-submission'
 import { log } from '@/lib/log'
@@ -14,7 +15,7 @@ const DAY_MS = 86_400_000
 
 // The promise on the page: a link stays live for the retention period, then the submission,
 // its pictures and, once nothing of theirs is left, the lead are removed, unless the person booked
-// a call or hired the studio, when their briefs stay while that stands and for keptDays after
+// a call or hired the studio, when their briefs stay for keptDays after that was last recorded
 // (ADR 0047). `seen` stays, because the exclusivity promise outlives the preview. Runs nightly;
 // each submission is its own step, so a failure removes what it can and the rest goes next night.
 export const retentionSweep = inngest.createFunction(
@@ -32,8 +33,12 @@ export const retentionSweep = inngest.createFunction(
     return step.run('tidy', async () => {
       const leads = await deleteLeadsWithoutSubmissions()
       const windows = await deleteRateLimitsBefore(new Date(Date.now() - 2 * DAY_MS))
-      log.info('retention.swept', { submissions: expired.length, leads, windows })
-      return { submissions: expired.length, leads, windows }
+      // A Cal.com booking that matched no brief keeps its start only until the call has passed.
+      const calls = await deleteUnmatchedCallsBefore(
+        new Date(Date.now() - CONFIG.call.minutes * 60_000),
+      )
+      log.info('retention.swept', { submissions: expired.length, leads, windows, calls })
+      return { submissions: expired.length, leads, windows, calls }
     })
   },
 )

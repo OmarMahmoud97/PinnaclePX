@@ -126,15 +126,14 @@ describe('outcomeOf', () => {
 })
 
 describe('countLine', () => {
-  it('counts the briefs and says how long each stays', () => {
-    expect(countLine(0, 200, 30)).toBe(
-      'No briefs yet. A brief stays here for 30 days after it is sent, then the nightly sweep removes it, unless its person booked a call or hired the studio: those stay while that stands, and for six months after.',
-    )
-    expect(countLine(1, 200, 30)).toMatch(/^1 brief, newest first\./)
-    expect(countLine(17, 200, 30)).toMatch(/^17 briefs, newest first\./)
+  it('says how long a brief stays, and that there are none when there are none', () => {
+    const stay =
+      'A brief stays here for 30 days after it is sent, then the nightly sweep removes it, unless its person booked a call or hired the studio: those stay for six months after that was recorded.'
+    expect(countLine(0, 200, 30)).toBe(`No briefs yet. ${stay}`)
+    expect(countLine(17, 200, 30)).toBe(stay)
   })
 
   it('says when the page is full', () => {
-    expect(countLine(200, 200, 30)).toMatch(/^The newest 200 briefs, newest first\./)
+    expect(countLine(200, 200, 30)).toMatch(/^The newest 200 briefs are shown\./)
   })
 })

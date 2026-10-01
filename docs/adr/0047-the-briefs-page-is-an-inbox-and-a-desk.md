@@ -109,16 +109,19 @@ DO UPDATE` whose `CASE` compares against the stored stage, so two stale tabs can
 7. **Booked and won briefs are kept past the thirty days** (the owner, 2 October 2026, reversing
    ADR 0045 OD2's default). The sweep's `expiredSlugs` skips a brief whose person stands at won,
    or at booked, with that standing set within `CONFIG.retention.keptDays` (180); the brief goes
-   the night after that stops holding. Lost, cancelled, no-show and quoted keep nothing. Erasure
-   on request removes everything regardless. The notice, the FAQ and the claims register say so
-   in the same words.
+   the night after the six months are up. Nothing records when a win or a booking stops
+   standing, so the words everywhere are "for six months after that", not "while it stands"; a
+   win that outlasts the six months is re-stamped by tapping Won off and on again (the review of
+   2 October 2026 caught the earlier wording). Lost, cancelled, no-show and quoted keep nothing.
+   Erasure on request removes everything regardless. The notice, the FAQ and the claims register
+   say so in the same words.
 
 8. **The privacy notice changes by these sentences.** "What we do with it": the basis clause
    names the record ("To look after your enquiry we keep a short record with your answers: when
    we read them, whether you booked a call and for when, what we quoted, what you decided, and any
-   note we make about the call. It is deleted when your answers are."). "How long we keep it":
-   the record goes with the answers, and "If you book a call or hire us, we keep them while that
-   stands and for six months after, so we can look after your enquiry." The Cal.com processor
+   note we make about your enquiry. It is deleted when your answers are."). "How long we keep
+   it": the record goes with the answers, and "If you book a call or hire us, we keep them for
+   six months after that, so we can look after your enquiry." The Cal.com processor
    line: "It tells us when you book, so we can note the time against your brief." The contact
    calendar sentence says the time is noted against the brief for the same address and kept
    alone, naming nobody, otherwise. The FAQ answer says the same. Kept true unchanged: "Nothing
@@ -208,3 +211,18 @@ DO UPDATE` whose `CASE` compares against the stored stage, so two stale tabs can
   matched no brief. The probe's enquiry and unmatched rows were then removed. Typecheck, lint,
   1,292 unit tests, knip, Prettier, the six admin e2e tests on the example (desktop, phone and
   tablet) and the production build all pass.
+- Reviewed the same day by five lenses (correctness, security and the webhook, data and
+  retention, privacy and promises, ease of use and accessibility) with three independent
+  verifiers per finding: sixteen findings stood, nine were refuted. Fixed before the PR merged:
+  Enter in a field pressed the form's first button (now a hidden, disabled default button, so
+  Enter does nothing; held by an e2e test); a refused save wiped the typed note and quote (the
+  refusal now carries the words back and the fields mount again with them, checked live with a
+  quote over the ceiling); the strip printed each company twice (drawn once, as the link); the
+  note had no label (named by its heading, described by its caption); the pressed button lost the
+  keyboard's focus (it stays enabled and swallows clicks while saving); the sweep line read as past
+  tense at a minute ("Goes on the night of Thu, 8 Oct 2026"); a cancellation that arrived before
+  its booking was dropped (the cancel is an upsert, so the late booking finds it); unmatched calls
+  were never swept (the nightly sweep removes passed starts); an empty first note was stamped;
+  a note's line breaks counted twice; and the notice, FAQ, config and claims register said "while
+  that stands" where the code keeps for six months after the last mark, and "about the call"
+  where the note is about the enquiry. After the fixes: 1,298 unit tests and seven e2e tests pass.

@@ -18,7 +18,6 @@ import {
   unbook,
   unopen,
 } from '@/lib/db/enquiries'
-import { err, ok, type Result } from '@/lib/errors'
 import { slugSchema } from '@/lib/identity/slug'
 import { log } from '@/lib/log'
 
@@ -26,7 +25,35 @@ import { log } from '@/lib/log'
 // swept, the form was not what the page sends, or a write failed. The form prints each one.
 type AdminRefusal = 'forbidden' | 'gone' | 'rejected' | 'retry'
 
-export type StandingResult = Result<null, AdminRefusal>
+// The typed fields as they were sent, carried back with a refusal so the form can show them
+// again (standing-form.tsx): React resets a form's fields when its action settles, and a refusal
+// brings no fresh page to reset them to.
+export type Fields = Readonly<{ note: string; quotePounds: string; startsAt: string }>
+
+// The action's answer. `attempt` counts the answers this form has had, so each one remounts the
+// fields; a refusal also says why and what was typed.
+export type StandingResult =
+  | Readonly<{ ok: true; value: null; attempt: number }>
+  | Readonly<{ ok: false; reason: AdminRefusal; attempt: number; fields: Fields }>
+
+const EMPTY: Fields = { note: '', quotePounds: '', startsAt: '' }
+
+function fieldsOf(input: unknown): Fields {
+  if (!(input instanceof FormData)) return EMPTY
+  const text = (name: string) => {
+    const value = input.get(name)
+    return typeof value === 'string' ? value : ''
+  }
+  return { note: text('note'), quotePounds: text('quotePounds'), startsAt: text('startsAt') }
+}
+
+function attemptAfter(previous: unknown): number {
+  const last =
+    typeof previous === 'object' && previous !== null && 'attempt' in previous
+      ? previous.attempt
+      : 0
+  return (typeof last === 'number' ? last : 0) + 1
+}
 
 // Every button on the standing panel, as the value of the one submit name. Each records what the
 // visitor did or undoes a mark; none reaches out to anyone.
@@ -69,11 +96,13 @@ const formSchema = z.object({
   intent: z.enum(INTENTS),
   quotePounds: pounds,
   startsAt: londonMoment,
+  // Line ends are made one character each before the length is counted, as the browser counts
+  // them, so a note the field allowed is never refused for its line breaks.
   note: z
     .string()
-    .max(CONFIG.admin.noteMaxChars)
     .default('')
-    .transform((value) => value.replace(/\r\n/g, '\n').trim()),
+    .transform((value) => value.replace(/\r\n/g, '\n').trim())
+    .pipe(z.string().max(CONFIG.admin.noteMaxChars)),
 })
 
 type Marks = z.infer<typeof formSchema>
@@ -111,7 +140,10 @@ async function apply(marks: Marks, identity: string): Promise<void> {
 // on every render, so refreshing it would undo the tap at once. Never throws to the client; a
 // failed write is a word on the page and a line in the log, with the intent and nothing about
 // the person. Takes the previous state first, as useActionState calls it.
-export async function setStanding(_previous: unknown, input: unknown): Promise<StandingResult> {
+export async function setStanding(previous: unknown, input: unknown): Promise<StandingResult> {
+  const attempt = attemptAfter(previous)
+  const fields = fieldsOf(input)
+  const err = (reason: AdminRefusal): StandingResult => ({ ok: false, reason, attempt, fields })
   const owner = adminCredentials()
   const authorization = (await headers()).get('authorization')
   if (owner === null || !basicAuthPasses(authorization, owner)) {
@@ -139,5 +171,5 @@ export async function setStanding(_previous: unknown, input: unknown): Promise<S
   // Outside the try: a redirect is thrown, and must not be read as a failed write.
   if (intent === 'unopen') redirect('/admin')
   refresh()
-  return ok(null)
+  return { ok: true, value: null, attempt }
 }

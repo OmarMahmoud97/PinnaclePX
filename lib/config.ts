@@ -201,9 +201,9 @@ export const CONFIG = {
   // submission points at it (lib/inngest/functions/orphan-upload-sweep.ts), so none outlives two
   // days, which is what /privacy says.
   // A brief whose person booked a call or hired the studio is kept past `days` (the owner, 2
-  // October 2026, ADR 0047): while the enquiry stands at won, or at booked, and for `keptDays`
-  // after that standing was last set, so the notice can say "while we work together and for six
-  // months after".
+  // October 2026, ADR 0047): for `keptDays` after the enquiry was last marked won or a call was
+  // last recorded as booked, so the notice can say "for six months after that". A win that
+  // outlasts the six months is re-stamped by tapping Won off and on again.
   retention: { days: 30, cron: '0 3 * * *', unsentHours: 24, keptDays: 180 },
   // The owner's page at /admin (ADR 0045, 0047) lists this many briefs, newest first, and has no
   // second page: the sweep keeps a month of them, far fewer than this at the studio's scale. The

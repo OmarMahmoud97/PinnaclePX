@@ -32,6 +32,7 @@ const database = vi.hoisted(() => ({
   selected: [] as unknown[],
   updated: [] as unknown[],
   deleted: [] as unknown[],
+  inserted: [] as unknown[],
 }))
 
 vi.mock('@/lib/db/client', () => {
@@ -51,8 +52,14 @@ vi.mock('@/lib/db/client', () => {
       insert: (table: unknown) => ({
         values: (values: Record<string, unknown>) => ({
           onConflictDoUpdate: (conflict: Upsert) => {
-            keep({ kind: 'insert', table, values, conflict })
-            return Promise.resolve()
+            const statement: Statement = { kind: 'insert', table, values, conflict }
+            keep(statement)
+            return Object.assign(Promise.resolve(), {
+              returning: (returning: unknown) => {
+                statement.returning = returning
+                return Promise.resolve(database.inserted)
+              },
+            })
           },
           onConflictDoNothing: () => {
             keep({ kind: 'insert', table, values, conflict: 'do nothing' })
@@ -97,6 +104,7 @@ beforeEach(() => {
   database.selected = []
   database.updated = []
   database.deleted = []
+  database.inserted = []
 })
 
 // An expression as Postgres receives it: its text and its bound values.
@@ -171,23 +179,32 @@ describe('recordCalBooking', () => {
 })
 
 describe('cancelCalBooking', () => {
-  it('marks the booking cancelled by its uid, only while it stands as booked, and says that it did', async () => {
-    database.updated = [{ identityHash: IDENTITY }]
+  it('records the cancellation by its uid as an upsert, changing a row only while it stands as booked', async () => {
+    database.inserted = [{ identityHash: IDENTITY }]
     expect(await cancelCalBooking(IDENTITY, UID_HASH, CREATED_AT)).toBe(true)
     const statement = only()
-    expect(statement.kind).toBe('update')
+    expect(statement.kind).toBe('insert')
     expect(statement.table).toBe(enquiry)
-    expect(Object.keys(statement.set ?? {}).sort()).toEqual(['callAt', 'callState', 'updatedAt'])
-    expect(statement.set).toMatchObject({ callState: 'cancelled', callAt: CREATED_AT })
-    expect(query(statement.set?.updatedAt).sql).toBe('now()')
-    expect(query(statement.where)).toEqual({
-      sql: '("enquiry"."identity_hash" = $1 and "enquiry"."call_uid_hash" = $2 and "enquiry"."call_state" = $3)',
-      params: [IDENTITY, UID_HASH, 'booked'],
+    expect(statement.values).toMatchObject({
+      identityHash: IDENTITY,
+      callState: 'cancelled',
+      callSource: 'cal',
+      callUidHash: UID_HASH,
+      callAt: CREATED_AT,
+    })
+    const conflict = statement.conflict as Upsert
+    expect(conflict.target).toBe(enquiry.identityHash)
+    expect(Object.keys(conflict.set).sort()).toEqual(['callAt', 'callState', 'updatedAt'])
+    expect(conflict.set).toMatchObject({ callState: 'cancelled', callAt: CREATED_AT })
+    expect(query(conflict.set.updatedAt).sql).toBe('now()')
+    expect(query(conflict.setWhere)).toEqual({
+      sql: '("enquiry"."call_uid_hash" = $1 and "enquiry"."call_state" = $2)',
+      params: [UID_HASH, 'booked'],
     })
     expect(statement.returning).toEqual({ identityHash: enquiry.identityHash })
   })
 
-  it('answers false when no booked row carried that uid', async () => {
+  it('answers false when no row was written, as for a cancellation of another uid', async () => {
     expect(await cancelCalBooking(IDENTITY, UID_HASH, CREATED_AT)).toBe(false)
     expect(database.statements).toHaveLength(1)
   })

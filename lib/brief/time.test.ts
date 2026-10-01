@@ -4,6 +4,7 @@ import {
   daysAfter,
   formatCountdown,
   formatLondon,
+  formatLondonDay,
   formatLondonRelative,
   fromLondonLocal,
   nextWholeHour,
@@ -309,5 +310,12 @@ describe('daysAfter', () => {
     const moment = new Date('2026-07-01T13:00:00Z')
     expect(daysAfter(moment, 0)).toEqual(moment)
     expect(daysAfter(moment, 0)).not.toBe(moment)
+  })
+})
+
+describe('formatLondonDay', () => {
+  it('names the London day alone, with its weekday and year', () => {
+    expect(formatLondonDay(new Date('2026-10-08T13:05:00Z'))).toBe('Thu, 8 Oct 2026')
+    expect(formatLondonDay(new Date('2026-07-31T23:30:00Z'))).toBe('Sat, 1 Aug 2026')
   })
 })

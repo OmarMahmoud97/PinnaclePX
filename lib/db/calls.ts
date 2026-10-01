@@ -1,5 +1,5 @@
 import 'server-only'
-import { and, eq, isNull, lt, type SQL, sql } from 'drizzle-orm'
+import { eq, isNull, lt, type SQL, sql } from 'drizzle-orm'
 import type { PgColumn } from 'drizzle-orm/pg-core'
 import { db } from '@/lib/db/client'
 import { enquiry, lead, unmatchedCall } from '@/lib/db/schema'
@@ -79,16 +79,23 @@ export async function cancelCalBooking(
   uidHash: string,
   createdAt: Date,
 ): Promise<boolean> {
+  // An upsert, not an update: a cancellation that lands before the booking it cancels (Cal.com's
+  // deliveries are separate requests with no order) leaves a cancelled row carrying the uid, so
+  // the booking that then arrives late finds its own cancellation and is a no-op.
   const rows = await db
-    .update(enquiry)
-    .set({ callState: 'cancelled', callAt: createdAt, updatedAt: NOW })
-    .where(
-      and(
-        eq(enquiry.identityHash, identityHash),
-        eq(enquiry.callUidHash, uidHash),
-        eq(enquiry.callState, 'booked'),
-      ),
-    )
+    .insert(enquiry)
+    .values({
+      identityHash,
+      callState: 'cancelled',
+      callSource: 'cal',
+      callUidHash: uidHash,
+      callAt: createdAt,
+    })
+    .onConflictDoUpdate({
+      target: enquiry.identityHash,
+      set: { callState: 'cancelled', callAt: createdAt, updatedAt: NOW },
+      setWhere: sql`(${eq(enquiry.callUidHash, uidHash)} and ${eq(enquiry.callState, 'booked')})`,
+    })
     .returning({ identityHash: enquiry.identityHash })
   return rows.length > 0
 }

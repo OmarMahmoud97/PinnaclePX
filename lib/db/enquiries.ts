@@ -131,7 +131,8 @@ export async function setNoShow(identityHash: string): Promise<void> {
 export async function saveNote(identityHash: string, note: string): Promise<void> {
   await db
     .insert(enquiry)
-    .values({ identityHash, note, noteAt: NOW })
+    // A first row with no note yet carries no time: the stamp means the words were written.
+    .values({ identityHash, note, noteAt: note === '' ? null : NOW })
     .onConflictDoUpdate({
       target: enquiry.identityHash,
       set: {
