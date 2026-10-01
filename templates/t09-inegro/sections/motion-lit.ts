@@ -5,8 +5,9 @@ import { pageTop } from './motion-stack'
 // card's top reaches the middle of the screen until the page has gone on by the card's
 // content height and half a screen more. The source tied this to the scroll with a lag of 0.75s
 // (GSAP's scrub, a tween on an expo curve restarted at every scroll step, chasing the scroll),
-// and once every letter was lit it stayed lit. Each paragraph carries its letters' count on the
-// spans (letters.tsx); the script sets how many are lit and marks the paragraph done at the end.
+// and once every letter was lit it stayed lit. Each frame marks lit only the letters the chase
+// has newly reached, or unmarks those it has left, as GSAP set the colour only on the letters
+// whose tween had moved: a frame restyles a letter or two, not the paragraph's hundreds.
 
 const LAG = 0.75
 const expoOut = (t: number) => (t >= 1 ? 1 : 1 - 2 ** (-10 * t))
@@ -15,8 +16,8 @@ const clamp = (v: number) => Math.min(1, Math.max(0, v))
 type Item = {
   block: HTMLElement
   glass: HTMLElement
-  text: HTMLElement
-  count: number
+  chars: HTMLElement[]
+  shown: number
   start: number
   end: number
   value: number
@@ -35,8 +36,8 @@ export function lightLetters(root: Element): () => void {
       {
         block,
         glass,
-        text,
-        count: text.querySelectorAll('.inegro-lit-char').length,
+        chars: [...text.querySelectorAll<HTMLElement>('.inegro-lit-char')],
+        shown: 0,
         start: 0,
         end: 0,
         value: 0,
@@ -50,11 +51,13 @@ export function lightLetters(root: Element): () => void {
   if (items.length === 0) return () => undefined
 
   const paint = (item: Item) => {
-    item.text.style.setProperty('--lit', String(Math.floor(item.value * item.count)))
-    if (item.value >= 1 && !item.done) {
-      item.done = true
-      item.text.dataset.done = ''
-    }
+    const shown = Math.floor(item.value * item.chars.length)
+    for (let i = item.shown; i < shown; i++) item.chars[i]?.classList.add('is-lit')
+    for (let i = shown; i < item.shown; i++) item.chars[i]?.classList.remove('is-lit')
+    item.shown = shown
+    // Every letter now holds its own light, so the paragraph is left alone: recolouring it would
+    // restyle all its letters again for no change on the screen.
+    if (item.value >= 1) item.done = true
   }
 
   // The lines, measured once at load as the source measured them: the screen's height then and

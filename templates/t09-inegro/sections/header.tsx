@@ -21,17 +21,20 @@ const WIDE = '(min-width: 1024.02px)'
 
 // The bar hides when the page goes down past its own height and comes back, as glass, when it
 // goes up, ignoring moves of two pixels or less and never hiding at the page's foot, as the
-// source's script did.
+// source's script did. The bar's height is measured once, as the source's was, and again on a
+// resize.
 function useScrollState(): Scroll {
   const [state, setState] = useState<Scroll>(undefined)
   useEffect(() => {
+    const measure = () =>
+      document.querySelector('.inegro-header')?.getBoundingClientRect().height ?? 0
+    let bar = measure()
     let last = window.scrollY
     let frame = 0
     const check = () => {
       frame = 0
       const y = window.scrollY
       if (Math.abs(last - y) <= 2) return
-      const bar = document.querySelector('.inegro-header')?.getBoundingClientRect().height ?? 0
       if (y > last && y > bar) setState('up')
       else if (y + window.innerHeight < document.documentElement.scrollHeight) setState('down')
       last = y
@@ -39,9 +42,14 @@ function useScrollState(): Scroll {
     const onScroll = () => {
       if (frame === 0) frame = requestAnimationFrame(check)
     }
+    const onResize = () => {
+      bar = measure()
+    }
     window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', onResize)
     return () => {
       window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onResize)
       cancelAnimationFrame(frame)
     }
   }, [])
@@ -117,7 +125,10 @@ export function InegroHeader({ brand, nav, highlights, highlightCta }: Props) {
     }
   }, [panel, sheet])
 
-  // The sheet holds the page still while it is open, as the source's did.
+  // The sheet holds the page still while it is open, as the source's did. The site's smooth
+  // scroll moves the page itself and would carry on under the sheet, so while the sheet is open
+  // the header, which holds the bar and the sheet, asks it to leave the wheel alone
+  // (data-lenis-prevent below): a wheel over the sheet scrolls the sheet, and over the bar nothing.
   useEffect(() => {
     if (!sheet) return
     const root = document.documentElement
@@ -136,7 +147,11 @@ export function InegroHeader({ brand, nav, highlights, highlightCta }: Props) {
 
   return (
     <>
-      <header className="inegro-header" data-scroll={scroll}>
+      <header
+        className="inegro-header"
+        data-scroll={scroll}
+        data-lenis-prevent={sheet ? '' : undefined}
+      >
         <div className="inegro-header-inner">
           <div className="inegro-nav-wrap">
             <a className="inegro-logo" href="#top" aria-label={brand.name}>

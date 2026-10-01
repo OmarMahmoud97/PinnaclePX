@@ -12,7 +12,10 @@ type Props = {
 
 // A name's letters, twice over, for the roll under the pointer (inegro.css): the first copy in
 // place, the second under it, each letter rising in turn a hundredth of a second after the one
-// before, as the source's script built them.
+// before, as the source's script built them. The source's stylesheet staggered only the first
+// 26 letters; any after rise with no wait, and so they do here.
+const STAGGERED = 26
+
 function Roll({ text }: { text: string }) {
   const letters = graphemes(text)
   const copy = (key: string) => (
@@ -21,7 +24,7 @@ function Roll({ text }: { text: string }) {
         <span
           key={index}
           className="inegro-roll-letter"
-          style={{ '--i': String(index + 1) } as CSSProperties}
+          style={index < STAGGERED ? ({ '--i': String(index + 1) } as CSSProperties) : undefined}
         >
           {letter === ' ' ? ' ' : letter}
         </span>
@@ -87,7 +90,7 @@ export function InegroServices({ brand, services }: Props) {
                           alt={item.image.alt}
                           width={item.image.width}
                           height={item.image.height}
-                          sizes="(min-width: 1024px) 470px, (min-width: 768px) 400px, 100vw"
+                          sizes="(min-width: 1024.02px) 470px, (min-width: 768px) 400px, 100vw"
                         />
                       )}
                       <span className="inegro-card-info">

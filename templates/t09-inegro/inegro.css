@@ -51,10 +51,12 @@
   --inegro-on-button-3: var(--inegro-set-on-button-3, var(--on-brand));
 
   /* The source's curves: its CSS's default ease and ease-in and ease-in-out, GSAP's power1.out
-   * (exactly this bezier, being quadratic) and sine.inOut, and its letter roll. */
+   * (exactly this bezier, being quadratic), and its letter roll. GSAP's sine.inOut and jQuery's
+   * swing are the same half cosine; this bezier keeps within 0.2% of it everywhere (the more
+   * common 0.445, 0.05, 0.55, 0.95 strays by 1.75%, six degrees of the ring's turn). */
   --inegro-ease: ease;
   --inegro-power1: cubic-bezier(0.3333, 0.6667, 0.6667, 1);
-  --inegro-sine: cubic-bezier(0.445, 0.05, 0.55, 0.95);
+  --inegro-sine: cubic-bezier(0.37, 0, 0.63, 1);
   --inegro-roll: cubic-bezier(0.76, 0, 0.24, 1);
 
   position: relative;
@@ -67,6 +69,9 @@
   line-height: calc(2.4 * var(--u));
   -webkit-font-smoothing: antialiased;
   text-align: left;
+  /* A brand's own words can run longer than the example's; one too long for its line breaks
+   * rather than running out of its box. A word that fits is never touched. */
+  overflow-wrap: break-word;
 }
 
 /* Two more hues, turned from the glows, where the browser can turn a colour. */
@@ -295,7 +300,11 @@
   transition: 0.4s ease-in-out;
 }
 
-@media (max-width: 768px) {
+/* The phone rules stop just short of 768px. The source ended them at 768px and started its
+ * tablet rules there too, so at exactly 768px, a tablet held upright, both applied: the
+ * newsletter's heading took the tablet's size in the phone's 150px column and broke inside a
+ * word, and the hero's heading squeezed into four lines. */
+@media (max-width: 767.98px) {
   .inegro .inegro-btn-wide {
     width: 100%;
     max-width: calc(40 * var(--u));
@@ -339,7 +348,7 @@
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767.98px) {
   .inegro .inegro-inner {
     padding-right: calc(2.5 * var(--u));
     padding-left: calc(2.5 * var(--u));
@@ -648,7 +657,8 @@
 /* The desktop dropdown: a white panel under the bar, links and a dark button on the left, two
  * picture cards on the right, over a frosted page (the scrim behind it). */
 /* It slides open and shut over 0.6s, as the source's slideToggle did (its swing is a sine in
- * and out), and is hidden once shut, so its links leave the tab order. */
+ * and out), and is hidden once shut, so its links leave the tab order. Opening another hides it
+ * at once, as the source's script hid every other dropdown. */
 .inegro .inegro-panel {
   position: absolute;
   top: 100%;
@@ -675,6 +685,10 @@
   transition:
     grid-template-rows 0.6s var(--inegro-sine),
     visibility 0s;
+}
+
+.inegro .inegro-nav-wrap:has(.inegro-panel[data-open]) .inegro-panel:not([data-open]) {
+  transition: none;
 }
 
 .inegro .inegro-panel-clip {
@@ -747,14 +761,14 @@
   transform: scale(1);
 }
 
-@media (min-width: 1024px) {
+/* The desktop bar from just past 1024px: the source's phone bar held to 1024 inclusive. The rest
+ * of the page's desktop rules start there too, so a tablet held sideways at exactly 1024px gets
+ * the tablet page whole; the source started some at 1024px and mixed the two. */
+@media (min-width: 1024.02px) {
   .inegro .inegro-logo {
     width: calc(20.9 * var(--u));
   }
-}
 
-/* The desktop bar from just past 1024px: the source's phone bar held to 1024 inclusive. */
-@media (min-width: 1024.02px) {
   .inegro .inegro-nav-right {
     justify-content: flex-end;
     width: calc(100% - 22 * var(--u));
@@ -819,6 +833,9 @@
     border-radius: 0;
     opacity: 0;
     visibility: hidden;
+    overflow: hidden auto;
+    overscroll-behavior: contain;
+    scrollbar-width: none;
     transform: scale(0.9);
     transform-origin: center;
     transition: 1s ease-in-out;
@@ -833,12 +850,13 @@
     transform: scale(1);
   }
 
+  /* The links fill the sheet above the picture cards. The source scrolled the links alone and
+   * pinned the cards, which on a short screen (a phone on its side, a small phone) left the links
+   * a sliver or nothing and pushed the ask below the screen; here the links keep their height and
+   * the whole sheet scrolls when it does not fit, and looks the same when it does. */
   .inegro .inegro-nav-scroll {
-    flex: 1 1 auto;
-    min-height: 0;
+    flex: 1 0 auto;
     padding: var(--u) calc(2 * var(--u)) calc(3 * var(--u));
-    overflow: hidden auto;
-    scrollbar-width: none;
   }
 
   .inegro .inegro-menu > li {
@@ -867,15 +885,21 @@
     color: var(--on-brand);
   }
 
+  /* A section slides open and shut as the desktop's dropdowns do, by the same script in the
+   * source: over 0.6s on its swing, the one that was open hidden at once when another opens. */
   .inegro .inegro-sub {
     display: grid;
     grid-template-rows: 0fr;
     padding: 0 calc(1.5 * var(--u));
-    transition: grid-template-rows 0.6s ease;
+    transition: grid-template-rows 0.6s var(--inegro-sine);
   }
 
   .inegro .inegro-sub[data-open] {
     grid-template-rows: 1fr;
+  }
+
+  .inegro .inegro-menu[data-open] .inegro-sub:not([data-open]) {
+    transition: none;
   }
 
   .inegro .inegro-sub > ul {
@@ -966,10 +990,16 @@
  * from its start (the source's DrawSVG, over its own time after its own wait) and a light runs
  * along each twice (hero.tsx). A wash from the page's colour keeps the words clear.
  */
+/* The source held the hero to the screen's height, so on a short screen (a phone on its side, a
+ * laptop's window at 1366 by 657) its centred words ran up under the bar and down past the hero.
+ * Here the hero is at least the screen's height and grows with its words when they need more;
+ * where they fit it is the source's to the pixel. */
 .inegro .inegro-hero {
   position: relative;
   z-index: 3;
-  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
   padding: 0;
 }
 
@@ -984,15 +1014,18 @@
   background: linear-gradient(to right, var(--surface) 0%, transparent 100%);
 }
 
-.inegro .inegro-hero > .inegro-inner,
-.inegro .inegro-hero-row {
-  height: 100%;
+.inegro .inegro-hero > .inegro-inner {
+  display: flex;
+  flex: 1 0 auto;
+  flex-direction: column;
+  width: 100%;
 }
 
 .inegro .inegro-hero-row {
   position: relative;
   z-index: 1;
   display: flex;
+  flex: 1 0 auto;
 }
 
 .inegro .inegro-hero-col {
@@ -1047,6 +1080,14 @@
 }
 
 @media (min-width: 768px) {
+  /* The source nudged the centred words 30px down by position alone, which the hero's height
+   * cannot see; twice that as padding centres them in the same place and lets a short screen's
+   * hero grow to hold them. */
+  .inegro .inegro-hero-col {
+    top: 0;
+    padding-top: calc(6 * var(--u));
+  }
+
   .inegro .inegro-hero .inegro-h1 {
     padding-top: calc(17 * var(--u));
   }
@@ -1071,9 +1112,9 @@
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767.98px) {
   .inegro .inegro-hero {
-    height: auto;
+    min-height: 0;
     padding: calc(15 * var(--u)) 0 0;
   }
 
@@ -1173,7 +1214,7 @@
   }
 }
 
-@media (min-width: 1024px) and (max-width: 1220px) {
+@media (min-width: 1024.02px) and (max-width: 1220px) {
   .inegro .inegro-lines svg {
     top: calc(-13 * var(--u));
   }
@@ -1298,20 +1339,16 @@
   }
 }
 
-/* The letters. Each is a span with its index; the script sets how many are lit on the
- * paragraph. Without a script, or with motion reduced, every letter is lit. */
+/* The letters. Each is a span; the script marks a letter lit as the scroll reaches it and
+ * unmarks it on the way back, touching only the letters that change, as the source's script set
+ * the colour on each letter it reached. An unlit letter takes the paragraph's faint colour.
+ * Without a script, or with motion reduced, the paragraph is lit whole. */
 .inegro .inegro-lit-word {
   display: inline-block;
 }
 
-@media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
-  .inegro .inegro-lit:not([data-done]) .inegro-lit-char {
-    color: color-mix(
-      in srgb,
-      var(--on-scrim) calc(30% + 70% * clamp(0, var(--lit, 0) - var(--i), 1)),
-      transparent
-    );
-  }
+.inegro .inegro-lit .inegro-lit-char.is-lit {
+  color: var(--on-scrim);
 }
 
 @media not ((scripting: enabled) and (prefers-reduced-motion: no-preference)) {
@@ -1320,14 +1357,10 @@
   }
 }
 
-.inegro .inegro-lit[data-done] {
-  color: var(--on-scrim);
-}
-
 /* ---------------------------------------------------------------------------------------------
  * Services: the list of big names. One is open at a time (services.tsx): its name turns to the
  * ink, its line shows, a rule runs under it and its picture card sits at the right. A closed
- * name is the muted ink, and from 1024px its letters roll up to a white copy under the pointer.
+ * name is the muted ink, and above 1024px its letters roll up to a white copy under the pointer.
  */
 .inegro .inegro-services-top {
   position: relative;
@@ -1534,7 +1567,7 @@
 }
 
 /* Each name's letters, twice: the second copy sits under the first and rolls up into view.
- * Until 1024px, and for a name that is open, only the first copy shows. */
+ * Up to 1024px, and for a name that is open, only the first copy shows. */
 .inegro .inegro-roll-copy {
   display: block;
 }
@@ -1626,7 +1659,7 @@
   }
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 1024.02px) {
   .inegro .inegro-card-picture {
     width: calc(47 * var(--u));
     margin: 0 auto calc(2 * var(--u));
@@ -1660,7 +1693,7 @@
     button:focus-visible
     .inegro-roll-letter {
     transform: translateY(-100%);
-    transition-delay: calc(var(--i) * 0.01s);
+    transition-delay: calc(var(--i, 0) * 0.01s);
   }
 }
 
@@ -1729,11 +1762,12 @@
 }
 
 /* The last card at rest: a fifth of the way along the purple ribbon, in the ribbon's own
- * coordinates scaled to its drawn width (--rest-x and --rest-y, set on the card). */
+ * coordinates scaled to its drawn width (--rest-x and --rest-y, set on the card), held inside
+ * the band's sides on a phone too narrow for it to centre there, as the script holds it. */
 .inegro .inegro-note[data-rest] {
   opacity: 1;
   transform: translate(
-    calc(var(--svg-left) + var(--svg-width) * var(--rest-x) - 50%),
+    clamp(0px, calc(var(--svg-left) + var(--svg-width) * var(--rest-x) - 50%), calc(100cqw - 100%)),
     calc(var(--svg-top) + var(--svg-width) * var(--rest-y) - 50%)
   );
 }
@@ -1875,19 +1909,19 @@
   opacity: 0.6;
 }
 
-/* Each line's letters light one after another; the line then fades. The script sets how many
- * are lit and hides the line; without it the first line shows whole. */
+/* Each line's letters are clear until the script lights them one after another; the line then
+ * fades. Without it the first line shows whole. */
 .inegro .inegro-ring-line .inegro-lit-char {
-  color: color-mix(
-    in srgb,
-    var(--on-surface) calc(100% * clamp(0, var(--lit, 0) - var(--i), 1)),
-    transparent
-  );
+  color: transparent;
+}
+
+.inegro .inegro-ring-line .inegro-lit-char.is-lit {
+  color: var(--on-surface);
 }
 
 @media not ((scripting: enabled) and (prefers-reduced-motion: no-preference)) {
-  .inegro .inegro-ring-line:first-child {
-    --lit: 999;
+  .inegro .inegro-ring-line:first-child .inegro-lit-char {
+    color: var(--on-surface);
   }
 }
 
@@ -2168,9 +2202,24 @@
   }
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 1024.02px) {
   .inegro .inegro-offers-col {
     width: 33.33%;
+  }
+}
+
+/* Up to 1024px the three boxes share a narrow row, and the source's 45px sides left a column of
+ * little more than 110px, too narrow for a long word in the heading. Here the sides are 25px, as
+ * on a phone, and a word still too long is hyphenated rather than cut. */
+@media (min-width: 782px) and (max-width: 1024px) {
+  .inegro .inegro-offer {
+    padding-right: calc(2.5 * var(--u));
+    padding-left: calc(2.5 * var(--u));
+  }
+
+  .inegro .inegro-offer h3,
+  .inegro .inegro-offer .inegro-p {
+    hyphens: auto;
   }
 }
 
@@ -2237,7 +2286,11 @@
   font-feature-settings: 'ss04', 'liga';
   font-size: calc(1.6 * var(--u));
   line-height: calc(2.1 * var(--u));
-  transition: 0.5s;
+  /* The source's form plugin's: under the pointer the border eases over 0.15s and the fill
+   * changes at once. */
+  transition:
+    border 0.15s,
+    box-shadow 0.15s;
   appearance: none;
 }
 
@@ -2303,9 +2356,7 @@
   .inegro .inegro-form-field {
     margin-bottom: calc(0.6 * var(--u));
   }
-}
 
-@media (max-width: 768px) {
   .inegro .inegro-newsletter h2 {
     max-width: calc(15 * var(--u));
     margin-right: auto;
@@ -2376,7 +2427,7 @@
   height: auto;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767.98px) {
   .inegro .inegro-social > div {
     display: inline-block;
     max-width: calc(30 * var(--u));

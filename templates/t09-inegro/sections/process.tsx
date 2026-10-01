@@ -1,5 +1,5 @@
 import type { InegroContent } from '../copy-slots'
-import { Letters, letterCount } from './letters'
+import { Letters } from './letters'
 
 type Props = { process: InegroContent['process'] }
 
@@ -101,7 +101,7 @@ export function InegroProcess({ process }: Props) {
                   <li key={step} className="inegro-ring-line" data-ring-line="">
                     <Letters text={number} />{' '}
                     <em>
-                      <Letters text={step} start={letterCount(number)} />
+                      <Letters text={step} />
                     </em>
                   </li>
                 )
