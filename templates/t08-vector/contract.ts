@@ -92,7 +92,7 @@ type ModelSlot = Exclude<
 const PURPOSE: Readonly<Record<ModelSlot, string>> = {
   'brand.name': 'the company name as given, set in lower case in the bar as the source set its own',
   'brand.legalName': 'the legal name for the footer, the company name if unknown',
-  'nav.links[].label':
+  'nav.links[]':
     'two to six short menu labels, in order: home, their work, what they offer, about, questions, contact',
   'hero.headline[]':
     'two or three short lines of the headline, a few words each; the last is set in the serif italic',

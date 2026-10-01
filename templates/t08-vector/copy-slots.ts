@@ -81,7 +81,7 @@ export type VectorContent = Readonly<{
 export const VECTOR_SLOTS = {
   'brand.name': { min: 2, max: 24 },
   'brand.legalName': { min: 2, max: 60 },
-  'nav.links[].label': { min: 3, max: 14 },
+  'nav.links[]': { min: 3, max: 14 },
   'hero.headline[]': { min: 6, max: 24 },
   'hero.subhead': { min: 60, max: 170 },
   'hero.scrollHint': { min: 3, max: 12 },
@@ -162,8 +162,9 @@ export function vectorViolations(content: VectorContent): SlotViolation[] {
 
   c.text('brand.name', 'brand.name', brand.name)
   c.text('brand.legalName', 'brand.legalName', brand.legalName)
+  // The copy's links are strings (the schema's shape), so the path is the string's own.
   c.list('nav.links', 'nav.links', nav.links, (link, path) => {
-    c.text('nav.links[].label', `${path}.label`, link.label)
+    c.text('nav.links[]', path, link.label)
   })
 
   c.list('hero.headline', 'hero.headline', hero.headline, (line, path) => {
