@@ -227,7 +227,11 @@ async function briefStage(fixture: Fixture, slug: string): Promise<FixtureRecord
         errors,
         brief,
         calls: takeNotes(slug, 'brief').map(strip),
-        ruleViolations: ruleViolationsIn(brief, fixture.answers.description),
+        ruleViolations: ruleViolationsIn(
+          brief,
+          `${fixture.answers.company}
+${fixture.answers.description}`,
+        ),
         ms: Date.now() - begun,
       }
     } catch (error) {
@@ -291,7 +295,16 @@ async function copyFor(
     step: note.step,
     call: note.attempt,
     parsed: note.parsed,
-    violations: note.parsed === null ? [] : judge(note.parsed, templateId, ownersWords),
+    // The company name is the owner's too (lib/ai/copy.ts).
+    violations:
+      note.parsed === null
+        ? []
+        : judge(
+            note.parsed,
+            templateId,
+            `${brief.company}
+${ownersWords}`,
+          ),
     usage: strip(note),
   }))
   return { final, fallback, fallbackReason, errors, attempts, ms: Date.now() - begun }

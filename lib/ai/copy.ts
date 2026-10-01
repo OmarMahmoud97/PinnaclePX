@@ -14,7 +14,8 @@ import { log } from '@/lib/log'
 type Input = Readonly<{
   brief: BrandBrief
   contract: TemplateContract
-  // The owner's own sentence: what the copy may quote numbers and claims from.
+  // The owner's own sentence: with the company name, what the copy may quote numbers and claims
+  // from.
   ownersWords: string
   slug: string
 }>
@@ -42,6 +43,10 @@ export async function writeCopy({
       ),
     },
   ]
+  // The owner's words are the allow-list (ADR 0011): the sentence, and the company name, which
+  // every page carries, so a name like A1 Plumbing is not a number the model invented.
+  const ownersText = `${brief.company}
+${ownersWords}`
   let violations: readonly CopyViolation[] = []
   for (let attempt = 0; attempt <= CONFIG.copy.retries; attempt += 1) {
     const response = await anthropic.messages.create(
@@ -65,7 +70,7 @@ export async function writeCopy({
     violations = parsed.ok
       ? [
           ...contract.copyViolations(parsed.value).map(fromSlotViolation),
-          ...ruleViolationsIn(parsed.value, ownersWords),
+          ...ruleViolationsIn(parsed.value, ownersText),
         ]
       : parsed.reason
     if (parsed.ok && violations.length === 0) return ok(parsed.value)
