@@ -51,13 +51,14 @@ export const lead = pgTable('lead', {
 
 // The exclusivity guarantee: a template an identity has been shown. The composite key makes a
 // duplicate reveal impossible; the slug says which submission revealed it, so a retried step can
-// tell its own rows from another submission's.
+// tell its own rows from another submission's. The hash is deliberately not a foreign key: `seen`
+// outlives the lead (ADR 0014 keeps it after the sweep, and the notice calls it a code that
+// cannot be turned back into the address), and a key to `lead` stopped the sweep deleting any
+// lead that had ever been shown a design (ADR 0046).
 export const seen = pgTable(
   'seen',
   {
-    identityHash: text('identity_hash')
-      .notNull()
-      .references(() => lead.identityHash),
+    identityHash: text('identity_hash').notNull(),
     templateId: text('template_id').notNull(),
     slug: text('slug').notNull(),
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
