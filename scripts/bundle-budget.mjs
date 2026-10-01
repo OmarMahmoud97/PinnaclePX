@@ -152,7 +152,12 @@ const BUDGETS = {
   // B before, 208,526 B after), and CI's Linux build measured 208,581 B, 81 B over the line. The
   // line is CI's measure plus the 70 B margin, rounded up to the next 500 (208,651 B up to
   // 209,000). / (217,338 B on CI) and /start (253,328 B) stay inside theirs, which do not move.
-  '/contact': { scripts: 209_000, stylesheets: 20_500, html: 11_000 },
+  // Then to 209,500 on 2 October 2026, when the analytics address cleaner learned the owner's
+  // brief page (lib/analytics/without-slug.ts, ADR 0047): it runs in the layout's telemetry, so
+  // every page carries it, and /contact measures 209,006 B on a Windows build, 6 B over the line.
+  // The line is that measure plus the 55 B the 1 October builds showed Linux adding and the 70 B
+  // margin, rounded up to the next 500 (209,131 B up to 209,500). / and /start stay inside theirs.
+  '/contact': { scripts: 209_500, stylesheets: 20_500, html: 11_000 },
 }
 
 // Chunks that must never ride a route's initial script tags. Each is found by a string its

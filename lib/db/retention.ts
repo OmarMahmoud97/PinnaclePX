@@ -1,17 +1,25 @@
 import 'server-only'
-import { and, eq, lt, ne, notExists } from 'drizzle-orm'
+import { and, eq, lt, ne, not, notExists, sql } from 'drizzle-orm'
 import { db } from '@/lib/db/client'
-import { blobRef, lead, rateLimit, seen, submission } from '@/lib/db/schema'
+import { blobRef, enquiry, lead, rateLimit, seen, submission } from '@/lib/db/schema'
 
 // What the retention sweep and erasure read and remove. `seen` is kept by retention, because
 // the exclusivity promise outlives the preview; erasure removes it too.
 
-// The slugs to remove, and nothing else: each is read in full in its own step.
-export async function slugsCreatedBefore(before: Date): Promise<string[]> {
+// Whether the person's standing keeps their briefs past the retention window (ADR 0047, the
+// owner's decision of 2 October 2026): won, or a call booked, and that standing set after
+// `keptAfter`. A brief is kept while this holds and goes the night after it stops holding.
+function keptBy(keptAfter: Date) {
+  return sql`exists (select 1 from ${enquiry} where ${enquiry.identityHash} = ${submission.identityHash} and ((${enquiry.stage} = 'won' and ${enquiry.stageAt} > ${keptAfter}) or (${enquiry.callState} = 'booked' and ${enquiry.callAt} > ${keptAfter})))`
+}
+
+// The slugs to remove, and nothing else: each is read in full in its own step. Older than
+// `before`, unless the person's standing keeps them.
+export async function expiredSlugs(before: Date, keptAfter: Date): Promise<string[]> {
   const rows = await db
     .select({ slug: submission.slug })
     .from(submission)
-    .where(lt(submission.createdAt, before))
+    .where(and(lt(submission.createdAt, before), not(keptBy(keptAfter))))
   return rows.map((row) => row.slug)
 }
 

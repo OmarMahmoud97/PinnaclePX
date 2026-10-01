@@ -35,6 +35,7 @@ const INPUT = {
   },
   slug: 'abcdefghjkmn',
   appUrl: 'https://pinnaclepx.example',
+  adminUrl: null,
   status: 'ready' as const,
   fallbackStages: [],
   concepts: [{ templateId: 't01-aurora', name: 'Aurora' }],
@@ -154,5 +155,17 @@ describe('ownerNoticeEmail', () => {
     const none = ownerNoticeEmail({ ...INPUT, calls: [] })
     expect(none.text).toContain('Total: 0 tokens over 0 calls')
     expect(none.text).toContain('No model call was recorded')
+  })
+})
+
+describe('the admin link', () => {
+  it('opens the Links section when the owner has a door, and is absent otherwise', () => {
+    const withDoor = ownerNoticeEmail({
+      ...INPUT,
+      adminUrl: 'https://pinnaclepx.example/admin/k7m2p9x4w3hd',
+    })
+    expect(withDoor.text).toContain('Links\nAdmin: https://pinnaclepx.example/admin/k7m2p9x4w3hd')
+    expect(withDoor.html).toContain('href="https://pinnaclepx.example/admin/k7m2p9x4w3hd"')
+    expect(ownerNoticeEmail(INPUT).text).not.toContain('Admin:')
   })
 })

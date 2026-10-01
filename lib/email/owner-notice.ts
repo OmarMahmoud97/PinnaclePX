@@ -74,6 +74,8 @@ type Input = Readonly<{
   slug: string
   // The site's absolute address, without a trailing slash.
   appUrl: string
+  // The brief's page on /admin, when the owner has a door to it (ADR 0047); null otherwise.
+  adminUrl: string | null
   // Ready when every stage finished; partial when any settled with its fallback.
   status: 'ready' | 'partial'
   // The stages that settled with the fallback, in pipeline order.
@@ -112,6 +114,9 @@ export function ownerNoticeEmail(input: Input): EmailMessage {
 
   const hubUrl = `${input.appUrl}/preview/${input.slug}`
   const links: Line[] = [
+    ...(input.adminUrl === null
+      ? []
+      : [{ label: 'Admin', value: input.adminUrl, url: input.adminUrl }]),
     { label: 'All designs', value: hubUrl, url: hubUrl },
     ...concepts.map((concept) => {
       const url = `${hubUrl}/${concept.templateId}`

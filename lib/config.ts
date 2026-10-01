@@ -200,10 +200,24 @@ export const CONFIG = {
   // A picture uploaded but never sent goes the same night once it is `unsentHours` old and no
   // submission points at it (lib/inngest/functions/orphan-upload-sweep.ts), so none outlives two
   // days, which is what /privacy says.
-  retention: { days: 30, cron: '0 3 * * *', unsentHours: 24 },
-  // The owner's page at /admin (ADR 0045) lists this many briefs, newest first, and has no second
-  // page: the sweep keeps a month of them, far fewer than this at the studio's scale.
-  admin: { briefs: 200 },
+  // A brief whose person booked a call or hired the studio is kept past `days` (the owner, 2
+  // October 2026, ADR 0047): while the enquiry stands at won, or at booked, and for `keptDays`
+  // after that standing was last set, so the notice can say "while we work together and for six
+  // months after".
+  retention: { days: 30, cron: '0 3 * * *', unsentHours: 24, keptDays: 180 },
+  // The owner's page at /admin (ADR 0045, 0047) lists this many briefs, newest first, and has no
+  // second page: the sweep keeps a month of them, far fewer than this at the studio's scale. The
+  // desk takes a note of up to noteMaxChars and a quote of up to quoteMaxPounds; a hand-marked
+  // call with no time asks for an outcome after untimedCallDays; a link sent more than quietDays
+  // ago says its age; the Cal.com webhook refuses a body over webhookBodyBytes.
+  admin: {
+    briefs: 200,
+    noteMaxChars: 500,
+    quoteMaxPounds: 100_000,
+    untimedCallDays: 7,
+    quietDays: 7,
+    webhookBodyBytes: 65_536,
+  },
   polling: { statusMs: 3_000 }, // how often the done page asks how the designs are coming along
   // The questionnaire at /start (docs/start-page-journey-plan.md, section 6.1), from its first
   // release: the longest business name and name the form takes, and the longest tab label the

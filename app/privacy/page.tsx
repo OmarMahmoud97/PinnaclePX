@@ -63,17 +63,21 @@ export default function PrivacyPage() {
           </p>
           <p>
             Our lawful basis is legitimate interests: you asked to see designs, and this is how they
-            are made. We send one email, with your link. Nobody rings you unless you book a call,
-            and we do not add you to a mailing list.
+            are made and looked after. To look after your enquiry we keep a short record with your
+            answers: when we read them, whether you booked a call and for when, what we quoted, what
+            you decided, and any note we make about the call. It is deleted when your answers are.
+            We send one email, with your link. Nobody rings you unless you book a call, and we do
+            not add you to a mailing list.
           </p>
         </Section>
 
         <Section title="How long we keep it">
           <p>
-            Your answers, your designs and your pictures are deleted {String(CONFIG.retention.days)}{' '}
-            days after you send them. We keep a record of which designs an address has been shown,
-            as a code that cannot be turned back into the address, so a return visit sees new
-            designs.
+            Your answers, your designs, your pictures and our record of your enquiry are deleted{' '}
+            {String(CONFIG.retention.days)} days after you send them. If you book a call or hire us,
+            we keep them while that stands and for six months after, so we can look after your
+            enquiry. We keep a record of which designs an address has been shown, as a code that
+            cannot be turned back into the address, so a return visit sees new designs.
           </p>
           <p>{UNSENT_PICTURES}</p>
         </Section>

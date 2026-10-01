@@ -92,7 +92,7 @@ export function briefView(row: BriefOverviewRow, appUrl: string): BriefView {
 
 // The line under the heading: how many briefs the page holds, and why no older one is on it.
 export function countLine(count: number, limit: number, days: number): string {
-  const stay = `A brief stays here for ${String(days)} days after it is sent, then the nightly sweep removes it.`
+  const stay = `A brief stays here for ${String(days)} days after it is sent, then the nightly sweep removes it, unless its person booked a call or hired the studio: those stay while that stands, and for six months after.`
   if (count === 0) return `No briefs yet. ${stay}`
   const shown =
     count >= limit

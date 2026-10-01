@@ -20,7 +20,7 @@ export const PROCESSORS = [
   ['Our email provider', 'holds our inbox, where your message arrives'],
   [
     'Cal.com',
-    "shows the contact page's calendar when you open it, and takes your booking if you choose a time",
+    "shows the contact page's calendar when you open it, and takes your booking if you choose a time. It tells us when you book, so we can note the time against your brief",
   ],
 ] as const
 
@@ -41,7 +41,7 @@ export const CONTACT_PRIVACY = {
     'Your message reaches us as one email. The site does not store it, and it sends you nothing back.',
   keep: 'We keep it in our inbox only while we need it to deal with your message, then delete it.',
   calendar:
-    'The Cal.com calendar on the contact page loads only when you open it. Opening it connects you to Cal.com, which sets three cookies of its own for security and sign-in, none for tracking. Cal.com also sends its own error reports.',
+    'The Cal.com calendar on the contact page loads only when you open it. Opening it connects you to Cal.com, which sets three cookies of its own for security and sign-in, none for tracking. Cal.com also sends its own error reports. If you book a call, Cal.com tells us. We note the time against your brief if you booked with the same address. If you did not, we keep only the time, with nothing that names you, until the call has passed.',
   rightsRoute: 'Write to us through the contact page, and we will do it within a few days.',
 } as const
 

@@ -19,7 +19,7 @@ With `INNGEST_DEV=1` in `.env.local` (see `.env.example`), a submission's event 
 
 Submissions are limited per address and per email (`CONFIG.rateLimit`), a form finished in under three seconds is refused, and a nightly sweep deletes submissions after `CONFIG.retention.days`. To erase or reset one email address, send an `admin/identity.erase` event with `{ "email": "..." }` from the Inngest dashboard (or the dev server's UI at http://localhost:8288): every submission, picture, seen row and the lead for that address are removed.
 
-Every brief the sweep still holds, with its five answers and the addresses of its designs, is listed at `/admin`, behind `ADMIN_USERNAME` and `ADMIN_PASSWORD` (HTTP Basic authentication; with either unset, the route does not exist). The same rows are the `brief_overview` view, which the Neon console and `drizzle-kit studio` show as a table (ADR 0045).
+Every brief the sweep still holds is listed at `/admin`, behind `ADMIN_USERNAME` and `ADMIN_PASSWORD` (HTTP Basic authentication; with either unset, the route does not exist): what needs the owner first, then every brief newest first with a dot on the ones not yet opened. Each opens at `/admin/<slug>`: the five answers, the design links, and where the enquiry stands (a call booked, quoted, won or lost, a note), recorded with one tap each (ADR 0045, 0047). A call booked on Cal.com is marked automatically once a webhook posts to `/api/cal` with `CAL_WEBHOOK_SECRET` set; until then the owner marks it by hand. The same rows are the `brief_overview` view, which the Neon console and `drizzle-kit studio` show as a table.
 
 Every environment variable is validated in `lib/env.ts` and the build fails fast if one is missing.
 
@@ -54,7 +54,8 @@ app/          routes only (thin: validate, delegate, respond)
   api/upload/ api/inngest/     the Blob token route and the Inngest serve handler
   api/status/[slug]/           a submission's status, for the done page, the designs page and a design opened before it is ready (ADR 0037)
   privacy/                     the privacy notice (ADR 0014)
-  admin/                       the owner's list of every brief, behind ADMIN_USERNAME and ADMIN_PASSWORD (proxy.ts, ADR 0045)
+  admin/                       the owner's inbox and a page per brief, behind ADMIN_USERNAME and ADMIN_PASSWORD (proxy.ts, ADR 0045, 0047)
+  api/cal/                     the Cal.com booking webhook, signed with CAL_WEBHOOK_SECRET (ADR 0047)
 components/   shared UI primitives
   ui/ brand/
   sketch/                      the live sketch: model, parts, browser and phone frames, chips

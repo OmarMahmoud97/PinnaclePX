@@ -80,6 +80,20 @@ describe('withoutSlug', () => {
     })
   })
 
+  it("replaces the slug in the owner's brief page with the route's placeholder", () => {
+    expect(withoutSlug({ type: 'pageview', url: '/admin/k7m2p9x4w3hd' })).toEqual({
+      type: 'pageview',
+      url: '/admin/[slug]',
+    })
+    expect(
+      withoutSlug({ type: 'pageview', url: 'https://pinnaclepx.example/admin/k7m2p9x4w3hd?x=1' }),
+    ).toEqual({ type: 'pageview', url: 'https://pinnaclepx.example/admin/[slug]?x=1' })
+    expect(withoutSlug({ type: 'pageview', url: '/admin' })).toEqual({
+      type: 'pageview',
+      url: '/admin',
+    })
+  })
+
   it('drops an event whose address cannot be read', () => {
     expect(withoutSlug({ type: 'pageview', url: 'https://[pinnaclepx/start?s=abc' })).toBeNull()
   })

@@ -1,5 +1,6 @@
 import 'server-only'
 import { NonRetriableError } from 'inngest'
+import { adminCredentials } from '@/lib/admin/credentials'
 import { submissionAnswersSchema } from '@/lib/brief/submission'
 import { readModelCalls } from '@/lib/db/model-calls'
 import {
@@ -71,6 +72,7 @@ async function notifyOwner(slug: string): Promise<Outcome> {
     answers: submissionAnswersSchema.parse(submission.answers),
     slug,
     appUrl: env.NEXT_PUBLIC_APP_URL,
+    adminUrl: adminCredentials() === null ? null : `${env.NEXT_PUBLIC_APP_URL}/admin/${slug}`,
     status: status.status,
     fallbackStages: fallbackStagesOf(submission),
     concepts: status.concepts.flatMap((concept) =>

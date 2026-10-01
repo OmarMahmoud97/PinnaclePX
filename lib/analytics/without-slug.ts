@@ -8,6 +8,9 @@
 const SLUG_PARAM = 's'
 const PREVIEW_SLUG = /^\/preview\/[^/]+/
 const PREVIEW_ROUTE = '/preview/[slug]'
+// The owner's page for one brief carries the slug the same way (ADR 0047).
+const ADMIN_SLUG = /^\/admin\/[^/]+/
+const ADMIN_ROUTE = '/admin/[slug]'
 
 // A path without an origin is read against this one and written back as a path.
 const PLACEHOLDER_ORIGIN = 'https://path.invalid'
@@ -22,10 +25,12 @@ export function withoutSlug<T extends { url: string }>(event: T): T | null {
   }
   const inQuery = url.searchParams.has(SLUG_PARAM)
   const inPath = PREVIEW_SLUG.test(url.pathname)
-  if (!inQuery && !inPath) return event
+  const inAdmin = ADMIN_SLUG.test(url.pathname)
+  if (!inQuery && !inPath && !inAdmin) return event
   // Only touched when there is a slug to take, since rewriting the query re-encodes it.
   if (inQuery) url.searchParams.delete(SLUG_PARAM)
   if (inPath) url.pathname = url.pathname.replace(PREVIEW_SLUG, PREVIEW_ROUTE)
+  if (inAdmin) url.pathname = url.pathname.replace(ADMIN_SLUG, ADMIN_ROUTE)
   const cleaned =
     url.origin === PLACEHOLDER_ORIGIN ? `${url.pathname}${url.search}${url.hash}` : url.href
   return { ...event, url: cleaned }

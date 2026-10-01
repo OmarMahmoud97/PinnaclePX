@@ -112,6 +112,9 @@ export const submission = pgTable('submission', {
   emailSentAt: timestamp('email_sent_at', { withTimezone: true }),
   // When the owner was told of the build (lib/email/owner-notice.ts). Null until then; once.
   ownerNotifiedAt: timestamp('owner_notified_at', { withTimezone: true }),
+  // When the owner last opened this brief on /admin (ADR 0047); null until then, which is what
+  // marks it new on the list. Set by the brief page before it renders, cleared by "Mark as new".
+  ownerOpenedAt: timestamp('owner_opened_at', { withTimezone: true }),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
 })
 
@@ -155,12 +158,60 @@ export const blobRef = pgTable(
   ],
 )
 
+// Where a person's enquiry stands, for the owner (ADR 0047): one row per lead, made the first time
+// the owner marks anything or Cal.com reports a booking, and gone with the lead. A call and a
+// quote happen to a person, and Cal.com only ever knows the person, so the row is theirs rather
+// than a brief's; the view joins it onto every brief of theirs, and the page sets a fact older
+// than a brief aside as "earlier". Every word records what the visitor or the system did, never
+// anything the studio did to reach them.
+const ENQUIRY_STAGES = ['open', 'quoted', 'won', 'lost'] as const
+export type EnquiryStage = (typeof ENQUIRY_STAGES)[number]
+const CALL_STATES = ['booked', 'cancelled', 'no_show'] as const
+export type CallState = (typeof CALL_STATES)[number]
+const CALL_SOURCES = ['cal', 'owner'] as const
+export type CallSource = (typeof CALL_SOURCES)[number]
+
+export const enquiry = pgTable('enquiry', {
+  identityHash: text('identity_hash')
+    .primaryKey()
+    .references(() => lead.identityHash, { onDelete: 'cascade' }),
+  stage: text('stage', { enum: ENQUIRY_STAGES }).notNull().default('open').$type<EnquiryStage>(),
+  // Whole pounds, written by Quoted and Won only; Lost keeps what was quoted, as a fact.
+  quotePounds: integer('quote_pounds'),
+  stageAt: timestamp('stage_at', { withTimezone: true }),
+  // The owner's own words about the enquiry, at most CONFIG.admin.noteMaxChars (held by the
+  // action), deleted with the row.
+  note: text('note').notNull().default(''),
+  noteAt: timestamp('note_at', { withTimezone: true }),
+  // The one live booking: Cal.com's, or the owner's own mark. Cal.com's uid is kept only as a
+  // digest, enough for its cancellation to find the booking and nothing that opens it there.
+  callState: text('call_state', { enum: CALL_STATES }).$type<CallState>(),
+  callSource: text('call_source', { enum: CALL_SOURCES }).$type<CallSource>(),
+  callUidHash: text('call_uid_hash'),
+  callStartsAt: timestamp('call_starts_at', { withTimezone: true }),
+  callEndsAt: timestamp('call_ends_at', { withTimezone: true }),
+  // When the booking was recorded: Cal.com's own createdAt, or the owner's clock. The newer wins,
+  // so a late or replayed event never undoes a later mark.
+  callAt: timestamp('call_at', { withTimezone: true }),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+})
+
+// A Cal.com booking whose address matched no lead: its start alone, nothing that names anyone, so
+// the owner is told a booking arrived and can attach it to the right brief with one tap. Removed
+// once the call has passed, and by the sweep.
+export const unmatchedCall = pgTable('unmatched_call', {
+  id: integer('id').primaryKey().generatedAlwaysAsIdentity(),
+  startsAt: timestamp('starts_at', { withTimezone: true }).notNull().unique(),
+})
+
 // One readable row per brief, for the owner (ADR 0045): who sent it, every answer from the five
 // questions flattened out of the jsonb, and the path of each design the build chose. A view, not
 // a table: it is always what `lead` and `submission` say, costs the pipeline no write, and keeps
 // the retention promise by itself, since a swept submission leaves it. The Neon console and
 // Drizzle Studio show it as a table; /admin renders it (lib/db/briefs.ts). The name and the email
-// are the lead's latest, since a submission never holds them; the company is this brief's.
+// are the lead's latest, since a submission never holds them; the company is this brief's. The
+// person's standing rides along from `enquiry` (ADR 0047), one row per lead, so the join never
+// fans out.
 export const briefOverview = pgView('brief_overview').as((qb) => {
   const answers = submission.answers
   const colours = sql`${answers} -> 'colours'`
@@ -168,6 +219,8 @@ export const briefOverview = pgView('brief_overview').as((qb) => {
     .select({
       createdAt: submission.createdAt,
       slug: submission.slug,
+      // The person, so the page can group a returning visitor's briefs; never rendered or linked.
+      identityHash: submission.identityHash,
       name: lead.name,
       email: lead.email,
       company: sql<string>`${answers} ->> 'company'`.as('company'),
@@ -191,7 +244,30 @@ export const briefOverview = pgView('brief_overview').as((qb) => {
       ),
       emailSentAt: submission.emailSentAt,
       settledAt: submission.settledAt,
+      // The build's stages and its deadline, so the page can say how a build stands the way the
+      // status poll does (lib/preview/status.ts, statusOf); when the owner last opened the brief.
+      conceptCount: submission.conceptCount,
+      deadlineAt: submission.deadlineAt,
+      stageSelect: submission.stageSelect,
+      stageTokens: submission.stageTokens,
+      stageBrief: submission.stageBrief,
+      stageCopy: submission.stageCopy,
+      stageImagery: submission.stageImagery,
+      ownerOpenedAt: submission.ownerOpenedAt,
+      // The person's standing (ADR 0047), with its empty values while they have no enquiry row.
+      // The uid digest stays out: the page has no use for it.
+      enquiryStage: sql<EnquiryStage>`coalesce(${enquiry.stage}, 'open')`.as('enquiry_stage'),
+      quotePounds: enquiry.quotePounds,
+      stageAt: enquiry.stageAt,
+      note: sql<string>`coalesce(${enquiry.note}, '')`.as('note'),
+      noteAt: enquiry.noteAt,
+      callState: enquiry.callState,
+      callSource: enquiry.callSource,
+      callStartsAt: enquiry.callStartsAt,
+      callEndsAt: enquiry.callEndsAt,
+      callAt: enquiry.callAt,
     })
     .from(submission)
     .innerJoin(lead, eq(lead.identityHash, submission.identityHash))
+    .leftJoin(enquiry, eq(enquiry.identityHash, submission.identityHash))
 })

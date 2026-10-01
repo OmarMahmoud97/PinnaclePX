@@ -31,6 +31,25 @@ const row: BriefOverviewRow = {
   ],
   emailSentAt: new Date('2026-10-01T13:09:30Z'),
   settledAt: new Date('2026-10-01T13:09:00Z'),
+  identityHash: 'a'.repeat(64),
+  conceptCount: 3,
+  deadlineAt: new Date('2026-10-01T13:10:00Z'),
+  stageSelect: 'done',
+  stageTokens: 'done',
+  stageBrief: 'done',
+  stageCopy: 'done',
+  stageImagery: 'done',
+  ownerOpenedAt: null,
+  enquiryStage: 'open',
+  quotePounds: null,
+  stageAt: null,
+  note: '',
+  noteAt: null,
+  callState: null,
+  callSource: null,
+  callStartsAt: null,
+  callEndsAt: null,
+  callAt: null,
 }
 
 describe('briefView', () => {
@@ -109,7 +128,7 @@ describe('outcomeOf', () => {
 describe('countLine', () => {
   it('counts the briefs and says how long each stays', () => {
     expect(countLine(0, 200, 30)).toBe(
-      'No briefs yet. A brief stays here for 30 days after it is sent, then the nightly sweep removes it.',
+      'No briefs yet. A brief stays here for 30 days after it is sent, then the nightly sweep removes it, unless its person booked a call or hired the studio: those stay while that stands, and for six months after.',
     )
     expect(countLine(1, 200, 30)).toMatch(/^1 brief, newest first\./)
     expect(countLine(17, 200, 30)).toMatch(/^17 briefs, newest first\./)
