@@ -18,6 +18,8 @@ import { Vector } from './t08-vector'
 import { assembleVector, vectorCopySchema } from './t08-vector/contract'
 import { Inegro } from './t09-inegro'
 import { assembleInegro, inegroCopySchema } from './t09-inegro/contract'
+import { Lucent } from './t10-lucent'
+import { assembleLucent, lucentCopySchema } from './t10-lucent/contract'
 
 // A template id, its stored copy and its assets to the rendered page. The copy is validated
 // against the template's own schema on the way in, so a row a template cannot render fails
@@ -47,6 +49,8 @@ export function renderConcept(
       return <Vector content={assembleVector(vectorCopySchema.parse(copy), assets)} />
     case 't09-inegro':
       return <Inegro content={assembleInegro(inegroCopySchema.parse(copy), assets)} />
+    case 't10-lucent':
+      return <Lucent content={assembleLucent(lucentCopySchema.parse(copy), assets)} />
     default:
       throw new Error(`No renderer for template ${templateId}`)
   }

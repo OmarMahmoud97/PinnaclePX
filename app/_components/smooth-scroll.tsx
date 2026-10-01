@@ -17,6 +17,16 @@ function lerpForPage(): number {
   return Number.isFinite(value) && value > 0 && value <= 1 ? value : CONFIG.motion.scroll.lerp
 }
 
+// A page may scroll natively instead: a template ported from a site that turned its own Lenis off
+// (Lucent's, ADR 0043) carries this on its root, and every scroll-tied motion there is timed
+// against the browser's own scrolling, as the source's was. The wheel then scrolls natively and
+// the page's own links are left to the page, which scrolls itself as its source did.
+const PAGE_NATIVE = 'data-scroll-native'
+
+function nativeForPage(): boolean {
+  return document.querySelector(`[${PAGE_NATIVE}]`) !== null
+}
+
 // A link that keeps the browser's own jump: the skip link, so that it lands on #main at once
 // rather than gliding there.
 const NATIVE_LINK = 'data-lenis-ignore'
@@ -63,11 +73,14 @@ export function SmoothScroll() {
   const motionAllowed = useMotionAllowed()
   const pathname = usePathname()
 
-  // The glide's weight follows the page: set when Lenis starts and again on every page after.
+  // The glide's weight follows the page, and so does whether the wheel glides at all: set when
+  // Lenis starts and again on every page after.
   useEffect(
     () =>
       onActiveLenis((lenis) => {
-        if (lenis !== undefined) lenis.options.lerp = lerpForPage()
+        if (lenis === undefined) return
+        lenis.options.lerp = lerpForPage()
+        lenis.options.smoothWheel = !nativeForPage()
       }),
     [pathname],
   )
@@ -119,6 +132,7 @@ function start(Lenis: LenisClass): () => void {
       return
     }
     if (link.target !== '' && link.target !== '_self') return
+    if (nativeForPage()) return
     const url = new URL(link.href)
     if (url.origin !== location.origin || url.pathname !== location.pathname) return
     if (url.hash.length < 2) return
