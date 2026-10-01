@@ -25,27 +25,47 @@ export function stackCards(root: Element): () => void {
   })
   if (pairs.length === 0) return () => undefined
 
+  // The screen's height as the source measured it, once at load, so a phone's toolbar showing or
+  // hiding does not move the runs; a change of width is a real resize and measures it again.
+  let vw = window.innerWidth
+  let vh = window.innerHeight
+  const shifts = pairs.map(() => '')
+
+  // Every block's place is read before any is moved, so a frame lays the page out once, and a
+  // block is moved only when its shift changes, as the source moved it only inside its run.
   let frame = 0
   const paint = () => {
     frame = 0
     const y = window.scrollY
-    const vh = window.innerHeight
-    for (const { card, next } of pairs) {
+    const values = pairs.map(({ card }) => {
       const start = pageTop(card) + card.offsetHeight - vh
       const past = Math.min(RUN, Math.max(0, y - start))
-      next.style.transform = `translateY(${String(-RATE * Math.round(RUN - past))}px)`
-    }
+      return `translateY(${String(-RATE * Math.round(RUN - past))}px)`
+    })
+    pairs.forEach(({ next }, index) => {
+      const value = values[index] ?? ''
+      if (value === shifts[index]) return
+      shifts[index] = value
+      next.style.transform = value
+    })
   }
   const request = () => {
     if (frame === 0) frame = requestAnimationFrame(paint)
   }
+  const onResize = () => {
+    if (window.innerWidth !== vw) {
+      vw = window.innerWidth
+      vh = window.innerHeight
+    }
+    request()
+  }
   paint()
   window.addEventListener('scroll', request, { passive: true })
-  window.addEventListener('resize', request)
+  window.addEventListener('resize', onResize)
   return () => {
     cancelAnimationFrame(frame)
     window.removeEventListener('scroll', request)
-    window.removeEventListener('resize', request)
+    window.removeEventListener('resize', onResize)
     for (const { next } of pairs) next.style.transform = ''
   }
 }

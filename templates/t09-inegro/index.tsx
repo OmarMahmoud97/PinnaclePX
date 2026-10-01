@@ -20,7 +20,8 @@ type Props = { content: InegroContent }
 // and the page's blocks sit in a frame that clips the ribbons at the sides, and the band and the
 // footer follow it. The root is isolated so the veil under the dropdowns and the glass cards
 // stack only among themselves. The motion component starts the scripted motion once the page is
-// on the screen.
+// on the screen. The root asks the site's smooth scroll for the source's glide (its Lenis ran at
+// a lerp of 0.1), which every scroll-tied piece of motion here is timed against.
 export function Inegro({ content }: Props) {
   const { brand, nav, hero, intro, services, notes, process, approach, offers, mission } = content
   const { newsletter, closing, footer } = content
@@ -33,7 +34,7 @@ export function Inegro({ content }: Props) {
     .flatMap((image) => (image?.credit ? [image.credit] : []))
     .filter((credit, index, all) => all.findIndex((c) => c.url === credit.url) === index)
   return (
-    <div id="top" className="inegro">
+    <div id="top" className="inegro" data-scroll-lerp="0.1">
       <div className="inegro-frame">
         <InegroHeader
           brand={brand}

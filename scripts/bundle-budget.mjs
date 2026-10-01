@@ -146,7 +146,13 @@ const BUDGETS = {
   // home page's choreography for its liquid pool and sheet lip (ADR 0040, OD9): its leaf takes
   // the scripts to 208,419 B, still inside the line (208,489 B with the margin), and GSAP and
   // ScrollTrigger stay lazy, fetched on the first scroll intent.
-  '/contact': { scripts: 208_500, stylesheets: 20_500, html: 11_000 },
+  // Then to 209 KB on 1 October 2026, when the site's smooth scroll began reading a page's own
+  // weight from its root (`data-scroll-lerp`, ADR 0041: Inegro glides at its source's 0.1). That
+  // reader is in the layout, so every page carries it: 102 B on a Windows build (/contact 208,424
+  // B before, 208,526 B after), and CI's Linux build measured 208,581 B, 81 B over the line. The
+  // line is CI's measure plus the 70 B margin, rounded up to the next 500 (208,651 B up to
+  // 209,000). / (217,338 B on CI) and /start (253,328 B) stay inside theirs, which do not move.
+  '/contact': { scripts: 209_000, stylesheets: 20_500, html: 11_000 },
 }
 
 // Chunks that must never ride a route's initial script tags. Each is found by a string its

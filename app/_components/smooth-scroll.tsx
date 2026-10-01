@@ -1,10 +1,21 @@
 'use client'
 
+import { usePathname } from 'next/navigation'
 import { useEffect } from 'react'
 import { CONFIG } from '@/lib/config'
 import { whenIdle } from '@/lib/motion/idle'
-import { type LenisClass, loadLenis, setActiveLenis } from '@/lib/motion/lenis'
+import { type LenisClass, loadLenis, onActiveLenis, setActiveLenis } from '@/lib/motion/lenis'
 import { useMotionAllowed } from '@/lib/motion/use-motion-allowed'
+
+// A page may glide at its own weight: a template ported from a site with its own Lenis carries
+// that site's lerp on its root (Inegro's, 0.1, ADR 0041), so its scroll-tied motion runs as the
+// source's did. Anywhere else the site's own weight stands.
+const PAGE_LERP = 'data-scroll-lerp'
+
+function lerpForPage(): number {
+  const value = Number(document.querySelector(`[${PAGE_LERP}]`)?.getAttribute(PAGE_LERP))
+  return Number.isFinite(value) && value > 0 && value <= 1 ? value : CONFIG.motion.scroll.lerp
+}
 
 // A link that keeps the browser's own jump: the skip link, so that it lands on #main at once
 // rather than gliding there.
@@ -50,6 +61,16 @@ function focusTarget(target: HTMLElement, frames: number = CONFIG.motion.scroll.
 // the anchor links glide. With JavaScript off none of this runs.
 export function SmoothScroll() {
   const motionAllowed = useMotionAllowed()
+  const pathname = usePathname()
+
+  // The glide's weight follows the page: set when Lenis starts and again on every page after.
+  useEffect(
+    () =>
+      onActiveLenis((lenis) => {
+        if (lenis !== undefined) lenis.options.lerp = lerpForPage()
+      }),
+    [pathname],
+  )
 
   useEffect(() => {
     if (!motionAllowed) return
