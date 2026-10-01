@@ -1,0 +1,31 @@
+# The copy call sends a skeleton, not a grammar, and the pipeline is measured
+
+- Status: accepted
+- Date: 1 October 2026
+- Plan: `docs/pipeline-quality-plan.md`
+- Amends: ADR 0009 (decision 8, the copy call's mechanism), ADR 0011 (decisions 1 and 2), ADR 0012 (decision 2), ADR 0015 (decision 1), ADR 0017 (decision 1)
+
+## Context
+
+Until this pass no model call had ever been measured: the `model_call` table was empty, the only cost figure was an Aurora-era estimate, and every template after Aurora had been verified against its fallback copy, never against the model. An eval harness (`pnpm eval`, `tests/eval`) now runs the brief, copy and rank calls over twenty frozen invented businesses (`tests/fixtures/eval`) and stops at the rank verdict, so a change can be judged on the same input as the run before it.
+
+The baseline run found the copy stage broken for five of the eight ready templates: the API answered the structured-output call for Monolith, Meridian, Atlas, Harbor and Summit with a permanent 400, "The compiled grammar is too large", and `isPermanentModelError` wrote the fallback at once. 36 of 60 template answers made no call. Only Aurora, Vector and Ember were ever written by the model. Reading the code beside the run found six more defects: the copy step kept calling the model after the sweeper had settled the stage; the SDK retried a timed-out request twice inside one call; a company name with a digit or a superlative broke the rules on every attempt because only the sentence was the allow-list; the picture judge echoed eight-digit Pexels ids and an unjudged picture sorted as accepted; every detail slot of three templates drew on one search of twelve (Ember has eleven detail slots, Summit twelve); and Harbor's guide allowed a one-line About heading its validator rejected.
+
+## Decision
+
+1. **The copy call sends the shape as a skeleton and checks the answer with the schema.** `copyPrompt` ends with the schema as a JSON value with every string empty and every list one item long (`skeletonOf`, `lib/ai/json.ts`); the call is a plain `messages.create`; the text is read between its first and last brace and parsed with the template's zod schema (`parseJsonAnswer`). A miss of shape is a violation like any other and goes back with the in-call retry. The brief and rank calls keep structured output: their grammars compile. Measured on the baseline's briefs (run `l0-skeleton`): every template answers; a first copy call takes 2,717 input tokens on average against 4,309 with the schema; 8 shape misses in 84 first answers, every one corrected by the retry.
+2. **The owner's words are the company name and the sentence.** `ruleViolationsIn` is judged against both, so a name like A1 Gas and Plumbing is not a number the model invented. Measured: that fixture cost six calls a template and fell back on two templates before the change ($0.43 of copy against a $0.10 mean).
+3. **A copy step reads the row before it calls, and the SDK does not retry.** `copy-<id>` returns `settled` when the stage is no longer open, so no call runs after the sweep; `CONFIG.ai.maxRetries` is 0, so a stage's timeout is a ceiling and Inngest's cadence is the only retry (ADR 0015).
+4. **Rank verdicts come back by position.** The photographs are numbered 1 to n in the prompt and mapped to their ids in code; a verdict naming no position is logged as `rank.unmatched` and dropped; a candidate the judge never mentioned sorts last.
+5. **A detail pool is every detail query's pictures, judged once.** The hero still takes the first query that finds any. A failed search lets the next query try, and the last failure stands only when none found anything. `CONFIG.ai.maxTokens.rank` is 2,000 to fit two dozen verdicts. Measured before the change: 63 slots empty and 106 repeated across twenty submissions; after: unmeasured, the account ran out of credit.
+6. **Harbor's About heading may be one line**, as its guide says.
+7. **The harness, the fixtures and `app/dev/eval` are committed** so the next pass starts from a baseline, and every number in the plan says measured or estimated.
+
+## Consequences
+
+- Measured cost, run `l0-skeleton`, thirteen fixtures whose three templates all answered: $0.160 a submission on average, $0.105 to $0.445, of which copy $0.137, brief $0.0084 and rank $0.0098. A clean first copy answer costs $0.0195; retries lift the mean to $0.0458 an answer, and one in three first answers fits. The $0.445 is the A1 fixture decision 2 removes. The pass's own spend: $3.16 at the skill's prices for 657,641 input and 204,386 output tokens, after which the account refused every call, including the free token count.
+- Left alone, on evidence: prompt caching (no prefix shared across submissions reaches Sonnet 5's minimum; the in-call retry would pay only above a 28% retry rate); `max_tokens` (ceilings never reached); the guide's content-object paths against the JSON keys (13 of 14 in-call retries fitted despite them); the brief's second image query (now used by decision 5); the models and thinking setting (a tradeoff for the eval, with the owner).
+- Proposed, not applied, because a prompt change goes through the eval and the eval needs credit: sending the owner's sentence to the copy call with the "unless the owner said it" exception the rules already grant; trimming the guides' restated purposes and per-line "characters"; dropping `imageQueries` from the copy prompt; a brief-specific system prompt; the look in the rank prompt and a cap on its reason; trimming over-long prose in code instead of a retry; a slot-only retry. Each is in the plan with its measured ceiling.
+- The in-call retry now also carries the whole first answer as text, as before; the `copy.violations` log line is unchanged; the `model_call` row still records no attempt, so retries are read from the harness, not the table.
+- `tests/eval/*.eval.ts` run only through `pnpm eval` (its own vitest config); `tests/fixtures/eval/fixtures.json` is frozen; run outputs under `test-results/eval` are ignored by git. `lib/env.ts` exposes `NODE_ENV` for the development-only route.
+- Not done in this pass: the one real end-to-end run on the local stack, which needs credit and the owner's word; the owner's read of three rendered pages (screenshots are under `test-results/eval/l0-skeleton/shots`); the eval re-run after decisions 2 to 5.
