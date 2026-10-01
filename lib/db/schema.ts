@@ -1,4 +1,14 @@
-import { index, integer, jsonb, pgTable, primaryKey, text, timestamp } from 'drizzle-orm/pg-core'
+import { eq, sql } from 'drizzle-orm'
+import {
+  index,
+  integer,
+  jsonb,
+  pgTable,
+  pgView,
+  primaryKey,
+  text,
+  timestamp,
+} from 'drizzle-orm/pg-core'
 import type { SubmissionAnswers } from '@/lib/brief/submission'
 import type { SlotImage } from '@/lib/copy-slots/assets'
 import type { BrandBrief } from '@/lib/copy-slots/brief'
@@ -143,3 +153,44 @@ export const blobRef = pgTable(
     index('blob_ref_slug_idx').on(table.slug),
   ],
 )
+
+// One readable row per brief, for the owner (ADR 0045): who sent it, every answer from the five
+// questions flattened out of the jsonb, and the path of each design the build chose. A view, not
+// a table: it is always what `lead` and `submission` say, costs the pipeline no write, and keeps
+// the retention promise by itself, since a swept submission leaves it. The Neon console and
+// Drizzle Studio show it as a table; /admin renders it (lib/db/briefs.ts). The name and the email
+// are the lead's latest, since a submission never holds them; the company is this brief's.
+export const briefOverview = pgView('brief_overview').as((qb) => {
+  const answers = submission.answers
+  const colours = sql`${answers} -> 'colours'`
+  return qb
+    .select({
+      createdAt: submission.createdAt,
+      slug: submission.slug,
+      name: lead.name,
+      email: lead.email,
+      company: sql<string>`${answers} ->> 'company'`.as('company'),
+      description: sql<string>`${answers} ->> 'description'`.as('description'),
+      // Both null when the name stands in as a wordmark.
+      logoFile: sql<string | null>`${answers} -> 'logo' ->> 'fileName'`.as('logo_file'),
+      logoUrl: sql<string | null>`${answers} -> 'logo' ->> 'url'`.as('logo_url'),
+      look: sql<string>`${answers} -> 'imagery' ->> 'style'`.as('look'),
+      photoUrls: sql<string[]>`jsonb_path_query_array(${answers}, '$.imagery.photos[*].url')`.as(
+        'photo_urls',
+      ),
+      // A palette's id, or the six hex digits of a colour of their own.
+      colour: sql<string>`coalesce(${colours} ->> 'paletteId', ${colours} ->> 'hex')`.as('colour'),
+      templateIds: submission.templateIds,
+      // The path of each design, in the build's order: null until the select stage lands, empty
+      // when the address had already seen every template.
+      designPaths: sql<
+        string[] | null
+      >`case when ${submission.templateIds} is null then null else array(select '/preview/' || ${submission.slug} || '/' || u.id from unnest(${submission.templateIds}) with ordinality as u(id, ord) order by u.ord) end`.as(
+        'design_paths',
+      ),
+      emailSentAt: submission.emailSentAt,
+      settledAt: submission.settledAt,
+    })
+    .from(submission)
+    .innerJoin(lead, eq(lead.identityHash, submission.identityHash))
+})

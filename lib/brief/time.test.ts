@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { formatCountdown } from '@/lib/brief/time'
+import { formatCountdown, formatLondon } from '@/lib/brief/time'
 
 describe('formatCountdown', () => {
   it('shows the full budget at the start', () => {
@@ -18,5 +18,12 @@ describe('formatCountdown', () => {
   it('stops at zero', () => {
     expect(formatCountdown(0)).toBe('0:00')
     expect(formatCountdown(-5_000)).toBe('0:00')
+  })
+})
+
+describe('formatLondon', () => {
+  it('writes the date and the time as London reads them, in summer and in winter', () => {
+    expect(formatLondon(new Date('2026-09-04T13:05:00Z'))).toBe('4 Sept 2026, 14:05')
+    expect(formatLondon(new Date('2026-12-04T13:05:00Z'))).toBe('4 Dec 2026, 13:05')
   })
 })
