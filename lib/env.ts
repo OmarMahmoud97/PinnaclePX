@@ -45,7 +45,13 @@ export const env = createEnv({
   client: {
     NEXT_PUBLIC_APP_URL: z.url(),
   },
+  shared: {
+    // Set by Next on every build and run. The development-only routes read it here, so nothing
+    // else needs process.env (app/dev/eval).
+    NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
+  },
   experimental__runtimeEnv: {
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
+    NODE_ENV: process.env.NODE_ENV,
   },
 })

@@ -1,0 +1,245 @@
+{
+  "note": "Twenty invented businesses for the pipeline eval (tests/eval/pipeline.eval.ts). None is a real lead. Frozen on 1 October 2026; a change here changes the baseline, so add a fixture rather than edit one. The identity seeds the template choice the way a real submission's identity does.",
+  "fixtures": [
+    {
+      "id": "joinery",
+      "identity": "eval-joinery",
+      "notes": "trades; the phase 1 probe's fixture; plain writing",
+      "answers": {
+        "description": "We make fitted wardrobes, alcove units and kitchens by hand in our Leeds workshop for homes across West Yorkshire. Every piece is measured, drawn and fitted by the two of us, and we only take on a few jobs a month so each one gets our full attention.",
+        "company": "Hollin Lane Joinery",
+        "logo": { "kind": "wordmark" },
+        "imagery": { "style": "warm", "photos": [] },
+        "colours": { "kind": "palette", "paletteId": "forest" }
+      }
+    },
+    {
+      "id": "a1-gas",
+      "identity": "eval-a1-gas",
+      "notes": "trades; a digit in the company name, which the rules flag unless the sentence repeats it",
+      "answers": {
+        "description": "Boiler repairs, servicing and new installs across Bradford and Shipley. Gas Safe registered, same-week appointments and no call-out charge for quotes.",
+        "company": "A1 Gas and Plumbing",
+        "logo": { "kind": "wordmark" },
+        "imagery": { "style": "dark", "photos": [] },
+        "colours": { "kind": "custom", "hex": "#1f2937" }
+      }
+    },
+    {
+      "id": "dentist-claims",
+      "identity": "eval-dentist-claims",
+      "notes": "clinic; the sentence full of numbers and claims",
+      "answers": {
+        "description": "Rated 4.9 on Google by over 300 patients, we have been the number one family dentist in Harrogate since 1998. Two surgeries, 0% finance on treatment over £500, open 7 days a week from 8am to 8pm, award-winning hygienists and a 10 year guarantee on crowns.",
+        "company": "Oakfield Dental Practice",
+        "logo": { "kind": "wordmark" },
+        "imagery": { "style": "bold", "photos": [] },
+        "colours": { "kind": "custom", "hex": "#0e7490" }
+      }
+    },
+    {
+      "id": "vague",
+      "identity": "eval-vague",
+      "notes": "services; the vague sentence",
+      "answers": {
+        "description": "We help people with things around the house and garden, all sorts really, just give us a ring.",
+        "company": "Dave and Sons",
+        "logo": { "kind": "wordmark" },
+        "imagery": { "style": "warm", "photos": [] },
+        "colours": { "kind": "palette", "paletteId": "clay" }
+      }
+    },
+    {
+      "id": "shortest",
+      "identity": "eval-shortest",
+      "notes": "services; near the form's minimum length",
+      "answers": {
+        "description": "Dog grooming and walking in Chorlton.",
+        "company": "Muddy Paws",
+        "logo": { "kind": "wordmark" },
+        "imagery": { "style": "minimal", "photos": [] },
+        "colours": { "kind": "palette", "paletteId": "ink" }
+      }
+    },
+    {
+      "id": "longest",
+      "identity": "eval-longest",
+      "notes": "consultancy; at the form's maximum length",
+      "answers": {
+        "description": "Fenwick Associates is a two-person management consultancy in Durham that helps owner-managed firms get ready to sell, or to hand over to the next generation. We start with a plain review of how the business runs, then stay alongside the owners through valuation, tidying up the paperwork, finding the right buyer and the first year after the deal. Most of our work comes from accountants who know us.",
+        "company": "Fenwick Associates",
+        "logo": { "kind": "wordmark" },
+        "imagery": { "style": "dark", "photos": [] },
+        "colours": { "kind": "palette", "paletteId": "plum" }
+      }
+    },
+    {
+      "id": "awkward",
+      "identity": "eval-awkward",
+      "notes": "consultancy; awkward writing with errors and a number",
+      "answers": {
+        "description": "we do accountancy for small busines , sole traders and landlords , been doing it 12 yrs in and around leeds, no jargon just sorting ur books tax returns vat and payroll etc, friendly and cheap, first meeting is free!!",
+        "company": "Kirkstall Accounts",
+        "logo": { "kind": "wordmark" },
+        "imagery": { "style": "minimal", "photos": [] },
+        "colours": { "kind": "custom", "hex": "#7c3aed" }
+      }
+    },
+    {
+      "id": "cafe",
+      "identity": "eval-cafe",
+      "notes": "food",
+      "answers": {
+        "description": "Independent café on the canal in Hebden Bridge. Breakfasts, sourdough toasties and cakes baked here each morning. Dogs, prams and muddy boots all welcome.",
+        "company": "Bramble and Bean",
+        "logo": { "kind": "wordmark" },
+        "imagery": { "style": "warm", "photos": [] },
+        "colours": { "kind": "palette", "paletteId": "clay" }
+      }
+    },
+    {
+      "id": "architects",
+      "identity": "eval-architects",
+      "notes": "creative",
+      "answers": {
+        "description": "Small architecture studio working on house extensions, loft conversions and barn conversions in the Peak District and Sheffield. We draw, we handle the planning, and we stay involved until the builder leaves.",
+        "company": "Studio Marlowe",
+        "logo": { "kind": "wordmark" },
+        "imagery": { "style": "dark", "photos": [] },
+        "colours": { "kind": "custom", "hex": "#334155" }
+      }
+    },
+    {
+      "id": "florist",
+      "identity": "eval-florist",
+      "notes": "shop",
+      "answers": {
+        "description": "Flower shop on Otley Road with bouquets, wedding flowers and weekly arrangements for offices. Same-day delivery across north Leeds if you order before noon.",
+        "company": "Thistle and Fern",
+        "logo": { "kind": "wordmark" },
+        "imagery": { "style": "bold", "photos": [] },
+        "colours": { "kind": "custom", "hex": "#be123c" }
+      }
+    },
+    {
+      "id": "physio-unbroken",
+      "identity": "eval-physio-unbroken",
+      "notes": "clinic; the 60-character name with no break opportunity (lib/preview/example.ts)",
+      "answers": {
+        "description": "Physiotherapy for sports injuries, back pain and post-operative rehab, with clinics in Sheffield and Leeds. Evening appointments, and direct referrals from GPs and consultants.",
+        "company": "AshgrovePhysiotherapyAndSportsInjuryClinicsSheffieldAndLeeds",
+        "logo": { "kind": "wordmark" },
+        "imagery": { "style": "minimal", "photos": [] },
+        "colours": { "kind": "palette", "paletteId": "forest" }
+      }
+    },
+    {
+      "id": "physio-longest",
+      "identity": "eval-physio-longest",
+      "notes": "clinic; the longest name the form takes (lib/preview/example.ts)",
+      "answers": {
+        "description": "Sports massage, gait analysis and injury rehab for runners, cyclists and walkers in Hull, with a drop-in clinic on Saturdays.",
+        "company": "Ashgrove Physio and Sport Clinic for all the Runners, Riders and Walkers of Hull",
+        "logo": { "kind": "wordmark" },
+        "imagery": { "style": "dark", "photos": [] },
+        "colours": { "kind": "palette", "paletteId": "ink" }
+      }
+    },
+    {
+      "id": "electrician",
+      "identity": "eval-electrician",
+      "notes": "trades; a trade body the owner names",
+      "answers": {
+        "description": "Domestic electrician covering York and Selby: rewires, consumer units, EV chargers and fault finding. NICEIC approved, tidy work, and a written quote before anything starts.",
+        "company": "Bright Spark Electrical",
+        "logo": { "kind": "wordmark" },
+        "imagery": { "style": "warm", "photos": [] },
+        "colours": { "kind": "custom", "hex": "#b45309" }
+      }
+    },
+    {
+      "id": "hr",
+      "identity": "eval-hr",
+      "notes": "consultancy; numbers the owner wrote",
+      "answers": {
+        "description": "HR consultancy for growing firms with 10 to 80 staff. Contracts, handbooks, difficult conversations and TUPE, on a retainer or by the day. Based in Manchester and working across the north west.",
+        "company": "Northgate People",
+        "logo": { "kind": "wordmark" },
+        "imagery": { "style": "bold", "photos": [] },
+        "colours": { "kind": "palette", "paletteId": "ink" }
+      }
+    },
+    {
+      "id": "bakery",
+      "identity": "eval-bakery",
+      "notes": "food; a time in the sentence",
+      "answers": {
+        "description": "Wholesale and retail bakery in Todmorden. Sourdough, tin loaves and buns for cafés and farm shops across Calderdale, delivered before 7am from Tuesday to Saturday.",
+        "company": "Pennine Loaf",
+        "logo": { "kind": "wordmark" },
+        "imagery": { "style": "warm", "photos": [] },
+        "colours": { "kind": "palette", "paletteId": "clay" }
+      }
+    },
+    {
+      "id": "photographer",
+      "identity": "eval-photographer",
+      "notes": "creative",
+      "answers": {
+        "description": "Wedding and family photography across Northumberland in a relaxed documentary style with no forced poses. Albums printed in the UK.",
+        "company": "Coldharbour Photography",
+        "logo": { "kind": "wordmark" },
+        "imagery": { "style": "minimal", "photos": [] },
+        "colours": { "kind": "custom", "hex": "#0f766e" }
+      }
+    },
+    {
+      "id": "cleaning",
+      "identity": "eval-cleaning",
+      "notes": "services",
+      "answers": {
+        "description": "Domestic and end-of-tenancy cleaning across Newcastle and Gateshead. Insured, DBS-checked cleaners, the same person each visit, and a checklist you agree in advance.",
+        "company": "Spotless Tyne",
+        "logo": { "kind": "wordmark" },
+        "imagery": { "style": "bold", "photos": [] },
+        "colours": { "kind": "palette", "paletteId": "plum" }
+      }
+    },
+    {
+      "id": "gardens",
+      "identity": "eval-gardens",
+      "notes": "trades and design",
+      "answers": {
+        "description": "Garden design, planting plans and ongoing maintenance for homes in Harrogate and Knaresborough. We also build paths, patios and raised beds.",
+        "company": "Hawthorn Gardens",
+        "logo": { "kind": "wordmark" },
+        "imagery": { "style": "dark", "photos": [] },
+        "colours": { "kind": "palette", "paletteId": "forest" }
+      }
+    },
+    {
+      "id": "it-support",
+      "identity": "eval-it-support",
+      "notes": "services; a product name and a number in words",
+      "answers": {
+        "description": "Outsourced IT for small offices in Nottingham: helpdesk, Microsoft 365, backups and security. One fixed monthly price per user, and a real person who answers the phone.",
+        "company": "Beacon IT Support",
+        "logo": { "kind": "wordmark" },
+        "imagery": { "style": "minimal", "photos": [] },
+        "colours": { "kind": "palette", "paletteId": "ink" }
+      }
+    },
+    {
+      "id": "tutors",
+      "identity": "eval-tutors",
+      "notes": "services; numbers in words",
+      "answers": {
+        "description": "Maths and science tutoring for GCSE and A level, in person in Ilkley or online. Small groups of four at most, or one to one, with the same tutor every week.",
+        "company": "Hillside Tutors",
+        "logo": { "kind": "wordmark" },
+        "imagery": { "style": "bold", "photos": [] },
+        "colours": { "kind": "custom", "hex": "#0b6e4f" }
+      }
+    }
+  ]
+}
