@@ -123,9 +123,7 @@ test('a failed or exhausted build keeps its words and leads to the call', async 
   await expect(designs(page)).toHaveCount(0)
 
   await open(page, 'exhausted')
-  await expect(main.locator('h1')).toHaveText(
-    'Every design we have has been shown to this address.',
-  )
+  await expect(main.locator('h1')).toHaveText('This email address has had its free designs.')
 })
 
 // The owner's rule: no hairlines. Every separation on the page is a ground or air.

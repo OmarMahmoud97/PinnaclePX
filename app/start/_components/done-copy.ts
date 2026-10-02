@@ -203,21 +203,21 @@ export const STOPPED = {
     lead: 'We could not finish your designs this time. We have the details. Try again in a few minutes, or book a call and we will sort it out with you.',
   },
   exhausted: {
-    heading: 'You have seen every design we have for now.',
-    lead: 'Every design we can build has been shown to this address, so there is nothing new to show you. The next step is a call: we go through your designs together.',
+    heading: 'You have had your free designs.',
+    lead: 'Each email address gets a set number of free designs, and this one has had them. The next step is a call: we go through your designs together.',
   },
 } as const
 
 // The designs page's words for a build with nothing to open (app/preview/_components/hub.tsx):
 // the heading and the lead, which says what the call starts from: the brief when nothing was
-// finished, the designs once the address has seen every one.
+// finished, the designs once the address has had its free designs.
 export const HUB_STOPPED = {
   failed: {
     heading: 'We could not finish these designs.',
     lead: 'The next step is a call: we go through your brief together.',
   },
   exhausted: {
-    heading: 'Every design we have has been shown to this address.',
+    heading: 'This email address has had its free designs.',
     lead: 'The next step is a call: we go through what you have seen together.',
   },
 } as const

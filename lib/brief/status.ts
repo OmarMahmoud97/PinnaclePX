@@ -20,9 +20,9 @@ export type FoundStatus = Readonly<{
   // building: stages still open. ready: every stage finished and every concept can be opened.
   // partial: a stage settled with its fallback (the pipeline's own after its attempts, or the
   // sweeper's at the deadline), so the page opens with that part set simply, and the email goes
-  // and says so. exhausted: this identity has seen every template, so there is nothing new to
-  // show and the call is the next step. failed: a stage with no fallback did not complete; the
-  // visitor is told plainly.
+  // and says so. exhausted: this identity has had its free designs (fewer unseen templates are
+  // left than a visit shows), so there is nothing new to show and the call is the next step.
+  // failed: a stage with no fallback did not complete; the visitor is told plainly.
   status: 'building' | 'ready' | 'partial' | 'exhausted' | 'failed'
   slug: string
   deadlineAt: string

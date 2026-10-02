@@ -155,7 +155,7 @@ export function buildLine(row: Row, now: Date): string {
     case 'building':
       return `Building, due ${dueAt(row.deadlineAt, now)}`
     case 'exhausted':
-      return 'Finished, no link sent: every design already seen'
+      return 'Finished, no link sent: free designs already used'
     case 'failed':
       return 'Finished, no link sent: the build failed'
     case 'ready':
