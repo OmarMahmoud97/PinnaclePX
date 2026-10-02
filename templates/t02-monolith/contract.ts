@@ -410,7 +410,7 @@ export function monolithFallbackCopy(brief: BrandBrief): MonolithCopy {
     },
     steps: {
       heading: plain('steps.heading.text', 'How it works, step by step.'),
-      lead: 'Four steps from first contact to getting started, so you always know what happens next.',
+      lead: 'Three steps from first contact to getting started, so you always know what happens next.',
       items: stepTitles.map((title, index) => ({
         title,
         body: prose('steps.items[].body', steps[index]?.body ?? ''),
