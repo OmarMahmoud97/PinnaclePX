@@ -47,24 +47,54 @@
 /*
  * The headline's two lit phrases. The source sets the first in a pink gradient (a light tint to
  * the full colour) and the second in a cyan one (a light tint through the colour to a shade).
- * Here the two colours are the glow tokens, tinted and shaded the same way, so a brand's set
- * chooses them.
+ * Here the two colours are the glow tokens, tinted with on-surface and shaded with surface the
+ * same way, so a brand's set chooses them. A glow is decoration, though, and on a light page it
+ * read at 1.35 to 1.9:1 (CRS-2). So a light page sets both phrases from brand-deeper to its
+ * hover, brand-deepest, colours the engine keeps at AA on every surface. That gradient is a layer
+ * over the glow's, opaque on a light page and transparent on a dark one, picked by the surface's
+ * own lightness, so no class has to say which page it is.
  */
-.monolith-lit-a {
-  background-image: linear-gradient(
-    to right,
-    color-mix(in srgb, var(--glow) 60%, white),
-    var(--glow)
+.monolith {
+  /* The surface itself where it is dark, and nothing where it is light. */
+  --monolith-dark-only: oklch(from var(--surface) l c h / clamp(0, (0.5 - l) * 1000, 1));
+  /*
+   * A colour where the page is light, and nothing where it is dark: 1% of it mixed into the line
+   * above keeps its hue and lightness, with an alpha near 0 on a light page and 1 on a dark one,
+   * and the alpha is then turned round.
+   */
+  --monolith-lit-from: oklch(
+    from color-mix(in oklab, var(--brand-deeper) 1%, var(--monolith-dark-only)) l c h /
+      clamp(0, (0.5 - alpha) * 1000, 1)
+  );
+  --monolith-lit-to: oklch(
+    from color-mix(in oklab, var(--brand-deepest) 1%, var(--monolith-dark-only)) l c h /
+      clamp(0, (0.5 - alpha) * 1000, 1)
   );
 }
 
+/* Where relative colours are not supported, both schemes take the checked gradient. */
+.monolith-lit-a,
 .monolith-lit-b {
-  background-image: linear-gradient(
-    to right,
-    color-mix(in srgb, var(--glow-secondary) 60%, white),
-    var(--glow-secondary),
-    color-mix(in srgb, var(--glow-secondary) 85%, black)
-  );
+  background-image: linear-gradient(to right, var(--brand-deeper), var(--brand-deepest));
+}
+
+@supports (color: oklch(from red l c h)) {
+  .monolith-lit-a {
+    background-image:
+      linear-gradient(to right, var(--monolith-lit-from), var(--monolith-lit-to)),
+      linear-gradient(to right, color-mix(in srgb, var(--glow) 60%, var(--on-surface)), var(--glow));
+  }
+
+  .monolith-lit-b {
+    background-image:
+      linear-gradient(to right, var(--monolith-lit-from), var(--monolith-lit-to)),
+      linear-gradient(
+        to right,
+        color-mix(in srgb, var(--glow-secondary) 60%, var(--on-surface)),
+        var(--glow-secondary),
+        color-mix(in srgb, var(--glow-secondary) 85%, var(--surface))
+      );
+  }
 }
 
 /*
