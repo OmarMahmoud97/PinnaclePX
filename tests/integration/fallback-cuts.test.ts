@@ -1,14 +1,23 @@
 import * as z from 'zod'
 import { fallbackBrief } from '@/lib/copy-slots/brief'
+import { collapse, fitToSlot } from '@/lib/copy-slots/fit'
 import { EDGE_COMPANIES } from '@/lib/preview/example'
 import evalFixtures from '@/tests/fixtures/eval/fixtures.json'
 import { contractFor, READY_TEMPLATES } from '@/templates/registry'
+import { KESTREL } from '@/templates/t01-aurora/example/content'
+
+// Every call is recorded, so a test can read each cut fitToSlot made.
+vi.mock('@/lib/copy-slots/fit', async (importOriginal) => {
+  const fit = await importOriginal<typeof import('@/lib/copy-slots/fit')>()
+  return { ...fit, fitToSlot: vi.fn(fit.fitToSlot) }
+})
 
 // When the model is refused, every design falls back to the visitor's own words, cut to fit by
-// lib/copy-slots/fit.ts. A cut never stops on a joining word or a comma (decision 18,
-// docs/template-fit-decisions.md): checked through every ready template's own fallback, over the
-// frozen eval fixtures' first sentences and company names at the edge lengths. It lives here, not
-// beside fit.ts, because lib/copy-slots may not import the templates.
+// lib/copy-slots/fit.ts (decision 18, docs/template-fit-decisions.md). Through every ready
+// template's own fallback, over the frozen eval fixtures and company names at the edge lengths:
+// no hero headline, wordmark or legal name is cut on a joining word or a comma, and no other cut
+// is either, but for the one line in KNOWN. It lives here, not beside fit.ts, because
+// lib/copy-slots may not import the templates.
 
 // Decision 18's list.
 const JOINING = new Set(
@@ -24,11 +33,12 @@ function isFixedLine(headline: string): boolean {
   return headline.toLowerCase().replace(/\.$/, '') === FIXED_LINE
 }
 
-// Whether a cut ends on a comma, or on a joining word once its closing marks are set aside.
+// Whether a cut ends on a comma, a dash or a slash, or on a joining word once its closing marks
+// are set aside.
 function dangles(text: string): boolean {
   const end = text.trimEnd()
   const words = end.replace(/[.,;:!?]+$/, '').split(' ')
-  return end.endsWith(',') || JOINING.has((words.at(-1) ?? '').toLowerCase())
+  return /[,/\u2013\u2014-]$/.test(end) || JOINING.has((words.at(-1) ?? '').toLowerCase())
 }
 
 const READY = READY_TEMPLATES.map((template) => template.id)
@@ -87,5 +97,48 @@ describe('fallback company names at the edges', () => {
         if (cut !== company) expect(dangles(cut), `${id}: "${cut}"`).toBe(false)
       }
     }
+  })
+})
+
+// Each fixture's own company and sentence, then every edge name with every fixture's sentence and
+// with the example designs page's (app/examples/hub).
+const SENTENCES = [
+  ...evalFixtures.fixtures.map(({ answers }) => answers.description),
+  KESTREL.brand.tagline,
+]
+const BRIEFS = [
+  ...evalFixtures.fixtures.map(({ answers }) =>
+    fallbackBrief(answers.company, answers.description),
+  ),
+  ...NAMES.flatMap((company) => SENTENCES.map((sentence) => fallbackBrief(company, sentence))),
+]
+
+// Summit's fallback closing heading, "Ready to talk to {company}?" (16 to 50 characters): with the
+// unbroken name, dropping "to" would leave 13 characters, under the minimum, so the cut keeps it.
+// Summit's own pull request gives that heading a plain line when the name does not fit.
+const KNOWN = new Set(['t07-summit: Ready to talk to'])
+
+// The cuts fitToSlot made since it was last cleared: each output whose input ran past its slot.
+function cuts(): string[] {
+  const { calls, results } = vi.mocked(fitToSlot).mock
+  return calls.flatMap(([text, slot], call) => {
+    const result = results[call]
+    return result?.type === 'return' && collapse(text).length > slot.max ? [result.value] : []
+  })
+}
+
+describe('every fallback cut', () => {
+  it.each(READY)('%s never cuts on a joining word, a comma, a dash or a slash', (id) => {
+    const contract = contractFor(id)
+    let made = 0
+    for (const brief of BRIEFS) {
+      vi.mocked(fitToSlot).mockClear()
+      expect(contract.copyViolations(contract.fallbackCopy(brief))).toEqual([])
+      for (const cut of cuts()) {
+        made += 1
+        if (!KNOWN.has(`${id}: ${cut}`)) expect(dangles(cut), `${id}: "${cut}"`).toBe(false)
+      }
+    }
+    expect(made).toBeGreaterThan(0)
   })
 })
