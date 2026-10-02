@@ -16,8 +16,9 @@ const YEAR = new Date().getFullYear()
 // the right, and under a hairline the legal line, the ringed social marks and a line of small
 // print. The email field offered news by email and the small print named privacy and terms
 // pages; no visitor's sentence offers news and a taster has neither page, so neither is drawn,
-// though the copy still carries their words. The source's own maker's credit is not here; the
-// photographers' credit the Pexels licence asks for is.
+// though the copy still carries their words. The columns' headings are h3, one level under the
+// page's block headings, where the source's h4 skipped one. The source's own maker's credit is
+// not here; the photographers' credit the Pexels licence asks for is.
 export function HarborFooter({ brand, footer, credits }: Props) {
   return (
     <footer className="relative overflow-hidden border-t border-border bg-surface pt-20 pb-10">
@@ -46,9 +47,9 @@ export function HarborFooter({ brand, footer, credits }: Props) {
           <div className="grid grid-cols-1 gap-10 sm:grid-cols-3 lg:col-span-8">
             {footer.columns.map((column) => (
               <div key={column.heading}>
-                <h4 className="mb-5 font-display text-xs font-black tracking-widest text-on-surface uppercase">
+                <h3 className="mb-5 font-display text-xs font-black tracking-widest text-on-surface uppercase">
                   {column.heading}
-                </h4>
+                </h3>
                 <ul className="space-y-3">
                   {column.links.map((link) => (
                     <li key={link.label}>

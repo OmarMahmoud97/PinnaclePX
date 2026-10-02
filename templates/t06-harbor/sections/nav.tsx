@@ -1,7 +1,7 @@
 'use client'
 
 import { Menu, X } from 'lucide-react'
-import { type CSSProperties, useEffect, useState } from 'react'
+import { type CSSProperties, useEffect, useRef, useState } from 'react'
 import type { HarborContent } from '../copy-slots'
 import { container, motion } from '../styles'
 import { HarborLogo } from './logo'
@@ -23,11 +23,17 @@ const EXIT_MS = 250
 // the source's delays, and it fades out before it goes. Escape closes it. The source showed two
 // close marks while the overlay was open, its toggle's over the overlay's own; here the toggle
 // hides and the overlay's close mark, which arrives with it, is the one control. The bar stays
-// above the overlay so the logo shows, but lets clicks through to that mark.
+// above the overlay so the logo shows, but lets clicks through to that mark. However the
+// overlay closes, by Escape, its close mark or a link, focus goes back to the toggle, which
+// the source left on the page's body.
 export function HarborNav({ brand, nav }: Props) {
   const [open, setOpen] = useState(false)
   const [closing, setClosing] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const toggleRef = useRef<HTMLButtonElement>(null)
+  // Whether the overlay has been open, so focus returns when it closes but not on the first
+  // render.
+  const wasOpen = useRef(false)
 
   useEffect(() => {
     const onScroll = () => {
@@ -54,6 +60,19 @@ export function HarborNav({ brand, nav }: Props) {
   const close = () => {
     setClosing(true)
   }
+
+  // The toggle is hidden while the overlay shows, so focus can go back to it only once the
+  // overlay has gone and the toggle is drawn again. A link's jump has already scrolled the page
+  // by then, so the focus leaves the scroll where it is.
+  useEffect(() => {
+    if (open) {
+      wasOpen.current = true
+      return
+    }
+    if (!wasOpen.current) return
+    wasOpen.current = false
+    toggleRef.current?.focus({ preventScroll: true })
+  }, [open])
 
   useEffect(() => {
     if (!open) return
@@ -107,6 +126,7 @@ export function HarborNav({ brand, nav }: Props) {
               </a>
             </div>
             <button
+              ref={toggleRef}
               type="button"
               className={`p-1 text-on-surface md:hidden ${open ? 'invisible' : ''}`}
               onClick={() => {

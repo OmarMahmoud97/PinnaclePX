@@ -18,7 +18,8 @@ const LABEL = 'mb-2 block text-xs font-semibold tracking-wider text-on-surface-m
 // by side from sm, a message, and a round accent button. The source posted the form to a
 // form service under a placeholder id and showed a toast; here it posts to the owner's email
 // as a mail message when it is known, and otherwise leads to the page's ask. The source's
-// hints named one made-up person on every page; these are plain.
+// hints named one made-up person on every page; these are plain. The name and email fields
+// let the browser fill them in.
 export function HarborContact({ contact }: Props) {
   const { form } = contact
   const { email } = form
@@ -91,6 +92,7 @@ export function HarborContact({ contact }: Props) {
                       id="harbor-name"
                       name="name"
                       type="text"
+                      autoComplete="name"
                       required
                       placeholder="Your name"
                       className={FIELD}
@@ -104,6 +106,7 @@ export function HarborContact({ contact }: Props) {
                       id="harbor-email"
                       name="email"
                       type="email"
+                      autoComplete="email"
                       required
                       placeholder="your@email.com"
                       className={FIELD}
