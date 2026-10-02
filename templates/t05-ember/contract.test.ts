@@ -125,7 +125,7 @@ describe('assembleEmber', () => {
     expect(content.testimonials).toBeNull()
     expect(content.footer.socials).toBeNull()
     expect(content.footer.contact).toEqual({ heading: 'Get in touch', email: null, phone: null })
-    // Every ask, the closing band's own button included, leads to the band.
+    // With no email every ask, the closing band's own button included, leads to the band.
     expect(
       [content.nav.cta, content.hero.cta, content.timing.cta, content.cta.button].map(
         (ask) => ask.href,
@@ -157,11 +157,14 @@ describe('assembleEmber', () => {
       '#reach',
       '#faq',
     ])
-    // Every ask leads to the closing band, its own button included.
+    // Every ask leads to the closing band, whose own button opens a mail to the page's email with
+    // its label as the subject.
     expect(content.nav.cta.href).toBe('#cta')
     expect(content.hero.cta.href).toBe('#cta')
     expect(content.timing.cta.href).toBe('#cta')
-    expect(content.cta.button.href).toBe('#cta')
+    expect(content.cta.button.href).toBe('mailto:owner@example.com?subject=Get%20in%20touch')
+    const asked = assembleEmber({ ...copy, cta: { ...copy.cta, button: 'Ask & book?' } }, assets)
+    expect(asked.cta.button.href).toBe('mailto:owner@example.com?subject=Ask%20%26%20book%3F')
     // The copy model's target names (dishes, booking-process) lead to the neutral addresses.
     expect(copy.footer.groups[0]?.links.map((link) => link.target)).toEqual([
       'about',

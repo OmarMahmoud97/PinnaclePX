@@ -16,8 +16,9 @@ import { meta } from './meta'
 // Ember's side of the pipeline contract: the copy the copy stage writes, the fallback when it
 // cannot, and how copy and assets become the content object. Links are never written: the nav
 // follows the page's sections in the source's order, and footer links point at one of the
-// page's own anchors. Every ask leads to the closing band, its own button included: the
-// source's led to the booking steps, which here hold no form or link (decision 15,
+// page's own anchors. Every ask leads to the closing band (the source's led to the booking
+// steps, which here hold no form or link), and the band's own button opens a mail to the page's
+// email with its label as the subject, or with no email leads to the band itself (decision 15,
 // docs/template-fit-decisions.md). The optional pieces (the rating line, the location card, the
 // booking testimonial, the opening times, the testimonials and the social links) are not in the
 // copy: the brief holds no such facts, so they stay null.
@@ -244,7 +245,13 @@ export function assembleEmber(copy: EmberCopy, assets: TemplateAssets): EmberCon
     cta: {
       heading: cta.heading,
       body: cta.body,
-      button: { label: cta.button, href: HREF.cta },
+      button: {
+        label: cta.button,
+        href:
+          assets.email === null
+            ? HREF.cta
+            : `mailto:${assets.email}?subject=${encodeURIComponent(cta.button)}`,
+      },
     },
     footer: {
       description: footer.description,

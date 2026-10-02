@@ -245,7 +245,10 @@ export const KESTREL_EMBER: EmberContent = {
   cta: {
     heading: 'Every Meal Is Made To Be Remembered',
     body: 'Join us for fresh ingredients, signature recipes and an unforgettable dining experience.',
-    button: { label: 'Book Your Table', href: '#cta' },
+    button: {
+      label: 'Book Your Table',
+      href: 'mailto:hello@example.com?subject=Book%20Your%20Table',
+    },
   },
   footer: {
     description:
