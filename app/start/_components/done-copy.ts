@@ -108,12 +108,15 @@ export function tonesLine(palette: string | null): Line {
 
 export const BRIEF_LINE = 'Your brief written from your sentence.'
 
-// The headlines' stage, running and then landed, in full or set from the sentence at the deadline.
+// The headlines' stage, running and then landed: written, or set simply when the stage fell back.
+// That happens at the deadline, after the copy's attempts or at once when the model refuses, so
+// the line names no reason, and no source: Harbor's and Vector's fallback headline is a fixed line
+// (docs/template-fit-decisions.md, decision 18).
 export function headlinesLine(count: number, state: 'running' | 'done' | 'fallback'): string {
   const headlines = `${numberWord(count)} ${count === 1 ? 'headline' : 'headlines'}`
   if (state === 'running') return `Writing ${headlines}`
   if (state === 'done') return `${capitalise(headlines)} written.`
-  return 'Headlines set from your sentence, to finish on time.'
+  return 'Headlines set simply.'
 }
 
 // The photos' stage: found to match the look, or the visitor's own placed. `photos` is how many
@@ -135,7 +138,7 @@ export function photosLine(stage: PhotosStage): string {
         ? 'Photos placed, each photographer credited.'
         : 'Your photos placed.'
     case 'fallback':
-      return 'Some photo spaces left plain, to finish on time.'
+      return 'Some photo spaces left plain.'
   }
 }
 
@@ -163,10 +166,11 @@ export function openDesign(index: number): string {
 
 export const CALL_AFTER_OPEN = `Seen one you like? Book the ${String(CONFIG.call.minutes)}-minute call.`
 
-// What a partial build names as set simply, each only when its stage fell back.
+// What a partial build names as set simply, each only when its stage fell back. Like the log's
+// lines above, they give no reason.
 export const PARTIAL_NOTES = {
-  headlines: 'Headlines are set from your sentence, to finish on time.',
-  photos: 'Some photo spaces are left plain, to finish on time.',
+  headlines: 'Headlines are set simply.',
+  photos: 'Some photo spaces are left plain.',
 } as const
 
 // What the status line says once each as the stages land, beside the lines it already says.
@@ -203,21 +207,21 @@ export const STOPPED = {
     lead: 'We could not finish your designs this time. We have the details. Try again in a few minutes, or book a call and we will sort it out with you.',
   },
   exhausted: {
-    heading: 'You have seen every design we have for now.',
-    lead: 'Every design we can build has been shown to this address, so there is nothing new to show you. The next step is a call: we go through your designs together.',
+    heading: 'You have had your free designs.',
+    lead: 'Each email address gets a set number of free designs, and this one has had them. The next step is a call: we go through your designs together.',
   },
 } as const
 
 // The designs page's words for a build with nothing to open (app/preview/_components/hub.tsx):
 // the heading and the lead, which says what the call starts from: the brief when nothing was
-// finished, the designs once the address has seen every one.
+// finished, the designs once the address has had its free designs.
 export const HUB_STOPPED = {
   failed: {
     heading: 'We could not finish these designs.',
     lead: 'The next step is a call: we go through your brief together.',
   },
   exhausted: {
-    heading: 'Every design we have has been shown to this address.',
+    heading: 'This email address has had its free designs.',
     lead: 'The next step is a call: we go through what you have seen together.',
   },
 } as const

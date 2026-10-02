@@ -236,7 +236,7 @@ export const briefOverview = pgView('brief_overview').as((qb) => {
       colour: sql<string>`coalesce(${colours} ->> 'paletteId', ${colours} ->> 'hex')`.as('colour'),
       templateIds: submission.templateIds,
       // The path of each design, in the build's order: null until the select stage lands, empty
-      // when the address had already seen every template.
+      // when the address had already had its free designs.
       designPaths: sql<
         string[] | null
       >`case when ${submission.templateIds} is null then null else array(select '/preview/' || ${submission.slug} || '/' || u.id from unnest(${submission.templateIds}) with ordinality as u(id, ord) order by u.ord) end`.as(
