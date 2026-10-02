@@ -40,9 +40,12 @@ export const heading =
 export const headingLg =
   'text-[length:min(1.875rem,97cqi/var(--monolith-word,1))] leading-[1.2] font-bold lg:text-[length:min(2.25rem,97cqi/var(--monolith-word,1))] lg:leading-[1.11]'
 
-// Every heading sets one phrase in the brand gradient, top to bottom.
+// Every heading sets one phrase in the brand gradient, top to bottom. The source ran from the
+// colour at 60% to the colour, and that faded top read at 2.51:1 on a light page; here it runs
+// from brand-deeper to its hover, brand-deepest, both colours the engine keeps at AA on every
+// surface, lighter at the top on a light page as the source's was.
 export const gradientText =
-  'bg-linear-to-b from-brand-deeper/60 to-brand-deeper bg-clip-text text-transparent'
+  'bg-linear-to-b from-brand-deeper to-brand-deepest bg-clip-text text-transparent'
 
 // The badge is text-xs in shadcn; every badge in the source overrides it to text-sm, and two set
 // the text in the brand colour, so those are the variants here. Tailwind 4 orders conflicting
