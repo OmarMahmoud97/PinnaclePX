@@ -50,4 +50,18 @@ describe('the Monolith page', () => {
     expect(ids.has('contact')).toBe(true)
     for (const target of texts(html, /href="#([^"]+)"/g)) expect(ids).toContain(target)
   })
+
+  it('opens with the headline, then a section heading, and skips no level', () => {
+    const levels = [...html.matchAll(/<h([1-6])[\s>]/g)].map((m) => Number(m[1]))
+    expect(levels.slice(0, 2)).toEqual([1, 2])
+    levels.forEach((level, index) => {
+      expect(level).toBeLessThanOrEqual((levels[index - 1] ?? 0) + 1)
+    })
+  })
+
+  it('hides the initials in the circles from screen readers', () => {
+    const initials = [...html.matchAll(/<span([^>]*)>K<\/span>/g)].map((m) => m[1] ?? '')
+    expect(initials).toHaveLength(2)
+    for (const attributes of initials) expect(attributes).toContain('aria-hidden="true"')
+  })
 })

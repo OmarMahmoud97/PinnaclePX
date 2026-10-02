@@ -25,7 +25,8 @@ type Props = { brand: MonolithContent['brand']; cards: MonolithContent['hero']['
 // cards inside their box (monolith.css), so it lights them wherever they show and never sits
 // behind the words. The visitor's name may wrap anywhere rather than run out of its card. The
 // service card's tinted square holds the plan's own Check, where the source drew a light bulb
-// (decision 1, t02-L2).
+// (decision 1, t02-L2). The cards' titles were headings in the source, four of them before the
+// page's first section heading; they are text here with the same look.
 export function HeroCards({ brand, cards }: Props) {
   const { quote, profile, plan, service } = cards
   return (
@@ -36,7 +37,7 @@ export function HeroCards({ brand, cards }: Props) {
         <div className={`${cardHeader} flex-row items-center gap-4 pb-2`}>
           <Avatar image={quote.image} name={brand.name} />
           <div className="flex min-w-0 flex-col">
-            <h3 className={`${cardTitleLg} wrap-anywhere`}>{brand.name}</h3>
+            <p className={`${cardTitleLg} wrap-anywhere`}>{brand.name}</p>
             <p className={cardDescription}>{quote.role}</p>
           </div>
         </div>
@@ -53,7 +54,7 @@ export function HeroCards({ brand, cards }: Props) {
             className="absolute -top-12 aspect-square h-24 w-24 grayscale-[0%]"
             textClass="text-3xl"
           />
-          <h3 className={`${cardTitle} text-center wrap-anywhere`}>{brand.name}</h3>
+          <p className={`${cardTitle} text-center wrap-anywhere`}>{brand.name}</p>
           <p className={`${cardDescriptionBrand} font-normal`}>{profile.role}</p>
         </div>
         <div className={`${cardContent} pb-2 text-center`}>
@@ -64,10 +65,10 @@ export function HeroCards({ brand, cards }: Props) {
 
       <div className={`${card} absolute top-[150px] left-[50px] w-72 drop-shadow-xl`}>
         <div className={cardHeader}>
-          <h3 className={`${cardTitle} flex items-center justify-between`}>
+          <p className={`${cardTitle} flex items-center justify-between`}>
             {plan.title}
             <span className={badge.secondaryBrand}>{plan.badge}</span>
-          </h3>
+          </p>
           {plan.price !== null && (
             <div>
               <span className="text-3xl font-bold">{plan.price.amount}</span>
@@ -102,7 +103,7 @@ export function HeroCards({ brand, cards }: Props) {
             <Check className="h-8 w-8 text-brand-deeper" />
           </div>
           <div>
-            <h3 className={cardTitle}>{service.title}</h3>
+            <p className={cardTitle}>{service.title}</p>
             <p className={`${cardDescriptionBase} mt-2`}>{service.body}</p>
           </div>
         </div>
