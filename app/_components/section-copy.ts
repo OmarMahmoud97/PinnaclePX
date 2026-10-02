@@ -47,7 +47,7 @@ export const HOW_IT_WORKS = {
     {
       stages: [3],
       title: 'Pick a look.',
-      body: "Warm, clean, bold or dark. Your photos go in if you have them; we find photos to match if you don't.",
+      body: 'Warm, clean, bold or dark. Your photos go in first; we find photos to match for the rest.',
     },
     {
       stages: [4],

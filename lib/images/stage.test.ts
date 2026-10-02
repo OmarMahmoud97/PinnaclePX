@@ -198,12 +198,37 @@ describe('imageryFor', () => {
 
     expect(readUpload).toHaveBeenCalledTimes(1)
     expect(readUpload).toHaveBeenCalledWith(`${BLOB}/photos/${SHA}.jpg`)
-    expect(searchPhotos).not.toHaveBeenCalled()
     expect(imagery.t01?.hero?.src).toBe(`${BLOB}/images/own-${SHA}.webp`)
     expect(imagery.t02?.hero?.src).toBe(`${BLOB}/images/own-${SHA}.webp`)
     // The visitor's own photograph keeps its alt: the stock alt rule is for Pexels' words only.
     expect(imagery.t01?.hero?.alt).toBe('Ashgrove Physio, photograph')
-    expect(imagery.t01?.statement).toBeNull()
+  })
+
+  it('fills the slots own photographs leave with stock, judged as for a visitor without', async () => {
+    const answers: SubmissionAnswers = {
+      ...ANSWERS,
+      imagery: { style: 'warm', photos: [{ fileName: 'a.jpg', url: `${BLOB}/photos/${SHA}.jpg` }] },
+    }
+    const contracts = [contract('t01', ['hero', 'statement', 'third']), contract('t02', ['hero'])]
+    const { imagery, unfilled } = await imageryFor(contracts, answers, BRIEF, 'slug')
+
+    // The first slot is the photograph, so only the detail search runs and is judged, once.
+    expect(vi.mocked(searchPhotos).mock.calls.map(([query]) => query)).toEqual([
+      'exercise band natural light',
+    ])
+    expect(rankPhotos).toHaveBeenCalledTimes(1)
+    expect(vi.mocked(rankPhotos).mock.calls[0]?.[1]).toMatch(/^a supporting picture/)
+    expect(imagery.t01?.hero?.src).toBe(`${BLOB}/images/own-${SHA}.webp`)
+    expect(imagery.t01?.statement?.src).toBe(`${BLOB}/images/pexels-3.webp`)
+    expect(imagery.t01?.third?.src).toBe(`${BLOB}/images/pexels-4.webp`)
+    expect(unfilled).toEqual([])
+
+    // A visitor without photographs makes the same detail search and more.
+    vi.mocked(searchPhotos).mockClear()
+    vi.mocked(rankPhotos).mockClear()
+    await imageryFor(contracts, ANSWERS, BRIEF, 'slug')
+    expect(searchPhotos).toHaveBeenCalledTimes(2)
+    expect(rankPhotos).toHaveBeenCalledTimes(2)
   })
 
   it("keeps a stock picture's alt only when it names nothing the visitor did not give", async () => {

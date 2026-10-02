@@ -48,7 +48,7 @@ test('the home page promises no initials and no stand-in photos of ours', async 
   await page.goto('/')
   const steps = page.locator('#how-it-works')
   await expect(steps).toContainText('or your name stands in')
-  await expect(steps).toContainText("we find photos to match if you don't")
+  await expect(steps).toContainText('we find photos to match for the rest')
   await expect(steps).not.toContainText('initials')
   await expect(steps).not.toContainText('ours stand in')
 })

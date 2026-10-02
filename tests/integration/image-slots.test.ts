@@ -1,7 +1,10 @@
+import { briefPrompt } from '@/lib/ai/prompts'
+import type { SubmissionAnswers } from '@/lib/brief/submission'
 import { CONFIG } from '@/lib/config'
 import { fallbackBrief } from '@/lib/copy-slots/brief'
 import type { TemplateContract } from '@/lib/copy-slots/contract'
-import { contractFor, TEMPLATES } from '@/templates/registry'
+import { planImagery, stockFreeSlots } from '@/lib/images/plan'
+import { contractFor, READY_TEMPLATES, TEMPLATES } from '@/templates/registry'
 
 // The imagery stage sees only a template's slot names (lib/images/stage.ts), so the slots it
 // fills apart from the rest are listed in CONFIG.images by template (decision 7a). Both lists are
@@ -103,4 +106,62 @@ describe('the image slots the stage fills apart from the rest', () => {
       }
     },
   )
+})
+
+describe('the plan for a visitor who adds their own photographs', () => {
+  const BLOB = 'https://x.public.blob.vercel-storage.com/photos'
+  const urlOf = (index: number) => `${BLOB}/${String(index + 1)}.jpg`
+  const answers = (photos: number): SubmissionAnswers => ({
+    description: 'Job scheduling for trades businesses.',
+    company: 'Kestrel',
+    logo: { kind: 'wordmark' },
+    imagery: {
+      style: 'warm',
+      photos: Array.from({ length: photos }, (_, index) => ({
+        fileName: `${String(index + 1)}.jpg`,
+        url: urlOf(index),
+      })),
+    },
+    colours: { kind: 'palette', paletteId: 'forest' },
+  })
+  const brief = {
+    ...BRIEF,
+    imageQueries: {
+      hero: ['van on a driveway', 'tidy workshop'],
+      detail: ['toolbox', 'kitchen fitting'],
+    },
+  }
+  const searchesOf = (plan: ReturnType<typeof planImagery>) =>
+    new Set(
+      Object.values(plan).flatMap((step) =>
+        step.kind === 'search' ? [`${step.queries.join('|')} ${step.purpose}`] : [],
+      ),
+    )
+
+  it.each(READY_TEMPLATES.flatMap(({ id }) => [0, 1, 3, 6].map((photos) => [id, photos] as const)))(
+    '%s with %i: their photographs first, in order, then the plan a visitor without any gets',
+    (id, photos) => {
+      const { imageSlots } = contractFor(id)
+      const stockFree = stockFreeSlots(id)
+      const plan = planImagery(imageSlots, answers(photos), brief, stockFree)
+      const without = planImagery(imageSlots, answers(0), brief, stockFree)
+      imageSlots.forEach((slot, index) => {
+        expect(plan[slot]).toEqual(
+          index < photos
+            ? { kind: 'own', url: urlOf(index), alt: 'Kestrel, photograph' }
+            : without[slot],
+        )
+      })
+      // So it searches and ranks nothing a visitor without photographs would not.
+      for (const search of searchesOf(plan)) expect(searchesOf(without)).toContain(search)
+      if (photos > 0) {
+        expect(Object.values(plan).some((s) => s.kind === 'search' && !s.union)).toBe(false)
+      }
+    },
+  )
+
+  it('rests on a brief that asks for its picture searches whether or not they gave photographs', () => {
+    expect(briefPrompt(answers(3))).toBe(briefPrompt(answers(0)))
+    expect(briefPrompt(answers(0))).toContain('imageQueries: stock photo searches')
+  })
 })
