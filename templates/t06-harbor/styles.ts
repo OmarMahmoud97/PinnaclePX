@@ -23,8 +23,12 @@ export const section = 'py-30'
 export const eyebrow =
   'mb-4 block text-xs font-semibold tracking-[0.25em] text-brand-deeper uppercase'
 
-// The block heading: black capitals in the display face.
-export const heading = 'font-display text-5xl font-black text-on-surface uppercase'
+// The block heading: black capitals in the display face, at the source's text-5xl on a screen
+// wider than about 530px and smaller with the screen below that, so a long word fits a phone;
+// one too long for the line wraps rather than being cut off. The line height is text-5xl's own
+// at every size.
+export const heading =
+  'font-display text-[clamp(1.75rem,9vw,3rem)] leading-none font-black text-on-surface uppercase wrap-break-word'
 
 // The curves the source's entrances ran on: its wrappers' own, which is CSS's `ease`, its
 // motion library's default for a plain tween, which is `ease-out`, and the expo curve of the

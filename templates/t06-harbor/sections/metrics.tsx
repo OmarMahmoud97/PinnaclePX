@@ -6,10 +6,14 @@ import { HeadingLines } from './lines'
 type Props = Pick<HarborContent, 'metrics'>
 
 // The source's Stats: a quieter band between hairlines with one word set huge and almost
-// invisible behind it, the eyebrow and heading centred, then a hairline grid of cells, two
-// columns and three from md, each a large figure in the accent over a label and a line. A
-// figure counts up from zero once in view, as the source's did (count.tsx); a phrase, which is
-// what a visitor's page carries, stands. The cells rise in turn as they arrive.
+// invisible behind it, the eyebrow and heading centred, then a hairline grid of cells, each a
+// large figure in the accent over a label and a line. A figure counts up from zero once in
+// view, as the source's did (count.tsx); a phrase, which is what a visitor's page carries,
+// stands. The cells rise in turn as they arrive. The source's two columns, three from md, cut
+// a phrase off on a phone and a tablet; here a cell has the row to itself on a phone, two
+// share it from md (a lone last cell taking the whole row, so no empty slot shows the hairline
+// fill) and three once the container is at its full width, the figure and the padding grow
+// with the room, and a word too long for its cell wraps rather than being cut.
 export function HarborMetrics({ metrics }: Props) {
   return (
     <section
@@ -35,18 +39,18 @@ export function HarborMetrics({ metrics }: Props) {
             </h2>
           </div>
         </div>
-        <div className="grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-border bg-border md:grid-cols-3">
+        <div className="grid grid-cols-1 gap-px overflow-hidden rounded-2xl border border-border bg-border md:grid-cols-2 min-[90rem]:grid-cols-3">
           {metrics.items.map((item, index) => (
             <div
               key={item.label}
               data-fade
               data-margin="-40px"
               style={motion(0.1 * index, '20px', 0.5, 'out')}
-              className="group bg-surface p-8 transition-colors duration-300 hover:bg-accent md:p-12"
+              className="group bg-surface p-8 transition-colors duration-300 hover:bg-accent md:last:odd:col-span-2 lg:p-12 min-[90rem]:last:odd:col-span-1"
             >
               <HarborCount
                 value={item.value}
-                className="mb-2 block origin-left text-5xl leading-none font-black text-brand-deeper transition-transform duration-300 group-hover:scale-105"
+                className="mb-2 block origin-left text-[clamp(1.75rem,9vw,3rem)] leading-none font-black wrap-break-word text-brand-deeper transition-transform duration-300 group-hover:scale-105 md:text-4xl lg:text-5xl"
               />
               <p className="mb-1 font-display text-base font-bold tracking-wide text-on-surface uppercase">
                 {item.label}

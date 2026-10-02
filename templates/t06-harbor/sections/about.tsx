@@ -11,7 +11,8 @@ type Props = Pick<HarborContent, 'about'>
 // dark wash over its foot and an accent badge scaling up over its corner; at the right the
 // eyebrow, a three-line heading, two paragraphs, a row of pills and two small quote cards,
 // each rising a little after the one before. Without a picture the card surface holds the
-// place.
+// place. Below about 530px the heading follows the screen, as the block headings do
+// (styles.ts).
 export function HarborAbout({ about }: Props) {
   const { image, badge, quotes } = about
   return (
@@ -65,7 +66,7 @@ export function HarborAbout({ about }: Props) {
               <span className={`${eyebrow} mb-4`}>{about.eyebrow}</span>
             </div>
             <div data-fade data-margin="-80px" style={motion(0.2)}>
-              <h2 className="mb-6 font-display text-5xl leading-[0.95] font-black tracking-tight text-on-surface uppercase md:text-6xl">
+              <h2 className="mb-6 font-display text-[clamp(1.75rem,9vw,3rem)] leading-[0.95] font-black tracking-tight wrap-break-word text-on-surface uppercase md:text-6xl">
                 <HeadingLines heading={about.heading} />
               </h2>
             </div>

@@ -8,7 +8,8 @@ type Props = Pick<HarborContent, 'cta'>
 
 // The source's closing band: a photograph dimmed to a fifth under a dark wash and a breath of
 // the accent from the top left, then the eyebrow, a two-line heading, a paragraph and two
-// round buttons, all centred, rising in turn as they arrive.
+// round buttons, all centred, rising in turn as they arrive. Below about 670px the heading
+// follows the screen, as the block headings do (styles.ts).
 export function HarborCta({ cta }: Props) {
   return (
     <section id="cta" className="relative overflow-hidden py-32">
@@ -30,7 +31,7 @@ export function HarborCta({ cta }: Props) {
           <span className={`${eyebrow} mb-6`}>{cta.eyebrow}</span>
         </div>
         <div data-fade data-margin="-80px" style={motion(0.1)}>
-          <h2 className="mx-auto mb-8 max-w-4xl font-display text-6xl font-black text-on-surface uppercase">
+          <h2 className="mx-auto mb-8 max-w-4xl font-display text-[clamp(1.75rem,9vw,3.75rem)] leading-none font-black wrap-break-word text-on-surface uppercase">
             <HeadingLines heading={cta.heading} />
           </h2>
         </div>

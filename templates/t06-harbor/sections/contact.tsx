@@ -13,8 +13,9 @@ const LABEL = 'mb-2 block text-xs font-semibold tracking-wider text-on-surface/4
 // questions, each a row under a hairline with a small ringed plus that becomes a filled minus
 // when open, the question turning to the accent and the answer sliding open; the source
 // toggled each by state, these are native disclosure rows (harbor.css). At the right, sliding
-// in from the right, a card with the eyebrow, a heading, a line and the form: name and email
-// side by side from sm, a message, and a round accent button. The source posted the form to a
+// in from the right, a card with the eyebrow, a heading (which follows the screen below about
+// 440px, so a long word fits the card on a phone), a line and the form: name and email side
+// by side from sm, a message, and a round accent button. The source posted the form to a
 // form service under a placeholder id and showed a toast; here it posts to the owner's email
 // as a mail message when it is known, and otherwise leads to the page's ask.
 export function HarborContact({ contact }: Props) {
@@ -66,7 +67,7 @@ export function HarborContact({ contact }: Props) {
           <div data-fade="right" data-margin="-80px" style={motion(0, undefined, 0.7)}>
             <div className="rounded-2xl border border-border bg-accent p-8 md:p-10">
               <span className={`${eyebrow} mb-4`}>{form.eyebrow}</span>
-              <h3 className="mb-2 font-display text-3xl leading-tight font-black text-on-surface uppercase md:text-4xl">
+              <h3 className="mb-2 font-display text-[clamp(1.25rem,6.75vw,1.875rem)] leading-tight font-black wrap-break-word text-on-surface uppercase md:text-4xl">
                 <HeadingLines heading={form.heading} />
               </h3>
               <p className="mb-8 text-sm text-on-surface/50">{form.lead}</p>

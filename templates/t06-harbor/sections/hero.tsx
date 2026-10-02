@@ -5,13 +5,18 @@ import { container, motion } from '../styles'
 
 type Props = Pick<HarborContent, 'hero'>
 
-const LINE = 'block text-7xl leading-[0.9] font-black tracking-tight uppercase'
+// The source set the lines at text-7xl at every width, which cut a long word off on a phone.
+// Here the size follows the screen up to that, so a line of short words fits from 320px, and a
+// word too long for the line wraps rather than being cut off.
+const LINE =
+  'block text-[clamp(2rem,11vw,4.5rem)] leading-[0.9] font-black tracking-tight uppercase wrap-break-word'
 
 // The source's Hero: a full-screen block over a dimmed photograph fading in from the left, a
 // pill with a bolt, the headline in three clipped rows (the second in the accent) rising one
 // after another, a paragraph and two round buttons, a row of three figures over a hairline,
 // and a scroll hint pinned at the bottom right. Everything arrives on a timer at load, at the
-// source's travels, lengths and waits. The three rows are one heading here.
+// source's travels, lengths and waits. The three rows are one heading here, and the row of
+// figures wraps where the screen is too narrow for it; the source's ran off the edge.
 export function HarborHero({ hero }: Props) {
   const [first, second, third] = hero.headline
   return (
@@ -100,7 +105,7 @@ export function HarborHero({ hero }: Props) {
         <div
           data-rise
           style={motion(1.05, '20px', 0.7, 'out')}
-          className="mt-16 flex items-center gap-12 border-t border-on-surface/10 pt-8"
+          className="mt-16 flex flex-wrap items-center gap-x-12 gap-y-6 border-t border-on-surface/10 pt-8"
         >
           {hero.stats.map((stat) => (
             <div key={stat.label} className="flex flex-col">
