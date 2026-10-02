@@ -62,18 +62,21 @@ export function EmberNav({ brand, nav }: Props) {
       <header
         className={`fixed top-0 z-20 ${pad} w-full transition-all duration-300 ${scrolled ? 'bg-surface/70 backdrop-blur-md' : 'bg-transparent'}`}
       >
-        <div className="mx-auto flex max-w-7xl items-center justify-between py-4 font-medium">
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-6 py-4 font-medium">
           <a href="#top" aria-label={`${brand.name} home`}>
             <EmberLogo brand={brand} />
           </a>
-          <nav aria-label="Main" className="hidden items-center gap-10 md:flex">
+          <nav
+            aria-label="Main"
+            className="hidden flex-wrap items-center justify-center gap-x-6 gap-y-2 whitespace-nowrap md:flex lg:gap-x-10"
+          >
             {nav.links.map((link) => (
               <a key={link.href} href={link.href} className="hover:text-on-surface-muted">
                 {link.label}
               </a>
             ))}
           </nav>
-          <a href={nav.cta.href} className={`hidden md:block ${pill}`}>
+          <a href={nav.cta.href} className={`hidden whitespace-nowrap md:block ${pill}`}>
             {nav.cta.label}
           </a>
           <button
