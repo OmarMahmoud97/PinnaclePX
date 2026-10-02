@@ -7,9 +7,10 @@ type Props = Pick<EmberContent, 'features'>
 // The source's Features: an eyebrow and heading, then three rows of a mark beside a title and
 // a paragraph at the left, rising in turn from further down, and a tall rounded portrait at the
 // right sliding in from the right. Without a picture a block of the quieter surface holds its
-// place. The source marked its rows with a chef's hat, a leaf and a heart; here each row has one
-// small dot of the brand colour in the icon's place, since the rows are in no order and the
-// points above already number theirs (decision 1, docs/template-fit-decisions.md).
+// place at the picture's size, where an empty block once had no width and showed nothing
+// (decision 15). The source marked its rows with a chef's hat, a leaf and a heart; here each
+// row has one small dot of the brand colour in the icon's place, since the rows are in no order
+// and the points above already number theirs (decision 1, docs/template-fit-decisions.md).
 export function EmberFeatures({ features }: Props) {
   const { image } = features
   return (
@@ -41,9 +42,9 @@ export function EmberFeatures({ features }: Props) {
             </div>
           ))}
         </div>
-        <div data-fade="right">
+        <div data-fade="right" className="max-w-full min-w-0">
           {image === null ? (
-            <div className="h-111 w-full max-w-sm rounded-3xl bg-surface-muted" />
+            <div className="h-111 w-96 max-w-full rounded-3xl bg-surface-muted" />
           ) : (
             <Image
               src={image.src}

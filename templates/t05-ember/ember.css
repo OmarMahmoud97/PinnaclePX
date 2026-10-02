@@ -8,7 +8,7 @@
  * below, 20px above, 50px to the right, or scaled to four fifths), on one spring, after a wait
  * down each list. The hero's parts are on screen at load and play on a timer; every block
  * below is marked shown by an observer (reveal.tsx) the first time it comes into view and plays
- * its entrance from here. A dish turns half a turn on a second spring each time the pointer
+ * its entrance from here. A dish turns a full turn on a second spring each time the pointer
  * reaches it (dish.tsx). All of it is off under reduced motion. The header's glass is the
  * source's own scroll listener (nav.tsx).
  */
@@ -21,7 +21,7 @@
   --ember-spring: cubic-bezier(0.16, 0.52, 0.08, 1);
 
   /* The dish's spring (stiffness 80, damping 15): under critical damping, 0.98s to rest,
-   * overshooting by a degree and a half on the way. */
+   * overshooting by under one percent on the way, about three degrees of a full turn. */
   --ember-turn: 0.98s;
   --ember-spin: cubic-bezier(0.32, 0.56, 0.02, 1.08);
 }
@@ -153,10 +153,11 @@
     }
   }
 
-  /* A dish's picture: half a turn for every time the pointer has reached its cell, on the
-   * spring, and it stays turned. */
+  /* A dish's picture: a full turn for every time the pointer has reached its cell, on the
+   * spring, so it always comes to rest upright (the source's half turn left it upside down after
+   * every other visit). */
   .ember-spin {
-    rotate: calc(var(--turns, 0) * 180deg);
+    rotate: calc(var(--turns, 0) * 360deg);
     transition: rotate var(--ember-turn) var(--ember-spin);
   }
 }

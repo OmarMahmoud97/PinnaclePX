@@ -1,7 +1,7 @@
 'use client'
 
 import { Menu, X } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import type { EmberContent } from '../copy-slots'
 import { menuButton, pad, pill } from '../styles'
 import { EmberLogo } from './logo'
@@ -18,10 +18,22 @@ const GLASS_AT = 10
 // full-screen sheet in from the right, holding the links stacked in the centre over a close
 // button. The source toggled the sheet by state and turned the bar to glass by a scroll
 // listener at ten pixels, over its 300ms transition; both are the same here. The sheet is
-// inert while closed, so its links are out of the tab order, and Escape closes it.
+// inert while closed, so its links are out of the tab order, and Escape closes it. Closing it by
+// Escape, its close button or a link hands focus back to the menu button, so a keyboard is not
+// left on a sheet that has gone (decision 15, docs/template-fit-decisions.md).
 export function EmberNav({ brand, nav }: Props) {
   const [open, setOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const toggle = useRef<HTMLButtonElement>(null)
+
+  // A link's jump to its section clears focus once its click is over, so the hand-back waits
+  // until then.
+  const close = useCallback(() => {
+    setOpen(false)
+    window.setTimeout(() => {
+      toggle.current?.focus({ preventScroll: true })
+    })
+  }, [])
 
   useEffect(() => {
     const onScroll = () => {
@@ -37,13 +49,13 @@ export function EmberNav({ brand, nav }: Props) {
   useEffect(() => {
     if (!open) return
     const onKey = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') setOpen(false)
+      if (event.key === 'Escape') close()
     }
     document.addEventListener('keydown', onKey)
     return () => {
       document.removeEventListener('keydown', onKey)
     }
-  }, [open])
+  }, [open, close])
 
   return (
     <>
@@ -65,6 +77,7 @@ export function EmberNav({ brand, nav }: Props) {
             {nav.cta.label}
           </a>
           <button
+            ref={toggle}
             type="button"
             onClick={() => {
               setOpen(true)
@@ -89,21 +102,12 @@ export function EmberNav({ brand, nav }: Props) {
               key={link.href}
               href={link.href}
               className="text-2xl text-on-surface/85 transition hover:text-brand-deeper"
-              onClick={() => {
-                setOpen(false)
-              }}
+              onClick={close}
             >
               {link.label}
             </a>
           ))}
-          <button
-            type="button"
-            onClick={() => {
-              setOpen(false)
-            }}
-            aria-label="Close menu"
-            className={menuButton}
-          >
+          <button type="button" onClick={close} aria-label="Close menu" className={menuButton}>
             <X aria-hidden="true" />
           </button>
         </nav>

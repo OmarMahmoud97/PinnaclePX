@@ -125,6 +125,12 @@ describe('assembleEmber', () => {
     expect(content.testimonials).toBeNull()
     expect(content.footer.socials).toBeNull()
     expect(content.footer.contact).toEqual({ heading: 'Get in touch', email: null, phone: null })
+    // Every ask, the closing band's own button included, leads to the band.
+    expect(
+      [content.nav.cta, content.hero.cta, content.timing.cta, content.cta.button].map(
+        (ask) => ask.href,
+      ),
+    ).toEqual(['#cta', '#cta', '#cta', '#cta'])
   })
 
   it('places the pictures in their slots, sends the mail link to the owner and fixes every link', () => {
@@ -151,10 +157,11 @@ describe('assembleEmber', () => {
       '#reach',
       '#faq',
     ])
-    expect(content.nav.cta.href).toBe('#steps')
-    expect(content.hero.cta.href).toBe('#steps')
-    expect(content.timing.cta.href).toBe('#steps')
-    expect(content.cta.button.href).toBe('#steps')
+    // Every ask leads to the closing band, its own button included.
+    expect(content.nav.cta.href).toBe('#cta')
+    expect(content.hero.cta.href).toBe('#cta')
+    expect(content.timing.cta.href).toBe('#cta')
+    expect(content.cta.button.href).toBe('#cta')
     // The copy model's target names (dishes, booking-process) lead to the neutral addresses.
     expect(copy.footer.groups[0]?.links.map((link) => link.target)).toEqual([
       'about',
