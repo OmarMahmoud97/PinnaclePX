@@ -55,7 +55,7 @@ export function HarborMetrics({ metrics }: Props) {
               <p className="mb-1 font-display text-base font-bold tracking-wide text-on-surface uppercase">
                 {item.label}
               </p>
-              <p className="text-xs text-on-surface/40">{item.description}</p>
+              <p className="text-xs text-on-surface-muted">{item.description}</p>
             </div>
           ))}
         </div>

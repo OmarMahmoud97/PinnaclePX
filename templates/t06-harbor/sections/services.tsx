@@ -29,7 +29,7 @@ export function HarborServices({ services }: Props) {
             </div>
           </div>
           <div data-fade data-margin="-80px" style={motion(0.2)} className="max-w-xs">
-            <p className="text-sm leading-relaxed text-on-surface/50">{services.lead}</p>
+            <p className="text-sm leading-relaxed text-on-surface-muted">{services.lead}</p>
           </div>
         </div>
         <div className="grid grid-cols-1 gap-px overflow-hidden rounded-2xl border border-border bg-border md:grid-cols-2 lg:grid-cols-3">
@@ -46,7 +46,7 @@ export function HarborServices({ services }: Props) {
               >
                 {hot && <div className="absolute top-0 right-0 left-0 h-px bg-brand-deeper" />}
                 <span
-                  className={`mb-6 inline-block rounded-full px-3 py-1 text-[10px] font-semibold tracking-widest uppercase ${hot ? 'bg-brand-deeper text-on-brand' : 'bg-border text-on-surface/50'}`}
+                  className={`mb-6 inline-block rounded-full px-3 py-1 text-[10px] font-semibold tracking-widest uppercase ${hot ? 'bg-brand-deeper text-on-brand' : 'bg-border text-on-surface-muted'}`}
                 >
                   {item.tag}
                 </span>
@@ -62,7 +62,7 @@ export function HarborServices({ services }: Props) {
                 <h3 className="mb-3 font-display text-xl font-black tracking-tight text-on-surface uppercase transition-colors duration-300 group-hover:text-brand-deeper">
                   {item.title}
                 </h3>
-                <p className="text-sm leading-relaxed text-on-surface/50">{item.body}</p>
+                <p className="text-sm leading-relaxed text-on-surface-muted">{item.body}</p>
                 <div className="mt-6 flex items-center gap-1 text-brand-deeper opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                   <span className="text-xs font-semibold tracking-wider uppercase">
                     {services.more}

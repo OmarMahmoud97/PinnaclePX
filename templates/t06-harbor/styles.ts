@@ -8,9 +8,11 @@ import type { CSSProperties } from 'react'
 // slightly lighter bands (0f0f0f) surface-muted, its cards (111) accent, its hairlines and tag
 // fills (1a1a1a) border, its lime (d7ff2f) brand-deeper and the lime's hover (c8f020)
 // brand-deepest, the near-black set on lime on-brand, and white on-surface, with every alpha
-// the source used kept as the same alpha on the token. Its two other greys are white at an
-// alpha: 222 is on-surface/10, 333 on-surface/16 and 555 on-surface/30. Its
-// footer, three units darker than the page, is the page.
+// the source used kept as the same alpha on the token, but for the white at 40% to 60% of its
+// paragraphs, labels and small print, which is on-surface-muted on a visitor's page so the
+// colour solver holds it to AA (copy-slots.ts). Its two other greys are white at an alpha: 222
+// is on-surface/10, 333 on-surface/16 and 555 on-surface/30. Its footer, three units darker
+// than the page, is the page.
 
 // The source's `container-gym`: 1440px at most, centred, 2rem of padding, 4rem from md and
 // 6rem from xl.

@@ -36,7 +36,7 @@ export function HarborCta({ cta }: Props) {
           </h2>
         </div>
         <div data-fade data-margin="-80px" style={motion(0.2)}>
-          <p className="mx-auto mb-10 max-w-md text-base text-on-surface/50">{cta.body}</p>
+          <p className="mx-auto mb-10 max-w-md text-base text-on-surface-muted">{cta.body}</p>
         </div>
         <div data-fade data-margin="-80px" style={motion(0.3)}>
           <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">

@@ -6,8 +6,8 @@ import { HeadingLines } from './lines'
 type Props = Pick<HarborContent, 'contact'>
 
 const FIELD =
-  'w-full rounded-xl border border-on-surface/10 bg-surface px-4 py-3 text-sm text-on-surface transition-colors placeholder:text-on-surface/40 focus:border-brand-deeper/50 focus:outline-none'
-const LABEL = 'mb-2 block text-xs font-semibold tracking-wider text-on-surface/40 uppercase'
+  'w-full rounded-xl border border-on-surface/10 bg-surface px-4 py-3 text-sm text-on-surface transition-colors placeholder:text-on-surface-muted focus:border-brand-deeper/50 focus:outline-none'
+const LABEL = 'mb-2 block text-xs font-semibold tracking-wider text-on-surface-muted uppercase'
 
 // The source's Contact: two columns from lg. At the left the eyebrow, the heading and the
 // questions, each a row under a hairline with a small ringed plus that becomes a filled minus
@@ -54,7 +54,7 @@ export function HarborContact({ contact }: Props) {
                     </summary>
                     <div>
                       <div>
-                        <p className="pb-6 text-sm leading-relaxed text-on-surface/60">
+                        <p className="pb-6 text-sm leading-relaxed text-on-surface-muted">
                           {item.answer}
                         </p>
                       </div>
@@ -70,7 +70,7 @@ export function HarborContact({ contact }: Props) {
               <h3 className="mb-2 font-display text-[clamp(1.25rem,6.75vw,1.875rem)] leading-tight font-black wrap-break-word text-on-surface uppercase md:text-4xl">
                 <HeadingLines heading={form.heading} />
               </h3>
-              <p className="mb-8 text-sm text-on-surface/50">{form.lead}</p>
+              <p className="mb-8 text-sm text-on-surface-muted">{form.lead}</p>
               <form
                 className="space-y-5"
                 action={

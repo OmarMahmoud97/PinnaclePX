@@ -297,11 +297,17 @@ const HARBOR_COUNTS = {
 
 // Every text-on-background pair the template paints. Text sits on the page, on its quieter
 // bands and on the cards; the accent carries the eyebrows, figures and lit phrases on all
-// three, and the buttons and badges carry on-brand on the accent.
+// three, and the buttons and badges carry on-brand on the accent. The quieter text of a
+// visitor's page (paragraphs, labels, hints and the small print) is on-surface-muted, on the
+// page, on the cards and the form, and on the tags' hairline fill. The source set it as white
+// at an alpha, which the solver cannot see, and on a light page it fell below AA.
 export const HARBOR_CONTRAST_PAIRS: readonly ContrastPair[] = [
   { text: 'on-surface', background: 'surface' },
   { text: 'on-surface', background: 'surface-muted' },
   { text: 'on-surface', background: 'accent' },
+  { text: 'on-surface-muted', background: 'surface' },
+  { text: 'on-surface-muted', background: 'accent' },
+  { text: 'on-surface-muted', background: 'border' },
   { text: 'brand-deeper', background: 'surface' },
   { text: 'brand-deeper', background: 'surface-muted' },
   { text: 'brand-deeper', background: 'accent' },

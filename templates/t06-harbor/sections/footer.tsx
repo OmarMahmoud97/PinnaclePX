@@ -40,7 +40,7 @@ export function HarborFooter({ brand, footer, credits }: Props) {
             >
               <HarborLogo brand={brand} />
             </a>
-            <p className="mb-8 max-w-xs text-sm leading-relaxed text-on-surface/60">
+            <p className="mb-8 max-w-xs text-sm leading-relaxed text-on-surface-muted">
               {footer.description}
             </p>
             <div>
@@ -62,7 +62,7 @@ export function HarborFooter({ brand, footer, credits }: Props) {
                   name="email"
                   aria-label={newsletter.label}
                   placeholder={newsletter.placeholder}
-                  className="flex-1 rounded-l-full border border-r-0 border-on-surface/10 bg-accent px-5 py-3 text-sm text-on-surface placeholder:text-on-surface/40 focus:border-brand-deeper/30 focus:outline-none"
+                  className="flex-1 rounded-l-full border border-r-0 border-on-surface/10 bg-accent px-5 py-3 text-sm text-on-surface placeholder:text-on-surface-muted focus:border-brand-deeper/30 focus:outline-none"
                 />
                 <button
                   type="submit"
@@ -84,7 +84,7 @@ export function HarborFooter({ brand, footer, credits }: Props) {
                   {column.links.map((link) => (
                     <li key={link.label}>
                       <a
-                        className="text-sm text-on-surface/60 transition-colors duration-200 hover:text-on-surface"
+                        className="text-sm text-on-surface-muted transition-colors duration-200 hover:text-on-surface"
                         href={link.href}
                       >
                         {link.label}
@@ -97,7 +97,7 @@ export function HarborFooter({ brand, footer, credits }: Props) {
           </div>
         </div>
         <div className="flex flex-col items-center justify-between gap-6 border-t border-border pt-8 md:flex-row">
-          <p className="text-xs text-on-surface/40">
+          <p className="text-xs text-on-surface-muted">
             &copy; {YEAR} {brand.legalName}. All rights reserved.
             {footer.note === '' ? '' : ` ${footer.note}`}
           </p>
@@ -116,7 +116,7 @@ export function HarborFooter({ brand, footer, credits }: Props) {
             </div>
           )}
           {credits.length > 0 && (
-            <p className="text-xs text-on-surface/40">
+            <p className="text-xs text-on-surface-muted">
               Photos by{' '}
               {credits.map((credit, index) => (
                 <Fragment key={credit.url}>
@@ -132,7 +132,7 @@ export function HarborFooter({ brand, footer, credits }: Props) {
               </a>
             </p>
           )}
-          <p className="text-xs text-on-surface/40">{footer.smallPrint}</p>
+          <p className="text-xs text-on-surface-muted">{footer.smallPrint}</p>
         </div>
       </div>
     </footer>

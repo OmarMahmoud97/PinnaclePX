@@ -74,7 +74,7 @@ export function HarborAbout({ about }: Props) {
               {about.paragraphs.map((paragraph, index) => (
                 <p
                   key={paragraph}
-                  className={`max-w-lg text-base leading-relaxed text-on-surface/60 ${index === about.paragraphs.length - 1 ? 'mb-10' : 'mb-4'}`}
+                  className={`max-w-lg text-base leading-relaxed text-on-surface-muted ${index === about.paragraphs.length - 1 ? 'mb-10' : 'mb-4'}`}
                 >
                   {paragraph}
                 </p>
