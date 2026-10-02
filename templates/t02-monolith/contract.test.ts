@@ -142,7 +142,7 @@ describe('assembleMonolith', () => {
       '#about',
       '#how-it-works',
     ])
-    expect(content.hero.cards.plan.action.href).toBe('#cta')
+    expect(content.hero.cards.plan.action.href).toBe('#contact')
     expect(content.cta.secondary.href).toBe('#features')
     expect(content.footer.groups[1]?.links[1]?.href).toBe('#top')
   })

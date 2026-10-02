@@ -31,4 +31,23 @@ describe('the Monolith page', () => {
       'We get to work',
     ])
   })
+
+  it('numbers the steps 1 to 3 outside their headings, hidden from screen readers', () => {
+    expect(texts(steps, /<span aria-hidden="true"[^>]*>(\d)<\/span>/g)).toEqual(['1', '2', '3'])
+  })
+
+  it('draws none of the source drawings, its panels mark or its radar', () => {
+    expect(html).not.toContain('Free Icons')
+    expect(html).not.toContain('viewBox="0 0 128 128"')
+    expect(html).not.toContain('lucide-panels-top-left')
+    expect(html).not.toContain('lucide-radar')
+    expect(html).toContain('<span class="sr-only">Menu</span>')
+  })
+
+  it('has no #cta address, and every in-page link has its target', () => {
+    const ids = new Set(texts(html, /\sid="([^"]+)"/g))
+    expect(ids.has('cta')).toBe(false)
+    expect(ids.has('contact')).toBe(true)
+    for (const target of texts(html, /href="#([^"]+)"/g)) expect(ids).toContain(target)
+  })
 })

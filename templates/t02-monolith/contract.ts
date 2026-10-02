@@ -20,13 +20,15 @@ import { meta } from './meta'
 // own anchors. The optional sections (testimonials, team, pricing, newsletter) and the plan's
 // price are not in the copy: the brief holds no such facts, so they stay null.
 
+// The copy names the closing band "cta" as the source did; its address is #contact, so the
+// address bar reads as a visitor would say it (decision 1, t02-L9). The copy model's name stays.
 const TARGETS = ['features', 'about', 'how-it-works', 'services', 'cta', 'faq', 'top'] as const
 const HREF: Readonly<Record<(typeof TARGETS)[number], string>> = {
   features: '#features',
   about: '#about',
   'how-it-works': '#how-it-works',
   services: '#services',
-  cta: '#cta',
+  cta: '#contact',
   faq: '#faq',
   top: '#top',
 }

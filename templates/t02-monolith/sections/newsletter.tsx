@@ -23,7 +23,7 @@ export function MonolithNewsletter({ newsletter }: Props) {
           className="mx-auto flex w-full flex-col gap-4 md:w-6/12 md:flex-row md:gap-2 lg:w-4/12"
           action={
             email === null
-              ? '#cta'
+              ? '#contact'
               : `mailto:${email}?subject=${encodeURIComponent(newsletter.button)}`
           }
           method={email === null ? 'get' : 'post'}
