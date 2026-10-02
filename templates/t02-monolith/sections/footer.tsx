@@ -12,7 +12,8 @@ const YEAR = new Date().getFullYear()
 
 // The source's Footer: a rule, a grid with the logo across the first columns and up to four
 // columns of links, then a centred legal line, here followed by the photographers' credit the
-// Pexels licence asks for.
+// Pexels licence asks for. The legal name may break anywhere when one word is wider than the
+// screen.
 export function MonolithFooter({ brand, footer, credits }: Props) {
   return (
     <footer id="footer">
@@ -42,7 +43,7 @@ export function MonolithFooter({ brand, footer, credits }: Props) {
       </section>
 
       <section className={`${container} pb-14 text-center`}>
-        <h3>
+        <h3 className="wrap-anywhere">
           &copy; {YEAR} {brand.legalName}
         </h3>
         {credits.length > 0 && (

@@ -1,6 +1,7 @@
 import { ChevronDown } from 'lucide-react'
 import type { MonolithContent } from '../copy-slots'
-import { container } from '../styles'
+import { fitWord } from '../fit'
+import { container, heading } from '../styles'
 import { Emphasis } from './emphasis'
 
 type Props = Pick<MonolithContent, 'faq'>
@@ -11,8 +12,8 @@ type Props = Pick<MonolithContent, 'faq'>
 // the page for search.
 export function MonolithFaq({ faq }: Props) {
   return (
-    <section id="faq" className={`${container} py-24 sm:py-32`}>
-      <h2 className="mb-4 text-3xl font-bold md:text-4xl">
+    <section id="faq" className={`${container} @container py-24 sm:py-32`}>
+      <h2 className={`mb-4 ${heading}`} style={fitWord([faq.heading.text])}>
         <Emphasis heading={faq.heading} />
       </h2>
 

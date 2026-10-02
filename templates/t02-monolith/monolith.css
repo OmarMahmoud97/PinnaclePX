@@ -6,15 +6,18 @@
 
 /*
  * The source's hero glow (its `.shadow`): a rotated, blurred slab in the primary colour that
- * slides back and forth behind the cards, forever. Absolutely positioned against the template's
- * root, which is isolated so a negative z-index sits above the root's own background. The
- * source's values at each width are kept; under reduced motion the slab rests at its midpoint.
+ * slides back and forth behind the cards, forever. The source placed it against the page, so
+ * below lg, where the cards are hidden, it sat behind the headline, and at rest it took the
+ * dark headline phrases to 2.56:1. Here it is placed against the cards' box (hero-cards.tsx),
+ * where the source's desktop values put it at 1440, so it shows only with the cards and moves
+ * with them. The template's root is isolated, so a negative z-index still sits above the root's
+ * own background. Under reduced motion the slab rests at its midpoint.
  */
 .monolith-glow {
   position: absolute;
   z-index: -1;
-  top: 200px;
-  right: 310px;
+  top: 16px;
+  right: 288px;
   width: 260px;
   height: 400px;
   rotate: 35deg;
@@ -26,11 +29,11 @@
 
 @keyframes monolith-glow-slide {
   from {
-    right: 460px;
+    right: 438px;
     background: color-mix(in srgb, var(--brand-deeper) 20%, transparent);
   }
   to {
-    right: 160px;
+    right: 138px;
     background: color-mix(in srgb, var(--brand-deeper) 80%, transparent);
   }
 }
@@ -38,43 +41,6 @@
 @media (prefers-reduced-motion: no-preference) {
   .monolith-glow {
     animation: monolith-glow-slide 4s linear infinite alternate;
-  }
-}
-
-@media (max-width: 1024px) {
-  .monolith-glow {
-    top: 70px;
-  }
-
-  @keyframes monolith-glow-slide {
-    from {
-      right: 460px;
-      background: color-mix(in srgb, var(--brand-deeper) 20%, transparent);
-    }
-    to {
-      right: 160px;
-      background: color-mix(in srgb, var(--brand-deeper) 50%, transparent);
-    }
-  }
-}
-
-@media (max-width: 768px) {
-  .monolith-glow {
-    top: 70px;
-    width: 100px;
-    height: 350px;
-    filter: blur(60px);
-  }
-
-  @keyframes monolith-glow-slide {
-    from {
-      right: 280px;
-      background: color-mix(in srgb, var(--brand-deeper) 20%, transparent);
-    }
-    to {
-      right: 100px;
-      background: color-mix(in srgb, var(--brand-deeper) 30%, transparent);
-    }
   }
 }
 

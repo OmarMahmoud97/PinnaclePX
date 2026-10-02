@@ -1,6 +1,14 @@
 import Image from 'next/image'
 import type { MonolithContent } from '../copy-slots'
-import { card, cardDescriptionBase, cardHeaderTight, cardTitle, container } from '../styles'
+import { fitWord } from '../fit'
+import {
+  card,
+  cardDescriptionBase,
+  cardHeaderTight,
+  cardTitle,
+  container,
+  heading,
+} from '../styles'
 import { Emphasis } from './emphasis'
 import { ChartIcon, MagnifierIcon, WalletIcon } from './icons'
 
@@ -15,8 +23,8 @@ export function MonolithServices({ services }: Props) {
   return (
     <section id="services" className={`${container} py-24 sm:py-32`}>
       <div className="grid place-items-center gap-8 lg:grid-cols-[1fr_1fr]">
-        <div>
-          <h2 className="text-3xl font-bold md:text-4xl">
+        <div className="@container w-full">
+          <h2 className={heading} style={fitWord([services.heading.text])}>
             <Emphasis heading={services.heading} />
           </h2>
 
