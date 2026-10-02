@@ -1,7 +1,7 @@
 'use client'
 
 import { ArrowRight } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { SummitContent } from '../copy-slots'
 import { arrow, menuButton, pad } from '../styles'
 import { SummitLogo } from './logo'
@@ -24,12 +24,15 @@ const GLASS_AT = 10
 // from md where the same row is the menu, and Escape closes it. While the bar is clear over the
 // hero's photograph it sits on the hero's veil of the page surface, where its name and links keep
 // their greys. The sheet's glass is frosted thicker than the source's, enough for its grey links
-// to read over any photograph behind it. On a page with a photograph the links are underlined under the pointer rather than
-// faded, since the lighter grey falls below WCAG AA over the picture, on the veil and on the glass.
+// to read over any photograph behind it. However the sheet closes (Escape, its close button or a
+// link), focus goes back to the toggle, where the source left it on a link the closed sheet hides.
+// On a page with a photograph the links are underlined under the pointer rather than faded, since
+// the lighter grey falls below WCAG AA over the picture, on the veil and on the glass.
 export function SummitNav({ brand, nav, pictured }: Props) {
   const [open, setOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [narrow, setNarrow] = useState(false)
+  const toggle = useRef<HTMLButtonElement>(null)
 
   useEffect(() => {
     const onScroll = () => {
@@ -57,7 +60,9 @@ export function SummitNav({ brand, nav, pictured }: Props) {
   useEffect(() => {
     if (!open) return
     const onKey = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') setOpen(false)
+      if (event.key !== 'Escape') return
+      setOpen(false)
+      toggle.current?.focus()
     }
     document.addEventListener('keydown', onKey)
     return () => {
@@ -65,8 +70,18 @@ export function SummitNav({ brand, nav, pictured }: Props) {
     }
   }, [open])
 
+  // The close button hands focus straight back; a link only once the page has moved to its
+  // anchor, which would otherwise leave focus on nothing. From md the toggle is not drawn, so
+  // it takes no focus.
   const close = () => {
     setOpen(false)
+    toggle.current?.focus()
+  }
+  const follow = () => {
+    setOpen(false)
+    window.setTimeout(() => {
+      toggle.current?.focus()
+    })
   }
 
   return (
@@ -87,7 +102,7 @@ export function SummitNav({ brand, nav, pictured }: Props) {
             <a
               key={link.href}
               href={link.href}
-              onClick={close}
+              onClick={follow}
               className={`font-medium text-on-surface/75 ${pictured ? 'underline-offset-4 hover:underline' : 'hover:text-on-surface'}`}
             >
               {link.label}
@@ -119,6 +134,7 @@ export function SummitNav({ brand, nav, pictured }: Props) {
           <ArrowRight size={18} strokeWidth={1.8} aria-hidden="true" className={arrow} />
         </a>
         <button
+          ref={toggle}
           type="button"
           onClick={() => {
             setOpen(true)

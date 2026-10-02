@@ -8,7 +8,8 @@ type Props = Pick<SummitContent, 'cta'>
 // The source's closing band: a wide rounded block of the quieter surface, brightening from
 // two fifths as it arrives, with the heading, a line and a dark button at the left (centred
 // below lg), each rising on the softer spring, and from lg a picture at the right whose foot
-// runs off the band's bottom edge. Without a picture the band holds its words alone.
+// runs off the band's bottom edge. Without a picture the band holds its words alone. The
+// picture loads lazily, as it sits at the foot of the page and a phone never draws it.
 export function SummitCta({ cta }: Props) {
   const { image } = cta
   return (
@@ -57,7 +58,6 @@ export function SummitCta({ cta }: Props) {
               width={493}
               height={338}
               sizes="493px"
-              priority
               className="block h-auto w-full object-cover"
             />
           </div>

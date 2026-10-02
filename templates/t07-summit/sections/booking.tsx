@@ -17,7 +17,8 @@ const CHEVRON = 'pointer-events-none absolute right-3.5 text-on-surface/37'
 // form posted nowhere; here it posts to the owner's email as a mail message when it is known,
 // and otherwise leads to the closing band. Where no people are listed the fourth field takes a
 // typed name. The fields are named for what they hold on any page, person and service, where
-// the source's were a hospital's doctor and department.
+// the source's were a hospital's doctor and department, and the visitor's own name, email and
+// phone are offered to the browser's autofill.
 export function SummitBooking({ booking }: Props) {
   const { form } = booking
   const { sendTo } = form
@@ -58,6 +59,7 @@ export function SummitBooking({ booking }: Props) {
                   id="summit-name"
                   name="name"
                   type="text"
+                  autoComplete="name"
                   placeholder={form.name.placeholder}
                   className={field}
                 />
@@ -70,6 +72,7 @@ export function SummitBooking({ booking }: Props) {
                   id="summit-email"
                   name="email"
                   type="email"
+                  autoComplete="email"
                   placeholder={form.email.placeholder}
                   className={field}
                 />
@@ -82,6 +85,7 @@ export function SummitBooking({ booking }: Props) {
                   id="summit-phone"
                   name="phone"
                   type="tel"
+                  autoComplete="tel"
                   placeholder={form.phone.placeholder}
                   className={field}
                 />
