@@ -49,7 +49,8 @@ export function answerOf(response: Noted[0]): { parsed: unknown; raw: string | n
 }
 
 // The notes of a run, and the clocks and step numbers that say when and where each call began.
-export function notebook() {
+// onNote sees every call as it is noted, which is how the spend stop prices the run so far.
+export function notebook(onNote: (note: Note) => void = () => undefined) {
   const notes: Note[] = []
   const started = new Map<string, number>()
   // The step attempt each template's copy is on, so the notes can say which fresh start a call
@@ -61,7 +62,7 @@ export function notebook() {
     const key = `${call.slug}\0${call.stage}\0${call.template ?? ''}`
     const begun = started.get(key)
     const { parsed, raw } = answerOf(response)
-    notes.push({
+    const noted: Note = {
       slug: call.slug,
       stage: call.stage,
       template: call.template ?? null,
@@ -77,7 +78,9 @@ export function notebook() {
       at: new Date().toISOString(),
       parsed,
       raw,
-    })
+    }
+    notes.push(noted)
+    onNote(noted)
     started.set(key, Date.now())
     return Promise.resolve()
   }

@@ -41,6 +41,20 @@ export type CopyAttempt = Readonly<{
   usage: CallRecord
 }>
 
+// What a run records about itself beside its fixtures, in test-results/eval/<run>/_run.json
+// (the underscore keeps it from ever being a fixture id): the switches that limited it and what
+// it spent. Runs from before 2 October 2026 have none.
+export type RunFacts = Readonly<{
+  // EVAL_TEMPLATES: the only templates whose copy the run wrote, or null for every chosen one.
+  templates: readonly string[] | null
+  // EVAL_MAX_USD, or null with no spend stop.
+  maxUsd: number | null
+  // The priced cost of the calls this run made, reused stages not included.
+  spent: number
+  concurrency: number
+  notStarted: readonly string[]
+}>
+
 export type PoolRecord = {
   key: string
   queries: readonly string[]

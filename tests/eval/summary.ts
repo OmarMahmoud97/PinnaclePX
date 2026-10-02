@@ -1,5 +1,5 @@
 import { NOT_JSON } from './notes'
-import type { CallRecord, CopyAttempt, FixtureRecord, JudgedViolation } from './types'
+import type { CallRecord, CopyAttempt, FixtureRecord, JudgedViolation, RunFacts } from './types'
 
 // A run's numbers: tokens and cost by stage and template, how often a first answer fitted, how
 // often the retry or the fallback did the work, what the picture judge rejected and why, and
@@ -20,7 +20,8 @@ function priceOf(model: string) {
   return key === undefined ? null : PRICE[key]
 }
 
-function costOf(call: CallRecord): number {
+// A call's price in dollars, or NaN for a model the table does not hold.
+export function costOf(call: CallRecord): number {
   const price = priceOf(call.model)
   if (price === null || price === undefined) return Number.NaN
   return (
@@ -193,9 +194,30 @@ function violationsOf(attempt: CopyAttempt): readonly JudgedViolation[] {
   return [...attempt.violations, NOT_JSON]
 }
 
+// The run's own line: which templates it wrote copy for, and its spend stop. The cost table
+// prices every call in the records, reused stages included, so a copy-only run reads as a whole
+// submission would; the spend here is what this run itself paid.
+function runLine(facts: RunFacts | null): string {
+  if (facts === null) return 'Spend stop: none recorded (the run has no _run.json).'
+  const written =
+    facts.templates === null
+      ? ''
+      : `Copy written for EVAL_TEMPLATES only: ${facts.templates.join(', ')}. `
+  if (facts.maxUsd === null) {
+    return `${written}Spend stop: none (EVAL_MAX_USD unset). This run spent ${usd(facts.spent)}.`
+  }
+  const reached = !(facts.spent < facts.maxUsd)
+  const skipped =
+    facts.notStarted.length === 0
+      ? 'every fixture started'
+      : `${String(facts.notStarted.length)} fixtures not started (${facts.notStarted.join(', ')})`
+  return `${written}Spend stop: EVAL_MAX_USD ${usd(facts.maxUsd)}, ${reached ? 'reached' : 'not reached'}; this run spent ${usd(facts.spent)}; ${skipped}. A fixture already started when the stop was reached ran to its end, so a run can pass its cap by the cost of up to ${String(facts.concurrency)} fixtures (EVAL_CONCURRENCY).`
+}
+
 export function summarise(
   run: string,
   records: readonly FixtureRecord[],
+  facts: RunFacts | null = null,
 ): { json: unknown; markdown: string } {
   const byStage = { brief: tally(), copy: tally(), rank: tally() }
   const byTemplate = new Map<
@@ -374,6 +396,7 @@ export function summarise(
     fixtures: n,
     stagesRun,
     reusedFrom: records[0]?.reusedFrom ?? null,
+    runFacts: facts,
     cost: {
       pass: totalCost,
       perSubmissionMean: n === 0 ? 0 : totalCost / n,
@@ -474,6 +497,8 @@ export function summarise(
   const markdown = `# Eval run ${run}
 
 ${String(n)} fixtures, stages ${stagesRun.join('+')}${json.reusedFrom === null ? '' : ` (the rest from ${json.reusedFrom})`}. Prices: the claude-api skill's table, 25 September 2026.
+
+${runLine(facts)}
 
 | Stage | Calls | Input | Output | Mean in | Mean out | Mean ms | Cost | Per submission |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |

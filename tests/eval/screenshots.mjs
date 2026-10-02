@@ -14,8 +14,9 @@ if (run === undefined) {
 }
 const dir = join(process.cwd(), 'test-results', 'eval', run)
 const wanted = only.split(',').filter((id) => id !== '')
+// Every fixture's record; summary.json and the run's own _run.json are not records.
 const records = readdirSync(dir)
-  .filter((name) => name.endsWith('.json') && name !== 'summary.json')
+  .filter((name) => name.endsWith('.json') && name !== 'summary.json' && !name.startsWith('_'))
   .map((name) => JSON.parse(readFileSync(join(dir, name), 'utf8')))
   .filter((record) => wanted.length === 0 || wanted.includes(record.id))
 const shots = join(dir, 'shots')
