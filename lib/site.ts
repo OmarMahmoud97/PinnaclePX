@@ -27,10 +27,12 @@ export const SITE = {
     'No pitch. We look at your designs together, and you leave with a fixed quote. Go ahead only if you want to.',
   // One promise about colour, shared by the home page and the colour question.
   colourPromise: 'Your colour stays. We only adjust it if text would be hard to read on it.',
-  // A build the deadline sweeper finished with a fallback (a headline set from the sentence, a
-  // photo space left plain) still opens and is still emailed; the done page and the email both
-  // say so in these words.
-  partialNote: 'A few parts were set simply, to finish on time.',
+  // A build with a stage settled by its fallback (a headline set simply, a photo space left
+  // plain) still opens and is still emailed, and the email says so in these words; the done page
+  // and the designs page say it in their own (PARTIAL_NOTES). A stage falls back at the deadline,
+  // after its attempts, at once when the model refuses, or when the photo search's quota runs
+  // out, so the note names no reason (docs/template-fit-decisions.md, decision 18).
+  partialNote: 'Parts of your designs were set simply.',
   // Said after the name of every link that opens a new tab, for a screen reader, so leaving the
   // page is never a surprise.
   newTab: '(opens in a new tab)',

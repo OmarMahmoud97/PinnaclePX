@@ -21,11 +21,12 @@ async function scrollWidth(page: Page): Promise<number> {
 }
 
 test('every state fits the phone, the designs in rows', async ({ page }) => {
-  for (const state of ['building', 'ready', 'partial', 'failed']) {
+  for (const state of ['building', 'ready', 'partial', 'failed', 'exhausted']) {
     await page.goto(`${HUB}?state=${state}`)
     await expect(page.locator('main#main h1')).toBeVisible()
     expect(await scrollWidth(page), state).toBeLessThanOrEqual(390)
-    if (state === 'failed') continue
+    // A build with nothing to open draws no rows.
+    if (state === 'failed' || state === 'exhausted') continue
     const rows = page.locator('.hub-design')
     await expect(rows).toHaveCount(3)
     for (const row of await rows.all()) {

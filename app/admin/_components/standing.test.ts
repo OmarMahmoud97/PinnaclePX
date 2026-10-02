@@ -333,7 +333,7 @@ describe('buildLine', () => {
 
   it('says why nothing went, or that the link is on its way', () => {
     expect(buildLine(rowOf(EXHAUSTED), NOW)).toBe(
-      'Finished, no link sent: every design already seen',
+      'Finished, no link sent: free designs already used',
     )
     expect(buildLine(rowOf(FAILED), NOW)).toBe('Finished, no link sent: the build failed')
     expect(buildLine(rowOf({ emailSentAt: null }), NOW)).toBe('Built, link on its way')

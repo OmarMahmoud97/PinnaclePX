@@ -33,7 +33,7 @@ export const WORDMARK = 'None uploaded; the name is set as a wordmark'
 export const OWN_COLOUR = 'Their own colour'
 export const NO_DESIGNS = {
   pending: 'Not chosen yet',
-  exhausted: 'None: this address had already seen every design',
+  exhausted: 'None: this address had already had its free designs',
 } as const
 
 function logoOf(row: BriefOverviewRow): BriefView['logo'] {
@@ -66,8 +66,8 @@ function designsOf(row: BriefOverviewRow, appUrl: string): Designs {
 }
 
 // How the brief stands, from the two stamps alone, so it is never wrong: the link went, the build
-// finished with nothing to send (every template seen, a stage failed, or the email is moments
-// away), or neither has happened.
+// finished with nothing to send (its free designs already used, a stage failed, or the email is
+// moments away), or neither has happened.
 export function outcomeOf(row: Pick<BriefOverviewRow, 'emailSentAt' | 'settledAt'>): string {
   if (row.emailSentAt !== null) return `Link sent ${formatLondon(row.emailSentAt)}`
   return row.settledAt === null ? 'No link sent yet' : 'Finished, no link sent'

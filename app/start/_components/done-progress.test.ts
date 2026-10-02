@@ -102,13 +102,13 @@ describe('the log', () => {
     expect(logText(lines).at(-1)).toEqual(['Placing your two photos', null])
   })
 
-  it('ends on what was made, or set simply to finish on time', () => {
+  it('ends on what was made, or on what was set simply', () => {
     expect(logText(logOf(view('ready'), DETAILS)).slice(-2)).toEqual([
       ['Three headlines written.', 58],
       ['Photos placed, each photographer credited.', 64],
     ])
     expect(logText(logOf(view('partial'), DETAILS)).at(-1)).toEqual([
-      'Some photo spaces left plain, to finish on time.',
+      'Some photo spaces left plain.',
       64,
     ])
     expect(landedOf(view('ready'))).toBe(5)
