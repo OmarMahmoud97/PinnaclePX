@@ -29,7 +29,7 @@ export function SummitWhy({ why }: Props) {
         </div>
         <div className="mt-auto">
           <h3 className="text-lg font-medium text-on-surface/75">{item.title}</h3>
-          <p className="mt-3 text-sm text-on-surface/55">{item.body}</p>
+          <p className="mt-3 text-sm text-on-surface-muted">{item.body}</p>
         </div>
       </div>
     )

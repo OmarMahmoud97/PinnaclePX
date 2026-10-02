@@ -88,7 +88,7 @@ export function SummitNav({ brand, nav, pictured }: Props) {
               key={link.href}
               href={link.href}
               onClick={close}
-              className={`font-medium text-on-surface/75 ${pictured ? 'underline-offset-4 hover:underline' : 'hover:text-on-surface/55'}`}
+              className={`font-medium text-on-surface/75 ${pictured ? 'underline-offset-4 hover:underline' : 'hover:text-on-surface'}`}
             >
               {link.label}
             </a>

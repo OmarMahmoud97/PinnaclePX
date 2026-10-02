@@ -64,7 +64,7 @@ export function SummitFaq({ faq }: Props) {
                   className={`overflow-hidden transition-all duration-500 ease-in-out ${isOpen ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'}`}
                 >
                   <div className="px-5 py-4">
-                    <p className="text-sm/6 text-on-surface/55">{item.answer}</p>
+                    <p className="text-sm/6 text-on-surface-muted">{item.answer}</p>
                   </div>
                 </div>
               </div>

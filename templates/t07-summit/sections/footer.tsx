@@ -12,7 +12,7 @@ type Props = Pick<SummitContent, 'brand' | 'footer'> & { credits: readonly Credi
 const YEAR = new Date().getFullYear()
 
 const COLUMN = 'flex flex-col items-center text-center md:items-start md:text-left'
-const LINK = 'text-on-surface/55 hover:text-on-surface/37'
+const LINK = 'text-on-surface-muted hover:text-on-surface'
 
 // The source's Footer: the logo and a line, then columns of links and a Get in touch column of
 // a mail link, a phone link and an address behind small icons, all centred below md; a rule;
@@ -41,7 +41,7 @@ export function SummitFooter({ brand, footer, credits }: Props) {
             <p
               data-fade
               style={delay(0.2)}
-              className="mt-3 max-w-84 text-sm/5.5 text-on-surface/55"
+              className="mt-3 max-w-84 text-sm/5.5 text-on-surface-muted"
             >
               {footer.description}
             </p>
@@ -83,7 +83,7 @@ export function SummitFooter({ brand, footer, credits }: Props) {
             </div>
           )}
         </div>
-        <div className="flex flex-col items-center justify-between gap-4 border-t border-border/50 pt-4.5 text-sm text-on-surface/37 md:flex-row">
+        <div className="flex flex-col items-center justify-between gap-4 border-t border-border/50 pt-4.5 text-sm text-on-surface-muted md:flex-row">
           <p>
             &copy; {YEAR} {brand.legalName}. All rights reserved.
             {credits.length > 0 && (
@@ -103,11 +103,7 @@ export function SummitFooter({ brand, footer, credits }: Props) {
           {footer.smallLinks.length > 0 && (
             <div className="flex gap-9">
               {footer.smallLinks.map((link) => (
-                <a
-                  key={link.label}
-                  href={link.href}
-                  className="transition hover:text-on-surface/17"
-                >
+                <a key={link.label} href={link.href} className="transition hover:text-on-surface">
                   {link.label}
                 </a>
               ))}
