@@ -23,7 +23,8 @@ const GLASS_AT = 10
 // inert while closed below md, so its links are out of the tab order there and still in it
 // from md where the same row is the menu, and Escape closes it. While the bar is clear over the
 // hero's photograph it sits on the hero's veil of the page surface, where its name and links keep
-// their greys. On a page with a photograph the links are underlined under the pointer rather than
+// their greys. The sheet's glass is frosted thicker than the source's, enough for its grey links
+// to read over any photograph behind it. On a page with a photograph the links are underlined under the pointer rather than
 // faded, since the lighter grey falls below WCAG AA over the picture, on the veil and on the glass.
 export function SummitNav({ brand, nav, pictured }: Props) {
   const [open, setOpen] = useState(false)
@@ -80,7 +81,7 @@ export function SummitNav({ brand, nav, pictured }: Props) {
         <div
           id={PANEL_ID}
           inert={narrow && !open}
-          className={`${open ? 'max-md:w-full' : 'max-md:w-0'} flex items-center gap-10 text-sm max-md:fixed max-md:top-0 max-md:left-0 max-md:z-50 max-md:h-screen max-md:flex-col max-md:justify-center max-md:overflow-hidden max-md:bg-surface/25 max-md:backdrop-blur max-md:transition-all max-md:duration-300`}
+          className={`${open ? 'max-md:w-full' : 'max-md:w-0'} flex items-center gap-10 text-sm max-md:fixed max-md:top-0 max-md:left-0 max-md:z-50 max-md:h-screen max-md:flex-col max-md:justify-center max-md:overflow-hidden max-md:bg-surface/75 max-md:backdrop-blur max-md:transition-all max-md:duration-300`}
         >
           {nav.links.map((link) => (
             <a
