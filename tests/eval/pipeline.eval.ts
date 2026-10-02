@@ -8,7 +8,9 @@
 //   EVAL_FIXTURES=a,b         only these fixture ids
 //   EVAL_STAGES=copy,rank     only these stages; the others are copied from EVAL_REUSE_RUN
 //   EVAL_REUSE_RUN=<name>     a finished run whose briefs or verdicts stand in for the stages
-//                             not run, so a copy change is judged on the same briefs
+//                             not run, so a copy change is judged on the same briefs; a fixture
+//                             with no record there reuses a variant of the same business with
+//                             other photographs, and its templates (decision 11)
 //   EVAL_TEMPLATES=a,b        write copy only for these templates, on the fixtures they were
 //                             chosen for; the briefs and pictures come from EVAL_REUSE_RUN, which
 //                             it needs, so a pass on one template's guide pays for its copy alone
@@ -40,7 +42,15 @@ import { orderByVerdict, planImagery } from '@/lib/images/plan'
 import { selectTemplates } from '@/lib/select/select'
 import { contractFor, READY_TEMPLATES, TEMPLATES } from '@/templates/registry'
 import { copyAttemptOf, notebook, usageOf } from './notes'
-import { type Choice, copyTargets, maxUsdOf, namedTemplates, runLimited, spendStop } from './plan'
+import {
+  type Choice,
+  copyTargets,
+  maxUsdOf,
+  namedTemplates,
+  reusedFor,
+  runLimited,
+  spendStop,
+} from './plan'
 import { costOf, summarise } from './summary'
 import type { FixtureRecord, PoolRecord, RunFacts } from './types'
 
@@ -395,16 +405,38 @@ function readRecord(run: string, id: string): FixtureRecord | null {
   return existsSync(file) ? (JSON.parse(readFileSync(file, 'utf8')) as FixtureRecord) : null
 }
 
+// Every fixture record of a run, read once.
+const runRecords = new Map<string, FixtureRecord[]>()
+function recordsOf(run: string): FixtureRecord[] {
+  const known = runRecords.get(run)
+  if (known !== undefined) return known
+  const dir = join(RESULTS, run)
+  const records = existsSync(dir)
+    ? readdirSync(dir)
+        .filter(
+          (name) => name.endsWith('.json') && name !== 'summary.json' && !name.startsWith('_'),
+        )
+        .map((name) => JSON.parse(readFileSync(join(dir, name), 'utf8')) as FixtureRecord)
+    : []
+  runRecords.set(run, records)
+  return records
+}
+
 // One fixture's stages. `write` is the templates whose copy the run writes: every template the
 // fixture was chosen, or the named ones of EVAL_TEMPLATES (plan.ts).
 async function runFixture(fixture: Fixture, write: readonly string[]): Promise<FixtureRecord> {
   const slug = `eval-${fixture.id}`
-  const { templates, seed } = templatesFor(fixture)
-  const reused = env.reuse === null ? null : readRecord(env.reuse, fixture.id)
+  const own = templatesFor(fixture)
+  const reused = env.reuse === null ? null : reusedFor(fixture, recordsOf(env.reuse))
   const wants = (stage: Stage) => env.stages.includes(stage)
   if (!wants('brief') && reused === null) {
     throw new Error(`EVAL_STAGES leaves out brief but EVAL_REUSE_RUN has no ${fixture.id}.json`)
   }
+  // A photograph variant that reuses another variant's copy keeps that variant's templates, so
+  // the copy it carries is the copy they were written for (decision 11).
+  const templates =
+    reused !== null && reused.id !== fixture.id && !wants('copy') ? reused.templates : own.templates
+  const { seed } = own
   const brief = wants('brief') || reused === null ? await briefStage(fixture, slug) : reused.brief
   const copy: FixtureRecord['copy'] = {}
   if (wants('copy')) {
@@ -513,6 +545,16 @@ test('the fixtures are valid and every ready template is chosen by at least five
           answers: targets.reduce((n, t) => n + t.templates.length, 0),
           notRun: fixtures.filter((f) => !targets.some((t) => t.id === f.id)).map((f) => f.id),
           estimate: env.templates === null ? null : estimateOf(targets),
+          // A fixture with no record of its own in the reused run, and the variant it reuses.
+          reuses:
+            env.reuse === null
+              ? {}
+              : Object.fromEntries(
+                  targets.flatMap((t) => {
+                    const found = reusedFor(t.fixture, recordsOf(env.reuse ?? ''))
+                    return found === null || found.id === t.id ? [] : [[t.id, found.id]]
+                  }),
+                ),
           maxUsd: env.maxUsd,
           concurrency: env.concurrency,
         },

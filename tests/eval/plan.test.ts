@@ -1,4 +1,5 @@
-import { copyTargets, maxUsdOf, namedTemplates, runLimited, spendStop } from './plan'
+import type { SubmissionAnswers } from '@/lib/brief/submission'
+import { copyTargets, maxUsdOf, namedTemplates, reusedFor, runLimited, spendStop } from './plan'
 import { summarise } from './summary'
 
 // The eval's two limits, proved without a call (decision 10, docs/template-fit-decisions.md):
@@ -134,5 +135,37 @@ describe('the summary of a limited run', () => {
       'Spend stop: none (EVAL_MAX_USD unset). This run spent $0.2000.',
     )
     expect(summarise('old', []).markdown).toContain('Spend stop: none recorded')
+  })
+})
+
+describe('reusing a stored run', () => {
+  const photo = (n: number) => ({
+    fileName: `own-${String(n)}.jpg`,
+    url: `http://localhost:3100/dev/photo/own-${String(n)}.jpg`,
+  })
+  const pottery = (photos: number): SubmissionAnswers => ({
+    description: 'Hand-thrown mugs, bowls and planters made in our Hebden Bridge studio.',
+    company: 'Weir Lane Pottery',
+    logo: { kind: 'wordmark' },
+    imagery: { style: 'warm', photos: Array.from({ length: photos }, (_, i) => photo(i + 1)) },
+    colours: { kind: 'palette', paletteId: 'clay' },
+  })
+  const stored = [
+    { id: 'joinery', answers: { ...pottery(0), company: 'Hollin Lane Joinery' } },
+    { id: 'own-photos-1', answers: pottery(1) },
+  ]
+
+  it('takes the fixture’s own record first', () => {
+    expect(reusedFor({ id: 'own-photos-1', answers: pottery(1) }, stored)?.id).toBe('own-photos-1')
+  })
+
+  it('takes a variant of the same business with other photographs when it has none', () => {
+    // Decision 11: the 3- and 6-photograph variants share the 1-photograph variant's copy run.
+    expect(reusedFor({ id: 'own-photos-6', answers: pottery(6) }, stored)?.id).toBe('own-photos-1')
+  })
+
+  it('takes nothing for another business', () => {
+    const other = { ...pottery(3), company: 'Weir Lane Ceramics' }
+    expect(reusedFor({ id: 'own-photos-3', answers: other }, stored)).toBeNull()
   })
 })

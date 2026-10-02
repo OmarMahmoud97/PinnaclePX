@@ -1,5 +1,5 @@
 {
-  "note": "Twenty invented businesses for the pipeline eval (tests/eval/pipeline.eval.ts). None is a real lead. Frozen on 1 October 2026; a change here changes the baseline, so add a fixture rather than edit one. The identity seeds the template choice the way a real submission's identity does.",
+  "note": "Twenty invented businesses for the pipeline eval (tests/eval/pipeline.eval.ts). None is a real lead. Frozen on 1 October 2026; a change here changes the baseline, so add a fixture rather than edit one. The identity seeds the template choice the way a real submission's identity does. Decision 11 appended four on 2 October 2026: two app founders, a sentence that names no trade, and a business with its own photographs in three variants (1, 3 and 6 stand-ins from tests/fixtures/photos), which share one copy run: one is run in full and the others with EVAL_STAGES=rank and EVAL_REUSE_RUN.",
   "fixtures": [
     {
       "id": "joinery",
@@ -239,6 +239,130 @@
         "logo": { "kind": "wordmark" },
         "imagery": { "style": "bold", "photos": [] },
         "colours": { "kind": "custom", "hex": "#0b6e4f" }
+      }
+    },
+    {
+      "id": "app-pharmacy",
+      "identity": "eval-app-pharmacy",
+      "notes": "app founder (row F); the founder's own kind of sentence, naming the trade the app serves, as VetPres's does (lib/brief/example-brief.ts)",
+      "answers": {
+        "description": "Benchrota is a scheduling platform built for independent pharmacies. Our app takes the pain out of staff rotas, locum bookings and cover requests, so pharmacists spend less time on admin and more time with their patients.",
+        "company": "Benchrota",
+        "logo": { "kind": "wordmark" },
+        "imagery": { "style": "minimal", "photos": [] },
+        "colours": { "kind": "custom", "hex": "#2563eb" }
+      }
+    },
+    {
+      "id": "app-driving",
+      "identity": "eval-app-driving",
+      "notes": "app founder (row F), a second trade, so a row-F label can be checked on two fixtures (decision 11)",
+      "answers": {
+        "description": "Mirrorsignal is an all-in-one booking app for driving instructors. Learners book and pay for lessons online, instructors manage their diary and track every pupil's progress, and automatic reminders cut no-shows.",
+        "company": "Mirrorsignal",
+        "logo": { "kind": "wordmark" },
+        "imagery": { "style": "bold", "photos": [] },
+        "colours": { "kind": "palette", "paletteId": "ink" }
+      }
+    },
+    {
+      "id": "no-trade",
+      "identity": "eval-no-trade",
+      "notes": "unlisted (row U); a sentence that names no trade",
+      "answers": {
+        "description": "We help small teams get more done with less fuss. Friendly, flexible and always happy to talk things through.",
+        "company": "Kite and Compass",
+        "logo": { "kind": "wordmark" },
+        "imagery": { "style": "dark", "photos": [] },
+        "colours": { "kind": "palette", "paletteId": "plum" }
+      }
+    },
+    {
+      "id": "own-photos-1",
+      "identity": "eval-own-photos",
+      "notes": "own photographs, one landscape stand-in (tests/fixtures/photos, served by /dev/photo in development); the 1, 3 and 6 variants share one copy run (decision 11)",
+      "answers": {
+        "description": "Hand-thrown mugs, bowls and planters made in our Hebden Bridge studio, glazed in small batches, with weekend wheel classes for beginners.",
+        "company": "Weir Lane Pottery",
+        "logo": { "kind": "wordmark" },
+        "imagery": {
+          "style": "warm",
+          "photos": [
+            {
+              "fileName": "own-1-landscape.jpg",
+              "url": "http://localhost:3100/dev/photo/own-1-landscape.jpg"
+            }
+          ]
+        },
+        "colours": { "kind": "palette", "paletteId": "clay" }
+      }
+    },
+    {
+      "id": "own-photos-3",
+      "identity": "eval-own-photos",
+      "notes": "own photographs, the 1-photo variant's business with three stand-ins, landscape and portrait",
+      "answers": {
+        "description": "Hand-thrown mugs, bowls and planters made in our Hebden Bridge studio, glazed in small batches, with weekend wheel classes for beginners.",
+        "company": "Weir Lane Pottery",
+        "logo": { "kind": "wordmark" },
+        "imagery": {
+          "style": "warm",
+          "photos": [
+            {
+              "fileName": "own-1-landscape.jpg",
+              "url": "http://localhost:3100/dev/photo/own-1-landscape.jpg"
+            },
+            {
+              "fileName": "own-2-portrait.jpg",
+              "url": "http://localhost:3100/dev/photo/own-2-portrait.jpg"
+            },
+            {
+              "fileName": "own-3-landscape.jpg",
+              "url": "http://localhost:3100/dev/photo/own-3-landscape.jpg"
+            }
+          ]
+        },
+        "colours": { "kind": "palette", "paletteId": "clay" }
+      }
+    },
+    {
+      "id": "own-photos-6",
+      "identity": "eval-own-photos",
+      "notes": "own photographs, the 1-photo variant's business with six stand-ins, three landscape and three portrait",
+      "answers": {
+        "description": "Hand-thrown mugs, bowls and planters made in our Hebden Bridge studio, glazed in small batches, with weekend wheel classes for beginners.",
+        "company": "Weir Lane Pottery",
+        "logo": { "kind": "wordmark" },
+        "imagery": {
+          "style": "warm",
+          "photos": [
+            {
+              "fileName": "own-1-landscape.jpg",
+              "url": "http://localhost:3100/dev/photo/own-1-landscape.jpg"
+            },
+            {
+              "fileName": "own-2-portrait.jpg",
+              "url": "http://localhost:3100/dev/photo/own-2-portrait.jpg"
+            },
+            {
+              "fileName": "own-3-landscape.jpg",
+              "url": "http://localhost:3100/dev/photo/own-3-landscape.jpg"
+            },
+            {
+              "fileName": "own-4-portrait.jpg",
+              "url": "http://localhost:3100/dev/photo/own-4-portrait.jpg"
+            },
+            {
+              "fileName": "own-5-landscape.jpg",
+              "url": "http://localhost:3100/dev/photo/own-5-landscape.jpg"
+            },
+            {
+              "fileName": "own-6-portrait.jpg",
+              "url": "http://localhost:3100/dev/photo/own-6-portrait.jpg"
+            }
+          ]
+        },
+        "colours": { "kind": "palette", "paletteId": "clay" }
       }
     }
   ]

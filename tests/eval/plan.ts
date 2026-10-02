@@ -1,5 +1,7 @@
-// Which fixtures a run writes copy for, and when it stops starting fixtures. Pure, so the
-// selection and the stop are unit-tested (plan.test.ts) without a model call.
+import type { SubmissionAnswers } from '@/lib/brief/submission'
+
+// Which fixtures a run writes copy for, which stored record each reuses, and when it stops
+// starting fixtures. Pure, so each is unit-tested (plan.test.ts) without a model call.
 
 // A fixture and the templates the selector chose for it.
 export type Choice = Readonly<{ id: string; templates: readonly string[] }>
@@ -92,4 +94,19 @@ export async function runLimited<T, R>(
   })
   await Promise.all(workers)
   return { results, notStarted }
+}
+
+// The record a fixture reuses from EVAL_REUSE_RUN: its own, else a variant's, one written for
+// the same business with other photographs (every answer the same but the photographs).
+// Decision 11's own-photograph variants share one copy run this way: one is written in full,
+// and the others re-run only the rank stage on its brief, templates and copy.
+export function reusedFor<T extends Readonly<{ id: string; answers: SubmissionAnswers }>>(
+  fixture: Readonly<{ id: string; answers: SubmissionAnswers }>,
+  records: readonly T[],
+): T | null {
+  const own = records.find((record) => record.id === fixture.id)
+  if (own !== undefined) return own
+  const business = (answers: SubmissionAnswers) =>
+    JSON.stringify({ ...answers, imagery: { ...answers.imagery, photos: [] } })
+  return records.find((record) => business(record.answers) === business(fixture.answers)) ?? null
 }
