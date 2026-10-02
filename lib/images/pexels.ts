@@ -2,7 +2,7 @@ import 'server-only'
 import { CONFIG } from '@/lib/config'
 import { env } from '@/lib/env'
 import { AppError } from '@/lib/errors'
-import { type Candidate, candidatesFrom } from '@/lib/images/candidates'
+import { candidatesFrom, type SizedCandidate } from '@/lib/images/candidates'
 import { log } from '@/lib/log'
 
 // Pexels has refused a search because the quota is spent. A 429 carries no reset time (the
@@ -17,7 +17,7 @@ export class PexelsQuotaError extends AppError {
 
 // One search, landscape, the configured page size. Throws on anything but a good answer, and
 // logs what is left of the quota so a rising count of searches shows before it bites.
-export async function searchPhotos(query: string): Promise<Candidate[]> {
+export async function searchPhotos(query: string): Promise<SizedCandidate[]> {
   const url = new URL('https://api.pexels.com/v1/search')
   url.searchParams.set('query', query)
   url.searchParams.set('orientation', 'landscape')

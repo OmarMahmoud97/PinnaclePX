@@ -11,6 +11,11 @@ export type Candidate = Readonly<{
   source: string
 }>
 
+// A candidate as a search returns it, with the original's size in pixels as Pexels reports it.
+// The size is kept as data for the pixel and crop checks to come (decision 7a): nothing filters
+// on it yet, so no picture changes.
+export type SizedCandidate = Candidate & Readonly<{ width: number; height: number }>
+
 const photoSchema = z.object({
   id: z.number(),
   width: z.number(),
@@ -24,7 +29,7 @@ const photoSchema = z.object({
 const responseSchema = z.object({ photos: z.array(photoSchema) })
 
 // The candidates a Pexels response holds, validated at the boundary.
-export function candidatesFrom(body: unknown): Candidate[] {
+export function candidatesFrom(body: unknown): SizedCandidate[] {
   return responseSchema.parse(body).photos.map((photo) => ({
     id: photo.id,
     alt: photo.alt ?? '',
@@ -32,5 +37,7 @@ export function candidatesFrom(body: unknown): Candidate[] {
     photographerUrl: photo.photographer_url,
     thumbnail: photo.src.medium,
     source: photo.src.large2x,
+    width: photo.width,
+    height: photo.height,
   }))
 }

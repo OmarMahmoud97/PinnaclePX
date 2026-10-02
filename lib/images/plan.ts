@@ -7,17 +7,36 @@ import type { BrandBrief } from '@/lib/copy-slots/brief'
 // finds pictures; the rest take the detail queries, every one of them, because the detail
 // slots of three templates (Ember has eleven, Summit twelve) can want more pictures than one
 // search returns, and a slot with nothing left is drawn empty. Own photographs go to the slots
-// in the order the visitor added them.
+// in the order the visitor added them, and the slots after them are planned as a visitor with
+// no photographs gets them, so a visitor who gives one photograph does not get a page of empty
+// shapes (decision 7a). The first slot is always an own photograph when there is one, so such a
+// visitor's searches are the detail ones alone, and they never cost more than a visitor's
+// without photographs. A slot stock never fills is none unless one of the visitor's photographs
+// reaches it.
 export type SlotPlan =
   | Readonly<{ kind: 'own'; url: string; alt: string }>
   | Readonly<{ kind: 'search'; queries: readonly string[]; purpose: string; union: boolean }>
   | Readonly<{ kind: 'none' }>
+
+// A template's slots that take no stock, and the pictures of its items past the copy's minimum,
+// which are chosen last (CONFIG.images, decision 7a).
+const STOCK_FREE: Readonly<Record<string, readonly string[]>> = CONFIG.images.stockFreeSlots
+const OPTIONAL: Readonly<Record<string, readonly string[]>> = CONFIG.images.optionalSlots
+
+export function stockFreeSlots(templateId: string): readonly string[] {
+  return STOCK_FREE[templateId] ?? []
+}
+
+export function optionalSlots(templateId: string): readonly string[] {
+  return OPTIONAL[templateId] ?? []
+}
 
 // The photographs a template needs, by slot name. Pure, so a test can say what a brief gets.
 export function planImagery(
   slots: readonly string[],
   answers: SubmissionAnswers,
   brief: BrandBrief,
+  stockFree: readonly string[] = [],
 ): Readonly<Record<string, SlotPlan>> {
   const own = answers.imagery.photos
   const modifier = CONFIG.images.styleQuery[answers.imagery.style]
@@ -27,7 +46,7 @@ export function planImagery(
       if (photo !== undefined) {
         return [slot, { kind: 'own', url: photo.url, alt: `${answers.company}, photograph` }]
       }
-      if (own.length > 0) return [slot, { kind: 'none' }]
+      if (stockFree.includes(slot)) return [slot, { kind: 'none' }]
       const queries = (index === 0 ? brief.imageQueries.hero : brief.imageQueries.detail)
         .map((q) => q.trim())
         .filter((q) => q !== '')

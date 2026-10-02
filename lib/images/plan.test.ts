@@ -1,6 +1,6 @@
 import type { SubmissionAnswers } from '@/lib/brief/submission'
 import { fallbackBrief } from '@/lib/copy-slots/brief'
-import { orderByVerdict, planImagery } from '@/lib/images/plan'
+import { optionalSlots, orderByVerdict, planImagery, stockFreeSlots } from '@/lib/images/plan'
 
 const BLOB = 'https://x.public.blob.vercel-storage.com/photos'
 const ANSWERS: SubmissionAnswers = {
@@ -33,28 +33,72 @@ describe('planImagery', () => {
     if (plan.hero?.kind === 'search') expect(plan.hero.purpose).toContain('Ashgrove Physio')
   })
 
-  it("uses the visitor's own photographs in order and searches for nothing", () => {
+  it("uses the visitor's own photographs in order, and plans the slots after them as without", () => {
     const photos = [
       { fileName: 'a.jpg', url: `${BLOB}/a.jpg` },
       { fileName: 'b.jpg', url: `${BLOB}/b.jpg` },
     ]
-    const plan = planImagery(
-      ['hero', 'statement', 'third'],
-      { ...ANSWERS, imagery: { style: 'warm', photos } },
-      BRIEF,
-    )
+    const slots = ['hero', 'statement', 'third', 'fourth']
+    const plan = planImagery(slots, { ...ANSWERS, imagery: { style: 'warm', photos } }, BRIEF)
     expect(plan.hero).toEqual({
       kind: 'own',
       url: `${BLOB}/a.jpg`,
       alt: 'Ashgrove Physio, photograph',
     })
     expect(plan.statement).toMatchObject({ kind: 'own', url: `${BLOB}/b.jpg` })
-    expect(plan.third).toEqual({ kind: 'none' })
+    // The same detail search, pool and purpose a visitor without photographs gets for them.
+    const without = planImagery(slots, ANSWERS, BRIEF)
+    expect(plan.third).toEqual(without.third)
+    expect(plan.fourth).toEqual(without.fourth)
+    expect(plan.third).toMatchObject({
+      kind: 'search',
+      queries: ['exercise band natural light'],
+      union: true,
+    })
   })
 
-  it('leaves a slot empty when the brief has no query for it', () => {
+  it('leaves a slot empty when the brief has no query for it, with photographs or without', () => {
     const brief = { ...BRIEF, imageQueries: { hero: [' '], detail: [] } }
     expect(planImagery(['hero'], ANSWERS, brief).hero).toEqual({ kind: 'none' })
+    const photos = [{ fileName: 'a.jpg', url: `${BLOB}/a.jpg` }]
+    const plan = planImagery(
+      ['hero', 'statement'],
+      { ...ANSWERS, imagery: { style: 'warm', photos } },
+      brief,
+    )
+    expect(plan.statement).toEqual({ kind: 'none' })
+  })
+
+  it('searches for no stock-free slot, but puts an own photograph there as before', () => {
+    const slots = ['about', 'services', 'quote', 'profile']
+    const plan = planImagery(slots, ANSWERS, BRIEF, ['quote', 'profile'])
+    expect(plan.services).toMatchObject({ kind: 'search' })
+    expect(plan.quote).toEqual({ kind: 'none' })
+    expect(plan.profile).toEqual({ kind: 'none' })
+
+    const photos = ['a', 'b', 'c'].map((name) => ({
+      fileName: `${name}.jpg`,
+      url: `${BLOB}/${name}.jpg`,
+    }))
+    const own = planImagery(slots, { ...ANSWERS, imagery: { style: 'warm', photos } }, BRIEF, [
+      'quote',
+      'profile',
+    ])
+    expect(own.quote).toEqual({
+      kind: 'own',
+      url: `${BLOB}/c.jpg`,
+      alt: 'Ashgrove Physio, photograph',
+    })
+    expect(own.profile).toEqual({ kind: 'none' })
+  })
+})
+
+describe('optionalSlots and stockFreeSlots', () => {
+  it("read a template's lists, and give a template with none an empty list", () => {
+    expect(optionalSlots('t08-vector')).toEqual(['project-3', 'project-4'])
+    expect(stockFreeSlots('t02-monolith')).toEqual(['quote', 'profile'])
+    expect(optionalSlots('t01-aurora')).toEqual([])
+    expect(stockFreeSlots('t01-aurora')).toEqual([])
   })
 })
 

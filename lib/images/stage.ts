@@ -7,9 +7,16 @@ import type { SlotImage } from '@/lib/copy-slots/assets'
 import type { BrandBrief } from '@/lib/copy-slots/brief'
 import type { TemplateContract } from '@/lib/copy-slots/contract'
 import { download } from '@/lib/download'
-import type { Candidate } from '@/lib/images/candidates'
+import { givenWords, stockAlt } from '@/lib/images/alt'
+import type { SizedCandidate } from '@/lib/images/candidates'
 import { PexelsQuotaError, searchPhotos } from '@/lib/images/pexels'
-import { orderByVerdict, planImagery, type SlotPlan } from '@/lib/images/plan'
+import {
+  optionalSlots,
+  orderByVerdict,
+  planImagery,
+  type SlotPlan,
+  stockFreeSlots,
+} from '@/lib/images/plan'
 import { rehostImage } from '@/lib/images/rehost'
 import { log } from '@/lib/log'
 
@@ -30,15 +37,22 @@ type ImageryOutcome = Readonly<{ imagery: SubmissionImagery }> & Empties
 
 type SearchStep = Extract<SlotPlan, { kind: 'search' }>
 
+// One template's plan, by slot name.
+type TemplatePlan = Readonly<{ templateId: string; plan: Readonly<Record<string, SlotPlan>> }>
+
+// What a search slot was given: its stock picture, null when the page has shown every candidate,
+// or the failure its searches ended in.
+type Choice = PromiseSettledResult<SizedCandidate | null>
+
 // The calls the templates of one submission share. Every template takes the same queries from
 // the brief, so a search, its ranking and a re-host each run once per distinct key and every
 // other template waits on the same promise; otherwise each template repeats the others' calls,
 // against the model's bill and the search quota.
 type Shared = Readonly<{
   // By query.
-  searches: Map<string, Promise<Candidate[]>>
+  searches: Map<string, Promise<SizedCandidate[]>>
   // By query and purpose: the same candidates are judged again for a different purpose.
-  rankings: Map<string, Promise<Candidate[]>>
+  rankings: Map<string, Promise<SizedCandidate[]>>
   // By what names the picture: the upload's URL, or the Pexels id.
   hosted: Map<string, Promise<SlotImage>>
   // Which templates have taken each Pexels picture, so the designs differ where they can.
@@ -56,9 +70,10 @@ function once<T>(cache: Map<string, Promise<T>>, key: string, work: () => Promis
 // What the stage needs of a template: which it is, and which slots it draws.
 export type ImageContract = Pick<TemplateContract, 'meta' | 'imageSlots'>
 
-// The imagery stage: for each template, the plan for its slots, then each slot filled. A slot
-// that fails ends null, and the template draws without it. Nothing here throws to the stage: a
-// picture is never the reason a page does not appear.
+// The imagery stage: the plan for every template's slots, the stock picture for each of them,
+// chosen together, then each slot filled. A slot that fails ends null, and the template draws
+// without it. Nothing here throws to the stage: a picture is never the reason a page does not
+// appear.
 export async function imageryFor(
   contracts: readonly ImageContract[],
   answers: SubmissionAnswers,
@@ -71,12 +86,18 @@ export async function imageryFor(
     hosted: new Map(),
     taken: new Map(),
   }
+  const plans = contracts.map(({ meta, imageSlots }) => ({
+    templateId: meta.id,
+    plan: planImagery(imageSlots, answers, brief, stockFreeSlots(meta.id)),
+  }))
+  const choices = await chooseInOrder(plans, slug, shared)
+  const given = givenWords(answers, brief)
   const results = await Promise.all(
-    contracts.map((contract) => templateImagery(contract, answers, brief, slug, shared)),
+    plans.map((plan) => templateImagery(plan, choices, given, slug, shared)),
   )
   return {
     imagery: Object.fromEntries(
-      contracts.map((contract, index) => [contract.meta.id, results[index]?.imagery ?? {}]),
+      plans.map(({ templateId }, index) => [templateId, results[index]?.imagery ?? {}]),
     ),
     unfilled: results.flatMap((result) => result.unfilled),
     exhausted: results.some((result) => result.exhausted),
@@ -85,25 +106,24 @@ export async function imageryFor(
 
 // One template's slots.
 async function templateImagery(
-  contract: ImageContract,
-  answers: SubmissionAnswers,
-  brief: BrandBrief,
+  { templateId, plan }: TemplatePlan,
+  choices: ReadonlyMap<string, Choice>,
+  given: ReadonlySet<string>,
   slug: string,
   shared: Shared,
 ): Promise<Readonly<{ imagery: TemplateImagery }> & Empties> {
-  const plan = planImagery(contract.imageSlots, answers, brief)
   const unfilled: string[] = []
   let exhausted = false
   const entries = await Promise.all(
     Object.entries(plan).map(async ([slot, step]): Promise<[string, SlotImage | null]> => {
       try {
-        return [slot, await fill(step, contract.meta.id, slug, shared)]
+        return [slot, await fill(step, choices.get(`${templateId}.${slot}`), given, shared)]
       } catch (error) {
         if (error instanceof PexelsQuotaError) exhausted = true
-        else unfilled.push(`${contract.meta.id}.${slot}`)
+        else unfilled.push(`${templateId}.${slot}`)
         log.warn('imagery.slot_empty', {
           slug,
-          template: contract.meta.id,
+          template: templateId,
           slot,
           reason: error instanceof Error ? error.message : 'unknown',
         })
@@ -118,12 +138,16 @@ async function templateImagery(
 // any, or every query's pictures together for a detail pool (lib/images/plan.ts), judged by
 // the ranking model, or left in Pexels' order if the judging fails. A search that fails lets
 // the next query try; when none found anything, the last failure is the slot's.
-function orderedCandidates(step: SearchStep, slug: string, shared: Shared): Promise<Candidate[]> {
+function orderedCandidates(
+  step: SearchStep,
+  slug: string,
+  shared: Shared,
+): Promise<SizedCandidate[]> {
   return once(shared.rankings, `${step.queries.join('\n')}\n${step.purpose}`, async () => {
-    let candidates: Candidate[] = []
+    let candidates: SizedCandidate[] = []
     let failure: unknown
     for (const query of step.queries) {
-      let found: Candidate[]
+      let found: SizedCandidate[]
       try {
         found = await once(shared.searches, query, () => searchPhotos(query))
       } catch (error) {
@@ -157,15 +181,52 @@ function orderedCandidates(step: SearchStep, slug: string, shared: Shared): Prom
   })
 }
 
+// The stock picture for every search slot of the submission, by template.slot. Every search and
+// ranking starts at once and is shared by the designs as before; the choices wait until all have
+// answered, so they are made in one order: first every slot each design is sure to draw, design
+// by design and slot by slot, then the pictures of the items past the copy's minimum count
+// (optionalSlots). The imagery runs beside the copy and cannot know how many items a design will
+// draw, so this way no picture goes to an item a design may leave out while a slot it does draw
+// goes without, or repeats another design's (decision 7a).
+async function chooseInOrder(
+  plans: readonly TemplatePlan[],
+  slug: string,
+  shared: Shared,
+): Promise<ReadonlyMap<string, Choice>> {
+  const searches = plans.flatMap(({ templateId, plan }) =>
+    Object.entries(plan).flatMap(([slot, step]) =>
+      step.kind === 'search'
+        ? [{ templateId, slot, step, optional: optionalSlots(templateId).includes(slot) }]
+        : [],
+    ),
+  )
+  const order = [...searches.filter((s) => !s.optional), ...searches.filter((s) => s.optional)]
+  const ranked = await Promise.allSettled(
+    order.map(({ step }) => orderedCandidates(step, slug, shared)),
+  )
+  const choices = new Map<string, Choice>()
+  ranked.forEach((result, index) => {
+    const search = order[index]
+    if (search === undefined) return
+    choices.set(
+      `${search.templateId}.${search.slot}`,
+      result.status === 'rejected'
+        ? result
+        : { status: 'fulfilled', value: choose(result.value, search.templateId, shared) },
+    )
+  })
+  return choices
+}
+
 // The picture for a slot: the best-ranked candidate no design has taken, so the designs differ
 // where the search allows; when every candidate is taken, the best one this page has not
 // shown, so a picture is shared across designs before it is ever repeated on one page. Null
 // when this page has shown them all.
 function choose(
-  ordered: readonly Candidate[],
+  ordered: readonly SizedCandidate[],
   templateId: string,
   shared: Shared,
-): Candidate | null {
+): SizedCandidate | null {
   const candidate =
     ordered.find((c) => !shared.taken.has(c.id)) ??
     ordered.find((c) => shared.taken.get(c.id)?.has(templateId) !== true) ??
@@ -177,10 +238,12 @@ function choose(
   return candidate
 }
 
+// The picture for one slot, re-hosted: the visitor's own photograph with its alt, or the chosen
+// stock picture with Pexels' alt where the alt rule keeps it (lib/images/alt.ts).
 async function fill(
   step: SlotPlan,
-  templateId: string,
-  slug: string,
+  choice: Choice | undefined,
+  given: ReadonlySet<string>,
   shared: Shared,
 ): Promise<SlotImage | null> {
   if (step.kind === 'none') return null
@@ -190,14 +253,17 @@ async function fill(
       return rehostImage({ bytes, key: `own-${sha}`, alt: step.alt, credit: null })
     })
   }
-  const candidate = choose(await orderedCandidates(step, slug, shared), templateId, shared)
+  if (choice?.status === 'rejected') {
+    throw choice.reason instanceof Error ? choice.reason : new Error('The search failed')
+  }
+  const candidate = choice?.value ?? null
   if (candidate === null) return null
   const key = `pexels-${String(candidate.id)}`
   return once(shared.hosted, key, async () =>
     rehostImage({
       bytes: await download(candidate.source, CONFIG.timeoutMs.download),
       key,
-      alt: candidate.alt,
+      alt: stockAlt(candidate.alt, given),
       credit: { photographer: candidate.photographer, url: candidate.photographerUrl },
     }),
   )

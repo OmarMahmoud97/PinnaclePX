@@ -15,7 +15,7 @@ export const PROCESSORS = [
   ['Neon', 'holds the database'],
   ['Inngest', 'runs the steps that build your designs'],
   ['Anthropic', 'writes the wording from your sentence, and judges stock photographs'],
-  ['Pexels', 'supplies stock photographs when you add none of your own'],
+  ['Pexels', 'supplies stock photographs for any photo space your own photos do not fill'],
   ['Resend', 'sends the email with your link, and sends us your answers and any message you write'],
   ['Our email provider', 'holds our inbox, where your message arrives'],
   [

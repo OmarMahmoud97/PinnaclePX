@@ -3,7 +3,7 @@ import { readUpload } from '@/lib/blob/read-upload'
 import type { SubmissionAnswers } from '@/lib/brief/submission'
 import { fallbackBrief } from '@/lib/copy-slots/brief'
 import { download } from '@/lib/download'
-import type { Candidate } from '@/lib/images/candidates'
+import type { SizedCandidate } from '@/lib/images/candidates'
 import { PexelsQuotaError, searchPhotos } from '@/lib/images/pexels'
 import { rehostImage } from '@/lib/images/rehost'
 import { type ImageContract, imageryFor } from '@/lib/images/stage'
@@ -40,7 +40,7 @@ function contract(id: string, imageSlots: readonly string[]): ImageContract {
   }
 }
 
-function candidate(id: number): Candidate {
+function candidate(id: number): SizedCandidate {
   return {
     id,
     alt: `photo ${String(id)}`,
@@ -48,6 +48,8 @@ function candidate(id: number): Candidate {
     photographerUrl: 'https://www.pexels.com/@a',
     thumbnail: `https://images.pexels.com/photos/${String(id)}/m.jpg`,
     source: `https://images.pexels.com/photos/${String(id)}/l.jpg`,
+    width: 4000,
+    height: 2667,
   }
 }
 
@@ -118,6 +120,45 @@ describe('imageryFor', () => {
     expect(rehostImage).toHaveBeenCalledTimes(2)
   })
 
+  it("chooses the pictures of items past the copy's minimum after every slot a design draws", async () => {
+    vi.mocked(searchPhotos).mockImplementation((query) =>
+      Promise.resolve(
+        query.startsWith('treatment room')
+          ? [candidate(1), candidate(2)]
+          : [candidate(3), candidate(4), candidate(5)],
+      ),
+    )
+    // Vector draws its third project only when the copy has three; Aurora always draws its
+    // statement. Vector comes first, yet its third project waits for Aurora's statement.
+    const contracts = [
+      contract('t08-vector', ['about', 'project-1', 'project-2', 'project-3']),
+      contract('t01-aurora', ['hero', 'statement']),
+    ]
+    const { imagery } = await imageryFor(contracts, ANSWERS, BRIEF, 'slug')
+
+    expect(imagery['t08-vector']?.['project-1']?.src).toBe(`${BLOB}/images/pexels-3.webp`)
+    expect(imagery['t08-vector']?.['project-2']?.src).toBe(`${BLOB}/images/pexels-4.webp`)
+    expect(imagery['t01-aurora']?.statement?.src).toBe(`${BLOB}/images/pexels-5.webp`)
+    // With nothing fresh left, the optional slot shares a picture rather than the statement.
+    expect(imagery['t08-vector']?.['project-3']?.src).toBe(`${BLOB}/images/pexels-5.webp`)
+  })
+
+  it("never puts stock in Monolith's circles, so its initials show", async () => {
+    const slots = ['about', 'services', 'feature-1', 'quote', 'profile']
+    const { imagery, unfilled } = await imageryFor(
+      [contract('t02-monolith', slots)],
+      ANSWERS,
+      BRIEF,
+      'slug',
+    )
+
+    expect(imagery['t02-monolith']?.services?.src).toBe(`${BLOB}/images/pexels-3.webp`)
+    expect(imagery['t02-monolith']?.quote).toBeNull()
+    expect(imagery['t02-monolith']?.profile).toBeNull()
+    expect(unfilled).toEqual([])
+    expect(rehostImage).toHaveBeenCalledTimes(3)
+  })
+
   it('never shows a picture twice on one page, even with nothing else to show', async () => {
     vi.mocked(searchPhotos).mockResolvedValue([candidate(1)])
     const brief = { ...BRIEF, imageQueries: { hero: ['clinic'], detail: ['clinic'] } }
@@ -157,10 +198,57 @@ describe('imageryFor', () => {
 
     expect(readUpload).toHaveBeenCalledTimes(1)
     expect(readUpload).toHaveBeenCalledWith(`${BLOB}/photos/${SHA}.jpg`)
-    expect(searchPhotos).not.toHaveBeenCalled()
     expect(imagery.t01?.hero?.src).toBe(`${BLOB}/images/own-${SHA}.webp`)
     expect(imagery.t02?.hero?.src).toBe(`${BLOB}/images/own-${SHA}.webp`)
-    expect(imagery.t01?.statement).toBeNull()
+    // The visitor's own photograph keeps its alt: the stock alt rule is for Pexels' words only.
+    expect(imagery.t01?.hero?.alt).toBe('Ashgrove Physio, photograph')
+  })
+
+  it('fills the slots own photographs leave with stock, judged as for a visitor without', async () => {
+    const answers: SubmissionAnswers = {
+      ...ANSWERS,
+      imagery: { style: 'warm', photos: [{ fileName: 'a.jpg', url: `${BLOB}/photos/${SHA}.jpg` }] },
+    }
+    const contracts = [contract('t01', ['hero', 'statement', 'third']), contract('t02', ['hero'])]
+    const { imagery, unfilled } = await imageryFor(contracts, answers, BRIEF, 'slug')
+
+    // The first slot is the photograph, so only the detail search runs and is judged, once.
+    expect(vi.mocked(searchPhotos).mock.calls.map(([query]) => query)).toEqual([
+      'exercise band natural light',
+    ])
+    expect(rankPhotos).toHaveBeenCalledTimes(1)
+    expect(vi.mocked(rankPhotos).mock.calls[0]?.[1]).toMatch(/^a supporting picture/)
+    expect(imagery.t01?.hero?.src).toBe(`${BLOB}/images/own-${SHA}.webp`)
+    expect(imagery.t01?.statement?.src).toBe(`${BLOB}/images/pexels-3.webp`)
+    expect(imagery.t01?.third?.src).toBe(`${BLOB}/images/pexels-4.webp`)
+    expect(unfilled).toEqual([])
+
+    // A visitor without photographs makes the same detail search and more.
+    vi.mocked(searchPhotos).mockClear()
+    vi.mocked(rankPhotos).mockClear()
+    await imageryFor(contracts, ANSWERS, BRIEF, 'slug')
+    expect(searchPhotos).toHaveBeenCalledTimes(2)
+    expect(rankPhotos).toHaveBeenCalledTimes(2)
+  })
+
+  it("keeps a stock picture's alt only when it names nothing the visitor did not give", async () => {
+    vi.mocked(searchPhotos).mockImplementation((query) =>
+      Promise.resolve(
+        query.startsWith('treatment room')
+          ? [{ ...candidate(1), alt: 'A treatment room in Sheffield' }]
+          : [{ ...candidate(3), alt: 'A gym in Warsaw during autumn' }],
+      ),
+    )
+    const { imagery } = await imageryFor(
+      [contract('t01', ['hero', 'statement'])],
+      ANSWERS,
+      BRIEF,
+      'slug',
+    )
+
+    expect(imagery.t01?.hero?.alt).toBe('A treatment room in Sheffield')
+    expect(imagery.t01?.statement?.src).toBe(`${BLOB}/images/pexels-3.webp`)
+    expect(imagery.t01?.statement?.alt).toBe('')
   })
 
   it('leaves a slot empty in every template when its search fails, without asking again', async () => {
