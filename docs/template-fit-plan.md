@@ -76,6 +76,8 @@ This covers the eight ready templates, read against the evidence in this plan. T
 
 ### Decisions for the owner
 
+**Decided on 2 October 2026.** The owner delegated these decisions after a senior review of this plan. The review, the adjusted plan and every decision are in [template-fit-decisions.md](template-fit-decisions.md). Its Part 6 corrects statements in this plan, which is kept as the Phase 1 record.
+
 Each decision gives its options, the evidence, a recommendation and the phase it blocks. "Free now" says whether work may go ahead on the recommendation as free, reversible work.
 
 **1. Leftover fixes, /examples, routing and Meridian's defects.** Blocks Phase 2's fix pull request. Routing blocks Phase 3.

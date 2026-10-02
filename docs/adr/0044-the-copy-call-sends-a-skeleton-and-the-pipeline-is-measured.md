@@ -4,6 +4,10 @@
 - Date: 1 October 2026
 - Plan: `docs/pipeline-quality-plan.md`
 - Amends: ADR 0009 (decision 8, the copy call's mechanism), ADR 0011 (decisions 1, 2 and 4), ADR 0012 (decision 2), ADR 0015 (decision 1), ADR 0017 (decision 1)
+- Amended by: ADR 0048 (2 October 2026: paid passes run one change at a time, each capped. "First
+  copy answers fit 36 of 60; 34 of 40 in-call retries fitted" counted unreadable answers as fits
+  and is 26 of 60 and 32 of 40; Harbor's cost comes more from unreadable answers than from its
+  cap)
 
 ## Context
 

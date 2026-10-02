@@ -348,6 +348,8 @@ Stop.
 
 ## Decisions to put to the owner
 
+**Answered on 2 October 2026.** The owner delegated these decisions after a senior review of the Phase 1 plan. [template-fit-decisions.md](template-fit-decisions.md) records the answers and six added decisions (18 to 23). Under the delegation, its Part 3 replaces the phase gates above: visible fixes ship first, and selection machinery is built only when a label can change a pick. Each paid pass still needs the owner's go-ahead on its written estimate and cap.
+
 Add any others you find.
 
 1. The owner's view (2 October 2026) answers the industry-fit decision in docs/template-analysis.md in principle: fix leftovers rather than restrict templates. Still to decide:

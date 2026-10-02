@@ -4,6 +4,8 @@
 - Date: 1 October 2026
 - Amends: ADR 0041 (the set is ten, the ninth and tenth not ready), ADR 0038 (its implicit two-visit cap)
 - Builds on: ADR 0008 (the template contract), ADR 0023 (the ports and their rules), ADR 0041 (porting a live site with hand-written CSS), `docs/template-porting-guide.md`
+- Amended by: ADR 0048 (2 October 2026: the shortfall question moves to the visit-cap work, and a
+  CI minimum guards it until then)
 
 ## Context
 

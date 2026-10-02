@@ -26,3 +26,17 @@ The owner chose to port from that build rather than from the HTML alone, and con
 - Deviations from the source, all deliberate: the header's logo links to the top of the page, not to prebuiltui.com; the eyebrow over the headline carries `uppercase` (the source typed its own in capitals); the closing band's headline is an `h2` (the source has two `h1`s) and the header's links sit in a `nav`; the menu buttons are labelled; the footer's "Designed by PrebuiltUI" is the photographers' credit line, and its "© 2026. All Right Reserved." is "© year, legal name. All rights reserved."; the corner pictures on the closing band have empty alt text, being repeats; the Instagram mark's path had a stray space in the source (`1. 145.333`), which stopped the browser drawing the rest of it and logged an error on every load, and is `1.145.333` here.
 - `docs/claims-register.md` row "A person designs every layout" still needs the owner's decision: four of the five ready layouts were designed by other people and adapted here.
 - The porting guide gains the recipe for a source that is only a published build.
+
+## Amendment, 2 October 2026: the source's trade is taken out (ADR 0048)
+
+- **Leftovers.** The feature rows' chef's hat, leaf and heart become one small brand dot. `#dishes`, `#timing` and `#booking-process` become `#offers`, `#reach` and `#steps`, with the copy's target names kept.
+- **The hero.** Its words sat straight on the photograph, and every text item met WCAG AA on 0 of 10 stored pictures. It gains the first treatment, in the order and within the caps of docs/template-fit-decisions.md decision 7, under which every word, the header's included, passes AA over any picture; any case that still fails is listed on the hero pull request. The visitor's logo stays visible over it. This ships in the hero-legibility pull request, with the done page's posters.
+- **Header and text.** The header fits at 768, and readable faded text below AA moves to a checked colour.
+- **Behaviour.**
+  - A grid picture now ends upright: it turned half a turn on every pointer entry.
+  - An empty grid picture keeps its square shape, and the empty About and feature blocks keep their slot's shape instead of collapsing to nothing.
+  - The menu returns focus to its button.
+  - Every ask points at the closing block, whose button opens a mail to the page's address.
+- **Tone.** "hospitable" becomes "welcoming".
+
+/examples changes with all of it. These land with the pull requests fix/ember-template-fit and the hero-legibility pull request.

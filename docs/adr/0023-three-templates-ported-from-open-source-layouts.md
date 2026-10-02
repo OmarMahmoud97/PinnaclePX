@@ -34,3 +34,33 @@ The sources cannot be used as they stand: their copy is hard-coded, their colour
 - `docs/claims-register.md` row "A person designs every layout" still needs the owner's decision: three of the four ready layouts were designed by other people and adapted here.
 - The registry test's "template without a contract" case moved from `t02-monolith` to `t05-ember`.
 - Six more placeholders remain (`t05` to `t10`). The owner has said more repositories will follow; each takes the same shape, the same sieve for invented facts, and the same section-by-section comparison against the source running locally, written up in `docs/template-porting-guide.md` with the comparison script `pnpm template:compare`.
+
+## Amendment, 2 October 2026: the sources' trades are taken out (ADR 0048)
+
+Each layout kept icons, placeholders and anchors from its source. They are replaced inside the same structures (decision 1, docs/template-fit-decisions.md), and /examples changes with them, so `pnpm template:compare` no longer matches these elements. Renamed anchors compare with `name=#old::#new`.
+
+- **Monolith.**
+  - The logo's panels mark, the radar beside each label and the eight drawings' "Free Icons" titles go, and the drawings are hidden from screen readers.
+  - The offering card's bulb and the service icons become Monolith's own check mark.
+  - The steps' medal, map, plane and gift become numerals 1 to 3.
+  - Only the brief's three steps are drawn: in every stored answer the fourth was padding.
+  - "Menu Icon" becomes "Menu", and `#cta` becomes `#contact`.
+  - The large About phrases, the hero cards and the wordmark fit at every width.
+  - The headline's gradient words are built from checked colours in the light scheme, where the glow tokens set them at about 1.5 to 2.5:1. The area labels move to a checked colour.
+  - Labels, the FAQ's closing line, the copyright and the hero cards' titles stop being out-of-order headings.
+  - The quote and profile circles take no stock picture and show the business's initials, hidden from screen readers.
+- **Meridian.**
+  - The marquee's crown, ghost, squirrel and other icons go.
+  - The benefit icons go, and the title leads. The faint 01 to 04 stay as a watermark hidden from screen readers, under decision 1's exception for numerals the source drew only as decoration.
+  - The feature icons become one check mark, and the contact steps' icons become numerals 01 to 03 at the row's size.
+  - The form's placeholders, a real person's name and email address, are removed apart from "Your message...".
+  - The headline phrase's gradient is built from checked colours in the light scheme, and the nav fits at 1024.
+  - The heading levels, the hero picture's reserved box, the dead markup and the generic fallback headings are fixed.
+- **Atlas.**
+  - The "More" links beside each column are not drawn when a card holds words. On /examples they stay, where the source's data sets them.
+  - The header's drop-down works by pointer and keyboard; it closed before a click could land.
+  - The nav fits at 1024, and the table headings move to a checked colour.
+  - `#tools` becomes `#approach`, and the heading levels are fixed.
+  - Every ask points at the pitch block, whose button opens a mail to the page's address.
+
+These land with the pull requests fix/monolith-template-fit, fix/meridian-template-fit and fix/atlas-template-fit.
