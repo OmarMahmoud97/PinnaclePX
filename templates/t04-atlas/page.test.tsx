@@ -33,4 +33,18 @@ describe('the Atlas page', () => {
     expect(mails).toHaveLength(1)
     expect(mails[0]).toMatch(/^mailto:owner@example\.com\?subject=\S+$/)
   })
+
+  // Decision 15: no header label wraps inside its link or button. The name (the home link) may
+  // wrap, and the toggle holds an icon alone.
+  it('keeps every header label to one line, with the row from xl', () => {
+    const header = html.slice(html.indexOf('<nav id="navbar"'), html.indexOf('</nav>'))
+    const controls = [...header.matchAll(/<(?:a|button)\s([^>]*)>/g)].map((m) => m[1] ?? '')
+    const labelled = controls.filter(
+      (attributes) => !/aria-label="(Menu|[^"]* home)"/.test(attributes),
+    )
+    expect(labelled.length).toBeGreaterThan(8)
+    for (const attributes of labelled) expect(attributes).toContain('whitespace-nowrap')
+    const toggle = controls.find((attributes) => attributes.includes('aria-label="Menu"'))
+    expect(toggle).toContain('xl:hidden')
+  })
 })
