@@ -3,7 +3,7 @@ import { readUpload } from '@/lib/blob/read-upload'
 import type { SubmissionAnswers } from '@/lib/brief/submission'
 import { fallbackBrief } from '@/lib/copy-slots/brief'
 import { download } from '@/lib/download'
-import type { Candidate } from '@/lib/images/candidates'
+import type { SizedCandidate } from '@/lib/images/candidates'
 import { PexelsQuotaError, searchPhotos } from '@/lib/images/pexels'
 import { rehostImage } from '@/lib/images/rehost'
 import { type ImageContract, imageryFor } from '@/lib/images/stage'
@@ -40,7 +40,7 @@ function contract(id: string, imageSlots: readonly string[]): ImageContract {
   }
 }
 
-function candidate(id: number): Candidate {
+function candidate(id: number): SizedCandidate {
   return {
     id,
     alt: `photo ${String(id)}`,
@@ -48,6 +48,8 @@ function candidate(id: number): Candidate {
     photographerUrl: 'https://www.pexels.com/@a',
     thumbnail: `https://images.pexels.com/photos/${String(id)}/m.jpg`,
     source: `https://images.pexels.com/photos/${String(id)}/l.jpg`,
+    width: 4000,
+    height: 2667,
   }
 }
 

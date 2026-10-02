@@ -8,7 +8,7 @@ import type { BrandBrief } from '@/lib/copy-slots/brief'
 import type { TemplateContract } from '@/lib/copy-slots/contract'
 import { download } from '@/lib/download'
 import { givenWords, stockAlt } from '@/lib/images/alt'
-import type { Candidate } from '@/lib/images/candidates'
+import type { SizedCandidate } from '@/lib/images/candidates'
 import { PexelsQuotaError, searchPhotos } from '@/lib/images/pexels'
 import { orderByVerdict, planImagery, type SlotPlan } from '@/lib/images/plan'
 import { rehostImage } from '@/lib/images/rehost'
@@ -37,9 +37,9 @@ type SearchStep = Extract<SlotPlan, { kind: 'search' }>
 // against the model's bill and the search quota.
 type Shared = Readonly<{
   // By query.
-  searches: Map<string, Promise<Candidate[]>>
+  searches: Map<string, Promise<SizedCandidate[]>>
   // By query and purpose: the same candidates are judged again for a different purpose.
-  rankings: Map<string, Promise<Candidate[]>>
+  rankings: Map<string, Promise<SizedCandidate[]>>
   // By what names the picture: the upload's URL, or the Pexels id.
   hosted: Map<string, Promise<SlotImage>>
   // Which templates have taken each Pexels picture, so the designs differ where they can.
@@ -121,12 +121,16 @@ async function templateImagery(
 // any, or every query's pictures together for a detail pool (lib/images/plan.ts), judged by
 // the ranking model, or left in Pexels' order if the judging fails. A search that fails lets
 // the next query try; when none found anything, the last failure is the slot's.
-function orderedCandidates(step: SearchStep, slug: string, shared: Shared): Promise<Candidate[]> {
+function orderedCandidates(
+  step: SearchStep,
+  slug: string,
+  shared: Shared,
+): Promise<SizedCandidate[]> {
   return once(shared.rankings, `${step.queries.join('\n')}\n${step.purpose}`, async () => {
-    let candidates: Candidate[] = []
+    let candidates: SizedCandidate[] = []
     let failure: unknown
     for (const query of step.queries) {
-      let found: Candidate[]
+      let found: SizedCandidate[]
       try {
         found = await once(shared.searches, query, () => searchPhotos(query))
       } catch (error) {
@@ -165,10 +169,10 @@ function orderedCandidates(step: SearchStep, slug: string, shared: Shared): Prom
 // shown, so a picture is shared across designs before it is ever repeated on one page. Null
 // when this page has shown them all.
 function choose(
-  ordered: readonly Candidate[],
+  ordered: readonly SizedCandidate[],
   templateId: string,
   shared: Shared,
-): Candidate | null {
+): SizedCandidate | null {
   const candidate =
     ordered.find((c) => !shared.taken.has(c.id)) ??
     ordered.find((c) => shared.taken.get(c.id)?.has(templateId) !== true) ??
