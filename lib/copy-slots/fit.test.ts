@@ -147,6 +147,12 @@ describe('fitToSlot, where a cut ends', () => {
     const text = 'Ready to talk to AshgrovePhysiotherapyAndSportsInjuryClinicsSheffieldAndLeeds?'
     expect(fitToSlot(text, { min: 16, max: 50 }, FILLERS)).toBe('Ready to talk to')
   })
+
+  it('keeps the plain cut, point and all, when no ending leaves the minimum', () => {
+    // "Rated" would be 5 characters, under the slot's 8, so the cut made before decision 18
+    // stands, and the fillers are needed, and fail, only where they were before.
+    expect(fitToSlot('Rated 4.9 on Google', { min: 8, max: 8 }, ['Ltd'])).toBe('Rated 4.')
+  })
 })
 
 // The wordmark (2 to 24 characters) and the legal name (2 to 60) are cut from the company name
