@@ -120,12 +120,11 @@ describe('fitToSlot, where a cut ends', () => {
   })
 
   it('ends at a comma, which goes, passing over one that follows a joining word', () => {
-    const range = { min: 5, max: 40 }
     const text = 'Cakes, tarts and, on Sundays only, pies baked fresh every single morning'
-    expect(fitToSlot(text, range, FILLERS)).toBe('Cakes, tarts and, on Sundays only')
-    expect(fitToSlot('Cakes, tarts and, pies baked fresh every morning', range, FILLERS)).toBe(
-      'Cakes',
-    )
+    expect(fitToSlot(text, { min: 5, max: 40 }, FILLERS)).toBe('Cakes, tarts and, on Sundays only')
+    // The earlier comma keeps 18 of the 34 characters, at least half, so it counts.
+    const after = 'Cakes and pastries, tarts and, pies baked fresh every morning'
+    expect(fitToSlot(after, { min: 5, max: 34 }, FILLERS)).toBe('Cakes and pastries')
   })
 
   it('drops every joining word left at a word boundary', () => {
@@ -168,6 +167,41 @@ describe('fitToSlot, where a cut ends', () => {
     // "Rated" would be 5 characters, under the slot's 8, so the cut made before decision 18
     // stands, and the fillers are needed, and fail, only where they were before.
     expect(fitToSlot('Rated 4.9 on Google', { min: 8, max: 8 }, ['Ltd'])).toBe('Rated 4.')
+  })
+})
+
+// A clause counts only when it keeps at least half the slot, so a name is not cut to its first
+// word: a refinement of decision 18's order (docs/template-fit-decisions.md).
+describe('fitToSlot, a clause keeps half the slot', () => {
+  const NAME = { min: 2, max: 24 }
+
+  it("does not cut a firm's name at its first comma", () => {
+    expect(fitToSlot('Smith, Jones & Partners Ltd', NAME, ['Ltd'])).toBe('Smith, Jones & Partners')
+  })
+
+  it("does not take an abbreviation's point for a sentence end", () => {
+    expect(fitToSlot('Dr. Smith Dental Care and Implant Clinic', NAME, ['Ltd'])).toBe(
+      'Dr. Smith Dental Care',
+    )
+  })
+
+  it('passes over a colon that keeps under half the slot', () => {
+    // The electrician fixture in a 20-to-90 slot: the colon keeps 44 of the 90 characters.
+    const text =
+      'Domestic electrician covering York and Selby: rewires, consumer units, EV chargers and fault finding.'
+    expect(fitToSlot(text, { min: 20, max: 90 }, FILLERS)).toBe(
+      'Domestic electrician covering York and Selby: rewires, consumer units',
+    )
+  })
+
+  it('still ends at a comma that keeps half the slot', () => {
+    // The clause is 30 characters: half of a 60-character slot, and under half of a 61.
+    const text =
+      'Boiler repairs across Bradford, Shipley and the villages of Airedale and Wharfedale.'
+    expect(fitToSlot(text, { min: 18, max: 60 }, FILLERS)).toBe('Boiler repairs across Bradford')
+    expect(fitToSlot(text, { min: 18, max: 61 }, FILLERS)).toBe(
+      'Boiler repairs across Bradford, Shipley and the villages',
+    )
   })
 })
 

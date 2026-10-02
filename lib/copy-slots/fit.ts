@@ -72,18 +72,21 @@ function plainCut(text: string, min: number, max: number): string {
 // last sentence end; just before the last colon or semicolon; the last comma, which goes; the last
 // word boundary, with the joining words and marks left at its end dropped. A colon, semicolon or
 // comma goes with the cut, so it may fall just past the `max` characters. Each counts only while
-// `min` characters remain, and never when none would, and a clause only when it does not end on a
-// joining word or inside brackets or a quotation. When none does, the plain cut stands, so the
-// fillers complete exactly what they completed before decision 18.
+// `min` characters remain, and never when none would. A clause counts only when it keeps at least
+// half the slot, so a name is not cut to its first word ("Smith, Jones & Partners Ltd" to "Smith",
+// "Dr. Smith Dental Care" to "Dr."), and when it does not end on a joining word or inside brackets
+// or a quotation. When none does, the plain cut stands, so the fillers complete exactly what they
+// completed before decision 18.
 function shorten(text: string, min: number, max: number): string {
   if (text.length <= max) return text
   const least = Math.max(min, 1)
+  const clauseLeast = Math.max(least, Math.ceil(max / 2))
   const before = (at: number) => text.slice(0, at).replace(TRAILING_JOINERS, '')
   const clause = [
     ...breaksAt(text, max, /[.!?]/g).map((at) => text.slice(0, at + 1)),
     ...breaksAt(text, max + 1, /[:;]/g).map(before),
     ...breaksAt(text, max + 1, /,/g).map(before),
-  ].find((cut) => cut.length >= least && !endsOnJoiningWord(cut) && !leavesOpen(cut))
+  ].find((cut) => cut.length >= clauseLeast && !endsOnJoiningWord(cut) && !leavesOpen(cut))
   if (clause !== undefined) return clause
   let phrase = wordCut(text, max).replace(TRAILING_JOINERS, '')
   while (phrase !== '' && endsOnJoiningWord(phrase)) {

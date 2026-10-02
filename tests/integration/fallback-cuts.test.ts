@@ -100,6 +100,24 @@ describe('fallback company names at the edges', () => {
   })
 })
 
+// A firm's name with an early comma, or an abbreviation's point, keeps more than its first word
+// in the wordmark (2 to 24 characters), because a clause counts only when it keeps half the slot.
+const FIRMS = [
+  ['Smith, Jones & Partners Ltd', 'Smith, Jones & Partners'],
+  ['Dr. Smith Dental Care and Implant Clinic', 'Dr. Smith Dental Care'],
+] as const
+
+describe('fallback wordmarks of firm names', () => {
+  it.each(READY)("%s keeps more than a firm name's first word", (id) => {
+    const contract = contractFor(id)
+    for (const [company, wordmark] of FIRMS) {
+      const copy = contract.fallbackCopy(fallbackBrief(company, 'Job scheduling for trades.'))
+      expect(contract.copyViolations(copy)).toEqual([])
+      expect(BRAND.parse(copy).brand.name, id).toBe(wordmark)
+    }
+  })
+})
+
 // Each fixture's own company and sentence, then every edge name with every fixture's sentence and
 // with the example designs page's (app/examples/hub).
 const SENTENCES = [
