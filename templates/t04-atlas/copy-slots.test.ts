@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs'
+import { join } from 'node:path'
 import { TOKEN_NAMES } from '@/lib/tokens/types'
 import { ATLAS_CONTRAST_PAIRS, atlasViolations } from './copy-slots'
 import { KESTREL_ATLAS } from './example/content'
@@ -53,6 +55,22 @@ describe('atlas copy slots', () => {
     for (const pair of ATLAS_CONTRAST_PAIRS) {
       expect(TOKEN_NAMES).toContain(pair.text)
       expect(TOKEN_NAMES).toContain(pair.background)
+    }
+  })
+
+  // Decision 15: words are set only in colours the contrast engine checks. Every stop of the two
+  // text gradients (atlas.css) is a pair on the surface and on the muted surface.
+  it('sets the text gradients only in colours it declares on both surfaces', () => {
+    const keys = ATLAS_CONTRAST_PAIRS.map((pair) => `${pair.text}/${pair.background}`)
+    const css = readFileSync(join(process.cwd(), 'templates/t04-atlas/atlas.css'), 'utf8')
+    for (const rule of ['.atlas-text-gradient {', '.atlas-header-gradient {']) {
+      const start = css.indexOf(rule)
+      const stops = [...css.slice(start, css.indexOf('}', start)).matchAll(/var\(--([a-z-]+)\)/g)]
+      expect(stops.length).toBeGreaterThan(1)
+      for (const [, stop] of stops) {
+        expect(keys).toContain(`${stop ?? ''}/surface`)
+        expect(keys).toContain(`${stop ?? ''}/surface-muted`)
+      }
     }
   })
 })

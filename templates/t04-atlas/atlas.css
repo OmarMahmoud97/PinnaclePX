@@ -1,7 +1,7 @@
 /*
  * Atlas (t04). The source's own stylesheet rules (its layout and page styles), scoped to the
  * template's root and painted with the tokens: the cover wash behind the top of the page, the
- * two text gradients, the blue gradient fill, and the band backgrounds it drew with pictures.
+ * blue gradient fill, the two text gradients, and the band backgrounds it drew with pictures.
  * The source also slid every block in with a scroll-animation library; those are scroll-driven
  * animations here, with no script, and off under reduced motion.
  */
@@ -29,27 +29,27 @@
   }
 }
 
-/* The source's .bg-blue-gradient and .text-gradient. */
-.atlas-blue-gradient,
-.atlas-text-gradient {
+/* The source's .bg-blue-gradient, a fill under on-brand. */
+.atlas-blue-gradient {
   background: linear-gradient(136.91deg, var(--brand) -12.5%, var(--brand-deeper) 107.5%);
 }
 
+/*
+ * The source's .text-gradient and .text-header-gradient, at their angles, from the deeper brand
+ * to the deepest: colours the contrast engine checks against the surface (decision 15). As
+ * text, the source's brand stop fell to 3.9:1 over the cover wash and the bands' haze in the
+ * dark scheme, and the header gradient's glows to 1.6:1 on every light page; glows are light,
+ * never text. Every stop now meets AA on both schemes' surfaces, wash and haze included.
+ */
 .atlas-text-gradient {
+  background: linear-gradient(136.91deg, var(--brand-deeper) -12.5%, var(--brand-deepest) 107.5%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
-/* The source's .text-header-gradient. */
 .atlas-header-gradient {
-  background: linear-gradient(
-    169.4deg,
-    var(--glow-secondary) -6.01%,
-    var(--glow) 36.87%,
-    var(--brand) 78.04%,
-    var(--brand-deeper) 103.77%
-  );
+  background: linear-gradient(169.4deg, var(--brand-deeper) -6.01%, var(--brand-deepest) 103.77%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
