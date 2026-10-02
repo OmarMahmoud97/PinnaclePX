@@ -6,15 +6,22 @@ import type { MonolithContent, MonolithLink } from '../copy-slots'
 import { button } from '../styles'
 import { MonolithLogo } from './logo'
 
-type Props = { brand: MonolithContent['brand']; links: readonly MonolithLink[]; cta: MonolithLink }
+type Props = {
+  brand: MonolithContent['brand']
+  links: readonly MonolithLink[]
+  cta: MonolithLink
+  // The class that hides the toggle from the width where the bar shows its links (nav.tsx).
+  hide: string
+}
 
 const PANEL_ID = 'monolith-menu'
 
 // The source's phone menu, the template's one piece of JavaScript: a sheet that slides in from
 // the left over a dark overlay, with the brand name at its head, the links stacked in the
 // centre, the bordered button under them and a close mark at the top right. Escape closes and
-// returns focus, a tap on the overlay closes, and choosing a link closes.
-export function NavMenu({ brand, links, cta }: Props) {
+// returns focus, a tap on the overlay closes, and choosing a link closes. The button under the
+// links is at least the source's 110px and grows with its label rather than spill.
+export function NavMenu({ brand, links, cta, hide }: Props) {
   const [open, setOpen] = useState(false)
   const buttonRef = useRef<HTMLButtonElement>(null)
   const close = () => {
@@ -34,7 +41,7 @@ export function NavMenu({ brand, links, cta }: Props) {
   }, [open])
 
   return (
-    <span className="flex md:hidden">
+    <span className={`flex shrink-0 ${hide}`}>
       <button
         ref={buttonRef}
         type="button"
@@ -45,7 +52,7 @@ export function NavMenu({ brand, links, cta }: Props) {
         aria-controls={PANEL_ID}
         className="px-2"
       >
-        <Menu className="flex h-5 w-5 md:hidden" />
+        <Menu className="flex h-5 w-5" />
         <span className="sr-only">Menu Icon</span>
       </button>
 
@@ -71,7 +78,7 @@ export function NavMenu({ brand, links, cta }: Props) {
             <a
               href={cta.href}
               onClick={close}
-              className={`w-[110px] border border-border ${button.secondary}`}
+              className={`min-w-[110px] border border-border ${button.secondary}`}
             >
               {cta.label}
             </a>

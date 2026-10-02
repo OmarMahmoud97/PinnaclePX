@@ -1,5 +1,6 @@
 import type { MonolithContent } from '../copy-slots'
-import { card, cardContent, cardHeader, cardTitle, container } from '../styles'
+import { fitWord } from '../fit'
+import { card, cardContent, cardHeader, cardTitle, container, heading } from '../styles'
 import { Emphasis } from './emphasis'
 import { GiftIcon, MapIcon, MedalIcon, PlaneIcon } from './icons'
 
@@ -11,8 +12,8 @@ const ICONS = [MedalIcon, MapIcon, PlaneIcon, GiftIcon] as const
 // illustration and title stacked in the centre and its description beneath.
 export function MonolithHowItWorks({ steps }: Props) {
   return (
-    <section id="how-it-works" className={`${container} py-24 text-center sm:py-32`}>
-      <h2 className="text-3xl font-bold md:text-4xl">
+    <section id="how-it-works" className={`${container} @container py-24 text-center sm:py-32`}>
+      <h2 className={heading} style={fitWord([steps.heading.text])}>
         <Emphasis heading={steps.heading} />
       </h2>
       <p className="mx-auto mt-4 mb-8 text-xl text-on-surface-muted md:w-3/4">{steps.lead}</p>
