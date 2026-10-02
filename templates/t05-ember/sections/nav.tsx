@@ -56,7 +56,9 @@ export function EmberNav({ brand, nav }: Props) {
           </a>
           <nav aria-label="Main" className="hidden items-center gap-10 md:flex">
             {nav.links.map((link) => (
-              <a key={link.href} href={link.href} className="hover:text-on-surface-muted">
+              // Underlined under the pointer: the source's fade to the muted grey would fall
+              // below WCAG AA over a photograph, even on the header's veil (hero.tsx).
+              <a key={link.href} href={link.href} className="underline-offset-4 hover:underline">
                 {link.label}
               </a>
             ))}
