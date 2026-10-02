@@ -15,11 +15,12 @@ import { meta } from './meta'
 
 // Ember's side of the pipeline contract: the copy the copy stage writes, the fallback when it
 // cannot, and how copy and assets become the content object. Links are never written: the nav
-// follows the page's sections in the source's order, every button leads to the booking steps as
-// the source's do, and footer links point at one of the page's own anchors. The optional
-// pieces (the rating line, the location card, the booking testimonial, the opening times, the
-// testimonials and the social links) are not in the copy: the brief holds no such facts, so
-// they stay null.
+// follows the page's sections in the source's order, and footer links point at one of the
+// page's own anchors. Every ask leads to the closing band, its own button included: the
+// source's led to the booking steps, which here hold no form or link (decision 15,
+// docs/template-fit-decisions.md). The optional pieces (the rating line, the location card, the
+// booking testimonial, the opening times, the testimonials and the social links) are not in the
+// copy: the brief holds no such facts, so they stay null.
 
 // The names the copy model gives a footer link's target, kept as it knows them, and the
 // address each leads to. The grid, the card on the photograph and the steps were the source's
@@ -199,13 +200,13 @@ export function assembleEmber(copy: EmberCopy, assets: TemplateAssets): EmberCon
         label,
         href: NAV_HREFS[index] ?? HREF.top,
       })),
-      cta: { label: copy.nav.cta, href: HREF['booking-process'] },
+      cta: { label: copy.nav.cta, href: HREF.cta },
     },
     hero: {
       eyebrow: hero.eyebrow,
       headline: hero.headline,
       subhead: hero.subhead,
-      cta: { label: hero.cta, href: HREF['booking-process'] },
+      cta: { label: hero.cta, href: HREF.cta },
       background: image('hero'),
       proof: null,
     },
@@ -236,14 +237,14 @@ export function assembleEmber(copy: EmberCopy, assets: TemplateAssets): EmberCon
       title: timing.title,
       rows: null,
       body: timing.body,
-      cta: { label: timing.cta, href: HREF['booking-process'] },
+      cta: { label: timing.cta, href: HREF.cta },
     },
     testimonials: null,
     faq: copy.faq,
     cta: {
       heading: cta.heading,
       body: cta.body,
-      button: { label: cta.button, href: HREF['booking-process'] },
+      button: { label: cta.button, href: HREF.cta },
     },
     footer: {
       description: footer.description,

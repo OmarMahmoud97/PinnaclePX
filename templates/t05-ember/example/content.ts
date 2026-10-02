@@ -34,7 +34,7 @@ function picture(file: StaticImage, alt: string): EmberImage {
   return { src: file.src, alt, width: file.width, height: file.height, credit: null }
 }
 
-const BOOK = { label: 'Book a table', href: '#steps' } as const
+const BOOK = { label: 'Book a table', href: '#cta' } as const
 
 const DISHES = [
   [dish1, 'Grilled Chicken Alfredo', '$24'],
@@ -245,7 +245,7 @@ export const KESTREL_EMBER: EmberContent = {
   cta: {
     heading: 'Every Meal Is Made To Be Remembered',
     body: 'Join us for fresh ingredients, signature recipes and an unforgettable dining experience.',
-    button: { label: 'Book Your Table', href: '#steps' },
+    button: { label: 'Book Your Table', href: '#cta' },
   },
   footer: {
     description:

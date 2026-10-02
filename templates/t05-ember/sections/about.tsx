@@ -8,15 +8,17 @@ type Props = Pick<EmberContent, 'about'>
 // The source's About: the picture at the left, rounded, and at the right the eyebrow between
 // two laurel marks, the heading, the paragraph and a small coloured card naming the place with
 // a thumbnail and a link to a map. The picture and the eyebrow scale up as they arrive; the
-// rest rises. Without a picture a block of the quieter surface holds its place.
+// rest rises. Without a picture a block of the quieter surface holds its place as the picture
+// would: as wide, in the source's 550 by 432 shape, and as tall as the row where the row is
+// taller. From md an empty block once had no width and showed nothing (decision 15).
 export function EmberAbout({ about }: Props) {
   const { image, location } = about
   return (
     <section id="about" className={`${pad} ${anchored} mt-44`}>
       <div className="mx-auto flex max-w-7xl flex-col gap-14 md:flex-row md:gap-18">
-        <div data-fade="scale">
+        <div data-fade="scale" className="min-w-0">
           {image === null ? (
-            <div className="aspect-[550/432] w-full max-w-137 rounded-3xl bg-surface-muted" />
+            <div className="aspect-[550/432] w-137 max-w-full rounded-3xl bg-surface-muted md:min-h-full" />
           ) : (
             <Image
               src={image.src}

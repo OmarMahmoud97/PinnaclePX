@@ -7,8 +7,9 @@ type Props = Pick<EmberContent, 'dishes'>
 
 // The source's signature dishes: an eyebrow and heading, then a grid of two columns, four from
 // md, each cell a picture over a name and a line. The cells rise in turn as they arrive, and a
-// picture turns half a turn on a spring each time the pointer reaches its cell (dish.tsx).
-// Without a picture a disc of the quieter surface holds its place.
+// picture turns a full turn on a spring each time the pointer reaches its cell (dish.tsx).
+// Without a picture a square of the quieter surface holds its place, the picture's own shape,
+// so a grid with some pictures missing keeps one shape (decision 15).
 export function EmberDishes({ dishes }: Props) {
   return (
     <section id="offers" className={`${pad} ${anchored} mt-44`}>
@@ -27,7 +28,7 @@ export function EmberDishes({ dishes }: Props) {
             style={delay(0.1 * index)}
             picture={
               item.image === null ? (
-                <div className="size-30 rounded-full bg-surface-muted md:size-35" />
+                <div className="size-30 bg-surface-muted md:size-35" />
               ) : (
                 <Image
                   src={item.image.src}
