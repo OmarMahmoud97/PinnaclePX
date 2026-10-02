@@ -11,8 +11,9 @@ export function collapse(text: string): string {
 const JOINING_WORD =
   /^(the|a|an|in|on|of|for|and|or|to|with|by|at|from|all|our|your|we|is|are|been|have|has|that|who|which|but|as|had|was|were|so|than|&)$/i
 
-// Punctuation that joins, left at the end of a cut.
-const TRAILING_JOINERS = /[\s,;:]+$/
+// Punctuation that joins, left at the end of a cut: a comma, colon or semicolon, a hyphen or a
+// dash, or a slash.
+const TRAILING_JOINERS = /[\s,;:/\u2013\u2014-]+$/
 
 // Marks that open and close an aside: brackets, and quotation marks by where they sit. A straight
 // quote opens at the start of a word and closes at its end, so the apostrophe in "we're" does
@@ -69,25 +70,26 @@ function plainCut(text: string, min: number, max: number): string {
 
 // Cuts to at most `max` characters where a phrase ends (decision 18). In order of preference: the
 // last sentence end; just before the last colon or semicolon; the last comma, which goes; the last
-// word boundary, with the joining words left at its end dropped. A colon, semicolon or comma goes
-// with the cut, so it may fall just past the `max` characters. Each counts only while `min`
-// characters remain, and a clause only when it does not end on a joining word or inside brackets
-// or a quotation. When none does, the plain cut stands, so the fillers complete exactly what they
-// completed before decision 18.
+// word boundary, with the joining words and marks left at its end dropped. A colon, semicolon or
+// comma goes with the cut, so it may fall just past the `max` characters. Each counts only while
+// `min` characters remain, and never when none would, and a clause only when it does not end on a
+// joining word or inside brackets or a quotation. When none does, the plain cut stands, so the
+// fillers complete exactly what they completed before decision 18.
 function shorten(text: string, min: number, max: number): string {
   if (text.length <= max) return text
+  const least = Math.max(min, 1)
   const before = (at: number) => text.slice(0, at).replace(TRAILING_JOINERS, '')
   const clause = [
     ...breaksAt(text, max, /[.!?]/g).map((at) => text.slice(0, at + 1)),
     ...breaksAt(text, max + 1, /[:;]/g).map(before),
     ...breaksAt(text, max + 1, /,/g).map(before),
-  ].find((cut) => cut.length >= min && !endsOnJoiningWord(cut) && !leavesOpen(cut))
+  ].find((cut) => cut.length >= least && !endsOnJoiningWord(cut) && !leavesOpen(cut))
   if (clause !== undefined) return clause
   let phrase = wordCut(text, max).replace(TRAILING_JOINERS, '')
   while (phrase !== '' && endsOnJoiningWord(phrase)) {
     phrase = phrase.slice(0, phrase.length - lastWord(phrase).length).replace(TRAILING_JOINERS, '')
   }
-  return phrase.length >= min ? phrase : plainCut(text, min, max)
+  return phrase.length >= least ? phrase : plainCut(text, min, max)
 }
 
 // Fits text into a slot's range. Too long, it is shortened; too short, fillers are appended in

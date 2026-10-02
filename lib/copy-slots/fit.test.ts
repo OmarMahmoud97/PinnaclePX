@@ -136,6 +136,22 @@ describe('fitToSlot, where a cut ends', () => {
     )
   })
 
+  it('drops a dash or a slash left at the end with the joining words', () => {
+    const range = { min: 10, max: 20 }
+    for (const dash of ['-', '\u2013', '\u2014']) {
+      const text = `Garden design ${dash} the planting plans and maintenance for homes`
+      expect(fitToSlot(text, range, FILLERS)).toBe('Garden design')
+    }
+    const slashes = 'Plumbing / heating / gas engineers for Leeds'
+    expect(fitToSlot(slashes, range, FILLERS)).toBe('Plumbing / heating')
+  })
+
+  it('never cuts to nothing in a slot with no minimum', () => {
+    // Every word is a joining word, and the clause before a leading comma is empty.
+    expect(fitToSlot('the and of the to', { min: 0, max: 5 }, [])).toBe('the')
+    expect(fitToSlot(', then more words here', { min: 0, max: 10 }, [])).toBe(', then')
+  })
+
   it('counts an ending only while the minimum holds', () => {
     // The comma would leave "Boilers", under the minimum, so the cut falls at a word boundary.
     const text = 'Boilers, radiators and hot water cylinders for homes in Leeds'
