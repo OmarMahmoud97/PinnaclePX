@@ -19,6 +19,10 @@ export const cardHeader = 'flex flex-col p-6 [&>*+*]:mt-1.5'
 // The source's service cards override the header's spacing to space-y-1.
 export const cardHeaderTight = 'flex flex-col p-6 [&>*+*]:mt-1'
 export const cardTitle = 'text-2xl leading-none font-semibold tracking-tight'
+// The title at text-2xl, but never larger than lets its longest word (fit.ts) fit the card's
+// padded width, the card being the @container: the steps, three to a row from md.
+export const cardTitleFit =
+  'text-[length:min(1.5rem,(100cqi_-_3rem)*0.97/var(--monolith-word,1))] leading-none font-semibold tracking-tight'
 // The title at text-lg. The source's class merger drops leading-none with a new size, so the
 // line height is text-lg's own.
 export const cardTitleLg = 'text-lg font-semibold tracking-tight'
