@@ -12,7 +12,7 @@ type Props = Pick<EmberContent, 'booking'>
 export function EmberBooking({ booking }: Props) {
   const { testimonial } = booking
   return (
-    <section id="booking-process" className={`${pad} ${anchored} mt-44`}>
+    <section id="steps" className={`${pad} ${anchored} mt-44`}>
       <div className="mx-auto grid max-w-7xl gap-16 md:grid-cols-2 md:gap-25">
         <div className="flex flex-col text-center md:text-left">
           <div data-fade style={delay(0.2)}>

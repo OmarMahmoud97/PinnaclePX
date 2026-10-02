@@ -147,14 +147,25 @@ describe('assembleEmber', () => {
     expect(content.footer.contact.email).toBe('owner@example.com')
     expect(content.nav.links.map((link) => link.href)).toEqual([
       '#about',
-      '#dishes',
-      '#timing',
+      '#offers',
+      '#reach',
       '#faq',
     ])
-    expect(content.nav.cta.href).toBe('#booking-process')
-    expect(content.hero.cta.href).toBe('#booking-process')
-    expect(content.timing.cta.href).toBe('#booking-process')
-    expect(content.cta.button.href).toBe('#booking-process')
+    expect(content.nav.cta.href).toBe('#steps')
+    expect(content.hero.cta.href).toBe('#steps')
+    expect(content.timing.cta.href).toBe('#steps')
+    expect(content.cta.button.href).toBe('#steps')
+    // The copy model's target names (dishes, booking-process) lead to the neutral addresses.
+    expect(copy.footer.groups[0]?.links.map((link) => link.target)).toEqual([
+      'about',
+      'dishes',
+      'booking-process',
+    ])
+    expect(content.footer.groups[0]?.links.map((link) => link.href)).toEqual([
+      '#about',
+      '#offers',
+      '#steps',
+    ])
     expect(content.footer.groups[1]?.links[1]?.href).toBe('#top')
   })
 })
