@@ -17,7 +17,7 @@ const MENU_ID = 'atlas-menu'
 // an entry; this one stays open while focus is inside it, and closes when focus leaves it, on
 // a press outside it, on choosing an entry, and on Escape, which returns focus to its button.
 // The closed list stays in the page, hidden, so a chosen link is still there to follow; the
-// open one is as wide as its longest entry, up to its cap, so no entry breaks over two lines.
+// open one is as wide as its longest entry, up to its cap, so entries keep to one line within it.
 export function AtlasNav({ brand, nav }: Props) {
   const [open, setOpen] = useState(false)
   const [menu, setMenu] = useState(false)
