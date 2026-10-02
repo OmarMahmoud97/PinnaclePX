@@ -20,7 +20,6 @@ import * as z from 'zod'
 import { writeBrief } from '@/lib/ai/brief'
 import { writeCopy } from '@/lib/ai/copy'
 import { isPermanentModelError } from '@/lib/ai/errors'
-import { extractJson } from '@/lib/ai/json'
 import { rankPhotos } from '@/lib/ai/rank'
 import { noteModelCall } from '@/lib/ai/usage'
 import { submissionAnswersSchema } from '@/lib/brief/submission'
@@ -33,8 +32,9 @@ import { searchPhotos } from '@/lib/images/pexels'
 import { orderByVerdict, planImagery } from '@/lib/images/plan'
 import { selectTemplates } from '@/lib/select/select'
 import { contractFor, READY_TEMPLATES } from '@/templates/registry'
+import { copyAttemptOf, notebook, usageOf } from './notes'
 import { summarise } from './summary'
-import type { CallRecord, FixtureRecord, PoolRecord } from './types'
+import type { FixtureRecord, PoolRecord } from './types'
 
 // The modules that reach outside: the row writer and the logger are replaced, so a call's usage
 // is kept here and nothing touches the database. server-only is stubbed as the unit tests do.
@@ -104,70 +104,10 @@ function coverage(fixtures: readonly Fixture[]): Record<string, number> {
 }
 
 // Every model call's usage, as noteModelCall receives it, kept in memory until the fixture is
-// written. The response carries the parsed output, so each attempt's answer is kept too.
-type Note = CallRecord & { parsed: unknown }
-const notes: Note[] = []
-const started = new Map<string, number>()
-
-type Noted = Parameters<typeof noteModelCall>
-
-// The answer a call carried: the parsed output of a structured call, else the JSON in its text,
-// else null when there was neither.
-function parsedOf(response: Noted[0]): unknown {
-  const structured = (response as { parsed_output?: unknown }).parsed_output
-  if (structured !== undefined) return structured
-  const content = (response as { content?: unknown }).content
-  if (!Array.isArray(content)) return null
-  const text = content
-    .map((block: unknown) => {
-      const b = block as { type?: unknown; text?: unknown }
-      return b.type === 'text' && typeof b.text === 'string' ? b.text : ''
-    })
-    .join('')
-  try {
-    return extractJson(text)
-  } catch {
-    return null
-  }
-}
-
-vi.mocked(noteModelCall).mockImplementation((response: Noted[0], call: Noted[1]) => {
-  const key = `${call.slug}\0${call.stage}\0${call.template ?? ''}`
-  const begun = started.get(key)
-  const parsed = parsedOf(response)
-  notes.push({
-    slug: call.slug,
-    stage: call.stage,
-    template: call.template ?? null,
-    attempt: call.attempt ?? 0,
-    step: steps.get(`${call.slug}\0${call.template ?? ''}`) ?? 0,
-    model: response.model,
-    stop: response.stop_reason ?? 'none',
-    input: response.usage.input_tokens,
-    output: response.usage.output_tokens,
-    cacheRead: response.usage.cache_read_input_tokens ?? 0,
-    cacheWrite: response.usage.cache_creation_input_tokens ?? 0,
-    ms: begun === undefined ? null : Date.now() - begun,
-    at: new Date().toISOString(),
-    parsed,
-  })
-  started.set(key, Date.now())
-  return Promise.resolve()
-})
-// The step attempt each template's copy is on, so the notes can say which fresh start a call
-// belonged to.
-const steps = new Map<string, number>()
-
-function takeNotes(slug: string, stage: Stage, template?: string): Note[] {
-  const mine = notes.filter(
-    (n) =>
-      n.slug === slug && n.stage === stage && (template === undefined || n.template === template),
-  )
-  for (const n of mine) notes.splice(notes.indexOf(n), 1)
-  return mine
-}
-
-const strip = ({ parsed: _parsed, ...call }: Note): CallRecord => call
+// written (notes.ts). The response carries the answer, so each attempt's answer is kept too,
+// and the text of one that did not parse.
+const book = notebook()
+vi.mocked(noteModelCall).mockImplementation(book.note)
 
 function errorText(error: unknown): string {
   return error instanceof Error ? `${error.name}: ${error.message}` : String(error)
@@ -217,7 +157,7 @@ function valueAt(value: unknown, path: string): unknown {
 async function briefStage(fixture: Fixture, slug: string): Promise<FixtureRecord['brief']> {
   const begun = Date.now()
   const errors: string[] = []
-  started.set(`${slug}\0brief\0`, Date.now())
+  book.begin(slug, 'brief')
   for (let attempt = 0; attempt < CONFIG.brief.attempts; attempt += 1) {
     try {
       const brief = await writeBrief(fixture.answers, slug)
@@ -226,7 +166,7 @@ async function briefStage(fixture: Fixture, slug: string): Promise<FixtureRecord
         attempts: attempt + 1,
         errors,
         brief,
-        calls: takeNotes(slug, 'brief').map(strip),
+        calls: book.take(slug, 'brief').map(usageOf),
         ruleViolations: ruleViolationsIn(
           brief,
           `${fixture.answers.company}
@@ -244,7 +184,7 @@ ${fixture.answers.description}`,
     attempts: errors.length,
     errors,
     brief: fallbackBrief(fixture.answers.company, fixture.answers.description),
-    calls: takeNotes(slug, 'brief').map(strip),
+    calls: book.take(slug, 'brief').map(usageOf),
     ruleViolations: [],
     ms: Date.now() - begun,
   }
@@ -265,10 +205,9 @@ async function copyFor(
   let final: unknown = null
   let fallback = false
   let fallbackReason: FixtureRecord['copy'][string]['fallbackReason'] = null
-  const key = `${slug}\0${templateId}`
   for (let step = 0; step < CONFIG.copy.attempts; step += 1) {
-    steps.set(key, step)
-    started.set(`${slug}\0copy\0${templateId}`, Date.now())
+    book.step(slug, templateId, step)
+    book.begin(slug, 'copy', templateId)
     try {
       const written = await writeCopy({ brief, contract, ownersWords, slug })
       if (written.ok) {
@@ -291,22 +230,18 @@ async function copyFor(
     }
   }
   if (fallback) final = contract.fallbackCopy(brief)
-  const attempts = takeNotes(slug, 'copy', templateId).map((note) => ({
-    step: note.step,
-    call: note.attempt,
-    parsed: note.parsed,
-    // The company name is the owner's too (lib/ai/copy.ts).
-    violations:
-      note.parsed === null
-        ? []
-        : judge(
-            note.parsed,
-            templateId,
-            `${brief.company}
+  // An answer that did not parse is a "not JSON" violation with its text kept (notes.ts). The
+  // company name is the owner's too (lib/ai/copy.ts).
+  const attempts = book.take(slug, 'copy', templateId).map((note) =>
+    copyAttemptOf(note, (parsed) =>
+      judge(
+        parsed,
+        templateId,
+        `${brief.company}
 ${ownersWords}`,
-          ),
-    usage: strip(note),
-  }))
+      ),
+    ),
+  )
   return { final, fallback, fallbackReason, errors, attempts, ms: Date.now() - begun }
 }
 
@@ -383,13 +318,13 @@ async function rankStage(
           thumbnail: c.thumbnail,
         }))
         if (candidates.length > 0) {
-          started.set(`${slug}\0rank\0`, Date.now())
+          book.begin(slug, 'rank')
           try {
             record.verdicts = await rankPhotos(candidates, step.purpose, slug)
           } catch (error) {
             record.errors.push(`rank: ${errorText(error)}`)
           }
-          record.calls = takeNotes(slug, 'rank').map(strip)
+          record.calls = book.take(slug, 'rank').map(usageOf)
         }
         record.ordered = orderByVerdict(candidates, record.verdicts).map((c) => c.id)
         record.ms = Date.now() - poolBegun

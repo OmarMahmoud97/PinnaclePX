@@ -25,12 +25,18 @@ export type CallRecord = Readonly<{
   at: string
 }>
 
-type JudgedViolation = CopyViolation & Readonly<{ kind: 'shape' | 'count' | 'length' | 'rule' }>
+export type JudgedViolation = CopyViolation &
+  Readonly<{ kind: 'shape' | 'count' | 'length' | 'rule' }>
 
-type CopyAttempt = Readonly<{
+export type CopyAttempt = Readonly<{
   step: number
   call: number
+  // The answer as the pipeline's reader parsed it, or null when it was not JSON.
   parsed: unknown
+  // An unreadable answer's text, cut to RAW_TEXT_LIMIT characters (notes.ts), so the defect
+  // that stopped it parsing can be read. Records written before 2 October 2026 have none, and
+  // their unreadable answers carry no violation; the summary counts those as not JSON too.
+  raw?: string
   violations: readonly JudgedViolation[]
   usage: CallRecord
 }>
