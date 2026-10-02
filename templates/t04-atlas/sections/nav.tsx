@@ -18,7 +18,9 @@ const MENU_ID = 'atlas-menu'
 // a press outside it, on choosing an entry, and on Escape, which returns focus to its button.
 // The closed list stays in the page, hidden, so a chosen link is still there to follow; the
 // open one is as wide as its longest entry, and in the row it hangs from its button's right
-// edge, so it never lies over the buttons beside it.
+// edge, so it never lies over the buttons beside it. The toggle's links unfold in the page's
+// flow, and Escape from inside the header folds them away again with focus back on the toggle
+// (decision 15); a link chosen there leaves focus at its section, as the browser puts it.
 //
 // Every label keeps to one line (decision 15). The source's row started at lg with one-word
 // labels; a visitor's run longer ("What's Included", "Give Us A Ring"), and the longest stored
@@ -32,6 +34,7 @@ export function AtlasNav({ brand, nav }: Props) {
   const [menu, setMenu] = useState(false)
   const menuRef = useRef<HTMLLIElement>(null)
   const buttonRef = useRef<HTMLButtonElement>(null)
+  const toggleRef = useRef<HTMLButtonElement>(null)
   const shown = open ? 'flex' : 'hidden xl:flex'
 
   useEffect(() => {
@@ -55,7 +58,18 @@ export function AtlasNav({ brand, nav }: Props) {
   }, [menu])
 
   return (
-    <nav id="navbar" aria-label="Main" className="relative z-10 w-full text-on-surface">
+    <nav
+      id="navbar"
+      aria-label="Main"
+      className="relative z-10 w-full text-on-surface"
+      onKeyDown={(event) => {
+        // Escape from inside the header folds the toggle's links away and puts focus back on
+        // the toggle; with the drop-down open, the drop-down's own Escape goes first.
+        if (event.key !== 'Escape' || !open || menu) return
+        setOpen(false)
+        toggleRef.current?.focus()
+      }}
+    >
       <div className="mx-auto flex max-w-(--breakpoint-xl) flex-col px-8 py-4 xl:flex-row xl:items-center xl:justify-between">
         <div className="flex flex-col items-center xl:min-w-0 xl:grow xl:flex-row [&>*+*]:ml-4 xl:[&>*+*]:ml-8">
           <div className="flex w-full flex-row items-center justify-between py-6 xl:w-auto xl:grow xl:basis-0">
@@ -65,6 +79,7 @@ export function AtlasNav({ brand, nav }: Props) {
               </a>
             </div>
             <button
+              ref={toggleRef}
               type="button"
               className="rounded-lg focus:outline-none xl:hidden"
               aria-expanded={open}
