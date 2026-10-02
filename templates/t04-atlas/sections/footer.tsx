@@ -16,12 +16,11 @@ const YEAR = new Date().getFullYear()
 // arrow button (or, without one, a note and a button); then the legal line, with the
 // photographers' credit the Pexels licence asks for. The cell borders are the source's, cell by
 // cell and breakpoint by breakpoint. From xl the fourth cell keeps the source's 22rem and its
-// column is that wide: in four equal columns it ran 48px past its own, and off a screen 1280 to
-// 1311px wide, so the page scrolled sideways there. The fourth cell is the page's closing
-// block, #contact, where every ask on the page leads; its title is a section heading, as the
-// page's others are.
-// The input's border and placeholder are the solid muted ink: at the source's 60% and 80% they
-// fell below AA on derived light palettes.
+// column is that wide: in four equal columns it ran up to 48px past its own, and off a screen
+// 1280 to 1342px wide, so the page scrolled sideways there. The fourth cell is the page's
+// closing block, #contact, where every ask on the page leads; its title is a section heading,
+// as the page's others are. The input's border and placeholder are the solid muted ink: at the
+// source's 60% and 80% they fell below AA on derived light palettes.
 export function AtlasFooter({ brand, footer, credits }: Props) {
   const [first = [], second = [], third = []] = footer.columns
   const { newsletter } = footer
