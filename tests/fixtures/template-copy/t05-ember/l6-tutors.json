@@ -1,0 +1,193 @@
+{
+  "source": "l6-all-fixes/tutors",
+  "answers": {
+    "description": "Maths and science tutoring for GCSE and A level, in person in Ilkley or online. Small groups of four at most, or one to one, with the same tutor every week.",
+    "company": "Hillside Tutors",
+    "logo": {
+      "kind": "wordmark"
+    },
+    "imagery": {
+      "style": "bold",
+      "photos": []
+    },
+    "colours": {
+      "kind": "custom",
+      "hex": "#0b6e4f"
+    }
+  },
+  "chosen": ["t07-summit", "t08-vector", "t05-ember"],
+  "ctaLabel": "Get in touch",
+  "copy": {
+    "brand": {
+      "name": "Hillside Tutors",
+      "legalName": "Hillside Tutors"
+    },
+    "nav": {
+      "links": ["About", "Offer", "Ilkley", "FAQs"],
+      "cta": "Get in touch"
+    },
+    "hero": {
+      "eyebrow": "MATHS AND SCIENCE TUTORING",
+      "headline": "Maths and science tutoring that fits around you",
+      "subhead": "GCSE and A level tutoring in person in Ilkley or online, built around how you learn.",
+      "cta": "Get in touch"
+    },
+    "about": {
+      "eyebrow": "Why we started",
+      "heading": "Steady, personal support through GCSE and A level",
+      "body": "We started Hillside Tutors to give students steady, personal support through GCSE and A level science and maths."
+    },
+    "stats": [
+      {
+        "title": "Small group sizes",
+        "body": "Groups of four at most, so you get proper attention and time to ask questions."
+      },
+      {
+        "title": "One to one option",
+        "body": "Prefer individual sessions? We offer one to one tutoring alongside small groups."
+      },
+      {
+        "title": "Same tutor weekly",
+        "body": "You keep the same tutor every week, building steady progress through your course."
+      }
+    ],
+    "dishes": {
+      "eyebrow": "What we offer",
+      "heading": "GCSE and A level support, weekly",
+      "items": [
+        {
+          "title": "Small group tutoring",
+          "note": "Up to four students"
+        },
+        {
+          "title": "One to one tutoring",
+          "note": "Individual sessions"
+        },
+        {
+          "title": "GCSE maths and science",
+          "note": "Weekly sessions"
+        },
+        {
+          "title": "A level maths and science",
+          "note": "Weekly sessions"
+        }
+      ]
+    },
+    "features": {
+      "eyebrow": "How it works for you",
+      "heading": "Small group or one to one tutoring in Ilkley",
+      "items": [
+        {
+          "title": "In person or online",
+          "body": "Join us in Ilkley or study online, whichever works better for your week."
+        },
+        {
+          "title": "Proper attention each week",
+          "body": "Small groups and one to one sessions mean time to ask questions and be heard."
+        },
+        {
+          "title": "Consistent, steady progress",
+          "body": "The same tutor each week helps you build understanding through your course."
+        }
+      ]
+    },
+    "booking": {
+      "eyebrow": "How it works",
+      "heading": "Three simple steps to get started",
+      "steps": [
+        {
+          "title": "Get in touch",
+          "body": "Send us a message to tell us which subject and level you need help with."
+        },
+        {
+          "title": "Choose your format",
+          "body": "Pick small group sessions or one to one tutoring, whichever suits how you learn."
+        },
+        {
+          "title": "Start weekly sessions",
+          "body": "Begin regular sessions with the same tutor, working through your course each week."
+        }
+      ]
+    },
+    "timing": {
+      "title": "In Ilkley or online",
+      "body": "Tell us which subject and level you need help with, in Ilkley or wherever suits you.",
+      "cta": "Get in touch"
+    },
+    "faq": {
+      "eyebrow": "FAQs",
+      "heading": "Frequently asked questions",
+      "items": [
+        {
+          "question": "Do you teach in person or online?",
+          "answer": "Both. We tutor in person in Ilkley or online, whichever suits you."
+        },
+        {
+          "question": "Do you offer one to one sessions?",
+          "answer": "Yes, alongside small group classes, we offer one to one tutoring too."
+        },
+        {
+          "question": "How big are the small groups?",
+          "answer": "Groups are four students at most, so you get proper attention each week."
+        },
+        {
+          "question": "Will I have the same tutor each week?",
+          "answer": "Yes, you keep the same tutor weekly, helping build steady progress."
+        },
+        {
+          "question": "Which subjects and levels do you cover?",
+          "answer": "We tutor maths and science for GCSE and A level students."
+        }
+      ]
+    },
+    "cta": {
+      "heading": "Ready for steady, personal support?",
+      "body": "Get in touch to tell us which subject and level you need help with.",
+      "button": "Get in touch"
+    },
+    "footer": {
+      "description": "Hillside Tutors offers maths and science tutoring for GCSE and A level students, in Ilkley or online.",
+      "groups": [
+        {
+          "heading": "Explore",
+          "links": [
+            {
+              "label": "About",
+              "target": "about"
+            },
+            {
+              "label": "What we offer",
+              "target": "dishes"
+            },
+            {
+              "label": "Features",
+              "target": "features"
+            },
+            {
+              "label": "How it works",
+              "target": "booking-process"
+            }
+          ]
+        },
+        {
+          "heading": "More",
+          "links": [
+            {
+              "label": "Find us",
+              "target": "timing"
+            },
+            {
+              "label": "FAQs",
+              "target": "faq"
+            },
+            {
+              "label": "Get in touch",
+              "target": "cta"
+            }
+          ]
+        }
+      ],
+      "contact": "Get in touch"
+    }
+  }
+}

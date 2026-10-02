@@ -2,6 +2,7 @@
 // emulated as a phone, the page scrolled end to end so lazy blocks render, and the dev server's
 // own indicator hidden, since it is no part of a visitor's page.
 import { chromium } from '@playwright/test'
+import { isStyled, loadFonts, settle } from './in-page.mjs'
 
 export async function launch() {
   return chromium.launch()
@@ -21,17 +22,18 @@ export async function contextFor(browser, viewport, extra = {}) {
 const HIDE_DEV_INDICATOR = 'nextjs-portal { display: none !important; }'
 
 // Open a page and wait until it is what a visitor sees at rest: loaded, its fonts in, scrolled
-// through and back to the top. Throws on an answer that is not 200, so a mistyped address is
-// never measured as an empty page.
+// through and back to the top. Throws on an answer that is not 200, or a page served without its
+// style sheet, so a mistyped address or a broken server is never measured as a clean page.
 export async function open(page, url, { scroll = true } = {}) {
   const response = await page.goto(url, { waitUntil: 'networkidle', timeout: 180_000 })
   if (response === null || response.status() !== 200) {
     throw new Error(`${url}: ${String(response?.status() ?? 'no response')}`)
   }
+  if (!(await page.evaluate(isStyled))) throw new Error(`${url}: served without its style sheet`)
   await page.addStyleTag({ content: HIDE_DEV_INDICATOR })
-  await page.evaluate(() => document.fonts.ready)
+  await page.evaluate(loadFonts)
   if (scroll) await scrollThrough(page)
-  await page.waitForTimeout(300)
+  await page.evaluate(settle)
 }
 
 // Down the page a screen at a time, then back to the top.
@@ -54,7 +56,8 @@ async function scrollThrough(page) {
 export async function resize(page, viewport) {
   await page.setViewportSize({ width: viewport.width, height: viewport.height })
   await page.evaluate(() => document.fonts.ready)
-  await page.waitForTimeout(250)
+  await page.waitForTimeout(150)
+  await page.evaluate(settle)
 }
 
 // Each item through work, at most n at a time, in order of the list.

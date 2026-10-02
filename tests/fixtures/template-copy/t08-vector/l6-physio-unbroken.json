@@ -1,0 +1,142 @@
+{
+  "source": "l6-all-fixes/physio-unbroken",
+  "answers": {
+    "description": "Physiotherapy for sports injuries, back pain and post-operative rehab, with clinics in Sheffield and Leeds. Evening appointments, and direct referrals from GPs and consultants.",
+    "company": "AshgrovePhysiotherapyAndSportsInjuryClinicsSheffieldAndLeeds",
+    "logo": {
+      "kind": "wordmark"
+    },
+    "imagery": {
+      "style": "minimal",
+      "photos": []
+    },
+    "colours": {
+      "kind": "palette",
+      "paletteId": "forest"
+    }
+  },
+  "chosen": ["t02-monolith", "t08-vector", "t01-aurora"],
+  "ctaLabel": "Book an appointment",
+  "copy": {
+    "brand": {
+      "name": "ashgrove physiotherapy",
+      "legalName": "Ashgrove Physiotherapy And Sports Injury Clinics"
+    },
+    "nav": {
+      "links": ["Home", "Our Work", "What We Offer", "About", "Questions", "Contact"]
+    },
+    "hero": {
+      "headline": ["Physiotherapy for", "recovery, in Sheffield", "and Leeds"],
+      "subhead": "Support for sports injuries, back pain and post-operative rehab, in Sheffield and Leeds.",
+      "scrollHint": "Scroll"
+    },
+    "projects": {
+      "marquee": {
+        "text": "Support",
+        "accent": "Areas"
+      },
+      "items": [
+        {
+          "titleUp": "Sports",
+          "titleDown": "Injury Care",
+          "description": "Treatment for sports injuries, helping you move and train again with less pain."
+        },
+        {
+          "titleUp": "Back Pain",
+          "titleDown": "Support",
+          "description": "Physiotherapy aimed at easing back pain and helping you return to daily life."
+        },
+        {
+          "titleUp": "Post-Operative",
+          "titleDown": "Rehab",
+          "description": "Guided rehabilitation after surgery, supporting your recovery step by step."
+        }
+      ]
+    },
+    "services": {
+      "heading": "Physiotherapy for sports injuries, back pain and post-operative rehab.",
+      "items": [
+        "Sports injury care",
+        "Back pain support",
+        "Post-operative rehab",
+        "Evening appointments"
+      ]
+    },
+    "about": {
+      "statement": "We set up these clinics to help people recover from injury, pain and surgery.",
+      "cta": "Book an appointment"
+    },
+    "faq": {
+      "heading": ["Frequently", "Asked"],
+      "items": [
+        {
+          "question": "Do I need a referral to see you?",
+          "answer": "You can contact the clinic directly, or come through a referral from your GP or consultant."
+        },
+        {
+          "question": "How do I book an appointment?",
+          "answer": "Choose a time that suits you, including evening appointments in Sheffield or Leeds."
+        },
+        {
+          "question": "Where are your clinics based?",
+          "answer": "We have clinics in Sheffield and Leeds, with evening appointments available."
+        },
+        {
+          "question": "What conditions do you treat?",
+          "answer": "We treat sports injuries, back pain, and support post-operative rehabilitation."
+        },
+        {
+          "question": "What happens at my first visit?",
+          "answer": "You will start your physiotherapy plan, tailored to your injury or recovery needs."
+        }
+      ]
+    },
+    "footer": {
+      "cta": "Book an appointment",
+      "tagline": "Supporting your recovery, step by step.",
+      "servicesHeading": "Services",
+      "navigationHeading": "Navigation",
+      "navigation": [
+        {
+          "label": "Home",
+          "target": "top"
+        },
+        {
+          "label": "Our Work",
+          "target": "projects"
+        },
+        {
+          "label": "What We Offer",
+          "target": "services"
+        },
+        {
+          "label": "About",
+          "target": "about"
+        },
+        {
+          "label": "Questions",
+          "target": "faq"
+        },
+        {
+          "label": "Contact",
+          "target": "contact"
+        }
+      ],
+      "bottomLinks": [
+        {
+          "label": "About",
+          "target": "about"
+        },
+        {
+          "label": "Questions",
+          "target": "faq"
+        },
+        {
+          "label": "Contact",
+          "target": "contact"
+        }
+      ],
+      "credit": "Ashgrove Physiotherapy And Sports Injury Clinics"
+    }
+  }
+}

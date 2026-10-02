@@ -22,7 +22,8 @@ import { pagesOf, urlOf } from './lib/pages.mjs'
 import { outDir, writeReport } from './lib/report.mjs'
 
 const options = parseArgs(process.argv.slice(2), {
-  source: 'eval:l6-all-fixes,eval:l7-sentence',
+  source: 'corpus',
+  kind: 'model',
 })
 const EMAIL = 'owner@example.com'
 const DESKTOP = { width: 1440, height: 900, phone: false }

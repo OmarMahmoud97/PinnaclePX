@@ -1,0 +1,119 @@
+{
+  "source": "synthetic: the long real words in every headline and phrase slot, from l6-bakery",
+  "answers": {
+    "description": "Wholesale and retail bakery in Todmorden. Sourdough, tin loaves and buns for cafés and farm shops across Calderdale, delivered before 7am from Tuesday to Saturday.",
+    "company": "Pennine Loaf",
+    "logo": {
+      "kind": "wordmark"
+    },
+    "imagery": {
+      "style": "warm",
+      "photos": []
+    },
+    "colours": {
+      "kind": "palette",
+      "paletteId": "clay"
+    }
+  },
+  "chosen": ["t01-aurora", "t07-summit", "t08-vector"],
+  "ctaLabel": "Get in touch",
+  "copy": {
+    "brand": {
+      "name": "Pennine Loaf",
+      "legalName": "Pennine Loaf",
+      "tagline": "Wholesale and retail bakery in Todmorden, baking for cafés and farm shops across Calderdale."
+    },
+    "nav": {
+      "links": ["What We Bake", "How It Works", "Why Us"],
+      "cta": "Get in touch"
+    },
+    "hero": {
+      "headline": "STRAIGHTFORWARD NORTHUMBERLAND PHYSIOTHERAPY KNARESBOROUGH",
+      "subhead": "We bake sourdough, tin loaves and buns for cafés and farm shops across Calderdale who want proper bread each morning.",
+      "primary": "Get in touch",
+      "secondary": "See how it works",
+      "reassurance": "Tell us what you need, we'll work out the rest together.",
+      "frame": {
+        "title": "NORTHUMBERLAND",
+        "rows": ["Sourdough loaves proving", "Tin loaves in the oven", "Buns ready for crates"]
+      }
+    },
+    "features": {
+      "title": "PHYSIOTHERAPY STRAIGHTFORWARD NORTHUMBERLAND KNARESBOROUGH",
+      "lead": "We bake sourdough, tin loaves and buns, then get them to you early, ready for your shelves.",
+      "items": [
+        {
+          "title": "KNARESBOROUGH STRAIGHTFORWARD",
+          "body": "We bake sourdough, tin loaves and buns for cafés and farm shops who want proper bread each morning."
+        },
+        {
+          "title": "CONVEYANCING STRAIGHTFORWARD",
+          "body": "Every order reaches you before seven, Tuesday to Saturday, so your shelves are ready for opening time."
+        },
+        {
+          "title": "ARCHITECTURE STRAIGHTFORWARD",
+          "body": "Whether you need regular wholesale orders or smaller retail amounts, we bake to suit your shop."
+        }
+      ]
+    },
+    "steps": {
+      "title": "ACCOUNTANCY STRAIGHTFORWARD NORTHUMBERLAND PHYSIOTHERAPY",
+      "lead": "Here's how we get fresh bread onto your shelves, Tuesday to Saturday, before your day begins.",
+      "items": [
+        {
+          "title": "STRAIGHTFORWARD NORTHUMBERLAND",
+          "body": "Tell us what you need, whether that's sourdough, tin loaves or buns, and how often you'd like deliveries."
+        },
+        {
+          "title": "NORTHUMBERLAND STRAIGHTFORWARD",
+          "body": "We work out quantities and timings together, so your order fits your shop and your customers."
+        },
+        {
+          "title": "PHYSIOTHERAPY STRAIGHTFORWARD",
+          "body": "Your bread arrives before seven each morning, Tuesday to Saturday, ready for your day ahead."
+        }
+      ]
+    },
+    "statement": "KNARESBOROUGH STRAIGHTFORWARD NORTHUMBERLAND PHYSIOTHERAPY CONVEYANCING ARCHITECTURE ACCOUNTANCY",
+    "cta": {
+      "headline": "CONVEYANCING STRAIGHTFORWARD NORTHUMBERLAND PHYSIOTHERAPY",
+      "body": "Get in touch to talk through sourdough, tin loaves and buns for your café or farm shop.",
+      "action": "Get in touch",
+      "reassurance": "Tell us what you need, we'll plan the bake together."
+    },
+    "footer": {
+      "groups": [
+        {
+          "heading": "ARCHITECTURE",
+          "links": [
+            {
+              "label": "What We Bake",
+              "target": "features"
+            },
+            {
+              "label": "How It Works",
+              "target": "how-it-works"
+            },
+            {
+              "label": "Why Pennine Loaf",
+              "target": "why"
+            }
+          ]
+        },
+        {
+          "heading": "ACCOUNTANCY",
+          "links": [
+            {
+              "label": "Get In Touch",
+              "target": "start"
+            },
+            {
+              "label": "Back To Top",
+              "target": "top"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

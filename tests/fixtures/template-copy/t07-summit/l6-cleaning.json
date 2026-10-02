@@ -1,0 +1,259 @@
+{
+  "source": "l6-all-fixes/cleaning",
+  "answers": {
+    "description": "Domestic and end-of-tenancy cleaning across Newcastle and Gateshead. Insured, DBS-checked cleaners, the same person each visit, and a checklist you agree in advance.",
+    "company": "Spotless Tyne",
+    "logo": {
+      "kind": "wordmark"
+    },
+    "imagery": {
+      "style": "bold",
+      "photos": []
+    },
+    "colours": {
+      "kind": "palette",
+      "paletteId": "plum"
+    }
+  },
+  "chosen": ["t07-summit", "t05-ember", "t02-monolith"],
+  "ctaLabel": "Get in touch",
+  "copy": {
+    "brand": {
+      "name": "Spotless Tyne",
+      "legalName": "Spotless Tyne"
+    },
+    "nav": {
+      "links": ["Home", "About", "Services", "Reviews"],
+      "cta": "Get in touch"
+    },
+    "hero": {
+      "badge": {
+        "tag": "Trusted",
+        "text": "Cleaning Newcastle and Gateshead"
+      },
+      "headline": "The Same Cleaner, Every Single Visit",
+      "subhead": "Domestic and end-of-tenancy cleaning across Newcastle and Gateshead for households that want it done properly.",
+      "primary": "Get in touch",
+      "secondary": "See what we do"
+    },
+    "why": {
+      "eyebrow": "Why choose us",
+      "heading": "Why people choose Spotless Tyne",
+      "cards": [
+        {
+          "title": "One Trusted Cleaner",
+          "body": "You get the same person each visit, so they get to know your home and how you like things done."
+        },
+        {
+          "title": "Insured And DBS-Checked",
+          "body": "Every cleaner is insured and DBS-checked, so you can let them into your home with confidence."
+        },
+        {
+          "title": "Agreed In Advance",
+          "body": "You agree a checklist before we start, so you know exactly what gets cleaned every time."
+        },
+        {
+          "title": "Built On Trust",
+          "body": "We believe a clean home comes from trust, so we send the same checked cleaner every time."
+        }
+      ]
+    },
+    "services": {
+      "eyebrow": "What we do",
+      "heading": "Cleaning across Newcastle and Gateshead",
+      "items": [
+        {
+          "tag": "Domestic",
+          "title": "Regular Domestic Cleaning",
+          "body": "Cleaning for your home, done properly, with the same cleaner each time you book.",
+          "checklist": [
+            "Same cleaner every visit",
+            "Checklist agreed with you",
+            "Insured and DBS-checked"
+          ]
+        },
+        {
+          "tag": "End Of Tenancy",
+          "title": "End-Of-Tenancy Cleaning",
+          "body": "A thorough clean when you move, agreed in advance so you know what to expect.",
+          "checklist": [
+            "Checklist agreed before you start",
+            "Insured and DBS-checked cleaner",
+            "Covers Newcastle and Gateshead"
+          ]
+        },
+        {
+          "tag": "For Homeowners",
+          "title": "Cleaning For Homeowners",
+          "body": "Regular cleaning for your own home, with a checklist agreed between us first.",
+          "checklist": [
+            "Same cleaner each visit",
+            "Checklist agreed with you",
+            "Insured and DBS-checked"
+          ]
+        },
+        {
+          "tag": "For Tenants",
+          "title": "Cleaning For Tenants",
+          "body": "Regular or end-of-tenancy cleaning for tenants across Newcastle and Gateshead.",
+          "checklist": [
+            "Same cleaner each visit",
+            "Checklist agreed with you",
+            "Covers Newcastle and Gateshead"
+          ]
+        }
+      ]
+    },
+    "steps": {
+      "eyebrow": "How it works",
+      "heading": "Three simple steps",
+      "body": "From first contact to your first visit, you always know what to expect and who is coming.",
+      "items": [
+        {
+          "title": "Get In Touch",
+          "body": "Tell us about your home and what you need cleaned, regular or end-of-tenancy."
+        },
+        {
+          "title": "Agree A Checklist",
+          "body": "We work out a checklist together, so you know exactly what to expect."
+        },
+        {
+          "title": "Meet Your Cleaner",
+          "body": "The same insured, DBS-checked cleaner visits each time, getting to know your home."
+        }
+      ]
+    },
+    "facilities": {
+      "eyebrow": "What you get",
+      "heading": "What every visit includes",
+      "items": [
+        {
+          "title": "Your Own Cleaner",
+          "body": "The same person visits each time, getting to know your home and how you like it done."
+        },
+        {
+          "title": "Checked And Insured",
+          "body": "Every cleaner is insured and DBS-checked, so you can feel confident letting them in."
+        },
+        {
+          "title": "A Clear Checklist",
+          "body": "You agree exactly what gets cleaned before the first visit, so there are no surprises."
+        },
+        {
+          "title": "Covering The Area",
+          "body": "We clean homes across Newcastle and Gateshead, for owners and tenants alike."
+        }
+      ],
+      "link": "Find out more"
+    },
+    "faq": {
+      "eyebrow": "FAQs",
+      "heading": "Frequently asked questions",
+      "items": [
+        {
+          "question": "Do I get the same cleaner every visit?",
+          "answer": "Yes, you get the same person each visit, so they get to know your home and how you like things done."
+        },
+        {
+          "question": "Are your cleaners insured and checked?",
+          "answer": "Every cleaner is insured and DBS-checked, so you can let them into your home with confidence."
+        },
+        {
+          "question": "How do you know what to clean?",
+          "answer": "You agree a checklist with us before we start, so you know exactly what gets cleaned every time."
+        },
+        {
+          "question": "Do you cover end-of-tenancy cleaning?",
+          "answer": "Yes, we offer domestic and end-of-tenancy cleaning across Newcastle and Gateshead."
+        },
+        {
+          "question": "Which areas do you cover?",
+          "answer": "We clean homes across Newcastle and Gateshead, for both homeowners and tenants."
+        }
+      ]
+    },
+    "booking": {
+      "eyebrow": "Get in touch",
+      "heading": "Tell us what your home needs",
+      "form": {
+        "name": {
+          "label": "Your name",
+          "placeholder": "Enter your full name"
+        },
+        "email": {
+          "label": "Your email",
+          "placeholder": "Enter your email address"
+        },
+        "phone": {
+          "label": "Your phone",
+          "placeholder": "Enter your phone number"
+        },
+        "doctor": {
+          "label": "Who to ask for",
+          "placeholder": "A name, if you have one"
+        },
+        "department": {
+          "label": "What you need",
+          "placeholder": "Choose one"
+        },
+        "date": "Preferred date",
+        "button": "Get in touch"
+      }
+    },
+    "cta": {
+      "heading": "Ready for a cleaner you can trust?",
+      "body": "Get in touch and tell us what your home needs, regular or end-of-tenancy.",
+      "button": "Get in touch"
+    },
+    "footer": {
+      "description": "Domestic and end-of-tenancy cleaning across Newcastle and Gateshead, done properly every time.",
+      "columns": [
+        {
+          "heading": "Explore",
+          "links": [
+            {
+              "label": "Home",
+              "target": "home"
+            },
+            {
+              "label": "Why Us",
+              "target": "why-choose-us"
+            },
+            {
+              "label": "Services",
+              "target": "our-services"
+            },
+            {
+              "label": "FAQs",
+              "target": "faq"
+            }
+          ]
+        },
+        {
+          "heading": "Get Started",
+          "links": [
+            {
+              "label": "How It Works",
+              "target": "booking-process"
+            },
+            {
+              "label": "Book Now",
+              "target": "book-appointment"
+            }
+          ]
+        }
+      ],
+      "contact": "Get in touch",
+      "smallLinks": [
+        {
+          "label": "Home",
+          "target": "home"
+        },
+        {
+          "label": "FAQs",
+          "target": "faq"
+        }
+      ]
+    }
+  }
+}

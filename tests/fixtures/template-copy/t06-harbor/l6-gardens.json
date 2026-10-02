@@ -1,0 +1,222 @@
+{
+  "source": "l6-all-fixes/gardens",
+  "answers": {
+    "description": "Garden design, planting plans and ongoing maintenance for homes in Harrogate and Knaresborough. We also build paths, patios and raised beds.",
+    "company": "Hawthorn Gardens",
+    "logo": {
+      "kind": "wordmark"
+    },
+    "imagery": {
+      "style": "dark",
+      "photos": []
+    },
+    "colours": {
+      "kind": "palette",
+      "paletteId": "forest"
+    }
+  },
+  "chosen": ["t01-aurora", "t06-harbor", "t02-monolith"],
+  "ctaLabel": "Get in touch",
+  "copy": {
+    "brand": {
+      "name": "Hawthorn Gardens",
+      "legalName": "Hawthorn Gardens"
+    },
+    "nav": {
+      "links": ["Home", "About", "Services", "Contact", "Get in touch"],
+      "cta": "Get in touch"
+    },
+    "hero": {
+      "badge": "Gardens for Harrogate homes",
+      "headline": ["THOUGHTFUL", "GARDENS", "FOR YOUR HOME"],
+      "subhead": "Garden design, planting plans and ongoing maintenance for homes in Harrogate and Knaresborough.",
+      "primary": "Get in touch",
+      "secondary": "Who we are",
+      "stats": [
+        {
+          "value": "Design",
+          "label": "plans built around you"
+        },
+        {
+          "value": "Planting",
+          "label": "suited to your garden"
+        },
+        {
+          "value": "Maintenance",
+          "label": "to keep it looked after"
+        }
+      ]
+    },
+    "about": {
+      "eyebrow": "Our approach",
+      "heading": {
+        "lines": ["GARDENS THAT WORK", "FOR THE PEOPLE", "WHO USE THEM"],
+        "emphasis": "FOR THE PEOPLE"
+      },
+      "paragraphs": [
+        "We care about gardens that work for the people who use them, in Harrogate and Knaresborough.",
+        "We plan gardens around your home, your space and how you want to use it, from first sketch onward."
+      ],
+      "tags": ["Garden Design", "Planting Plans", "Paths and Patios", "Ongoing Maintenance"]
+    },
+    "services": {
+      "eyebrow": "What we do",
+      "heading": {
+        "lines": ["DESIGN, PLANTING", "AND MAINTENANCE"],
+        "emphasis": ""
+      },
+      "lead": "Design, planting and maintenance, done with care, for Harrogate and Knaresborough gardens.",
+      "items": [
+        {
+          "tag": "Design",
+          "title": "Garden Design",
+          "body": "We plan gardens around your home, your space and how you want to use it, from first sketch onward."
+        },
+        {
+          "tag": "Planting",
+          "title": "Planting Plans",
+          "body": "We choose and arrange planting that suits your garden, so it grows well through the seasons."
+        },
+        {
+          "tag": "Structure",
+          "title": "Paths and Patios",
+          "body": "We build paths, patios and raised beds, adding structure and practical spaces to your garden."
+        }
+      ],
+      "more": "Find out more"
+    },
+    "metrics": {
+      "eyebrow": "What matters",
+      "heading": {
+        "lines": ["CARE THAT SHOWS", "IN THE DETAIL"],
+        "emphasis": ""
+      },
+      "watermark": "CARE",
+      "items": [
+        {
+          "value": "Design",
+          "label": "Planned around you",
+          "description": "from first sketch onward"
+        },
+        {
+          "value": "Planting",
+          "label": "Suited to your garden",
+          "description": "through the seasons"
+        },
+        {
+          "value": "Structure",
+          "label": "Paths and raised beds",
+          "description": "practical garden spaces"
+        },
+        {
+          "value": "Maintenance",
+          "label": "Ongoing care",
+          "description": "gardens kept looked after"
+        }
+      ]
+    },
+    "contact": {
+      "eyebrow": "FAQ",
+      "heading": {
+        "lines": ["QUESTIONS", "YOU MIGHT ASK"],
+        "emphasis": ""
+      },
+      "faq": [
+        {
+          "question": "Do you work in Knaresborough as well as Harrogate?",
+          "answer": "Yes, we design and care for gardens in both Harrogate and Knaresborough."
+        },
+        {
+          "question": "Can you help with an existing garden, not just a new one?",
+          "answer": "Yes, we offer ongoing maintenance alongside design and planting plans."
+        },
+        {
+          "question": "Do you build hard landscaping as well as plant gardens?",
+          "answer": "Yes, we build paths, patios and raised beds as part of our work."
+        },
+        {
+          "question": "What happens after I get in touch?",
+          "answer": "We arrange a time to talk through your garden and what you'd like to change."
+        }
+      ],
+      "form": {
+        "eyebrow": "Get in touch",
+        "heading": {
+          "lines": ["TELL US ABOUT", "YOUR GARDEN"],
+          "emphasis": ""
+        },
+        "lead": "Tell us about your garden and what you'd like to change.",
+        "labels": {
+          "name": "Name",
+          "email": "Email",
+          "message": "Message"
+        },
+        "placeholder": "Tell us about your garden...",
+        "button": "Send message"
+      }
+    },
+    "cta": {
+      "eyebrow": "Ready when you are",
+      "heading": {
+        "lines": ["LET'S TALK ABOUT", "YOUR GARDEN"],
+        "emphasis": ""
+      },
+      "body": "Tell us about your garden and what you'd like to change, and we'll arrange a time to talk it through.",
+      "primary": "Get in touch",
+      "secondary": "Who we are"
+    },
+    "footer": {
+      "description": "Garden design, planting plans and ongoing maintenance for homes in Harrogate and Knaresborough.",
+      "newsletter": {
+        "label": "Hear from us",
+        "placeholder": "your@email.com"
+      },
+      "columns": [
+        {
+          "heading": "Site",
+          "links": [
+            {
+              "label": "Home",
+              "target": "top"
+            },
+            {
+              "label": "About",
+              "target": "about"
+            },
+            {
+              "label": "Services",
+              "target": "services"
+            },
+            {
+              "label": "Contact",
+              "target": "contact"
+            }
+          ]
+        },
+        {
+          "heading": "Garden",
+          "links": [
+            {
+              "label": "Design",
+              "target": "services"
+            },
+            {
+              "label": "Planting",
+              "target": "services"
+            },
+            {
+              "label": "Maintenance",
+              "target": "metrics"
+            },
+            {
+              "label": "Get in touch",
+              "target": "cta"
+            }
+          ]
+        }
+      ],
+      "note": "Harrogate and Knaresborough",
+      "smallPrint": "Privacy · Terms"
+    }
+  }
+}

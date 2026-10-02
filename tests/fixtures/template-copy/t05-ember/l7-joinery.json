@@ -1,0 +1,176 @@
+{
+  "source": "l7-sentence/joinery",
+  "answers": {
+    "description": "We make fitted wardrobes, alcove units and kitchens by hand in our Leeds workshop for homes across West Yorkshire. Every piece is measured, drawn and fitted by the two of us, and we only take on a few jobs a month so each one gets our full attention.",
+    "company": "Hollin Lane Joinery",
+    "logo": {
+      "kind": "wordmark"
+    },
+    "imagery": {
+      "style": "warm",
+      "photos": []
+    },
+    "colours": {
+      "kind": "palette",
+      "paletteId": "forest"
+    }
+  },
+  "chosen": ["t03-meridian", "t07-summit", "t05-ember"],
+  "ctaLabel": "Get in touch",
+  "copy": {
+    "brand": {
+      "name": "Hollin Lane Joinery",
+      "legalName": "Hollin Lane Joinery"
+    },
+    "nav": {
+      "links": ["About", "Our Work", "Area", "FAQs"],
+      "cta": "Get in touch"
+    },
+    "hero": {
+      "eyebrow": "HANDMADE JOINERY IN LEEDS",
+      "headline": "Fitted wardrobes and kitchens made by hand in Leeds",
+      "subhead": "We make fitted wardrobes, alcove units and kitchens by hand for homes across West Yorkshire.",
+      "cta": "Get in touch"
+    },
+    "about": {
+      "eyebrow": "Made with care",
+      "heading": "Every piece measured, drawn and fitted by us",
+      "body": "We make fitted wardrobes, alcove units and kitchens by hand in our Leeds workshop, for homes across West Yorkshire."
+    },
+    "stats": [
+      {
+        "title": "Made by hand",
+        "body": "Every wardrobe, alcove unit and kitchen is made by hand in our Leeds workshop."
+      },
+      {
+        "title": "Just the two of us",
+        "body": "Every piece is measured, drawn and fitted by the two of us, start to finish."
+      },
+      {
+        "title": "Full attention, every job",
+        "body": "We only take on a few jobs a month, so each one gets our complete attention."
+      }
+    ],
+    "dishes": {
+      "eyebrow": "What we make",
+      "heading": "Fitted wardrobes, alcove units and kitchens",
+      "items": [
+        {
+          "title": "Fitted wardrobes",
+          "note": "Made for your space"
+        },
+        {
+          "title": "Alcove units",
+          "note": "Built to fit exactly"
+        },
+        {
+          "title": "Kitchens",
+          "note": "Measured and fitted"
+        },
+        {
+          "title": "Bespoke joinery",
+          "note": "Made by hand"
+        }
+      ]
+    },
+    "features": {
+      "eyebrow": "What sets us apart",
+      "heading": "Small workshop, full attention",
+      "items": [
+        {
+          "title": "Measured and drawn by us",
+          "body": "We visit your home, measure the space and draw up a design that fits it exactly."
+        },
+        {
+          "title": "Fitted by the two of us",
+          "body": "From first visit to final fit, the same two people handle every part of the job."
+        },
+        {
+          "title": "Only a few jobs a month",
+          "body": "We keep our workload small, so your wardrobe, alcove unit or kitchen gets proper care."
+        }
+      ]
+    },
+    "booking": {
+      "eyebrow": "How it works",
+      "heading": "Three simple steps",
+      "steps": [
+        {
+          "title": "Get in touch",
+          "body": "Tell us about your space and what you need, and we will arrange a time to visit."
+        },
+        {
+          "title": "Measure and draw",
+          "body": "We come to your home, measure the space and draw up a design that fits it exactly."
+        },
+        {
+          "title": "Make and fit",
+          "body": "We make your wardrobe, alcove unit or kitchen by hand, then fit it ourselves."
+        }
+      ]
+    },
+    "timing": {
+      "title": "Where to find us",
+      "body": "We work from our Leeds workshop, fitting wardrobes, alcove units and kitchens across West Yorkshire. Get in touch to arrange a visit.",
+      "cta": "Get in touch"
+    },
+    "faq": {
+      "eyebrow": "FAQs",
+      "heading": "Frequently asked questions",
+      "items": [
+        {
+          "question": "Where are you based?",
+          "answer": "We work from our workshop in Leeds, fitting homes across West Yorkshire."
+        },
+        {
+          "question": "Who will do the work?",
+          "answer": "Every piece is measured, drawn and fitted by the two of us, from start to finish."
+        },
+        {
+          "question": "Do you take on many jobs at once?",
+          "answer": "No, we only take on a few jobs a month, so each one gets our full attention."
+        },
+        {
+          "question": "What do you make?",
+          "answer": "We make fitted wardrobes, alcove units and kitchens by hand."
+        },
+        {
+          "question": "Is the furniture made by hand?",
+          "answer": "Yes, every piece is made by hand in our Leeds workshop, not mass produced."
+        }
+      ]
+    },
+    "cta": {
+      "heading": "Ready to talk about your space?",
+      "body": "Get in touch and we will arrange a time to visit your home.",
+      "button": "Get in touch"
+    },
+    "footer": {
+      "description": "We make fitted wardrobes, alcove units and kitchens by hand in our Leeds workshop.",
+      "groups": [
+        {
+          "heading": "Explore",
+          "links": [
+            {
+              "label": "About",
+              "target": "about"
+            },
+            {
+              "label": "Our Work",
+              "target": "dishes"
+            },
+            {
+              "label": "Process",
+              "target": "booking-process"
+            },
+            {
+              "label": "FAQs",
+              "target": "faq"
+            }
+          ]
+        }
+      ],
+      "contact": "Get in touch"
+    }
+  }
+}

@@ -5,6 +5,8 @@
 //                          eval:<run> (test-results/eval/<run>), comma separated
 //   --templates <list>     only these template ids
 //   --names <list>         only these pages: a corpus name, or a run's fixture id
+//   --kind <kind>          model (stored model answers), synthetic (the corpus's synthetic
+//                          answers) or all; each check sets its own default
 //   --looks <list>         all (the four looks' fonts), own (each answer's own look), or names
 //   --widths <list>        standard, seams, all, or sizes such as 390x844,1024
 //   --limit <n>            at most n pages per template, the longest copy first
@@ -49,6 +51,7 @@ export function parseArgs(argv, defaults = {}) {
     templates: null,
     names: null,
     looks: defaults.looks ?? 'all',
+    kind: defaults.kind ?? 'all',
     widths: defaults.widths ?? 'standard',
     limit: null,
     out: null,
@@ -66,6 +69,7 @@ export function parseArgs(argv, defaults = {}) {
     else if (arg === '--templates') options.templates = next().split(',')
     else if (arg === '--names') options.names = next().split(',')
     else if (arg === '--looks') options.looks = next()
+    else if (arg === '--kind') options.kind = next()
     else if (arg === '--widths') options.widths = next()
     else if (arg === '--limit') options.limit = Number(next())
     else if (arg === '--out') options.out = next()

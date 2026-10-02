@@ -1,0 +1,159 @@
+{
+  "source": "synthetic: every text slot at its longest allowed length, from l6-bakery",
+  "answers": {
+    "description": "Wholesale and retail bakery in Todmorden. Sourdough, tin loaves and buns for cafés and farm shops across Calderdale, delivered before 7am from Tuesday to Saturday.",
+    "company": "Pennine Loaf",
+    "logo": {
+      "kind": "wordmark"
+    },
+    "imagery": {
+      "style": "warm",
+      "photos": []
+    },
+    "colours": {
+      "kind": "palette",
+      "paletteId": "clay"
+    }
+  },
+  "chosen": ["t01-aurora", "t07-summit", "t08-vector"],
+  "ctaLabel": "Get in touch",
+  "copy": {
+    "brand": {
+      "name": "Plain words fill this sp",
+      "legalName": "words fill this space to the longest length it allows so eve"
+    },
+    "nav": {
+      "links": [
+        "fill this spac",
+        "this space tos",
+        "space to the l",
+        "to the longest",
+        "the longest le",
+        "longest length"
+      ]
+    },
+    "hero": {
+      "headline": [
+        "length it allows so ever",
+        "it allows so every lines",
+        "allows so every line sho"
+      ],
+      "subhead": "so every line shows how far the layout stretches before it gives Plain words fill this space to the longest length it allows so every line shows how far the layout stretc",
+      "scrollHint": "every line s"
+    },
+    "projects": {
+      "marquee": {
+        "text": "line shows h",
+        "accent": "shows how fa"
+      },
+      "items": [
+        {
+          "titleUp": "how far the layo",
+          "titleDown": "far the layout s",
+          "description": "the layout stretches before it gives Plain words fill this space to the longest length it allows so every line shows how far the l"
+        },
+        {
+          "titleUp": "layout stretches",
+          "titleDown": "stretches before",
+          "description": "before it gives Plain words fill this space to the longest length it allows so every line shows how far the layout stretches befor"
+        },
+        {
+          "titleUp": "it gives Plain w",
+          "titleDown": "gives Plain word",
+          "description": "Plain words fill this space to the longest length it allows so every line shows how far the layout stretches before it gives Plain"
+        }
+      ]
+    },
+    "services": {
+      "heading": "words fill this space to the longest length it allows so every line shows how fa",
+      "items": [
+        "fill this space to the l",
+        "this space to the longes",
+        "space to the longest len",
+        "to the longest length it",
+        "the longest length it al",
+        "longest length it allows"
+      ]
+    },
+    "about": {
+      "statement": "length it allows so every line shows how far the layout stretches before it gives Plain words fill this space to the longest length it allows so every line show",
+      "cta": "it allows so every l"
+    },
+    "faq": {
+      "heading": ["allows so every line sho", "so every line shows hows"],
+      "items": [
+        {
+          "question": "every line shows how far the layout stretches before it gives Plain wo",
+          "answer": "line shows how far the layout stretches before it gives Plain words fill this space to the longest length it allows so every line shows how far the layout stretches before it gives Plain words fill this space to the longest length it allows so every line shows how far the layout stretches before its"
+        },
+        {
+          "question": "shows how far the layout stretches before it gives Plain words fill th",
+          "answer": "how far the layout stretches before it gives Plain words fill this space to the longest length it allows so every line shows how far the layout stretches before it gives Plain words fill this space to the longest length it allows so every line shows how far the layout stretches before it gives Plain"
+        },
+        {
+          "question": "far the layout stretches before it gives Plain words fill this space t",
+          "answer": "the layout stretches before it gives Plain words fill this space to the longest length it allows so every line shows how far the layout stretches before it gives Plain words fill this space to the longest length it allows so every line shows how far the layout stretches before it gives Plain words f"
+        },
+        {
+          "question": "layout stretches before it gives Plain words fill this space to the lo",
+          "answer": "stretches before it gives Plain words fill this space to the longest length it allows so every line shows how far the layout stretches before it gives Plain words fill this space to the longest length it allows so every line shows how far the layout stretches before it gives Plain words fill this sp"
+        },
+        {
+          "question": "before it gives Plain words fill this space to the longest length it a",
+          "answer": "it gives Plain words fill this space to the longest length it allows so every line shows how far the layout stretches before it gives Plain words fill this space to the longest length it allows so every line shows how far the layout stretches before it gives Plain words fill this space to the longes"
+        },
+        {
+          "question": "gives Plain words fill this space to the longest length it allows so e",
+          "answer": "Plain words fill this space to the longest length it allows so every line shows how far the layout stretches before it gives Plain words fill this space to the longest length it allows so every line shows how far the layout stretches before it gives Plain words fill this space to the longest lengths"
+        }
+      ]
+    },
+    "footer": {
+      "cta": "words fill this space to",
+      "tagline": "fill this space to the longest length it",
+      "servicesHeading": "this space to th",
+      "navigationHeading": "space to the lon",
+      "navigation": [
+        {
+          "label": "to the longest l",
+          "target": "top"
+        },
+        {
+          "label": "longest length i",
+          "target": "projects"
+        },
+        {
+          "label": "it allows so eve",
+          "target": "services"
+        },
+        {
+          "label": "so every line sh",
+          "target": "about"
+        },
+        {
+          "label": "line shows how f",
+          "target": "faq"
+        },
+        {
+          "label": "how far the layo",
+          "target": "contact"
+        }
+      ],
+      "bottomLinks": [
+        {
+          "label": "the layout stretches",
+          "target": "about"
+        },
+        {
+          "label": "stretches before its",
+          "target": "faq"
+        },
+        {
+          "label": "it gives Plain words",
+          "target": "contact"
+        }
+      ],
+      "credit": "Plain words fill this space to the longest length it allowss"
+    }
+  }
+}

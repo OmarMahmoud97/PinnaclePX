@@ -40,16 +40,50 @@ function evalPages(run) {
   )
 }
 
+// Every answer of the committed corpus (tests/fixtures/template-copy), rendered through /dev/copy:
+// the stored model answers of l6 and l7 and the synthetic ones. It holds no pictures.
+function corpusPages() {
+  const dir = join(ROOT, 'tests', 'fixtures', 'template-copy')
+  return readdirSync(dir, { withFileTypes: true })
+    .filter((entry) => entry.isDirectory())
+    .flatMap(({ name: templateId }) =>
+      readdirSync(join(dir, templateId))
+        .filter((file) => file.endsWith('.json'))
+        .map((file) => {
+          const stored = JSON.parse(readFileSync(join(dir, templateId, file), 'utf8'))
+          const name = file.replace(/\.json$/, '')
+          return {
+            templateId,
+            name,
+            label: `corpus/${templateId}/${name}`,
+            path: `/dev/copy/${templateId}/${name}`,
+            answers: stored.answers,
+            chosen: stored.chosen,
+            copy: stored.copy,
+            ctaLabel: stored.ctaLabel,
+            picks: {},
+            pools: [],
+            thumbnails: {},
+          }
+        }),
+    )
+}
+
 const size = (page) => JSON.stringify(page.copy).length
 
 export function pagesOf(options) {
   const pages = options.source.split(',').flatMap((source) => {
+    if (source === 'corpus') return corpusPages()
     if (source.startsWith('eval:')) return evalPages(source.slice('eval:'.length))
-    throw new Error(`Unknown source ${source}: use eval:<run>`)
+    throw new Error(`Unknown source ${source}: use corpus or eval:<run>`)
   })
   const chosen = pages
     .filter((page) => options.templates === null || options.templates.includes(page.templateId))
     .filter((page) => options.names === null || options.names.includes(page.name))
+    .filter((page) => {
+      const synthetic = page.name.startsWith('synthetic-')
+      return options.kind === 'all' || (options.kind === 'synthetic') === synthetic
+    })
   if (options.limit === null) return chosen
   // The longest copy first: the pages most likely to break a layout.
   const byTemplate = new Map()

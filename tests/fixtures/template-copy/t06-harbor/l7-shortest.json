@@ -1,0 +1,209 @@
+{
+  "source": "l7-sentence/shortest",
+  "answers": {
+    "description": "Dog grooming and walking in Chorlton.",
+    "company": "Muddy Paws",
+    "logo": {
+      "kind": "wordmark"
+    },
+    "imagery": {
+      "style": "minimal",
+      "photos": []
+    },
+    "colours": {
+      "kind": "palette",
+      "paletteId": "ink"
+    }
+  },
+  "chosen": ["t06-harbor", "t05-ember", "t03-meridian"],
+  "ctaLabel": "Get in touch",
+  "copy": {
+    "brand": {
+      "name": "Muddy Paws",
+      "legalName": "Muddy Paws"
+    },
+    "nav": {
+      "links": ["Home", "About", "Services", "Contact", "Get in touch"],
+      "cta": "Get in touch"
+    },
+    "hero": {
+      "badge": "Dog grooming and walking in Chorlton",
+      "headline": ["CARING FOR", "YOUR DOG", "IN CHORLTON"],
+      "subhead": "Gentle grooming and regular walks for your dog, right here in Chorlton.",
+      "primary": "Get in touch",
+      "secondary": "Who we are",
+      "stats": [
+        {
+          "value": "Grooming",
+          "label": "gentle and careful"
+        },
+        {
+          "value": "Walking",
+          "label": "regular and reliable"
+        },
+        {
+          "value": "Local",
+          "label": "based in Chorlton"
+        }
+      ]
+    },
+    "about": {
+      "eyebrow": "Who we are",
+      "heading": {
+        "lines": ["CARE CLOSE", "TO HOME"],
+        "emphasis": "CLOSE TO HOME"
+      },
+      "paragraphs": [
+        "We look after dogs in Chorlton because we care about their comfort and happiness.",
+        "From grooming to walking, we're based right in your neighbourhood in Chorlton."
+      ],
+      "tags": ["Dog grooming", "Dog walking", "Based in Chorlton", "Local care"]
+    },
+    "services": {
+      "eyebrow": "What we do",
+      "heading": {
+        "lines": ["GROOMING AND", "WALKS FOR", "CHORLTON DOGS"],
+        "emphasis": ""
+      },
+      "lead": "Two ways we look after your dog, grooming and walking.",
+      "items": [
+        {
+          "tag": "Grooming",
+          "title": "Gentle grooming",
+          "body": "Gentle, careful grooming for your dog, done close to home in Chorlton."
+        },
+        {
+          "tag": "Walking",
+          "title": "Regular walks",
+          "body": "Regular walks to keep your dog happy, exercised and well looked after."
+        },
+        {
+          "tag": "Local",
+          "title": "Local to you",
+          "body": "Based in Chorlton, so your dog is cared for right in your neighbourhood."
+        }
+      ],
+      "more": "Find out more"
+    },
+    "metrics": {
+      "eyebrow": "What matters",
+      "heading": {
+        "lines": ["CARE YOU", "CAN SEE"],
+        "emphasis": ""
+      },
+      "watermark": "CARE",
+      "items": [
+        {
+          "value": "Gentle",
+          "label": "Grooming approach",
+          "description": "Calm and careful, always"
+        },
+        {
+          "value": "Regular",
+          "label": "Walking schedule",
+          "description": "Keeping your dog active"
+        },
+        {
+          "value": "Local",
+          "label": "Based in Chorlton",
+          "description": "Right in your neighbourhood"
+        }
+      ]
+    },
+    "contact": {
+      "eyebrow": "FAQ",
+      "heading": {
+        "lines": ["QUESTIONS", "YOU MIGHT ASK"],
+        "emphasis": ""
+      },
+      "faq": [
+        {
+          "question": "Do you offer both grooming and walking?",
+          "answer": "Yes, we offer dog grooming and walking in Chorlton, whichever your dog needs."
+        },
+        {
+          "question": "Are you based in Chorlton?",
+          "answer": "Yes, we're based in Chorlton, so your dog is cared for close to home."
+        },
+        {
+          "question": "How do I arrange a visit?",
+          "answer": "Get in touch to tell us about your dog, then we find a time that suits you both."
+        },
+        {
+          "question": "Can I book regular walks?",
+          "answer": "Yes, we offer regular walks to keep your dog happy and well exercised."
+        }
+      ],
+      "form": {
+        "eyebrow": "Get in touch",
+        "heading": {
+          "lines": ["TELL US", "ABOUT YOUR DOG"],
+          "emphasis": ""
+        },
+        "lead": "Send us a message about your dog and what you need.",
+        "labels": {
+          "name": "Your name",
+          "email": "Your email",
+          "message": "Message"
+        },
+        "placeholder": "Tell us about your dog and what you need",
+        "button": "Send message"
+      }
+    },
+    "cta": {
+      "eyebrow": "Get in touch",
+      "heading": {
+        "lines": ["LET'S LOOK AFTER", "YOUR DOG"],
+        "emphasis": ""
+      },
+      "body": "Contact us to tell us about your dog and what you need, grooming or walking. We'll arrange a visit that suits you both.",
+      "primary": "Get in touch",
+      "secondary": "Who we are"
+    },
+    "footer": {
+      "description": "Muddy Paws offers dog grooming and walking in Chorlton, caring for local dogs close to home.",
+      "newsletter": {
+        "label": "Hear from us",
+        "placeholder": "your@email.com"
+      },
+      "columns": [
+        {
+          "heading": "Site",
+          "links": [
+            {
+              "label": "Home",
+              "target": "top"
+            },
+            {
+              "label": "About",
+              "target": "about"
+            },
+            {
+              "label": "Services",
+              "target": "services"
+            },
+            {
+              "label": "Contact",
+              "target": "contact"
+            }
+          ]
+        },
+        {
+          "heading": "Get started",
+          "links": [
+            {
+              "label": "Get in touch",
+              "target": "cta"
+            },
+            {
+              "label": "Our ethos",
+              "target": "about"
+            }
+          ]
+        }
+      ],
+      "note": "Caring for Chorlton dogs",
+      "smallPrint": "Privacy · Terms"
+    }
+  }
+}

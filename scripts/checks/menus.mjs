@@ -13,7 +13,8 @@ import { pagesOf, urlOf } from './lib/pages.mjs'
 import { outDir, writeReport } from './lib/report.mjs'
 
 const options = parseArgs(process.argv.slice(2), {
-  source: 'eval:l6-all-fixes,eval:l7-sentence',
+  source: 'corpus',
+  kind: 'model',
 })
 
 // In the page: every link a visitor could use now, by a mark the check gives it.

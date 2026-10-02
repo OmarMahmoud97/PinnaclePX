@@ -34,8 +34,12 @@ import {
 } from './lib/pixels.mjs'
 import { outDir, tally, writeReport } from './lib/report.mjs'
 
+// The stored picks and pools are an eval run's; the rest measure the committed corpus.
+const asked = process.argv.indexOf('--mode')
+const withPictures = ['picks', 'pool'].includes(process.argv[asked + 1] ?? '') && asked !== -1
 const options = parseArgs(process.argv.slice(2), {
-  source: 'eval:l6-all-fixes,eval:l7-sentence',
+  source: withPictures ? 'eval:l6-all-fixes' : 'corpus',
+  kind: 'model',
   looks: 'own',
 })
 const mode = options.rest.mode ?? 'worst'

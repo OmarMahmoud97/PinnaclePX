@@ -1,0 +1,119 @@
+{
+  "source": "synthetic: a business name of 10 characters, from l6-bakery",
+  "answers": {
+    "description": "Wholesale and retail bakery in Todmorden. Sourdough, tin loaves and buns for cafés and farm shops across Calderdale, delivered before 7am from Tuesday to Saturday.",
+    "company": "Hollin Oak",
+    "logo": {
+      "kind": "wordmark"
+    },
+    "imagery": {
+      "style": "warm",
+      "photos": []
+    },
+    "colours": {
+      "kind": "palette",
+      "paletteId": "clay"
+    }
+  },
+  "chosen": ["t01-aurora", "t07-summit", "t08-vector"],
+  "ctaLabel": "Get in touch",
+  "copy": {
+    "brand": {
+      "name": "Hollin Oak",
+      "legalName": "Hollin Oak",
+      "tagline": "Wholesale and retail bakery in Todmorden, baking for cafés and farm shops across Calderdale."
+    },
+    "nav": {
+      "links": ["What We Bake", "How It Works", "Why Us"],
+      "cta": "Get in touch"
+    },
+    "hero": {
+      "headline": "Sourdough and tin loaves baked in Todmorden",
+      "subhead": "We bake sourdough, tin loaves and buns for cafés and farm shops across Calderdale who want proper bread each morning.",
+      "primary": "Get in touch",
+      "secondary": "See how it works",
+      "reassurance": "Tell us what you need, we'll work out the rest together.",
+      "frame": {
+        "title": "Today's Bake",
+        "rows": ["Sourdough loaves proving", "Tin loaves in the oven", "Buns ready for crates"]
+      }
+    },
+    "features": {
+      "title": "Fresh bread for Calderdale cafés and farm shops",
+      "lead": "We bake sourdough, tin loaves and buns, then get them to you early, ready for your shelves.",
+      "items": [
+        {
+          "title": "Sourdough and tin loaves",
+          "body": "We bake sourdough, tin loaves and buns for cafés and farm shops who want proper bread each morning."
+        },
+        {
+          "title": "Early morning delivery",
+          "body": "Every order reaches you before seven, Tuesday to Saturday, so your shelves are ready for opening time."
+        },
+        {
+          "title": "Wholesale and retail",
+          "body": "Whether you need regular wholesale orders or smaller retail amounts, we bake to suit your shop."
+        }
+      ]
+    },
+    "steps": {
+      "title": "Baked early, delivered before seven each morning",
+      "lead": "Here's how we get fresh bread onto your shelves, Tuesday to Saturday, before your day begins.",
+      "items": [
+        {
+          "title": "Get in touch",
+          "body": "Tell us what you need, whether that's sourdough, tin loaves or buns, and how often you'd like deliveries."
+        },
+        {
+          "title": "We plan your bake",
+          "body": "We work out quantities and timings together, so your order fits your shop and your customers."
+        },
+        {
+          "title": "Early delivery begins",
+          "body": "Your bread arrives before seven each morning, Tuesday to Saturday, ready for your day ahead."
+        }
+      ]
+    },
+    "statement": "We bake because good bread brings people together, and Calderdale's cafés and farm shops deserve it fresh.",
+    "cta": {
+      "headline": "Fresh bread for your shop, every morning",
+      "body": "Get in touch to talk through sourdough, tin loaves and buns for your café or farm shop.",
+      "action": "Get in touch",
+      "reassurance": "Tell us what you need, we'll plan the bake together."
+    },
+    "footer": {
+      "groups": [
+        {
+          "heading": "Bakery",
+          "links": [
+            {
+              "label": "What We Bake",
+              "target": "features"
+            },
+            {
+              "label": "How It Works",
+              "target": "how-it-works"
+            },
+            {
+              "label": "Why Pennine Loaf",
+              "target": "why"
+            }
+          ]
+        },
+        {
+          "heading": "Get Started",
+          "links": [
+            {
+              "label": "Get In Touch",
+              "target": "start"
+            },
+            {
+              "label": "Back To Top",
+              "target": "top"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

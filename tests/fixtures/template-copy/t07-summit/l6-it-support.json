@@ -1,0 +1,253 @@
+{
+  "source": "l6-all-fixes/it-support",
+  "answers": {
+    "description": "Outsourced IT for small offices in Nottingham: helpdesk, Microsoft 365, backups and security. One fixed monthly price per user, and a real person who answers the phone.",
+    "company": "Beacon IT Support",
+    "logo": {
+      "kind": "wordmark"
+    },
+    "imagery": {
+      "style": "minimal",
+      "photos": []
+    },
+    "colours": {
+      "kind": "palette",
+      "paletteId": "ink"
+    }
+  },
+  "chosen": ["t07-summit", "t04-atlas", "t03-meridian"],
+  "ctaLabel": "Get in touch",
+  "copy": {
+    "brand": {
+      "name": "Beacon IT Support",
+      "legalName": "Beacon IT Support"
+    },
+    "nav": {
+      "links": ["Home", "About", "Services", "FAQs"],
+      "cta": "Get in touch"
+    },
+    "hero": {
+      "badge": {
+        "tag": "Nottingham",
+        "text": "IT support for small offices"
+      },
+      "headline": "IT support for small offices in Nottingham",
+      "subhead": "Helpdesk, Microsoft 365, backups and security, covered for small offices in Nottingham.",
+      "primary": "Get in touch",
+      "secondary": "See what we do"
+    },
+    "why": {
+      "eyebrow": "Why choose us",
+      "heading": "Why small offices choose Beacon",
+      "cards": [
+        {
+          "title": "One fixed price",
+          "body": "You pay one fixed monthly price per user, with no surprises on your bill."
+        },
+        {
+          "title": "A real person answers",
+          "body": "When you call, a real person answers, not a queue or a recorded message."
+        },
+        {
+          "title": "No fuss, no jargon",
+          "body": "We explain things in plain words, so you always know what is happening."
+        },
+        {
+          "title": "Built for small offices",
+          "body": "Our helpdesk understands small offices and the problems they actually have."
+        }
+      ]
+    },
+    "services": {
+      "eyebrow": "What we do",
+      "heading": "Outsourced IT for small offices",
+      "items": [
+        {
+          "tag": "Helpdesk",
+          "title": "Helpdesk when you need it",
+          "body": "Get help with everyday IT problems from a helpdesk that understands small offices.",
+          "checklist": [
+            "Everyday IT problems sorted",
+            "Support that knows small offices",
+            "Help when you actually need it"
+          ]
+        },
+        {
+          "tag": "Microsoft 365",
+          "title": "Microsoft 365 handled",
+          "body": "We set up and manage Microsoft 365 so your office can work smoothly without technical worries.",
+          "checklist": ["Setup done for you", "Ongoing management", "Fewer technical worries"]
+        },
+        {
+          "tag": "Backups and security",
+          "title": "Backups and security",
+          "body": "Your data stays backed up and protected, so you can focus on running your business.",
+          "checklist": ["Data backed up", "Protection in place", "Less IT risk to worry about"]
+        }
+      ]
+    },
+    "steps": {
+      "eyebrow": "How it works",
+      "heading": "Steady IT support, no fuss",
+      "body": "Getting set up with Beacon is simple, from your first call to ongoing support.",
+      "items": [
+        {
+          "title": "Get in touch",
+          "body": "Call or email us to tell us about your office and what support you need right now."
+        },
+        {
+          "title": "We set things up",
+          "body": "We arrange your helpdesk, Microsoft 365, backups and security to suit your office."
+        },
+        {
+          "title": "Ongoing support",
+          "body": "You pay one fixed monthly price per user, and a real person answers when you call."
+        }
+      ]
+    },
+    "facilities": {
+      "eyebrow": "What you get",
+      "heading": "What ongoing support looks like",
+      "items": [
+        {
+          "title": "Helpdesk access",
+          "body": "Reach a helpdesk that understands small offices whenever a problem comes up."
+        },
+        {
+          "title": "Microsoft 365 setup",
+          "body": "Your Microsoft 365 is set up and managed so your office runs smoothly."
+        },
+        {
+          "title": "Protected data",
+          "body": "Your data stays backed up and protected, so you can get on with business."
+        },
+        {
+          "title": "One fixed price",
+          "body": "One fixed monthly price per user covers your ongoing IT support."
+        }
+      ],
+      "link": "Find out more"
+    },
+    "faq": {
+      "eyebrow": "FAQs",
+      "heading": "Frequently asked questions",
+      "items": [
+        {
+          "question": "Do you only support offices in Nottingham?",
+          "answer": "We cover small offices in Nottingham, handling helpdesk, Microsoft 365, backups and security."
+        },
+        {
+          "question": "Will I speak to a real person?",
+          "answer": "Yes, a real person answers when you call, rather than a queue or recorded message."
+        },
+        {
+          "question": "How is pricing worked out?",
+          "answer": "You pay one fixed monthly price per user, so your costs stay steady."
+        },
+        {
+          "question": "What does the helpdesk cover?",
+          "answer": "The helpdesk covers everyday IT problems and understands what small offices need."
+        },
+        {
+          "question": "Do you manage Microsoft 365 for us?",
+          "answer": "Yes, we set up and manage Microsoft 365 so your office works smoothly."
+        },
+        {
+          "question": "Are backups and security included?",
+          "answer": "Yes, your data stays backed up and protected as part of your support."
+        }
+      ]
+    },
+    "booking": {
+      "eyebrow": "Get in touch",
+      "heading": "Tell us about your office",
+      "form": {
+        "name": {
+          "label": "Your name",
+          "placeholder": "Enter your name"
+        },
+        "email": {
+          "label": "Your email",
+          "placeholder": "Enter your email"
+        },
+        "phone": {
+          "label": "Your phone",
+          "placeholder": "Enter your number"
+        },
+        "doctor": {
+          "label": "Who to ask for",
+          "placeholder": "A name, if you have one"
+        },
+        "department": {
+          "label": "What you need",
+          "placeholder": "Choose one"
+        },
+        "date": "Preferred date",
+        "button": "Get in touch"
+      }
+    },
+    "cta": {
+      "heading": "Ready for straightforward IT support?",
+      "body": "Get in touch and tell us what support your small office needs right now.",
+      "button": "Get in touch"
+    },
+    "footer": {
+      "description": "We started this because small offices deserve straightforward IT support from someone who answers the phone.",
+      "columns": [
+        {
+          "heading": "Explore",
+          "links": [
+            {
+              "label": "Home",
+              "target": "home"
+            },
+            {
+              "label": "Why us",
+              "target": "why-choose-us"
+            },
+            {
+              "label": "Services",
+              "target": "our-services"
+            },
+            {
+              "label": "FAQs",
+              "target": "faq"
+            }
+          ]
+        },
+        {
+          "heading": "Support",
+          "links": [
+            {
+              "label": "How it works",
+              "target": "booking-process"
+            },
+            {
+              "label": "What you get",
+              "target": "facilities"
+            },
+            {
+              "label": "Get in touch",
+              "target": "cta"
+            }
+          ]
+        }
+      ],
+      "contact": "Get in touch",
+      "smallLinks": [
+        {
+          "label": "Home",
+          "target": "home"
+        },
+        {
+          "label": "FAQs",
+          "target": "faq"
+        },
+        {
+          "label": "Get in touch",
+          "target": "cta"
+        }
+      ]
+    }
+  }
+}

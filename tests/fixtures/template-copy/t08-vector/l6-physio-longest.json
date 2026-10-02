@@ -1,0 +1,141 @@
+{
+  "source": "l6-all-fixes/physio-longest",
+  "answers": {
+    "description": "Sports massage, gait analysis and injury rehab for runners, cyclists and walkers in Hull, with a drop-in clinic on Saturdays.",
+    "company": "Ashgrove Physio and Sport Clinic for all the Runners, Riders and Walkers of Hull",
+    "logo": {
+      "kind": "wordmark"
+    },
+    "imagery": {
+      "style": "dark",
+      "photos": []
+    },
+    "colours": {
+      "kind": "palette",
+      "paletteId": "ink"
+    }
+  },
+  "chosen": ["t08-vector", "t02-monolith", "t05-ember"],
+  "ctaLabel": "Book a visit",
+  "copy": {
+    "brand": {
+      "name": "ashgrove physio clinic",
+      "legalName": "Ashgrove Physio and Sport Clinic"
+    },
+    "nav": {
+      "links": ["Home", "Our Work", "Services", "About", "FAQs", "Contact"]
+    },
+    "hero": {
+      "headline": ["Physio care for", "Hull's runners", "and riders"],
+      "subhead": "Sports massage, gait analysis and injury rehab for runners, cyclists and walkers in Hull.",
+      "scrollHint": "Scroll"
+    },
+    "projects": {
+      "marquee": {
+        "text": "Helping",
+        "accent": "Hull"
+      },
+      "items": [
+        {
+          "titleUp": "Sports",
+          "titleDown": "Massage",
+          "description": "Ease tight muscles and recover better with sports massage, built around your training."
+        },
+        {
+          "titleUp": "Gait",
+          "titleDown": "Analysis",
+          "description": "Understand how you move and spot issues before they slow your running or riding."
+        },
+        {
+          "titleUp": "Injury",
+          "titleDown": "Rehab",
+          "description": "Get back to running, cycling or walking with rehab designed around your recovery."
+        }
+      ]
+    },
+    "services": {
+      "heading": "Sports massage, gait analysis and injury rehab for Hull.",
+      "items": ["Sports Massage", "Gait Analysis", "Injury Rehab"]
+    },
+    "about": {
+      "statement": "We work with Hull's runners, cyclists and walkers because we want you moving well and pain-free.",
+      "cta": "Book a visit"
+    },
+    "faq": {
+      "heading": ["Frequently", "Asked"],
+      "items": [
+        {
+          "question": "Who do you work with?",
+          "answer": "We work with runners, cyclists and walkers across Hull, whatever your pace or distance."
+        },
+        {
+          "question": "What does sports massage help with?",
+          "answer": "It eases tight muscles and helps you recover better, built around your training and routine."
+        },
+        {
+          "question": "What is gait analysis for?",
+          "answer": "It helps you understand how you move, so issues can be spotted before they slow you down."
+        },
+        {
+          "question": "Can you help with an injury?",
+          "answer": "Yes, injury rehab is designed around your recovery, so you can get back to your sport."
+        },
+        {
+          "question": "How do I book an appointment?",
+          "answer": "Get in touch to tell us what's bothering you, then choose a time that suits you to visit."
+        },
+        {
+          "question": "Do you offer weekend appointments?",
+          "answer": "Yes, we run a drop-in clinic on Saturdays, so there's no long wait needed."
+        }
+      ]
+    },
+    "footer": {
+      "cta": "Book a visit",
+      "tagline": "Keep moving, stay supported.",
+      "servicesHeading": "Services",
+      "navigationHeading": "Navigation",
+      "navigation": [
+        {
+          "label": "Home",
+          "target": "top"
+        },
+        {
+          "label": "Our Work",
+          "target": "projects"
+        },
+        {
+          "label": "Services",
+          "target": "services"
+        },
+        {
+          "label": "About",
+          "target": "about"
+        },
+        {
+          "label": "FAQs",
+          "target": "faq"
+        },
+        {
+          "label": "Contact",
+          "target": "contact"
+        }
+      ],
+      "bottomLinks": [
+        {
+          "label": "Services",
+          "target": "services-menu"
+        },
+        {
+          "label": "About",
+          "target": "about"
+        },
+        {
+          "label": "Contact",
+          "target": "contact"
+        }
+      ],
+      "credit": "Ashgrove Physio and Sport Clinic, Hull."
+    }
+  }
+}

@@ -1,0 +1,140 @@
+{
+  "source": "l6-all-fixes/tutors",
+  "answers": {
+    "description": "Maths and science tutoring for GCSE and A level, in person in Ilkley or online. Small groups of four at most, or one to one, with the same tutor every week.",
+    "company": "Hillside Tutors",
+    "logo": {
+      "kind": "wordmark"
+    },
+    "imagery": {
+      "style": "bold",
+      "photos": []
+    },
+    "colours": {
+      "kind": "custom",
+      "hex": "#0b6e4f"
+    }
+  },
+  "chosen": ["t07-summit", "t08-vector", "t05-ember"],
+  "ctaLabel": "Get in touch",
+  "copy": {
+    "brand": {
+      "name": "hillside tutors",
+      "legalName": "Hillside Tutors"
+    },
+    "nav": {
+      "links": ["Home", "Our Work", "What We Offer", "About", "Questions", "Contact"]
+    },
+    "hero": {
+      "headline": ["Tutoring that", "fits around", "you need"],
+      "subhead": "Maths and science tutoring for GCSE and A level students, in person in Ilkley or online.",
+      "scrollHint": "Scroll"
+    },
+    "projects": {
+      "marquee": {
+        "text": "Learning",
+        "accent": "Styles"
+      },
+      "items": [
+        {
+          "titleUp": "Small",
+          "titleDown": "Groups",
+          "description": "Groups of four at most, so you get proper attention and time to ask questions each week."
+        },
+        {
+          "titleUp": "One to",
+          "titleDown": "One",
+          "description": "Prefer individual sessions? We offer one to one tutoring alongside our small group classes."
+        },
+        {
+          "titleUp": "Same",
+          "titleDown": "Tutor",
+          "description": "You keep the same tutor every week, building steady progress through GCSE or A level study."
+        }
+      ]
+    },
+    "services": {
+      "heading": "GCSE and A level maths and science tutoring, in Ilkley or online.",
+      "items": [
+        "GCSE maths tutoring",
+        "A level maths tutoring",
+        "GCSE science tutoring",
+        "A level science tutoring",
+        "Small group sessions",
+        "One to one sessions"
+      ]
+    },
+    "about": {
+      "statement": "We started Hillside Tutors to give students steady, personal support through GCSE and A level science and maths.",
+      "cta": "Get in touch"
+    },
+    "faq": {
+      "heading": ["Frequently", "Asked"],
+      "items": [
+        {
+          "question": "Do you tutor in person or online?",
+          "answer": "Both. You can learn with us in person in Ilkley or join sessions online, whichever suits you."
+        },
+        {
+          "question": "What subjects do you cover?",
+          "answer": "We tutor maths and science, for students working towards GCSE or A level exams."
+        },
+        {
+          "question": "Will I have the same tutor each week?",
+          "answer": "Yes. You keep the same tutor every week, so you can build steady progress together."
+        },
+        {
+          "question": "Can I choose one to one tutoring?",
+          "answer": "Yes. Alongside small group classes, we offer one to one sessions if you prefer individual support."
+        },
+        {
+          "question": "How big are the group sessions?",
+          "answer": "Groups are four students at most, so you still get proper attention and time to ask questions."
+        }
+      ]
+    },
+    "footer": {
+      "cta": "Get in touch",
+      "tagline": "Steady support, week by week.",
+      "servicesHeading": "Services",
+      "navigationHeading": "Navigation",
+      "navigation": [
+        {
+          "label": "Home",
+          "target": "top"
+        },
+        {
+          "label": "Our Work",
+          "target": "projects"
+        },
+        {
+          "label": "What We Offer",
+          "target": "services"
+        },
+        {
+          "label": "About",
+          "target": "about"
+        },
+        {
+          "label": "Questions",
+          "target": "faq"
+        }
+      ],
+      "bottomLinks": [
+        {
+          "label": "About",
+          "target": "about"
+        },
+        {
+          "label": "Questions",
+          "target": "faq"
+        },
+        {
+          "label": "Contact",
+          "target": "contact"
+        }
+      ],
+      "credit": "Hillside Tutors, Ilkley"
+    }
+  }
+}

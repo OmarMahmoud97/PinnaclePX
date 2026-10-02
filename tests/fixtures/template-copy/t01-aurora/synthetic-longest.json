@@ -1,0 +1,123 @@
+{
+  "source": "synthetic: every text slot at its longest allowed length, from l6-bakery",
+  "answers": {
+    "description": "Wholesale and retail bakery in Todmorden. Sourdough, tin loaves and buns for cafés and farm shops across Calderdale, delivered before 7am from Tuesday to Saturday.",
+    "company": "Pennine Loaf",
+    "logo": {
+      "kind": "wordmark"
+    },
+    "imagery": {
+      "style": "warm",
+      "photos": []
+    },
+    "colours": {
+      "kind": "palette",
+      "paletteId": "clay"
+    }
+  },
+  "chosen": ["t01-aurora", "t07-summit", "t08-vector"],
+  "ctaLabel": "Get in touch",
+  "copy": {
+    "brand": {
+      "name": "Plain words fill this sp",
+      "legalName": "words fill this space to the longest length it allows so eve",
+      "tagline": "fill this space to the longest length it allows so every line shows how far the layout stretches before it gives Plain w"
+    },
+    "nav": {
+      "links": ["this space to thes", "space to the longe", "to the longest len"],
+      "cta": "the longest length its"
+    },
+    "hero": {
+      "headline": "longest length it allows so every line shows how far the lay",
+      "subhead": "length it allows so every line shows how far the layout stretches before it gives Plain words fill this space to the longest length it allows so every line shows how far the layout stretches",
+      "primary": "it allows so every lin",
+      "secondary": "allows so every line s",
+      "reassurance": "so every line shows how far the layout stretches before it gives Plain words fill this space to the longest le",
+      "frame": {
+        "title": "every line shows",
+        "rows": [
+          "line shows how far the layout stretchess",
+          "shows how far the layout stretches befor",
+          "how far the layout stretches before it g"
+        ]
+      }
+    },
+    "features": {
+      "title": "far the layout stretches before it gives Plain words fill th",
+      "lead": "the layout stretches before it gives Plain words fill this space to the longest length it allows so every line shows how far the layout stretches before it gives Plain wo",
+      "items": [
+        {
+          "title": "layout stretches before it gives",
+          "body": "stretches before it gives Plain words fill this space to the longest length it allows so every line shows how far the layout stretches before it gives Plain words fill this space to the long"
+        },
+        {
+          "title": "before it gives Plain words fill",
+          "body": "it gives Plain words fill this space to the longest length it allows so every line shows how far the layout stretches before it gives Plain words fill this space to the longest length it all"
+        },
+        {
+          "title": "gives Plain words fill this spac",
+          "body": "Plain words fill this space to the longest length it allows so every line shows how far the layout stretches before it gives Plain words fill this space to the longest length it allows so ev"
+        }
+      ]
+    },
+    "steps": {
+      "title": "words fill this space to the longest length it allows so eve",
+      "lead": "fill this space to the longest length it allows so every line shows how far the layout stretches before it gives Plain words fill this space to the longest length it allo",
+      "items": [
+        {
+          "title": "this space to the longest length",
+          "body": "space to the longest length it allows so every line shows how far the layout stretches before it gives Plain words fill this space to the longest length it allows so every line shows how far"
+        },
+        {
+          "title": "to the longest length it allowss",
+          "body": "the longest length it allows so every line shows how far the layout stretches before it gives Plain words fill this space to the longest length it allows so every line shows how far the layo"
+        },
+        {
+          "title": "longest length it allows so ever",
+          "body": "length it allows so every line shows how far the layout stretches before it gives Plain words fill this space to the longest length it allows so every line shows how far the layout stretches"
+        }
+      ]
+    },
+    "statement": "it allows so every line shows how far the layout stretches before it gives Plain words fill this space to the longest length it allows so every line shows how far the layout stretc",
+    "cta": {
+      "headline": "allows so every line shows how far the layout stretches befo",
+      "body": "so every line shows how far the layout stretches before it gives Plain words fill this space to the longest length it allows so every line shows how far the layout stretches before it givess",
+      "action": "every line shows how f",
+      "reassurance": "line shows how far the layout stretches before it gives Plain words fill this space to the longest length it a"
+    },
+    "footer": {
+      "groups": [
+        {
+          "heading": "shows how far thes",
+          "links": [
+            {
+              "label": "how far the layout stret",
+              "target": "features"
+            },
+            {
+              "label": "the layout stretches bef",
+              "target": "how-it-works"
+            },
+            {
+              "label": "stretches before it give",
+              "target": "why"
+            }
+          ]
+        },
+        {
+          "heading": "it gives Plain wor",
+          "links": [
+            {
+              "label": "gives Plain words fill t",
+              "target": "start"
+            },
+            {
+              "label": "words fill this space to",
+              "target": "top"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,137 @@
+{
+  "source": "l6-all-fixes/florist",
+  "answers": {
+    "description": "Flower shop on Otley Road with bouquets, wedding flowers and weekly arrangements for offices. Same-day delivery across north Leeds if you order before noon.",
+    "company": "Thistle and Fern",
+    "logo": {
+      "kind": "wordmark"
+    },
+    "imagery": {
+      "style": "bold",
+      "photos": []
+    },
+    "colours": {
+      "kind": "custom",
+      "hex": "#be123c"
+    }
+  },
+  "chosen": ["t01-aurora", "t08-vector", "t07-summit"],
+  "ctaLabel": "Order Flowers",
+  "copy": {
+    "brand": {
+      "name": "thistle and fern",
+      "legalName": "Thistle and Fern"
+    },
+    "nav": {
+      "links": ["Home", "Our Work", "What We Offer", "About", "Questions", "Contact"]
+    },
+    "hero": {
+      "headline": ["Bright Blooms", "From Otley Road", "Delivered Same Day"],
+      "subhead": "Colourful bouquets, wedding flowers and office arrangements, made fresh on Otley Road for north Leeds.",
+      "scrollHint": "Scroll"
+    },
+    "projects": {
+      "marquee": {
+        "text": "Selected",
+        "accent": "Blooms"
+      },
+      "items": [
+        {
+          "titleUp": "Fresh",
+          "titleDown": "Bouquets",
+          "description": "Colourful bouquets made fresh on Otley Road, ready for birthdays, thank yous or just because."
+        },
+        {
+          "titleUp": "Wedding",
+          "titleDown": "Flowers",
+          "description": "Wedding flowers that fit your day, from bouquets to venue arrangements, all made with care."
+        },
+        {
+          "titleUp": "Office",
+          "titleDown": "Arrangements",
+          "description": "Fresh flowers delivered weekly, arranged to suit your office space and keep it bright."
+        }
+      ]
+    },
+    "services": {
+      "heading": "Bold flowers for every moment, made on Otley Road.",
+      "items": ["Bouquets", "Wedding Flowers", "Office Flowers", "Same-Day Delivery"]
+    },
+    "about": {
+      "statement": "We love bringing colour and life to north Leeds, one bouquet and one office arrangement at a time.",
+      "cta": "Order Flowers"
+    },
+    "faq": {
+      "heading": ["Frequently Asked", "Questions"],
+      "items": [
+        {
+          "question": "Where is your flower shop?",
+          "answer": "We're a flower shop on Otley Road, making bouquets, wedding flowers and office arrangements."
+        },
+        {
+          "question": "Do you deliver the same day?",
+          "answer": "Order before noon and we'll deliver across north Leeds the same day, straight to your door."
+        },
+        {
+          "question": "Can you do flowers for weddings?",
+          "answer": "We create wedding flowers that fit your day, from bouquets to venue arrangements, all made with care."
+        },
+        {
+          "question": "Do you supply flowers for offices?",
+          "answer": "Yes, we deliver fresh flowers weekly, arranged to suit your office space and keep it bright."
+        },
+        {
+          "question": "How do I place an order?",
+          "answer": "Get in touch to share your occasion, style and budget, whether it's a bouquet or wedding flowers."
+        }
+      ]
+    },
+    "footer": {
+      "cta": "Order Flowers",
+      "tagline": "Bright blooms from Otley Road.",
+      "servicesHeading": "Services",
+      "navigationHeading": "Navigation",
+      "navigation": [
+        {
+          "label": "Home",
+          "target": "top"
+        },
+        {
+          "label": "Our Work",
+          "target": "projects"
+        },
+        {
+          "label": "What We Offer",
+          "target": "services"
+        },
+        {
+          "label": "About",
+          "target": "about"
+        },
+        {
+          "label": "Questions",
+          "target": "faq"
+        },
+        {
+          "label": "Contact",
+          "target": "contact"
+        }
+      ],
+      "bottomLinks": [
+        {
+          "label": "Services",
+          "target": "services-menu"
+        },
+        {
+          "label": "About",
+          "target": "about"
+        },
+        {
+          "label": "Contact",
+          "target": "contact"
+        }
+      ],
+      "credit": "Thistle and Fern, Otley Road."
+    }
+  }
+}

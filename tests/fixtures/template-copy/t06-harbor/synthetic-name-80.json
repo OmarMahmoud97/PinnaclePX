@@ -1,0 +1,213 @@
+{
+  "source": "synthetic: a business name of 80 characters, from l6-photographer",
+  "answers": {
+    "description": "Wedding and family photography across Northumberland in a relaxed documentary style with no forced poses. Albums printed in the UK.",
+    "company": "Ashgrove Physio and Sport Clinic for all the Runners, Riders and Walkers of Hull",
+    "logo": {
+      "kind": "wordmark"
+    },
+    "imagery": {
+      "style": "minimal",
+      "photos": []
+    },
+    "colours": {
+      "kind": "custom",
+      "hex": "#0f766e"
+    }
+  },
+  "chosen": ["t03-meridian", "t04-atlas", "t06-harbor"],
+  "ctaLabel": "Get in touch",
+  "copy": {
+    "brand": {
+      "name": "Ashgrove Physio and",
+      "legalName": "Ashgrove Physio and Sport Clinic for all the Runners, Riders"
+    },
+    "nav": {
+      "links": ["Home", "About", "What we do", "Contact", "Get in touch"],
+      "cta": "Get in touch"
+    },
+    "hero": {
+      "badge": "Weddings and family, Northumberland",
+      "headline": ["YOUR DAY", "CAPTURED", "NATURALLY"],
+      "subhead": "Wedding and family photography across Northumberland, in a relaxed documentary style with no forced poses.",
+      "primary": "Get in touch",
+      "secondary": "Who we are",
+      "stats": [
+        {
+          "value": "Documentary",
+          "label": "natural, relaxed photographs"
+        },
+        {
+          "value": "Weddings",
+          "label": "and family sessions covered"
+        },
+        {
+          "value": "UK printed",
+          "label": "albums you can hold and keep"
+        }
+      ]
+    },
+    "about": {
+      "eyebrow": "Our approach",
+      "heading": {
+        "lines": ["THE WAY THINGS", "REALLY ARE"],
+        "emphasis": "REALLY ARE"
+      },
+      "paragraphs": [
+        "We photograph weddings and families the way they really are, without forced poses or fuss.",
+        "We cover weddings and family sessions across Northumberland, with a calm approach that puts you at ease."
+      ],
+      "tags": ["Documentary style", "Weddings", "Family sessions", "UK printed albums"]
+    },
+    "services": {
+      "eyebrow": "What we do",
+      "heading": {
+        "lines": ["WEDDINGS AND", "FAMILY PHOTOGRAPHY"],
+        "emphasis": ""
+      },
+      "lead": "Relaxed, documentary photography across Northumberland, with no forced poses.",
+      "items": [
+        {
+          "tag": "Style",
+          "title": "Documentary style",
+          "body": "You get natural, relaxed photographs rather than stiff, posed shots, quietly captured as your day unfolds."
+        },
+        {
+          "tag": "Coverage",
+          "title": "Weddings and family",
+          "body": "Covering weddings and family sessions across Northumberland, with a calm approach that puts you at ease."
+        },
+        {
+          "tag": "Albums",
+          "title": "UK printed albums",
+          "body": "Your albums are printed in the UK, so your photographs become something you can hold and keep."
+        }
+      ],
+      "more": "Find out more"
+    },
+    "metrics": {
+      "eyebrow": "What matters",
+      "heading": {
+        "lines": ["HOW WE", "WORK"],
+        "emphasis": ""
+      },
+      "watermark": "NATURAL",
+      "items": [
+        {
+          "value": "Relaxed",
+          "label": "No forced poses",
+          "description": "Just natural moments"
+        },
+        {
+          "value": "Quiet",
+          "label": "Unobtrusive on the day",
+          "description": "We stay in the background"
+        },
+        {
+          "value": "Printed",
+          "label": "UK printed albums",
+          "description": "Something to hold and keep"
+        }
+      ]
+    },
+    "contact": {
+      "eyebrow": "FAQ",
+      "heading": {
+        "lines": ["QUESTIONS YOU", "MIGHT HAVE"],
+        "emphasis": ""
+      },
+      "faq": [
+        {
+          "question": "Do you only photograph weddings?",
+          "answer": "No, we cover weddings and family sessions across Northumberland, both in the same relaxed documentary style."
+        },
+        {
+          "question": "Will you ask us to pose?",
+          "answer": "No, our style is documentary, so your day unfolds naturally while we quietly capture it as it happens."
+        },
+        {
+          "question": "Do you work across all of Northumberland?",
+          "answer": "Yes, we photograph weddings and family sessions across Northumberland."
+        },
+        {
+          "question": "Can we get a printed album?",
+          "answer": "Yes, your albums are printed in the UK, so your photographs become something you can hold and keep."
+        },
+        {
+          "question": "What happens when we first get in touch?",
+          "answer": "Send a message about your wedding or family session, and tell us your date and what you have in mind."
+        }
+      ],
+      "form": {
+        "eyebrow": "Get in touch",
+        "heading": {
+          "lines": ["TELL US ABOUT", "YOUR DAY"],
+          "emphasis": ""
+        },
+        "lead": "Send a message about your wedding or family session.",
+        "labels": {
+          "name": "Name",
+          "email": "Email",
+          "message": "Message"
+        },
+        "placeholder": "Tell us your date and what you have in mind",
+        "button": "Send message"
+      }
+    },
+    "cta": {
+      "eyebrow": "Get in touch",
+      "heading": {
+        "lines": ["YOUR DAY,", "CAPTURED AS", "IT HAPPENS"],
+        "emphasis": ""
+      },
+      "body": "We photograph weddings and families the way they really are, without forced poses or fuss. Tell us your date and what you have in mind.",
+      "primary": "Get in touch",
+      "secondary": "Who we are"
+    },
+    "footer": {
+      "description": "Wedding and family photography across Northumberland, in a relaxed documentary style with no forced poses.",
+      "newsletter": {
+        "label": "Hear from us",
+        "placeholder": "your@email.com"
+      },
+      "columns": [
+        {
+          "heading": "Site",
+          "links": [
+            {
+              "label": "Home",
+              "target": "top"
+            },
+            {
+              "label": "About",
+              "target": "about"
+            },
+            {
+              "label": "What we do",
+              "target": "services"
+            },
+            {
+              "label": "Contact",
+              "target": "contact"
+            }
+          ]
+        },
+        {
+          "heading": "Start here",
+          "links": [
+            {
+              "label": "Get in touch",
+              "target": "cta"
+            },
+            {
+              "label": "Our approach",
+              "target": "about"
+            }
+          ]
+        }
+      ],
+      "note": "Northumberland based",
+      "smallPrint": "Privacy · Terms"
+    }
+  }
+}

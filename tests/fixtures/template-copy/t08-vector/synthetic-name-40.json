@@ -1,0 +1,148 @@
+{
+  "source": "synthetic: a business name of 40 characters, from l6-bakery",
+  "answers": {
+    "description": "Wholesale and retail bakery in Todmorden. Sourdough, tin loaves and buns for cafés and farm shops across Calderdale, delivered before 7am from Tuesday to Saturday.",
+    "company": "Northgate People and Payroll Consultancy",
+    "logo": {
+      "kind": "wordmark"
+    },
+    "imagery": {
+      "style": "warm",
+      "photos": []
+    },
+    "colours": {
+      "kind": "palette",
+      "paletteId": "clay"
+    }
+  },
+  "chosen": ["t01-aurora", "t07-summit", "t08-vector"],
+  "ctaLabel": "Get in touch",
+  "copy": {
+    "brand": {
+      "name": "Northgate People and",
+      "legalName": "Northgate People and Payroll Consultancy"
+    },
+    "nav": {
+      "links": ["Home", "Our Work", "What We Offer", "About", "Questions", "Contact"]
+    },
+    "hero": {
+      "headline": ["Sourdough and", "tin loaves, baked", "in Todmorden"],
+      "subhead": "We bake sourdough, tin loaves and buns for cafés and farm shops across Calderdale, delivered fresh each morning.",
+      "scrollHint": "Scroll"
+    },
+    "projects": {
+      "marquee": {
+        "text": "Fresh",
+        "accent": "Bread"
+      },
+      "items": [
+        {
+          "titleUp": "Sourdough",
+          "titleDown": "Loaves",
+          "description": "Proper sourdough baked each morning for cafés and farm shops who want the real thing."
+        },
+        {
+          "titleUp": "Tin Loaves",
+          "titleDown": "and Buns",
+          "description": "Tin loaves and buns baked fresh, ready for your shelves before opening time."
+        },
+        {
+          "titleUp": "Wholesale",
+          "titleDown": "Orders",
+          "description": "Regular wholesale baking for cafés and farm shops across Calderdale."
+        }
+      ]
+    },
+    "services": {
+      "heading": "We bake bread for cafés and farm shops across Calderdale.",
+      "items": [
+        "Sourdough loaves",
+        "Tin loaves",
+        "Fresh baked buns",
+        "Wholesale orders",
+        "Retail orders",
+        "Early morning delivery"
+      ]
+    },
+    "about": {
+      "statement": "We bake because good bread brings people together, and Calderdale's cafés and farm shops deserve it fresh.",
+      "cta": "Get in touch"
+    },
+    "faq": {
+      "heading": ["Frequently asked", "Questions"],
+      "items": [
+        {
+          "question": "What kind of bread do you bake?",
+          "answer": "We bake sourdough, tin loaves and buns for cafés and farm shops who want proper bread each morning."
+        },
+        {
+          "question": "When does delivery arrive?",
+          "answer": "Every order reaches you before seven, Tuesday to Saturday, so your shelves are ready for opening time."
+        },
+        {
+          "question": "Do you do wholesale and retail?",
+          "answer": "Whether you need regular wholesale orders or smaller retail amounts, we bake to suit your shop."
+        },
+        {
+          "question": "How do we get started?",
+          "answer": "Tell us what you need, whether that's sourdough, tin loaves or buns, and how often you'd like deliveries."
+        },
+        {
+          "question": "How do you plan our order?",
+          "answer": "We work out quantities and timings together, so your order fits your shop and your customers."
+        },
+        {
+          "question": "Which days do you deliver?",
+          "answer": "Your bread arrives before seven each morning, Tuesday to Saturday, ready for your day ahead."
+        }
+      ]
+    },
+    "footer": {
+      "cta": "Get in touch",
+      "tagline": "Baked early for Calderdale",
+      "servicesHeading": "Our Bread",
+      "navigationHeading": "Navigation",
+      "navigation": [
+        {
+          "label": "Home",
+          "target": "top"
+        },
+        {
+          "label": "Our Work",
+          "target": "projects"
+        },
+        {
+          "label": "What We Offer",
+          "target": "services"
+        },
+        {
+          "label": "About",
+          "target": "about"
+        },
+        {
+          "label": "Questions",
+          "target": "faq"
+        },
+        {
+          "label": "Contact",
+          "target": "contact"
+        }
+      ],
+      "bottomLinks": [
+        {
+          "label": "About",
+          "target": "about"
+        },
+        {
+          "label": "Questions",
+          "target": "faq"
+        },
+        {
+          "label": "Contact",
+          "target": "contact"
+        }
+      ],
+      "credit": "Pennine Loaf, Todmorden"
+    }
+  }
+}

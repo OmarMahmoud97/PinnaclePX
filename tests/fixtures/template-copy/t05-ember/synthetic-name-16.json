@@ -1,0 +1,193 @@
+{
+  "source": "synthetic: a business name of 16 characters, from l6-cleaning",
+  "answers": {
+    "description": "Domestic and end-of-tenancy cleaning across Newcastle and Gateshead. Insured, DBS-checked cleaners, the same person each visit, and a checklist you agree in advance.",
+    "company": "Bramble and Bean",
+    "logo": {
+      "kind": "wordmark"
+    },
+    "imagery": {
+      "style": "bold",
+      "photos": []
+    },
+    "colours": {
+      "kind": "palette",
+      "paletteId": "plum"
+    }
+  },
+  "chosen": ["t07-summit", "t05-ember", "t02-monolith"],
+  "ctaLabel": "Get in touch",
+  "copy": {
+    "brand": {
+      "name": "Bramble and Bean",
+      "legalName": "Bramble and Bean"
+    },
+    "nav": {
+      "links": ["About", "Services", "Areas", "FAQs"],
+      "cta": "Get in touch"
+    },
+    "hero": {
+      "eyebrow": "CLEANED PROPERLY, EVERY TIME",
+      "headline": "Your Home Cleaned, Your Way, Every Time",
+      "subhead": "Domestic and end-of-tenancy cleaning across Newcastle and Gateshead, for households that want it done properly.",
+      "cta": "Get in touch"
+    },
+    "about": {
+      "eyebrow": "Made with care",
+      "heading": "A clean home comes from trust, not luck",
+      "body": "We believe a clean home comes from trust, so we send the same checked cleaner every time."
+    },
+    "stats": [
+      {
+        "title": "One Trusted Cleaner",
+        "body": "You get the same person each visit, so they get to know your home and how you like things done."
+      },
+      {
+        "title": "Insured And DBS-Checked",
+        "body": "Every cleaner is insured and DBS-checked, so you can let them into your home with confidence."
+      },
+      {
+        "title": "Agreed In Advance",
+        "body": "You agree a checklist before we start, so you know exactly what gets cleaned every time."
+      }
+    ],
+    "dishes": {
+      "eyebrow": "What we offer",
+      "heading": "Cleaning across Newcastle and Gateshead",
+      "items": [
+        {
+          "title": "Domestic Cleaning",
+          "note": "For regular homes"
+        },
+        {
+          "title": "End-Of-Tenancy Cleaning",
+          "note": "Tenants, landlords"
+        },
+        {
+          "title": "Agreed Checklists",
+          "note": "Set in advance"
+        },
+        {
+          "title": "Regular Visits",
+          "note": "Same cleaner"
+        }
+      ]
+    },
+    "features": {
+      "eyebrow": "What sets us apart",
+      "heading": "Why households choose us",
+      "items": [
+        {
+          "title": "The Same Cleaner",
+          "body": "The same cleaner visits every time, so they get to know your home and how you like things done."
+        },
+        {
+          "title": "Checked And Insured",
+          "body": "Every cleaner is insured and DBS-checked, so you can feel confident letting them in."
+        },
+        {
+          "title": "Clear Checklists",
+          "body": "You agree exactly what gets cleaned before we start, so nothing is left to guesswork."
+        }
+      ]
+    },
+    "booking": {
+      "eyebrow": "How it works",
+      "heading": "Three simple steps",
+      "steps": [
+        {
+          "title": "Get In Touch",
+          "body": "Tell us about your home and what you need cleaned, whether regular or end-of-tenancy."
+        },
+        {
+          "title": "Agree A Checklist",
+          "body": "We work out a checklist together, so you know exactly what to expect from each visit."
+        },
+        {
+          "title": "Meet Your Cleaner",
+          "body": "The same insured, DBS-checked cleaner visits each time, getting to know your home properly."
+        }
+      ]
+    },
+    "timing": {
+      "title": "Ready When You Are",
+      "body": "Tell us about your home in Newcastle or Gateshead, and we will sort the rest with you.",
+      "cta": "Get in touch"
+    },
+    "faq": {
+      "eyebrow": "FAQs",
+      "heading": "Frequently asked questions",
+      "items": [
+        {
+          "question": "Do I get the same cleaner every visit?",
+          "answer": "Yes, you get the same person each visit, so they get to know your home and how you like things done."
+        },
+        {
+          "question": "Are your cleaners insured and checked?",
+          "answer": "Every cleaner is insured and DBS-checked, so you can let them into your home with confidence."
+        },
+        {
+          "question": "How do you know what to clean?",
+          "answer": "You agree a checklist with us before we start, so you know exactly what gets cleaned every time."
+        },
+        {
+          "question": "Do you cover end-of-tenancy cleaning?",
+          "answer": "Yes, we offer domestic and end-of-tenancy cleaning across Newcastle and Gateshead."
+        },
+        {
+          "question": "Which areas do you cover?",
+          "answer": "We clean homes across Newcastle and Gateshead."
+        }
+      ]
+    },
+    "cta": {
+      "heading": "Let's agree a checklist for your home",
+      "body": "Get in touch and tell us what you need cleaned, regular or end-of-tenancy.",
+      "button": "Get in touch"
+    },
+    "footer": {
+      "description": "Domestic and end-of-tenancy cleaning across Newcastle and Gateshead, done properly every time.",
+      "groups": [
+        {
+          "heading": "Explore",
+          "links": [
+            {
+              "label": "About",
+              "target": "about"
+            },
+            {
+              "label": "Services",
+              "target": "dishes"
+            },
+            {
+              "label": "How It Works",
+              "target": "booking-process"
+            },
+            {
+              "label": "FAQs",
+              "target": "faq"
+            }
+          ]
+        },
+        {
+          "heading": "Company",
+          "links": [
+            {
+              "label": "Features",
+              "target": "features"
+            },
+            {
+              "label": "Areas",
+              "target": "timing"
+            },
+            {
+              "label": "Get In Touch",
+              "target": "cta"
+            }
+          ]
+        }
+      ],
+      "contact": "Get in touch"
+    }
+  }
+}

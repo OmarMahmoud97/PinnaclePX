@@ -1,0 +1,252 @@
+{
+  "source": "synthetic: the long real words in every headline and phrase slot, from l6-a1-gas",
+  "answers": {
+    "description": "Boiler repairs, servicing and new installs across Bradford and Shipley. Gas Safe registered, same-week appointments and no call-out charge for quotes.",
+    "company": "A1 Gas and Plumbing",
+    "logo": {
+      "kind": "wordmark"
+    },
+    "imagery": {
+      "style": "dark",
+      "photos": []
+    },
+    "colours": {
+      "kind": "custom",
+      "hex": "#1f2937"
+    }
+  },
+  "chosen": ["t06-harbor", "t04-atlas", "t02-monolith"],
+  "ctaLabel": "Book a visit",
+  "copy": {
+    "brand": {
+      "name": "A1 Gas and Plumbing",
+      "legalName": "A1 Gas and Plumbing"
+    },
+    "nav": {
+      "links": ["What We Do", "About", "How It Works", "Questions"],
+      "cta": "Book a visit"
+    },
+    "hero": {
+      "headline": {
+        "text": "STRAIGHTFORWARD NORTHUMBERLAND PHYSIOTHERAPY KNARESBOROUGH",
+        "first": "NORTHUMBERLAND STRAIGHTFORWARD",
+        "second": "PHYSIOTHERAPY STRAIGHTFORWARD"
+      },
+      "subhead": "Boiler repairs, servicing and new installs for homeowners across Bradford and Shipley.",
+      "primary": "Book a visit",
+      "secondary": "See how it works",
+      "cards": {
+        "quote": {
+          "text": "We want local homes to have reliable, properly qualified gas and plumbing help.",
+          "role": "Why we started"
+        },
+        "profile": {
+          "role": "Homeowners needing boiler work",
+          "body": "There's no call-out charge for quotes, so you can find out costs without pressure."
+        },
+        "plan": {
+          "title": "KNARESBOROUGH",
+          "badge": "Included",
+          "body": "Boiler repairs, servicing and new installs, handled properly from start to finish.",
+          "action": "Book a visit",
+          "points": ["Gas Safe registered", "Same-week appointments", "No call-out charge"]
+        },
+        "service": {
+          "title": "CONVEYANCING STRAIGHTFORWARD",
+          "body": "All our gas work is carried out by Gas Safe registered engineers, so it's handled properly."
+        }
+      }
+    },
+    "sponsors": {
+      "heading": "ARCHITECTURE STRAIGHTFORWARD ACCOUNTANCY",
+      "items": [
+        "ACCOUNTANCY",
+        "STRAIGHTFORWARD",
+        "NORTHUMBERLAND",
+        "PHYSIOTHERAPY",
+        "KNARESBOROUGH"
+      ]
+    },
+    "about": {
+      "heading": {
+        "text": "CONVEYANCING STRAIGHTFORWARD ACCOUNTANCY",
+        "emphasis": "A1"
+      },
+      "body": "We cover Bradford and Shipley because we want local homes to have reliable, properly qualified gas and plumbing help. Our engineers carry out boiler repairs, servicing and new installs. We quote jobs with no call-out charge, so you know what you're paying before any work starts.",
+      "highlights": [
+        {
+          "value": "ARCHITECTURE",
+          "label": "registered engineers"
+        },
+        {
+          "value": "ACCOUNTANCY",
+          "label": "appointments"
+        },
+        {
+          "value": "STRAIGHTFORWARD",
+          "label": "for call-outs"
+        },
+        {
+          "value": "NORTHUMBERLAND",
+          "label": "Bradford and Shipley"
+        }
+      ]
+    },
+    "steps": {
+      "heading": {
+        "text": "PHYSIOTHERAPY STRAIGHTFORWARD NORTHUMBERLAND KNARESBOROUGH",
+        "emphasis": "How booking"
+      },
+      "lead": "A simple process from first contact to finished job, with no call-out charge along the way.",
+      "items": [
+        {
+          "title": "KNARESBOROUGH STRAIGHTFORWARD",
+          "body": "Tell us what's wrong with your boiler or what work you need, and we'll arrange a time to visit."
+        },
+        {
+          "title": "CONVEYANCING STRAIGHTFORWARD",
+          "body": "We come out to look at the job and give you a quote, with no call-out charge involved."
+        },
+        {
+          "title": "ARCHITECTURE STRAIGHTFORWARD",
+          "body": "Once you're happy to go ahead, we carry out the repair, service or install at a time that suits you."
+        },
+        {
+          "title": "ACCOUNTANCY STRAIGHTFORWARD",
+          "body": "Your boiler is repaired, serviced or installed by a Gas Safe registered engineer, done properly."
+        }
+      ]
+    },
+    "features": {
+      "heading": {
+        "text": "STRAIGHTFORWARD NORTHUMBERLAND PHYSIOTHERAPY",
+        "emphasis": "rely on"
+      },
+      "tags": [
+        "Boiler repairs",
+        "Boiler servicing",
+        "New installs",
+        "Gas Safe registered",
+        "No call-out charge",
+        "Same-week visits"
+      ],
+      "items": [
+        {
+          "title": "NORTHUMBERLAND STRAIGHTFORWARD",
+          "body": "All our gas work is carried out by Gas Safe registered engineers, so you know it's handled properly."
+        },
+        {
+          "title": "PHYSIOTHERAPY STRAIGHTFORWARD",
+          "body": "We offer same-week appointments, so your boiler problem doesn't have to wait around for long."
+        },
+        {
+          "title": "KNARESBOROUGH STRAIGHTFORWARD",
+          "body": "We don't charge a call-out fee for quotes, so you can find out costs without any pressure."
+        }
+      ]
+    },
+    "services": {
+      "heading": {
+        "text": "CONVEYANCING STRAIGHTFORWARD NORTHUMBERLAND",
+        "emphasis": "Boiler repairs"
+      },
+      "lead": "Whatever your boiler needs, we cover it across Bradford and Shipley.",
+      "items": [
+        {
+          "title": "ARCHITECTURE STRAIGHTFORWARD",
+          "body": "If your boiler has broken down, we'll come out and get it fixed properly, with no call-out charge."
+        },
+        {
+          "title": "ACCOUNTANCY STRAIGHTFORWARD",
+          "body": "Regular servicing keeps your boiler running well, carried out by Gas Safe registered engineers."
+        },
+        {
+          "title": "STRAIGHTFORWARD NORTHUMBERLAND",
+          "body": "If it's time for a new boiler, we'll fit it for you at a time that suits your household."
+        }
+      ]
+    },
+    "cta": {
+      "heading": {
+        "text": "NORTHUMBERLAND STRAIGHTFORWARD PHYSIOTHERAPY KNARESBOROUGH",
+        "emphasis": "this week"
+      },
+      "body": "Get in touch and we'll arrange a time to visit, quote the job, and get it done with no call-out charge.",
+      "primary": "Book a visit",
+      "secondary": "See what we do"
+    },
+    "faq": {
+      "heading": {
+        "text": "PHYSIOTHERAPY STRAIGHTFORWARD NORTHUMBERLAND",
+        "emphasis": "questions"
+      },
+      "items": [
+        {
+          "question": "Do you charge a call-out fee for quotes?",
+          "answer": "No, we don't charge a call-out fee for quotes, so you can find out costs without any pressure."
+        },
+        {
+          "question": "Are your engineers Gas Safe registered?",
+          "answer": "Yes, all our gas work is carried out by Gas Safe registered engineers, so it's handled properly."
+        },
+        {
+          "question": "How quickly can you fit me in?",
+          "answer": "We offer same-week appointments, so your boiler problem doesn't have to wait around for long."
+        },
+        {
+          "question": "Which areas do you cover?",
+          "answer": "We cover Bradford and Shipley, offering boiler repairs, servicing and new installs to local homes."
+        },
+        {
+          "question": "What boiler work do you do?",
+          "answer": "We handle boiler repairs, servicing and new installs, from the first call to the finished job."
+        }
+      ],
+      "prompt": "Still have questions?",
+      "link": "Contact us"
+    },
+    "footer": {
+      "groups": [
+        {
+          "heading": "KNARESBOROUGH",
+          "links": [
+            {
+              "label": "About",
+              "target": "about"
+            },
+            {
+              "label": "How It Works",
+              "target": "how-it-works"
+            }
+          ]
+        },
+        {
+          "heading": "CONVEYANCING",
+          "links": [
+            {
+              "label": "What We Do",
+              "target": "features"
+            },
+            {
+              "label": "Our Services",
+              "target": "services"
+            }
+          ]
+        },
+        {
+          "heading": "ARCHITECTURE",
+          "links": [
+            {
+              "label": "Questions",
+              "target": "faq"
+            },
+            {
+              "label": "Book a Visit",
+              "target": "cta"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

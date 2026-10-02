@@ -1,0 +1,224 @@
+{
+  "source": "l7-sentence/longest",
+  "answers": {
+    "description": "Fenwick Associates is a two-person management consultancy in Durham that helps owner-managed firms get ready to sell, or to hand over to the next generation. We start with a plain review of how the business runs, then stay alongside the owners through valuation, tidying up the paperwork, finding the right buyer and the first year after the deal. Most of our work comes from accountants who know us.",
+    "company": "Fenwick Associates",
+    "logo": {
+      "kind": "wordmark"
+    },
+    "imagery": {
+      "style": "dark",
+      "photos": []
+    },
+    "colours": {
+      "kind": "palette",
+      "paletteId": "plum"
+    }
+  },
+  "chosen": ["t03-meridian", "t07-summit", "t05-ember"],
+  "ctaLabel": "Get in touch",
+  "copy": {
+    "brand": {
+      "name": "Fenwick Associates",
+      "legalName": "Fenwick Associates"
+    },
+    "nav": {
+      "links": ["Why us", "Services", "Contact", "Questions"],
+      "cta": "Get in touch",
+      "menu": {
+        "label": "What we do",
+        "items": [
+          {
+            "title": "Plain review",
+            "body": "An honest look at how your business runs today, before anything else."
+          },
+          {
+            "title": "Alongside you",
+            "body": "We stay with you through valuation, paperwork and finding a buyer."
+          },
+          {
+            "title": "After the deal",
+            "body": "We remain involved through the first year after handover."
+          }
+        ]
+      }
+    },
+    "hero": {
+      "badge": {
+        "label": "Durham",
+        "text": "A two-person consultancy in Durham"
+      },
+      "headline": {
+        "text": "Ready your business for its next chapter",
+        "emphasis": "next chapter"
+      },
+      "subhead": "We help owner-managed firms get ready to sell, or to hand over to the next generation, with steady guidance throughout.",
+      "primary": "Get in touch",
+      "secondary": "See what we do"
+    },
+    "sponsors": {
+      "heading": "What we cover",
+      "items": ["Business review", "Valuation", "Paperwork", "Finding a buyer", "Handover support"]
+    },
+    "benefits": {
+      "eyebrow": "Benefits",
+      "heading": "Steady guidance, start to finish",
+      "lead": "We work alongside owner-managers through every stage of a sale or handover. Most of our work comes through accountants who know us.",
+      "items": [
+        {
+          "title": "Plain review first",
+          "body": "We start by looking honestly at how your business runs, before anything else is decided."
+        },
+        {
+          "title": "Alongside you throughout",
+          "body": "We stay with you through valuation, paperwork and finding the right buyer, not just at the start."
+        },
+        {
+          "title": "Support after the deal",
+          "body": "We remain involved through the first year after handover, so the transition stays steady."
+        },
+        {
+          "title": "Known through accountants",
+          "body": "Most of our work comes from accountants who know us and send their clients our way."
+        }
+      ]
+    },
+    "features": {
+      "eyebrow": "What we do",
+      "heading": "Getting your business ready",
+      "lead": "A two-person consultancy in Durham, helping owner-managed firms prepare to sell or hand over.",
+      "items": [
+        {
+          "title": "Honest review",
+          "body": "We look closely at how the business runs today, so we know where to focus next."
+        },
+        {
+          "title": "Valuation support",
+          "body": "We help you understand what your business is worth before you go further."
+        },
+        {
+          "title": "Tidying the paperwork",
+          "body": "We work through the paperwork with you, so everything is in order."
+        },
+        {
+          "title": "Finding the right buyer",
+          "body": "We help you find a buyer who fits, not just the first offer that comes along."
+        }
+      ]
+    },
+    "services": {
+      "eyebrow": "Services",
+      "heading": "How we work with you",
+      "lead": "From the first conversation to the year after the deal, we stay close by.",
+      "items": [
+        {
+          "title": "Business review and valuation",
+          "body": "We review how your business runs and help you understand its value."
+        },
+        {
+          "title": "Sale or handover preparation",
+          "body": "We get the paperwork and the business itself ready for a sale or handover."
+        },
+        {
+          "title": "Year one support",
+          "body": "We stay involved through the first year after the deal is done."
+        }
+      ]
+    },
+    "community": {
+      "heading": {
+        "text": "Thinking about selling or handing over?",
+        "emphasis": "handing over?"
+      },
+      "body": "Talk to us early, before anything is decided, and we will talk it through with you.",
+      "action": "Get in touch"
+    },
+    "contact": {
+      "eyebrow": "Contact",
+      "heading": "Get in touch",
+      "lead": "Tell us a little about your business and what you are thinking about, and we will take it from there.",
+      "rows": [
+        {
+          "title": "You get in touch",
+          "lines": ["Send us a message with a little about your business."]
+        },
+        {
+          "title": "We talk it through",
+          "lines": ["We have a plain conversation about what selling or handover might look like."]
+        },
+        {
+          "title": "We stay alongside you",
+          "lines": ["From review through valuation, paperwork, buyer and beyond."]
+        }
+      ],
+      "form": {
+        "subjects": ["Selling my business", "Handing over to family", "General enquiry"],
+        "button": "Send message"
+      }
+    },
+    "faq": {
+      "eyebrow": "FAQ",
+      "heading": "Common questions",
+      "items": [
+        {
+          "question": "What kind of businesses do you work with?",
+          "answer": "We work with owner-managed firms getting ready to sell or hand over to the next generation."
+        },
+        {
+          "question": "Where are you based?",
+          "answer": "We are a two-person management consultancy based in Durham."
+        },
+        {
+          "question": "What happens first?",
+          "answer": "We start with a plain review of how your business runs, before anything else is decided."
+        },
+        {
+          "question": "Do you help after the sale?",
+          "answer": "Yes, we stay alongside owners through the first year after the deal."
+        },
+        {
+          "question": "How do most clients find you?",
+          "answer": "Most of our work comes from accountants who know us."
+        }
+      ]
+    },
+    "footer": {
+      "groups": [
+        {
+          "heading": "About",
+          "links": [
+            {
+              "label": "Why us",
+              "target": "benefits"
+            },
+            {
+              "label": "What we do",
+              "target": "features"
+            },
+            {
+              "label": "Services",
+              "target": "services"
+            }
+          ]
+        },
+        {
+          "heading": "Get started",
+          "links": [
+            {
+              "label": "Contact",
+              "target": "contact"
+            },
+            {
+              "label": "Questions",
+              "target": "faq"
+            },
+            {
+              "label": "Back to top",
+              "target": "top"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

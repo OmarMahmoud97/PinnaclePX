@@ -1,0 +1,249 @@
+{
+  "source": "l6-all-fixes/florist",
+  "answers": {
+    "description": "Flower shop on Otley Road with bouquets, wedding flowers and weekly arrangements for offices. Same-day delivery across north Leeds if you order before noon.",
+    "company": "Thistle and Fern",
+    "logo": {
+      "kind": "wordmark"
+    },
+    "imagery": {
+      "style": "bold",
+      "photos": []
+    },
+    "colours": {
+      "kind": "custom",
+      "hex": "#be123c"
+    }
+  },
+  "chosen": ["t01-aurora", "t08-vector", "t07-summit"],
+  "ctaLabel": "Order Flowers",
+  "copy": {
+    "brand": {
+      "name": "Thistle and Fern",
+      "legalName": "Thistle and Fern"
+    },
+    "nav": {
+      "links": ["Home", "About", "Services", "Blooms"],
+      "cta": "Order Flowers"
+    },
+    "hero": {
+      "badge": {
+        "tag": "Otley Road",
+        "text": "Fresh flowers made daily on Otley Road"
+      },
+      "headline": "Bright Blooms From Otley Road, Delivered Same Day",
+      "subhead": "Bouquets, wedding flowers and weekly office arrangements, made fresh on Otley Road for all of north Leeds.",
+      "primary": "Order Flowers",
+      "secondary": "See What We Do"
+    },
+    "why": {
+      "eyebrow": "Why choose us",
+      "heading": "Why people choose Thistle and Fern",
+      "cards": [
+        {
+          "title": "Made Fresh On Otley Road",
+          "body": "Every bouquet is made fresh on Otley Road, ready for whatever the occasion."
+        },
+        {
+          "title": "Wedding Flowers With Care",
+          "body": "We create wedding flowers that fit your day, made with care from start to finish."
+        },
+        {
+          "title": "Weekly Office Flowers",
+          "body": "Keep your workplace bright with fresh flowers delivered weekly to suit your space."
+        },
+        {
+          "title": "Same-Day Delivery",
+          "body": "Order before noon and we deliver across north Leeds the very same day."
+        }
+      ]
+    },
+    "services": {
+      "eyebrow": "What we do",
+      "heading": "Flowers for every moment in north Leeds",
+      "items": [
+        {
+          "tag": "Bouquets",
+          "title": "Bouquets For Every Occasion",
+          "body": "Colourful bouquets made fresh on Otley Road, ready for birthdays, thank yous or just because.",
+          "checklist": ["Made fresh to order", "Suits any occasion", "Same-day delivery available"]
+        },
+        {
+          "tag": "Wedding Flowers",
+          "title": "Wedding Flowers For Your Day",
+          "body": "We create wedding flowers that fit your day, from bouquets to venue arrangements, all made with care.",
+          "checklist": [
+            "Bouquets for the day",
+            "Venue arrangements included",
+            "Made to match your style"
+          ]
+        },
+        {
+          "tag": "Office Flowers",
+          "title": "Weekly Office Arrangements",
+          "body": "Keep your workplace bright with fresh flowers delivered weekly, arranged to suit your office space.",
+          "checklist": [
+            "Delivered every week",
+            "Arranged for your space",
+            "Keeps your office bright"
+          ]
+        }
+      ]
+    },
+    "steps": {
+      "eyebrow": "How it works",
+      "heading": "Three simple steps to your flowers",
+      "body": "From a quick chat to flowers on your doorstep, here is how ordering with us works.",
+      "items": [
+        {
+          "title": "Tell Us What You Need",
+          "body": "Share your occasion, style and budget, whether it's a bouquet or wedding flowers."
+        },
+        {
+          "title": "We Create Your Order",
+          "body": "Our team puts together your flowers on Otley Road, choosing fresh blooms to match."
+        },
+        {
+          "title": "Same-Day Delivery",
+          "body": "Order before noon and we deliver across north Leeds the same day, straight to your door."
+        }
+      ]
+    },
+    "facilities": {
+      "eyebrow": "What you get",
+      "heading": "A look at what we create on Otley Road",
+      "items": [
+        {
+          "title": "Colourful Bouquets",
+          "body": "Bright, colourful bouquets made fresh for birthdays, thank yous or just because."
+        },
+        {
+          "title": "Wedding Arrangements",
+          "body": "Bouquets and venue arrangements created with care to fit your wedding day."
+        },
+        {
+          "title": "Office Displays",
+          "body": "Fresh arrangements delivered weekly and arranged to suit your workplace."
+        },
+        {
+          "title": "Our Otley Road Shop",
+          "body": "Flowers made fresh on Otley Road, ready for same-day delivery across north Leeds."
+        }
+      ],
+      "link": "Find out more"
+    },
+    "faq": {
+      "eyebrow": "FAQs",
+      "heading": "Frequently asked questions",
+      "items": [
+        {
+          "question": "Do you offer same-day delivery?",
+          "answer": "Yes, order before noon and we'll deliver across north Leeds the same day, straight to your door."
+        },
+        {
+          "question": "Can you do flowers for weddings?",
+          "answer": "Yes, we create wedding flowers that fit your day, from bouquets to venue arrangements, all made with care."
+        },
+        {
+          "question": "Do you deliver to offices every week?",
+          "answer": "Yes, we deliver fresh flowers weekly, arranged to suit your office space."
+        },
+        {
+          "question": "Where are you based?",
+          "answer": "We're a flower shop on Otley Road, making bouquets and arrangements fresh for north Leeds."
+        },
+        {
+          "question": "How do I place an order?",
+          "answer": "Get in touch to share your occasion, style and budget, whether it's a bouquet or wedding flowers."
+        }
+      ]
+    },
+    "booking": {
+      "eyebrow": "Get in touch",
+      "heading": "Tell us what flowers you need",
+      "form": {
+        "name": {
+          "label": "Your name",
+          "placeholder": "Enter your name"
+        },
+        "email": {
+          "label": "Your email",
+          "placeholder": "Enter your email"
+        },
+        "phone": {
+          "label": "Your phone",
+          "placeholder": "Enter your number"
+        },
+        "doctor": {
+          "label": "Who to ask for",
+          "placeholder": "A name, if you have one"
+        },
+        "department": {
+          "label": "What you need",
+          "placeholder": "Choose one"
+        },
+        "date": "Preferred date",
+        "button": "Order Flowers"
+      }
+    },
+    "cta": {
+      "heading": "Ready to bring colour to your day?",
+      "body": "Get in touch and let us put together flowers for your occasion, wedding or office.",
+      "button": "Order Flowers"
+    },
+    "footer": {
+      "description": "A flower shop on Otley Road, making bouquets, wedding flowers and weekly office arrangements.",
+      "columns": [
+        {
+          "heading": "Explore",
+          "links": [
+            {
+              "label": "Home",
+              "target": "home"
+            },
+            {
+              "label": "Why Us",
+              "target": "why-choose-us"
+            },
+            {
+              "label": "Services",
+              "target": "our-services"
+            },
+            {
+              "label": "FAQs",
+              "target": "faq"
+            }
+          ]
+        },
+        {
+          "heading": "Flowers",
+          "links": [
+            {
+              "label": "Bouquets",
+              "target": "our-services"
+            },
+            {
+              "label": "Weddings",
+              "target": "our-services"
+            },
+            {
+              "label": "Office Flowers",
+              "target": "our-services"
+            }
+          ]
+        }
+      ],
+      "contact": "Get in touch",
+      "smallLinks": [
+        {
+          "label": "Home",
+          "target": "home"
+        },
+        {
+          "label": "Order Flowers",
+          "target": "cta"
+        }
+      ]
+    }
+  }
+}

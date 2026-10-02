@@ -1,0 +1,254 @@
+{
+  "source": "l7-sentence/cafe",
+  "answers": {
+    "description": "Independent café on the canal in Hebden Bridge. Breakfasts, sourdough toasties and cakes baked here each morning. Dogs, prams and muddy boots all welcome.",
+    "company": "Bramble and Bean",
+    "logo": {
+      "kind": "wordmark"
+    },
+    "imagery": {
+      "style": "warm",
+      "photos": []
+    },
+    "colours": {
+      "kind": "palette",
+      "paletteId": "clay"
+    }
+  },
+  "chosen": ["t08-vector", "t02-monolith", "t01-aurora"],
+  "ctaLabel": "Visit us today",
+  "copy": {
+    "brand": {
+      "name": "Bramble and Bean",
+      "legalName": "Bramble and Bean"
+    },
+    "nav": {
+      "links": ["Menu", "About", "How It Works", "Questions"],
+      "cta": "Visit us today"
+    },
+    "hero": {
+      "headline": {
+        "text": "Your independent café by the canal in Hebden Bridge",
+        "first": "independent",
+        "second": "canal"
+      },
+      "subhead": "Breakfasts, sourdough toasties and cakes baked here each morning. Dogs, prams and muddy boots all welcome.",
+      "primary": "Visit us today",
+      "secondary": "See how it works",
+      "cards": {
+        "quote": {
+          "text": "We wanted a café where everyone feels welcome, muddy boots and all.",
+          "role": "Why we started"
+        },
+        "profile": {
+          "role": "Locals and visitors alike",
+          "body": "Pop in any morning, no booking needed, just follow the towpath to our door."
+        },
+        "plan": {
+          "title": "What you get",
+          "badge": "Included",
+          "body": "Everything baked here each morning, served by the water.",
+          "action": "Visit us today",
+          "points": ["Breakfasts", "Sourdough toasties", "Cakes baked daily"]
+        },
+        "service": {
+          "title": "Baked here each morning",
+          "body": "Our cakes are baked fresh on site every morning. Come and see what's just come out of the oven."
+        }
+      }
+    },
+    "sponsors": {
+      "heading": "What we cover",
+      "items": ["Breakfasts", "Toasties", "Cakes", "Canalside seating"]
+    },
+    "about": {
+      "heading": {
+        "text": "About Bramble and Bean",
+        "emphasis": "Bramble"
+      },
+      "body": "Bramble and Bean is an independent café on the canal in Hebden Bridge. We bake cakes here each morning and serve breakfasts and sourdough toasties. Dogs, prams and muddy boots are all welcome, whoever you are.",
+      "highlights": [
+        {
+          "value": "Independent",
+          "label": "café"
+        },
+        {
+          "value": "Canalside",
+          "label": "location"
+        },
+        {
+          "value": "Baked daily",
+          "label": "cakes"
+        },
+        {
+          "value": "Open to all",
+          "label": "dogs and prams"
+        }
+      ]
+    },
+    "steps": {
+      "heading": {
+        "text": "How a visit to Bramble and Bean works",
+        "emphasis": "visit"
+      },
+      "lead": "Finding us and settling in is simple. Here's what to expect when you come by the canal.",
+      "items": [
+        {
+          "title": "Find us by the canal",
+          "body": "We're easy to spot on the canal in Hebden Bridge. Just follow the towpath and look out for our door."
+        },
+        {
+          "title": "Settle in",
+          "body": "Bring the dog, the pram or your muddy boots. Grab a table and take a moment by the water."
+        },
+        {
+          "title": "Order at the counter",
+          "body": "Choose from breakfasts, toasties and cakes baked that morning. We'll bring it over when ready."
+        },
+        {
+          "title": "Relax by the water",
+          "body": "Take your time with your food and the view. There's no rush at Bramble and Bean."
+        }
+      ]
+    },
+    "features": {
+      "heading": {
+        "text": "What we serve each day",
+        "emphasis": "each day"
+      },
+      "tags": [
+        "Breakfasts",
+        "Sourdough toasties",
+        "Cakes",
+        "Coffee",
+        "Dog friendly",
+        "Pram friendly"
+      ],
+      "items": [
+        {
+          "title": "Baked here each morning",
+          "body": "Our cakes are baked fresh on site every morning. Come and see what's just come out of the oven today."
+        },
+        {
+          "title": "Hearty breakfasts",
+          "body": "Start your day with a proper breakfast by the water. Simple, satisfying food cooked with care."
+        },
+        {
+          "title": "Sourdough toasties",
+          "body": "Our sourdough toasties are made to order using good bread and simple fillings. A canalside favourite."
+        }
+      ]
+    },
+    "services": {
+      "heading": {
+        "text": "A warm welcome for everyone",
+        "emphasis": "everyone"
+      },
+      "lead": "Whoever you are and whatever the weather, there's a place for you at our table by the canal.",
+      "items": [
+        {
+          "title": "Dogs welcome",
+          "body": "Bring your dog along and settle in. We're used to four-legged visitors by the water."
+        },
+        {
+          "title": "Prams welcome",
+          "body": "Plenty of room to park a pram while you enjoy breakfast, toasties or cake."
+        },
+        {
+          "title": "Muddy boots welcome",
+          "body": "Been walking the towpath? Come straight in, muddy boots and all, no fuss."
+        }
+      ]
+    },
+    "cta": {
+      "heading": {
+        "text": "Come and visit us by the canal",
+        "emphasis": "canal"
+      },
+      "body": "Breakfasts, toasties and cakes baked here each morning, with a warm welcome waiting for you.",
+      "primary": "Visit us today",
+      "secondary": "See what we serve"
+    },
+    "faq": {
+      "heading": {
+        "text": "Frequently asked questions",
+        "emphasis": "questions"
+      },
+      "items": [
+        {
+          "question": "Where exactly are you on the canal in Hebden Bridge?",
+          "answer": "We're right on the canal. Just follow the towpath and look out for our door."
+        },
+        {
+          "question": "Do you bake everything on site?",
+          "answer": "Yes, our cakes are baked here each morning, along with our breakfasts and sourdough toasties."
+        },
+        {
+          "question": "Can I bring my dog?",
+          "answer": "Yes, dogs are all welcome, along with prams and muddy boots."
+        },
+        {
+          "question": "Do I need to book a table?",
+          "answer": "No, just pop in. Grab a table and settle in by the water."
+        },
+        {
+          "question": "What can I order?",
+          "answer": "Breakfasts, sourdough toasties and cakes baked here each morning, ordered at the counter."
+        }
+      ],
+      "prompt": "Still have questions?",
+      "link": "Contact us"
+    },
+    "footer": {
+      "groups": [
+        {
+          "heading": "Explore",
+          "links": [
+            {
+              "label": "What we serve",
+              "target": "features"
+            },
+            {
+              "label": "About us",
+              "target": "about"
+            },
+            {
+              "label": "How it works",
+              "target": "how-it-works"
+            }
+          ]
+        },
+        {
+          "heading": "Visit",
+          "links": [
+            {
+              "label": "Our services",
+              "target": "services"
+            },
+            {
+              "label": "Get in touch",
+              "target": "cta"
+            },
+            {
+              "label": "Questions",
+              "target": "faq"
+            }
+          ]
+        },
+        {
+          "heading": "Site",
+          "links": [
+            {
+              "label": "Back to top",
+              "target": "top"
+            },
+            {
+              "label": "Questions",
+              "target": "faq"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

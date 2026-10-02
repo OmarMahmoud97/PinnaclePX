@@ -1,0 +1,213 @@
+{
+  "source": "l6-all-fixes/shortest",
+  "answers": {
+    "description": "Dog grooming and walking in Chorlton.",
+    "company": "Muddy Paws",
+    "logo": {
+      "kind": "wordmark"
+    },
+    "imagery": {
+      "style": "minimal",
+      "photos": []
+    },
+    "colours": {
+      "kind": "palette",
+      "paletteId": "ink"
+    }
+  },
+  "chosen": ["t06-harbor", "t05-ember", "t03-meridian"],
+  "ctaLabel": "Get in touch",
+  "copy": {
+    "brand": {
+      "name": "Muddy Paws",
+      "legalName": "Muddy Paws"
+    },
+    "nav": {
+      "links": ["Home", "About", "Services", "Contact", "Get in touch"],
+      "cta": "Get in touch"
+    },
+    "hero": {
+      "badge": "Dog grooming and walking in Chorlton",
+      "headline": ["CARING FOR", "YOUR DOG", "IN CHORLTON"],
+      "subhead": "Gentle grooming and regular walks for dogs in Chorlton, close to home.",
+      "primary": "Get in touch",
+      "secondary": "Who we are",
+      "stats": [
+        {
+          "value": "Gentle care",
+          "label": "grooming done with patience"
+        },
+        {
+          "value": "Regular walk",
+          "label": "to keep your dog happy"
+        },
+        {
+          "value": "Local to you",
+          "label": "based right in Chorlton"
+        }
+      ]
+    },
+    "about": {
+      "eyebrow": "Our approach",
+      "heading": {
+        "lines": ["WE CARE ABOUT", "THEIR COMFORT"],
+        "emphasis": "THEIR COMFORT"
+      },
+      "paragraphs": [
+        "We look after dogs in Chorlton because we care about their comfort and happiness.",
+        "From gentle grooming to regular walks, we look after your dog close to home."
+      ],
+      "tags": ["Dog grooming", "Dog walking", "Based in Chorlton"]
+    },
+    "services": {
+      "eyebrow": "What we do",
+      "heading": {
+        "lines": ["GROOMING AND", "WALKS FOR", "YOUR DOG"],
+        "emphasis": ""
+      },
+      "lead": "Grooming and walking for dogs in Chorlton, cared for close to home.",
+      "items": [
+        {
+          "tag": "Grooming",
+          "title": "Gentle grooming",
+          "body": "Gentle, careful grooming for your dog, done close to home in Chorlton."
+        },
+        {
+          "tag": "Walking",
+          "title": "Regular walks",
+          "body": "Regular walks to keep your dog happy, exercised and well looked after."
+        },
+        {
+          "tag": "Local",
+          "title": "Local to you",
+          "body": "Based in Chorlton, so your dog is cared for right in your neighbourhood."
+        }
+      ],
+      "more": "Find out more"
+    },
+    "metrics": {
+      "eyebrow": "What matters",
+      "heading": {
+        "lines": ["CARE THAT STAYS", "CLOSE TO HOME"],
+        "emphasis": "CLOSE TO HOME"
+      },
+      "watermark": "CHORLTON",
+      "items": [
+        {
+          "value": "Gentle",
+          "label": "Grooming approach",
+          "description": "Careful and unhurried"
+        },
+        {
+          "value": "Regular",
+          "label": "Walking routine",
+          "description": "Keeps your dog active"
+        },
+        {
+          "value": "Local",
+          "label": "Where we work",
+          "description": "Right in Chorlton"
+        }
+      ]
+    },
+    "contact": {
+      "eyebrow": "FAQ",
+      "heading": {
+        "lines": ["QUESTIONS", "FROM DOG", "OWNERS"],
+        "emphasis": ""
+      },
+      "faq": [
+        {
+          "question": "Do you offer both grooming and walking?",
+          "answer": "Yes, we offer grooming and walking for dogs in Chorlton, whatever your dog needs."
+        },
+        {
+          "question": "Where are you based?",
+          "answer": "We're based in Chorlton, so your dog is cared for right in your neighbourhood."
+        },
+        {
+          "question": "How do I start?",
+          "answer": "Contact us to tell us about your dog and what you need, grooming or walking."
+        },
+        {
+          "question": "What happens after I get in touch?",
+          "answer": "We find a time that suits you and your dog, and talk through the details."
+        },
+        {
+          "question": "Is this a one-off or ongoing?",
+          "answer": "Your dog can settle into regular grooming or walks, cared for by us in Chorlton."
+        }
+      ],
+      "form": {
+        "eyebrow": "Get in touch",
+        "heading": {
+          "lines": ["TELL US ABOUT", "YOUR DOG"],
+          "emphasis": ""
+        },
+        "lead": "Send us a message and tell us what your dog needs.",
+        "labels": {
+          "name": "Name",
+          "email": "Email",
+          "message": "Message"
+        },
+        "placeholder": "Tell us about your dog and what you need",
+        "button": "Send message"
+      }
+    },
+    "cta": {
+      "eyebrow": "Get in touch",
+      "heading": {
+        "lines": ["LET'S LOOK AFTER", "YOUR DOG"],
+        "emphasis": ""
+      },
+      "body": "We look after dogs in Chorlton because we care about their comfort and happiness. Get in touch to tell us what your dog needs.",
+      "primary": "Get in touch",
+      "secondary": "Who we are"
+    },
+    "footer": {
+      "description": "Dog grooming and walking in Chorlton, cared for close to home by people who care about their comfort.",
+      "newsletter": {
+        "label": "Hear from us",
+        "placeholder": "your@email.com"
+      },
+      "columns": [
+        {
+          "heading": "Explore",
+          "links": [
+            {
+              "label": "Home",
+              "target": "top"
+            },
+            {
+              "label": "About",
+              "target": "about"
+            },
+            {
+              "label": "Services",
+              "target": "services"
+            },
+            {
+              "label": "Contact",
+              "target": "contact"
+            }
+          ]
+        },
+        {
+          "heading": "Get started",
+          "links": [
+            {
+              "label": "Get in touch",
+              "target": "cta"
+            },
+            {
+              "label": "What we do",
+              "target": "services"
+            }
+          ]
+        }
+      ],
+      "note": "",
+      "smallPrint": "Privacy · Terms"
+    }
+  }
+}

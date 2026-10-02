@@ -1,0 +1,217 @@
+{
+  "source": "l7-sentence/awkward",
+  "answers": {
+    "description": "we do accountancy for small busines , sole traders and landlords , been doing it 12 yrs in and around leeds, no jargon just sorting ur books tax returns vat and payroll etc, friendly and cheap, first meeting is free!!",
+    "company": "Kirkstall Accounts",
+    "logo": {
+      "kind": "wordmark"
+    },
+    "imagery": {
+      "style": "minimal",
+      "photos": []
+    },
+    "colours": {
+      "kind": "custom",
+      "hex": "#7c3aed"
+    }
+  },
+  "chosen": ["t02-monolith", "t07-summit", "t04-atlas"],
+  "ctaLabel": "Get in touch",
+  "copy": {
+    "brand": {
+      "name": "Kirkstall Accounts",
+      "legalName": "Kirkstall Accounts"
+    },
+    "nav": {
+      "links": ["Get started", "What's included", "How we work", "Why us", "Questions"],
+      "menu": {
+        "label": "More",
+        "items": [
+          {
+            "label": "Tools we use",
+            "target": "tools"
+          },
+          {
+            "label": "Why us",
+            "target": "why"
+          },
+          {
+            "label": "Back to top",
+            "target": "top"
+          }
+        ]
+      },
+      "secondary": "How it works",
+      "cta": "Get in touch"
+    },
+    "hero": {
+      "eyebrow": "KIRKSTALL ACCOUNTS",
+      "headline": {
+        "text": "Accountancy made simple, around Leeds",
+        "emphasis": "made simple"
+      },
+      "subhead": "We handle accountancy for small businesses, sole traders and landlords in and around Leeds. Friendly, plain-speaking help with your books.",
+      "primary": "Get in touch",
+      "secondary": "How it works"
+    },
+    "glance": {
+      "columns": [
+        {
+          "title": "Books sorted",
+          "body": "We take care of your bookkeeping, so your records stay tidy and up to date."
+        },
+        {
+          "title": "Tax returns",
+          "body": "We handle tax returns, sorting out the detail so you don't have to."
+        },
+        {
+          "title": "VAT and payroll",
+          "body": "We manage VAT and payroll too, keeping everything running smoothly for you."
+        }
+      ],
+      "more": "More"
+    },
+    "pitch": {
+      "heading": {
+        "text": "Why we started doing this",
+        "emphasis": "this"
+      },
+      "lead": "We wanted to give small businesses and landlords straightforward help, without confusing jargon getting in the way.",
+      "label": "Why",
+      "statement": "We started this to give small businesses and landlords straightforward, friendly help without the jargon.",
+      "action": "Get in touch"
+    },
+    "offer": {
+      "heading": {
+        "text": "What's included, plainly explained",
+        "emphasis": "plainly explained"
+      },
+      "body": "We sort your books, tax returns, VAT and payroll, explaining things plainly as we go.",
+      "points": [
+        "Bookkeeping kept up to date",
+        "Tax returns handled for you",
+        "VAT and payroll taken care of"
+      ],
+      "action": "Find out more"
+    },
+    "tools": {
+      "heading": {
+        "text": "Twelve years around Leeds",
+        "emphasis": "Twelve years"
+      },
+      "items": [
+        {
+          "title": "Local knowledge",
+          "body": "We've worked in and around Leeds for twelve years, getting to know small businesses and landlords well."
+        },
+        {
+          "title": "Plain speaking",
+          "body": "We explain things plainly, without confusing terms, so you always know where you stand with your accounts."
+        },
+        {
+          "title": "Friendly and fair",
+          "body": "We keep things friendly and keep costs down, so good help with your accounts doesn't cost the earth."
+        }
+      ],
+      "primary": "Get in touch",
+      "secondary": "How it works"
+    },
+    "why": {
+      "heading": "Why small businesses and landlords choose us",
+      "items": [
+        {
+          "title": "No jargon",
+          "body": "We explain things plainly, without confusing terms, just straightforward help with your accounts."
+        },
+        {
+          "title": "Twelve years' experience",
+          "body": "We've been doing this for twelve years in and around Leeds, helping local businesses and landlords."
+        },
+        {
+          "title": "Friendly and cheap",
+          "body": "We keep things friendly and keep our prices down, so help with your accounts stays affordable."
+        }
+      ]
+    },
+    "steps": {
+      "heading": "How working with us works",
+      "items": [
+        {
+          "title": "Free first meeting",
+          "body": "Get in touch and we'll arrange a free first meeting to talk through what you need."
+        },
+        {
+          "title": "We sort your books",
+          "body": "We take care of your books, tax returns, VAT and payroll, so you don't have to worry."
+        },
+        {
+          "title": "Ongoing support",
+          "body": "We stay in touch throughout the year, keeping your accounts in order as things change."
+        }
+      ]
+    },
+    "faq": {
+      "eyebrow": "Questions",
+      "heading": "Frequently asked questions",
+      "items": [
+        {
+          "question": "Who do you work with?",
+          "answer": "We work with small businesses, sole traders and landlords, mostly in and around Leeds."
+        },
+        {
+          "question": "What does the first meeting involve?",
+          "answer": "The first meeting is free. We talk through what you need and how we can help."
+        },
+        {
+          "question": "What exactly do you help with?",
+          "answer": "We sort your books, tax returns, VAT and payroll, explaining everything plainly as we go."
+        },
+        {
+          "question": "Do you explain things in plain language?",
+          "answer": "Yes, no jargon, just straightforward help sorting your books, tax returns, VAT and payroll."
+        },
+        {
+          "question": "How long have you been doing this?",
+          "answer": "We've been doing this for twelve years in and around Leeds."
+        }
+      ]
+    },
+    "footer": {
+      "columns": [
+        [
+          {
+            "label": "Get started",
+            "target": "start"
+          },
+          {
+            "label": "What's included",
+            "target": "offer"
+          },
+          {
+            "label": "How it works",
+            "target": "how-it-works"
+          }
+        ],
+        [
+          {
+            "label": "Why us",
+            "target": "why"
+          },
+          {
+            "label": "Tools we use",
+            "target": "tools"
+          },
+          {
+            "label": "Questions",
+            "target": "faq"
+          }
+        ]
+      ],
+      "note": {
+        "title": "Get in touch",
+        "body": "Get in touch for a free first meeting to talk through what you need."
+      },
+      "action": "Get in touch"
+    }
+  }
+}

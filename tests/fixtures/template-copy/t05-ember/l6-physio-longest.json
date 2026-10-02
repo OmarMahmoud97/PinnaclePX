@@ -1,0 +1,176 @@
+{
+  "source": "l6-all-fixes/physio-longest",
+  "answers": {
+    "description": "Sports massage, gait analysis and injury rehab for runners, cyclists and walkers in Hull, with a drop-in clinic on Saturdays.",
+    "company": "Ashgrove Physio and Sport Clinic for all the Runners, Riders and Walkers of Hull",
+    "logo": {
+      "kind": "wordmark"
+    },
+    "imagery": {
+      "style": "dark",
+      "photos": []
+    },
+    "colours": {
+      "kind": "palette",
+      "paletteId": "ink"
+    }
+  },
+  "chosen": ["t08-vector", "t02-monolith", "t05-ember"],
+  "ctaLabel": "Book a visit",
+  "copy": {
+    "brand": {
+      "name": "Ashgrove Physio",
+      "legalName": "Ashgrove Physio and Sport Clinic"
+    },
+    "nav": {
+      "links": ["About", "Services", "Find Us", "FAQs"],
+      "cta": "Book a visit"
+    },
+    "hero": {
+      "eyebrow": "FOR HULL'S RUNNERS, RIDERS AND WALKERS",
+      "headline": "Physio care for Hull's runners and riders",
+      "subhead": "Sports massage, gait analysis and injury rehab for runners, cyclists and walkers in Hull.",
+      "cta": "Book a visit"
+    },
+    "about": {
+      "eyebrow": "Who we work with",
+      "heading": "We help Hull's runners, cyclists and walkers move well",
+      "body": "We work with Hull's runners, cyclists and walkers because we want you moving well and pain-free."
+    },
+    "stats": [
+      {
+        "title": "Sports Massage",
+        "body": "Ease tight muscles and recover better, built around your training and routine."
+      },
+      {
+        "title": "Gait Analysis",
+        "body": "Understand how you move and spot issues before they slow your running or riding."
+      },
+      {
+        "title": "Injury Rehab",
+        "body": "Get back to running, cycling or walking with rehab designed around your recovery."
+      }
+    ],
+    "dishes": {
+      "eyebrow": "What we offer",
+      "heading": "Care built around your sport",
+      "items": [
+        {
+          "title": "Sports Massage",
+          "note": "For tight muscles"
+        },
+        {
+          "title": "Gait Analysis",
+          "note": "Spot issues early"
+        },
+        {
+          "title": "Injury Rehab",
+          "note": "For recovery"
+        },
+        {
+          "title": "Saturday Drop-in",
+          "note": "No long wait"
+        }
+      ]
+    },
+    "features": {
+      "eyebrow": "What sets us apart",
+      "heading": "Built around you and your sport",
+      "items": [
+        {
+          "title": "Calm, focused care",
+          "body": "We take time to understand your body, your training and what you need from recovery."
+        },
+        {
+          "title": "Support for your sport",
+          "body": "Whether you run, cycle or walk, we build a plan around how you move and train."
+        },
+        {
+          "title": "Easy to book",
+          "body": "Reach out, choose a time that suits you, and get started without a long wait."
+        }
+      ]
+    },
+    "booking": {
+      "eyebrow": "How it works",
+      "heading": "Three simple steps",
+      "steps": [
+        {
+          "title": "Get In Touch",
+          "body": "Reach out to tell us what's bothering you, whether it's an injury, pain, or a training concern."
+        },
+        {
+          "title": "Book Your Visit",
+          "body": "Choose a time that suits you, including our drop-in clinic on Saturdays, no long wait needed."
+        },
+        {
+          "title": "Start Your Recovery",
+          "body": "Work through a plan built for your body and your sport, with support as you move forward."
+        }
+      ]
+    },
+    "timing": {
+      "title": "Ready when you are",
+      "body": "Tell us what's bothering you and we'll help you find a time that suits you, including Saturdays.",
+      "cta": "Book a visit"
+    },
+    "faq": {
+      "eyebrow": "FAQs",
+      "heading": "Frequently asked questions",
+      "items": [
+        {
+          "question": "Who do you work with?",
+          "answer": "We work with Hull's runners, cyclists and walkers who want to move well and pain-free."
+        },
+        {
+          "question": "What does gait analysis involve?",
+          "answer": "Gait analysis looks at how you move, helping spot issues before they slow your running or riding."
+        },
+        {
+          "question": "Can you help with an existing injury?",
+          "answer": "Yes, injury rehab is designed around your recovery, your body and your sport."
+        },
+        {
+          "question": "Do you offer weekend appointments?",
+          "answer": "We run a drop-in clinic on Saturdays, so you can book without a long wait."
+        },
+        {
+          "question": "How do I start?",
+          "answer": "Reach out to tell us what's bothering you, whether it's an injury, pain or a training concern."
+        }
+      ]
+    },
+    "cta": {
+      "heading": "Let's get you moving again",
+      "body": "Reach out and tell us what's bothering you, and we'll help you find a way forward.",
+      "button": "Book a visit"
+    },
+    "footer": {
+      "description": "Sports massage, gait analysis and injury rehab for Hull's runners, cyclists and walkers.",
+      "groups": [
+        {
+          "heading": "Explore",
+          "links": [
+            {
+              "label": "About",
+              "target": "about"
+            },
+            {
+              "label": "Services",
+              "target": "dishes"
+            },
+            {
+              "label": "How It Works",
+              "target": "booking-process"
+            },
+            {
+              "label": "FAQs",
+              "target": "faq"
+            }
+          ]
+        }
+      ],
+      "contact": "Get in touch"
+    }
+  }
+}

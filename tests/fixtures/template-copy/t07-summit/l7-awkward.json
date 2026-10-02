@@ -1,0 +1,259 @@
+{
+  "source": "l7-sentence/awkward",
+  "answers": {
+    "description": "we do accountancy for small busines , sole traders and landlords , been doing it 12 yrs in and around leeds, no jargon just sorting ur books tax returns vat and payroll etc, friendly and cheap, first meeting is free!!",
+    "company": "Kirkstall Accounts",
+    "logo": {
+      "kind": "wordmark"
+    },
+    "imagery": {
+      "style": "minimal",
+      "photos": []
+    },
+    "colours": {
+      "kind": "custom",
+      "hex": "#7c3aed"
+    }
+  },
+  "chosen": ["t02-monolith", "t07-summit", "t04-atlas"],
+  "ctaLabel": "Get in touch",
+  "copy": {
+    "brand": {
+      "name": "Kirkstall Accounts",
+      "legalName": "Kirkstall Accounts"
+    },
+    "nav": {
+      "links": ["Home", "About", "Services", "FAQs"],
+      "cta": "Get in touch"
+    },
+    "hero": {
+      "badge": {
+        "tag": "Leeds",
+        "text": "Accountancy around Leeds, no jargon"
+      },
+      "headline": "Accountancy made simple, around Leeds",
+      "subhead": "We handle books, tax returns, VAT and payroll for small businesses, sole traders and landlords in and around Leeds.",
+      "primary": "Get in touch",
+      "secondary": "See what we do"
+    },
+    "why": {
+      "eyebrow": "Why choose us",
+      "heading": "Why people choose Kirkstall Accounts",
+      "cards": [
+        {
+          "title": "No jargon, just help",
+          "body": "We explain things plainly, without confusing terms, just straightforward help with your accounts."
+        },
+        {
+          "title": "Years around Leeds",
+          "body": "We've been doing this for twelve years in and around Leeds, helping local businesses and landlords."
+        },
+        {
+          "title": "Friendly and fair prices",
+          "body": "We keep things friendly and keep costs down, so good help doesn't cost the earth."
+        },
+        {
+          "title": "Free first meeting",
+          "body": "Your first meeting with us is free, so you can see how we can help."
+        }
+      ]
+    },
+    "services": {
+      "eyebrow": "What we do",
+      "heading": "Accountancy for small businesses and landlords",
+      "items": [
+        {
+          "tag": "Bookkeeping",
+          "title": "Keeping your books in order",
+          "body": "We sort your books so you always know where your business stands.",
+          "checklist": [
+            "Everyday bookkeeping",
+            "Tidying up your records",
+            "Help throughout the year"
+          ]
+        },
+        {
+          "tag": "Tax returns",
+          "title": "Tax returns done properly",
+          "body": "We handle your tax returns, so you don't need to worry about getting them wrong.",
+          "checklist": [
+            "Self assessment returns",
+            "Landlord tax returns",
+            "Help understanding what's owed"
+          ]
+        },
+        {
+          "tag": "VAT",
+          "title": "VAT sorted for you",
+          "body": "We take care of your VAT, keeping things straightforward and on time.",
+          "checklist": [
+            "VAT registration help",
+            "Regular VAT returns",
+            "Plain explanations, no jargon"
+          ]
+        },
+        {
+          "tag": "Payroll",
+          "title": "Payroll handled for you",
+          "body": "We manage your payroll, so your staff get paid correctly and on time.",
+          "checklist": ["Monthly payroll runs", "Payslips sorted", "Help with new starters"]
+        }
+      ]
+    },
+    "steps": {
+      "eyebrow": "How it works",
+      "heading": "Getting started is simple",
+      "body": "We keep things easy, starting with a free first meeting and ongoing support after that.",
+      "items": [
+        {
+          "title": "Free first meeting",
+          "body": "Get in touch and we'll arrange a free first meeting to talk through what you need."
+        },
+        {
+          "title": "We sort your books",
+          "body": "We take care of your books, tax returns, VAT and payroll, so you don't have to worry."
+        },
+        {
+          "title": "Ongoing support",
+          "body": "We stay in touch throughout the year, keeping your accounts in order as things change."
+        }
+      ]
+    },
+    "facilities": {
+      "eyebrow": "What you get",
+      "heading": "What working with us looks like",
+      "items": [
+        {
+          "title": "Plain speaking",
+          "body": "We talk you through things in plain words, without confusing accounting terms."
+        },
+        {
+          "title": "Local knowledge",
+          "body": "We know Leeds and the businesses and landlords around it, after twelve years here."
+        },
+        {
+          "title": "Fair, friendly fees",
+          "body": "We keep our prices friendly and fair, so help with your accounts stays affordable."
+        },
+        {
+          "title": "A free first chat",
+          "body": "Your first meeting with us costs nothing, so you can see if we're a good fit."
+        }
+      ],
+      "link": "Find out more"
+    },
+    "faq": {
+      "eyebrow": "FAQs",
+      "heading": "Frequently asked questions",
+      "items": [
+        {
+          "question": "Who do you work with?",
+          "answer": "We work with small businesses, sole traders and landlords in and around Leeds."
+        },
+        {
+          "question": "What can you help with?",
+          "answer": "We sort books, tax returns, VAT and payroll, explained without jargon."
+        },
+        {
+          "question": "How much does it cost?",
+          "answer": "We keep things friendly and cheap, and your first meeting is free."
+        },
+        {
+          "question": "How long have you been doing this?",
+          "answer": "We've been doing accountancy in and around Leeds for twelve years."
+        },
+        {
+          "question": "Is the first meeting really free?",
+          "answer": "Yes, your first meeting with us is completely free."
+        },
+        {
+          "question": "Do you use lots of jargon?",
+          "answer": "No, we keep things plain and simply sort your books and returns."
+        }
+      ]
+    },
+    "booking": {
+      "eyebrow": "Get in touch",
+      "heading": "Book your free first meeting",
+      "form": {
+        "name": {
+          "label": "Your name",
+          "placeholder": "Enter your full name"
+        },
+        "email": {
+          "label": "Your email",
+          "placeholder": "Enter your email address"
+        },
+        "phone": {
+          "label": "Your phone",
+          "placeholder": "Enter your phone number"
+        },
+        "doctor": {
+          "label": "Who to ask for",
+          "placeholder": "A name, if you have one"
+        },
+        "department": {
+          "label": "What you need",
+          "placeholder": "Choose one"
+        },
+        "date": "Preferred date",
+        "button": "Get in touch"
+      }
+    },
+    "cta": {
+      "heading": "Ready for simple, friendly accounts?",
+      "body": "Get in touch today and book your free first meeting with us.",
+      "button": "Get in touch"
+    },
+    "footer": {
+      "description": "Kirkstall Accounts handles bookkeeping, tax returns, VAT and payroll around Leeds, plainly and fairly.",
+      "columns": [
+        {
+          "heading": "Explore",
+          "links": [
+            {
+              "label": "Home",
+              "target": "home"
+            },
+            {
+              "label": "Why us",
+              "target": "why-choose-us"
+            },
+            {
+              "label": "Services",
+              "target": "our-services"
+            },
+            {
+              "label": "FAQs",
+              "target": "faq"
+            }
+          ]
+        },
+        {
+          "heading": "Get started",
+          "links": [
+            {
+              "label": "How it works",
+              "target": "booking-process"
+            },
+            {
+              "label": "Book now",
+              "target": "book-appointment"
+            }
+          ]
+        }
+      ],
+      "contact": "Get in touch",
+      "smallLinks": [
+        {
+          "label": "Home",
+          "target": "home"
+        },
+        {
+          "label": "Contact",
+          "target": "cta"
+        }
+      ]
+    }
+  }
+}

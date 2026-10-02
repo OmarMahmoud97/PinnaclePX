@@ -13,19 +13,20 @@ node scripts/checks/text-fit.mjs --base http://localhost:3120
 
 Every check takes the options in `lib/args.mjs`:
 
-| Option                                 | What it does                                                                                                                         |
-| -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
-| `--base <url>`                         | the dev server (required)                                                                                                            |
-| `--source <list>`                      | where the copy comes from: `eval:<run>` for a stored run under `test-results/eval`                                                   |
-| `--templates <list>`, `--names <list>` | only these templates, or these pages (a run's fixture ids)                                                                           |
-| `--looks <list>`                       | `all` (the four looks' fonts), `own`, or names                                                                                       |
-| `--widths <list>`                      | `standard` (390x844, 320, 360, 768, 1024, 1280, 1440, 1920, 844x390), `seams` (639/640, 767, 1023, 1279, 1535/1536), `all`, or sizes |
-| `--limit <n>`                          | at most n pages a template, the longest copy first                                                                                   |
-| `--out <dir>`                          | where results go (default `test-results/checks/<check>`)                                                                             |
+| Option                                 | What it does                                                                                                                            |
+| -------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| `--base <url>`                         | the dev server (required)                                                                                                               |
+| `--source <list>`                      | where the copy comes from: `corpus` (the committed copy corpus, the default) or `eval:<run>` for a stored run under `test-results/eval` |
+| `--templates <list>`, `--names <list>` | only these templates, or these pages (a corpus name, or a run's fixture id)                                                             |
+| `--kind <kind>`                        | `model` (stored model answers), `synthetic` (the corpus's answers at the limits) or `all`; each check sets its own default              |
+| `--looks <list>`                       | `all` (the four looks' fonts), `own`, or names                                                                                          |
+| `--widths <list>`                      | `standard` (390x844, 320, 360, 768, 1024, 1280, 1440, 1920, 844x390), `seams` (639/640, 767, 1023, 1279, 1535/1536), `all`, or sizes    |
+| `--limit <n>`                          | at most n pages a template, the longest copy first                                                                                      |
+| `--out <dir>`                          | where results go (default `test-results/checks/<check>`)                                                                                |
 
 Each writes `results.json` (every finding) and `summary.txt` (what a pull request quotes).
 
-The pages come from `/dev/eval/<run>/<fixture>/<template>`, which takes `?look=`, `?scheme=`, `?pictures=white|black|grey` (every image slot filled with a flat stand-in), `?logo=<fill>` (a stand-in image logo of a CIE lightness, decision 23's marks) and `?email=` (`app/dev/_render/concept.tsx`). `/dev/contract/<template>` gives a template's guide and copy keys.
+The pages come from `/dev/copy/<template>/<name>` for the corpus (`tests/fixtures/template-copy`: every l6 and l7 model answer, and synthetic answers with every text slot at its longest, the long real words in every headline and phrase slot, and business names of 10, 16, 40, 60 and 80 characters cut to the brand slots as the pipeline cuts them; `tests/eval/corpus.test.ts` writes and holds them) and from `/dev/eval/<run>/<fixture>/<template>` for a stored run. Both take `?look=`, `?scheme=`, `?pictures=white|black|grey` (every image slot filled with a flat stand-in), `?logo=<fill>` (a stand-in image logo of a CIE lightness, decision 23's marks) and `?email=` (`app/dev/_render/concept.tsx`). `/dev/contract/<template>` gives a template's guide and copy keys.
 
 ## The checks
 
@@ -41,6 +42,10 @@ The pages come from `/dev/eval/<run>/<fixture>/<template>`, which takes `?look=`
 | `a11y-names.mjs`    | the shared outline and name rules (one h1 and none before it, no skipped level, no eyebrow or copyright line or paragraph set as a heading, every control named and its name holding a short label's words, no drawing named as an icon, initials in a circle hidden, a letter-by-letter heading read as words) and each template's own expectations                                                                                                                                    | review/verify-templates/a11y-check.cjs                                                                 |
 | `leftovers.mjs`     | each decided copy-free leftover drawn, each renamed address or field name still present, each copy-dependent leftover's words on the page, and each guide example or copy-key word echoed in stored copy                                                                                                                                                                                                                                                                                | review/outcome/scorecard.cjs and the fix list                                                          |
 
+## In CI
+
+`e2e/reduced-motion-template-fit.spec.ts` runs the text-fit measure (`lib/text-fit-measure.mjs`) over each template's corpus at 320, 390, 768, 1024 and 1440, in each answer's own look: the three longest stored answers and every synthetic one. The cases that fail on main are listed there as expected failures, each with the template pull request that fixes it; the cases that pass only narrowly (they fail with text about 4% wider, as CI's Linux Chromium sets it), and Aurora's that fail only through its header ask (whose two display classes the dev server's style sheets order either way from one start to the next, t01-D2), are skipped with the same pointer.
+
 ## Frozen detectors and their blind spots
 
 These detectors were frozen on 2 October 2026, before the first template pull request (decision 20). A later change to any of them is reported in the pull request that makes it, with what it finds before and after the change, so a pass that comes from a changed detector is visible.
@@ -52,6 +57,7 @@ What each one cannot see:
   - A line counts as clipped downward only when its middle is hidden, so a tight row that shaves a few pixels off ascenders or descenders passes.
   - Text clipped by `clip-path` or a mask, and the text inside form fields, are not measured.
   - The header is the first `header`, else `nav`, drawn across the top of the first screen.
+  - A business name with nowhere to break may break anywhere (plan 7.7), so its own breaks are not counted.
 - **Words over a picture.**
   - The stand-in pictures are flat 3:2 fills; the picks and pool modes serve each picture as a 3:2 centre crop, close to but not exactly the crop a visitor's page makes.
   - A picture a template draws into a canvas through its own treatment (Vector's duotone) is measured as the canvas paints it, not as pure white and black.

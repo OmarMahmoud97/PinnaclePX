@@ -1,0 +1,221 @@
+{
+  "source": "l6-all-fixes/a1-gas",
+  "answers": {
+    "description": "Boiler repairs, servicing and new installs across Bradford and Shipley. Gas Safe registered, same-week appointments and no call-out charge for quotes.",
+    "company": "A1 Gas and Plumbing",
+    "logo": {
+      "kind": "wordmark"
+    },
+    "imagery": {
+      "style": "dark",
+      "photos": []
+    },
+    "colours": {
+      "kind": "custom",
+      "hex": "#1f2937"
+    }
+  },
+  "chosen": ["t06-harbor", "t04-atlas", "t02-monolith"],
+  "ctaLabel": "Book a visit",
+  "copy": {
+    "brand": {
+      "name": "A1 Gas and Plumbing",
+      "legalName": "A1 Gas and Plumbing"
+    },
+    "nav": {
+      "links": ["Get Started", "What's Included", "How It Works", "Why Us", "Questions"],
+      "menu": {
+        "label": "More",
+        "items": [
+          {
+            "label": "Get a Quote",
+            "target": "offer"
+          },
+          {
+            "label": "Our Promise",
+            "target": "why"
+          },
+          {
+            "label": "FAQs",
+            "target": "faq"
+          },
+          {
+            "label": "Back to Top",
+            "target": "top"
+          }
+        ]
+      },
+      "secondary": "How It Works",
+      "cta": "Book a visit"
+    },
+    "hero": {
+      "eyebrow": "A1 GAS AND PLUMBING",
+      "headline": {
+        "text": "Boiler repairs and servicing across Bradford and Shipley",
+        "emphasis": "Bradford and Shipley"
+      },
+      "subhead": "Reliable boiler repairs, servicing and new installs for homeowners across Bradford and Shipley.",
+      "primary": "Book a visit",
+      "secondary": "How It Works"
+    },
+    "glance": {
+      "columns": [
+        {
+          "title": "Boiler Repairs",
+          "body": "Something gone wrong with your boiler? We'll get out to you and sort it properly."
+        },
+        {
+          "title": "Boiler Servicing",
+          "body": "Regular servicing keeps your boiler running well and catches problems early."
+        },
+        {
+          "title": "New Installs",
+          "body": "Need a new boiler fitted? We handle the whole job from start to finish."
+        }
+      ],
+      "more": "More"
+    },
+    "pitch": {
+      "heading": {
+        "text": "Why we cover Bradford and Shipley",
+        "emphasis": "Bradford and Shipley"
+      },
+      "lead": "We want local homes to have reliable, properly qualified gas and plumbing help close by.",
+      "label": "Why",
+      "statement": "We cover Bradford and Shipley because we want local homes to have reliable, properly qualified gas and plumbing help.",
+      "action": "Book a visit"
+    },
+    "offer": {
+      "heading": {
+        "text": "What's included in our boiler work",
+        "emphasis": "included"
+      },
+      "body": "From repairs to full installs, our work is carried out by Gas Safe registered engineers.",
+      "points": [
+        "Gas Safe registered engineers",
+        "Same-week appointments available",
+        "No call-out charge for quotes"
+      ],
+      "action": "Get in touch"
+    },
+    "tools": {
+      "heading": {
+        "text": "What we bring to every job",
+        "emphasis": ""
+      },
+      "items": [
+        {
+          "title": "Gas Safe registration",
+          "body": "All our gas work is carried out by Gas Safe registered engineers, so you know it's handled properly."
+        },
+        {
+          "title": "Quick appointments",
+          "body": "We offer same-week appointments, so your boiler problem doesn't have to wait around for long."
+        },
+        {
+          "title": "No call-out charge",
+          "body": "We don't charge a call-out fee for quotes, so you can find out costs without any pressure."
+        }
+      ],
+      "primary": "Book a visit",
+      "secondary": "How It Works"
+    },
+    "why": {
+      "heading": "Why homeowners choose A1 Gas and Plumbing",
+      "items": [
+        {
+          "title": "Gas Safe registered engineers",
+          "body": "All our gas work is carried out by Gas Safe registered engineers, so you know it's handled properly."
+        },
+        {
+          "title": "Same-week appointments",
+          "body": "We offer same-week appointments, so your boiler problem doesn't have to wait around for long."
+        },
+        {
+          "title": "No call-out charge",
+          "body": "We don't charge a call-out fee for quotes, so you can find out costs without any pressure."
+        }
+      ]
+    },
+    "steps": {
+      "heading": "How we get your boiler sorted",
+      "items": [
+        {
+          "title": "Get in touch",
+          "body": "Tell us what's wrong with your boiler or what work you need, and we'll arrange a time to visit."
+        },
+        {
+          "title": "We quote the job",
+          "body": "We come out to look at the job and give you a quote, with no call-out charge involved."
+        },
+        {
+          "title": "We get it done",
+          "body": "Once you're happy to go ahead, we carry out the repair, service or install at a time that suits you."
+        }
+      ]
+    },
+    "faq": {
+      "eyebrow": "Questions",
+      "heading": "Frequently asked questions",
+      "items": [
+        {
+          "question": "Do you charge a call-out fee for quotes?",
+          "answer": "No, we don't charge a call-out fee for quotes, so you can find out costs without any pressure."
+        },
+        {
+          "question": "How quickly can you fit an appointment in?",
+          "answer": "We offer same-week appointments, so your boiler problem doesn't have to wait around for long."
+        },
+        {
+          "question": "Are your engineers Gas Safe registered?",
+          "answer": "Yes, all our gas work is carried out by Gas Safe registered engineers, so you know it's handled properly."
+        },
+        {
+          "question": "Which areas do you cover?",
+          "answer": "We cover Bradford and Shipley, offering boiler repairs, servicing and new installs to local homes."
+        },
+        {
+          "question": "What boiler work do you do?",
+          "answer": "We carry out boiler repairs, servicing and new installs, depending on what your home needs."
+        }
+      ]
+    },
+    "footer": {
+      "columns": [
+        [
+          {
+            "label": "Get Started",
+            "target": "start"
+          },
+          {
+            "label": "What's Included",
+            "target": "offer"
+          },
+          {
+            "label": "How It Works",
+            "target": "how-it-works"
+          }
+        ],
+        [
+          {
+            "label": "Why Us",
+            "target": "why"
+          },
+          {
+            "label": "Questions",
+            "target": "faq"
+          },
+          {
+            "label": "Back to Top",
+            "target": "top"
+          }
+        ]
+      ],
+      "note": {
+        "title": "Get in touch",
+        "body": "Tell us what your boiler needs and we'll arrange a time to visit."
+      },
+      "action": "Book a visit"
+    }
+  }
+}

@@ -1,0 +1,142 @@
+{
+  "source": "l6-all-fixes/cafe",
+  "answers": {
+    "description": "Independent café on the canal in Hebden Bridge. Breakfasts, sourdough toasties and cakes baked here each morning. Dogs, prams and muddy boots all welcome.",
+    "company": "Bramble and Bean",
+    "logo": {
+      "kind": "wordmark"
+    },
+    "imagery": {
+      "style": "warm",
+      "photos": []
+    },
+    "colours": {
+      "kind": "palette",
+      "paletteId": "clay"
+    }
+  },
+  "chosen": ["t08-vector", "t02-monolith", "t01-aurora"],
+  "ctaLabel": "Visit us today",
+  "copy": {
+    "brand": {
+      "name": "bramble and bean",
+      "legalName": "Bramble and Bean"
+    },
+    "nav": {
+      "links": ["Home", "Our Work", "What We Offer", "About", "Questions", "Contact"]
+    },
+    "hero": {
+      "headline": ["Canalside café", "in Hebden Bridge", "Warm welcome"],
+      "subhead": "Your independent café by the canal, serving breakfasts, sourdough toasties and cakes baked each morning.",
+      "scrollHint": "Scroll"
+    },
+    "projects": {
+      "marquee": {
+        "text": "Morning",
+        "accent": "Bakes"
+      },
+      "items": [
+        {
+          "titleUp": "Baked",
+          "titleDown": "Each Morning",
+          "description": "Our cakes are baked fresh on site every morning. Come and see what's just come out of the oven."
+        },
+        {
+          "titleUp": "Hearty",
+          "titleDown": "Breakfasts",
+          "description": "Start your day with a proper breakfast by the water, simple food cooked with care."
+        },
+        {
+          "titleUp": "Sourdough",
+          "titleDown": "Toasties",
+          "description": "Made to order using good bread and simple fillings, a canalside favourite."
+        }
+      ]
+    },
+    "services": {
+      "heading": "Breakfasts, toasties and cakes baked here each morning.",
+      "items": [
+        "Breakfasts",
+        "Sourdough toasties",
+        "Cakes baked fresh daily",
+        "Coffee by the canal"
+      ]
+    },
+    "about": {
+      "statement": "We wanted a café on the canal where everyone feels welcome, muddy boots, dogs and prams included.",
+      "cta": "Visit us today"
+    },
+    "faq": {
+      "heading": ["Frequently", "Asked"],
+      "items": [
+        {
+          "question": "Where are you based?",
+          "answer": "We're on the canal in Hebden Bridge. Just follow the towpath and look out for our door."
+        },
+        {
+          "question": "Can I bring my dog?",
+          "answer": "Of course. Bring the dog, the pram or your muddy boots, everyone's welcome here."
+        },
+        {
+          "question": "What's on the menu?",
+          "answer": "Breakfasts, sourdough toasties and cakes baked that morning. Simple food cooked with care."
+        },
+        {
+          "question": "How do I order?",
+          "answer": "Settle in at a table, then order at the counter. We'll bring it over when it's ready."
+        },
+        {
+          "question": "Are the cakes fresh?",
+          "answer": "Yes, our cakes are baked fresh on site every morning. Come and see what's just come out of the oven."
+        }
+      ]
+    },
+    "footer": {
+      "cta": "Visit us today",
+      "tagline": "A warm welcome by the canal.",
+      "servicesHeading": "Our Menu",
+      "navigationHeading": "Navigation",
+      "navigation": [
+        {
+          "label": "Home",
+          "target": "top"
+        },
+        {
+          "label": "Our Work",
+          "target": "projects"
+        },
+        {
+          "label": "What We Offer",
+          "target": "services"
+        },
+        {
+          "label": "About",
+          "target": "about"
+        },
+        {
+          "label": "Questions",
+          "target": "faq"
+        },
+        {
+          "label": "Contact",
+          "target": "contact"
+        }
+      ],
+      "bottomLinks": [
+        {
+          "label": "About",
+          "target": "about"
+        },
+        {
+          "label": "Questions",
+          "target": "faq"
+        },
+        {
+          "label": "Contact",
+          "target": "contact"
+        }
+      ],
+      "credit": "Bramble and Bean, by the canal."
+    }
+  }
+}

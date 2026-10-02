@@ -1,0 +1,254 @@
+{
+  "source": "l7-sentence/dentist-claims",
+  "answers": {
+    "description": "Rated 4.9 on Google by over 300 patients, we have been the number one family dentist in Harrogate since 1998. Two surgeries, 0% finance on treatment over £500, open 7 days a week from 8am to 8pm, award-winning hygienists and a 10 year guarantee on crowns.",
+    "company": "Oakfield Dental Practice",
+    "logo": {
+      "kind": "wordmark"
+    },
+    "imagery": {
+      "style": "bold",
+      "photos": []
+    },
+    "colours": {
+      "kind": "custom",
+      "hex": "#0e7490"
+    }
+  },
+  "chosen": ["t01-aurora", "t08-vector", "t02-monolith"],
+  "ctaLabel": "Book a visit",
+  "copy": {
+    "brand": {
+      "name": "Oakfield Dental Practice",
+      "legalName": "Oakfield Dental Practice"
+    },
+    "nav": {
+      "links": ["Our Care", "About", "How It Works", "Questions"],
+      "cta": "Book a visit"
+    },
+    "hero": {
+      "headline": {
+        "text": "Your family dentist, open every day of the week",
+        "first": "family dentist",
+        "second": "every day"
+      },
+      "subhead": "A family dentist in Harrogate, open every day for your dental care. Book a visit that suits your week.",
+      "primary": "Book a visit",
+      "secondary": "See how it works",
+      "cards": {
+        "quote": {
+          "text": "We set up Oakfield to give Harrogate families a dentist they can see any day of the week.",
+          "role": "Why we started"
+        },
+        "profile": {
+          "role": "For local families",
+          "body": "Get in touch by phone or online and ask about an appointment that suits you."
+        },
+        "plan": {
+          "title": "What you get",
+          "badge": "Included",
+          "body": "Dental care built around your family, across two surgeries in Harrogate.",
+          "action": "Book a visit",
+          "points": ["Two surgeries", "Open seven days", "Flexible payment"]
+        },
+        "service": {
+          "title": "Open Every Day",
+          "body": "We open seven days a week, from 8am to 8pm, so you can book a visit when it suits you."
+        }
+      }
+    },
+    "sponsors": {
+      "heading": "What we cover",
+      "items": ["Check-ups", "Hygiene visits", "Crowns", "Treatment plans", "Family care"]
+    },
+    "about": {
+      "heading": {
+        "text": "About Oakfield Dental Practice",
+        "emphasis": "Oakfield"
+      },
+      "body": "Oakfield Dental Practice is a family dentist in Harrogate. We set up Oakfield to give Harrogate families a dentist they can see any day of the week. We run two surgeries and open seven days a week, from 8am to 8pm.",
+      "highlights": [
+        {
+          "value": "Two",
+          "label": "surgeries"
+        },
+        {
+          "value": "Seven days",
+          "label": "a week"
+        },
+        {
+          "value": "8am to 8pm",
+          "label": "opening hours"
+        },
+        {
+          "value": "0% finance",
+          "label": "on larger treatment"
+        }
+      ]
+    },
+    "steps": {
+      "heading": {
+        "text": "How a visit to Oakfield works",
+        "emphasis": "Oakfield"
+      },
+      "lead": "Getting dental care for your family is simple, with two surgeries open across the week.",
+      "items": [
+        {
+          "title": "Get In Touch",
+          "body": "Contact our practice by phone or online to ask about an appointment that suits you."
+        },
+        {
+          "title": "Visit The Practice",
+          "body": "Come along to one of our two surgeries for your check-up, treatment or hygiene visit."
+        },
+        {
+          "title": "Ongoing Care",
+          "body": "We look after your dental health over time, with flexible appointments across the week."
+        },
+        {
+          "title": "Plan Larger Work",
+          "body": "Ask about 0% finance on treatment over £500, to help you plan bigger dental work."
+        }
+      ]
+    },
+    "features": {
+      "heading": {
+        "text": "Dental care for every member of the family",
+        "emphasis": "family"
+      },
+      "tags": [
+        "Check-ups",
+        "Hygiene visits",
+        "Crowns",
+        "Flexible finance",
+        "Evening appointments",
+        "Weekend appointments"
+      ],
+      "items": [
+        {
+          "title": "Open Every Day",
+          "body": "We open seven days a week, from 8am to 8pm, so you can book a visit when it suits you."
+        },
+        {
+          "title": "Flexible Payment",
+          "body": "We offer 0% finance on treatment over £500, making larger dental work easier to plan for."
+        },
+        {
+          "title": "Trusted Hygienists",
+          "body": "Our hygienists bring care and attention to every visit, helping you look after your smile."
+        }
+      ]
+    },
+    "services": {
+      "heading": {
+        "text": "Dental care across two surgeries",
+        "emphasis": "Two surgeries"
+      },
+      "lead": "Visit one of our two surgeries in Harrogate, open every day for your family's dental care.",
+      "items": [
+        {
+          "title": "Family Check-Ups",
+          "body": "Bring your whole family along for regular check-ups at either of our two surgeries."
+        },
+        {
+          "title": "Crown Treatment",
+          "body": "Ask about crowns and the 10 year guarantee that comes with this treatment."
+        },
+        {
+          "title": "Hygiene Visits",
+          "body": "Book a hygiene visit with our hygienists, who bring care and attention to every appointment."
+        }
+      ]
+    },
+    "cta": {
+      "heading": {
+        "text": "Ready to see a dentist that fits your week?",
+        "emphasis": "your week"
+      },
+      "body": "Get in touch with Oakfield Dental Practice and book a visit at a time that suits your family.",
+      "primary": "Book a visit",
+      "secondary": "See our care"
+    },
+    "faq": {
+      "heading": {
+        "text": "Frequently asked questions",
+        "emphasis": "questions"
+      },
+      "items": [
+        {
+          "question": "What hours is Oakfield Dental Practice open?",
+          "answer": "We open seven days a week, from 8am to 8pm, so you can book a visit whenever it suits your family."
+        },
+        {
+          "question": "How many surgeries do you have?",
+          "answer": "We have two surgeries, giving your family more ways to book a convenient appointment."
+        },
+        {
+          "question": "Do you offer payment plans for larger treatment?",
+          "answer": "Yes, we offer 0% finance on treatment over £500, making larger dental work easier to plan for."
+        },
+        {
+          "question": "Is there a guarantee on crowns?",
+          "answer": "Yes, crowns come with a 10 year guarantee as part of your treatment."
+        },
+        {
+          "question": "Who looks after hygiene visits?",
+          "answer": "Our hygienists bring care and attention to every hygiene visit you book with us."
+        }
+      ],
+      "prompt": "Still have questions?",
+      "link": "Contact us"
+    },
+    "footer": {
+      "groups": [
+        {
+          "heading": "Explore",
+          "links": [
+            {
+              "label": "Our Care",
+              "target": "features"
+            },
+            {
+              "label": "About Us",
+              "target": "about"
+            },
+            {
+              "label": "How It Works",
+              "target": "how-it-works"
+            }
+          ]
+        },
+        {
+          "heading": "Practice",
+          "links": [
+            {
+              "label": "Our Services",
+              "target": "services"
+            },
+            {
+              "label": "Questions",
+              "target": "faq"
+            },
+            {
+              "label": "Back To Top",
+              "target": "top"
+            }
+          ]
+        },
+        {
+          "heading": "Get Started",
+          "links": [
+            {
+              "label": "Book A Visit",
+              "target": "cta"
+            },
+            {
+              "label": "About Us",
+              "target": "about"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

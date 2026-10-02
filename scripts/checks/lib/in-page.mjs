@@ -361,3 +361,46 @@ export function logoBoxes() {
       return { where, rect: [left, top, left + w, top + h] }
     })
 }
+
+// The look's two faces, loaded before anything is measured. They load on demand (fonts.ts sets
+// no preload), so the document can report its fonts ready before either has started; a text
+// measured in the fallback face can fit where the look's own face does not.
+export async function loadFonts() {
+  const root = [...document.querySelectorAll('[style]')].find(
+    (el) => el.style.getPropertyValue('--template-font-display') !== '',
+  )
+  if (root !== undefined) {
+    for (const name of ['--template-font-display', '--template-font-body']) {
+      const family = root.style.getPropertyValue(name)
+      if (family === '') continue
+      await Promise.all(
+        ['400', '700'].map((weight) => document.fonts.load(`${weight} 24px ${family}`)),
+      )
+    }
+  }
+  await document.fonts.ready
+}
+
+// The page at rest: every running animation or transition that ends has ended (a marquee never
+// does, so it is not waited for), at most three seconds, then two frames. On a fresh server a
+// page can still be moving when it reports itself loaded, and a measure taken mid-move is wrong.
+export async function settle() {
+  const ending = document.getAnimations().filter((animation) => {
+    const timing = animation.effect?.getTiming?.()
+    return (
+      timing !== undefined && timing.iterations !== Infinity && animation.playState === 'running'
+    )
+  })
+  await Promise.race([
+    Promise.all(ending.map((animation) => animation.finished.catch(() => undefined))),
+    new Promise((resolve) => setTimeout(resolve, 3000)),
+  ])
+  await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)))
+}
+
+// Whether the page has its style sheet: the app's base styles set the body's margin to 0, which a
+// page served without them keeps at the browser's 8px. Unstyled text flows freely, so a measure
+// of it would pass everything.
+export function isStyled() {
+  return document.styleSheets.length > 0 && getComputedStyle(document.body).marginTop === '0px'
+}
