@@ -53,7 +53,7 @@ export function NavMenu({ brand, links, cta, hide }: Props) {
         className="px-2"
       >
         <Menu className="flex h-5 w-5" />
-        <span className="sr-only">Menu Icon</span>
+        <span className="sr-only">Menu</span>
       </button>
 
       <div id={PANEL_ID} hidden={!open}>

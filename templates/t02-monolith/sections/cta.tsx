@@ -9,7 +9,7 @@ type Props = Pick<MonolithContent, 'cta'>
 // left and two buttons at the right.
 export function MonolithCta({ cta }: Props) {
   return (
-    <section id="cta" className="my-24 bg-surface-muted/50 py-16 sm:my-32">
+    <section id="contact" className="my-24 bg-surface-muted/50 py-16 sm:my-32">
       <div className={`${container} place-items-center lg:grid lg:grid-cols-2`}>
         <div className="@container w-full lg:col-start-1">
           <h2 className={heading} style={fitWord([cta.heading.text])}>

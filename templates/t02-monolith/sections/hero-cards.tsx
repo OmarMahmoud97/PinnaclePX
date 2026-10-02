@@ -15,7 +15,6 @@ import {
   cardTitleLg,
 } from '../styles'
 import { Avatar } from './avatar'
-import { LightBulbIcon } from './icons'
 
 type Props = { brand: MonolithContent['brand']; cards: MonolithContent['hero']['cards'] }
 
@@ -24,7 +23,9 @@ type Props = { brand: MonolithContent['brand']; cards: MonolithContent['hero']['
 // and a service at the lower right; here the quote and the profile carry the brand's own words
 // and pictures, and the plan's price shows only when there is one. The glow slides behind the
 // cards inside their box (monolith.css), so it lights them wherever they show and never sits
-// behind the words. The visitor's name may wrap anywhere rather than run out of its card.
+// behind the words. The visitor's name may wrap anywhere rather than run out of its card. The
+// service card's tinted square holds the plan's own Check, where the source drew a light bulb
+// (decision 1, t02-L2).
 export function HeroCards({ brand, cards }: Props) {
   const { quote, profile, plan, service } = cards
   return (
@@ -97,8 +98,8 @@ export function HeroCards({ brand, cards }: Props) {
 
       <div className={`${card} absolute -right-[10px] bottom-[35px] w-[350px] drop-shadow-xl`}>
         <div className={`${cardHeaderTight} items-start justify-start gap-4 md:flex-row`}>
-          <div className="mt-1 rounded-2xl bg-brand-deeper/20 p-1">
-            <LightBulbIcon />
+          <div className="mt-1 rounded-2xl bg-brand-deeper/20 p-4">
+            <Check className="h-8 w-8 text-brand-deeper" />
           </div>
           <div>
             <h3 className={cardTitle}>{service.title}</h3>
