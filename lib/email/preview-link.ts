@@ -10,8 +10,9 @@ type Input = Readonly<{
   previewUrl: string
   bookingUrl: string
   conceptCount: number
-  // The deadline sweeper finished a stage with its fallback. The email still goes, and says so
-  // (ADR 0015 D5, amended by docs/start-page-journey-plan.md, OD9a).
+  // A stage settled with its fallback, at the deadline or before it (the model refused, the copy
+  // missed its limits, the photo search's quota ran out). The email still goes, and says so (ADR
+  // 0015 D5, amended by docs/start-page-journey-plan.md, OD9a).
   partial: boolean
 }>
 

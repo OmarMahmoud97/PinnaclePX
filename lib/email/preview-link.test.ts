@@ -67,9 +67,9 @@ describe('previewLinkEmail', () => {
     expect(nameless.text).toContain('Hello,')
   })
 
-  // A build the sweeper finished with a fallback is still sent (ADR 0015 D5, as amended by the
-  // plan's OD9a), and says so, in the words the done page uses.
-  it('says when a few parts were set simply to finish on time', () => {
+  // A build with a stage settled by its fallback is still sent (ADR 0015 D5, as amended by the
+  // plan's OD9a and by ADR 0048), and says so, with no reason.
+  it('says when parts of the designs were set simply', () => {
     expect(email.text).not.toContain(SITE.partialNote)
     const partial = previewLinkEmail({ ...INPUT, partial: true })
     expect(partial.text).toContain(SITE.partialNote)
