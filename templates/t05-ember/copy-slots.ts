@@ -169,10 +169,11 @@ const EMBER_COUNTS = {
   'footer.groups[].links': { min: 2, max: 5 },
 } as const satisfies Record<string, CopySlot>
 
-// Every text-on-background pair the template paints. Muted text also sits on the quieter
-// surface where a card is hovered; the coloured eyebrows and step numbers are brand-deeper on
-// the page, the hero's eyebrow the deeper shade; the buttons and the location card carry
-// on-brand on brand-deeper.
+// Every text-on-background pair the template paints. Muted text, the answers, the footer's
+// small print and the card's rows among it, also sits on the quieter surface where a card is
+// hovered and where the footer's watermark lies; the coloured eyebrows and step numbers are
+// brand-deeper on the page, the hero's eyebrow the deeper shade; the buttons and the location
+// card carry on-brand on brand-deeper.
 export const EMBER_CONTRAST_PAIRS: readonly ContrastPair[] = [
   { text: 'on-surface', background: 'surface' },
   { text: 'on-surface-muted', background: 'surface' },

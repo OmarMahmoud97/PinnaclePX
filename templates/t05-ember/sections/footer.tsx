@@ -82,7 +82,7 @@ export function EmberFooter({ brand, footer, credits }: Props) {
             <LinkColumn key={group.heading} group={group} />
           ))}
         </div>
-        <div className="flex items-center justify-between border-t border-border py-4.5 text-on-surface/55">
+        <div className="flex items-center justify-between border-t border-border py-4.5 text-on-surface-muted">
           <p>
             &copy; {YEAR} {brand.legalName}. All rights reserved.
           </p>
