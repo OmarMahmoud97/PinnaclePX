@@ -179,7 +179,7 @@ describe('fitToSlot, a clause keeps half the slot', () => {
     expect(fitToSlot('Smith, Jones & Partners Ltd', NAME, ['Ltd'])).toBe('Smith, Jones & Partners')
   })
 
-  it("does not take an abbreviation's point for a sentence end", () => {
+  it("passes over an abbreviation's point that keeps under half the slot", () => {
     expect(fitToSlot('Dr. Smith Dental Care and Implant Clinic', NAME, ['Ltd'])).toBe(
       'Dr. Smith Dental Care',
     )
