@@ -7,6 +7,7 @@ import type { SlotImage } from '@/lib/copy-slots/assets'
 import type { BrandBrief } from '@/lib/copy-slots/brief'
 import type { TemplateContract } from '@/lib/copy-slots/contract'
 import { download } from '@/lib/download'
+import { givenWords, stockAlt } from '@/lib/images/alt'
 import type { Candidate } from '@/lib/images/candidates'
 import { PexelsQuotaError, searchPhotos } from '@/lib/images/pexels'
 import { orderByVerdict, planImagery, type SlotPlan } from '@/lib/images/plan'
@@ -71,8 +72,9 @@ export async function imageryFor(
     hosted: new Map(),
     taken: new Map(),
   }
+  const given = givenWords(answers, brief)
   const results = await Promise.all(
-    contracts.map((contract) => templateImagery(contract, answers, brief, slug, shared)),
+    contracts.map((contract) => templateImagery(contract, answers, brief, given, slug, shared)),
   )
   return {
     imagery: Object.fromEntries(
@@ -88,6 +90,7 @@ async function templateImagery(
   contract: ImageContract,
   answers: SubmissionAnswers,
   brief: BrandBrief,
+  given: ReadonlySet<string>,
   slug: string,
   shared: Shared,
 ): Promise<Readonly<{ imagery: TemplateImagery }> & Empties> {
@@ -97,7 +100,7 @@ async function templateImagery(
   const entries = await Promise.all(
     Object.entries(plan).map(async ([slot, step]): Promise<[string, SlotImage | null]> => {
       try {
-        return [slot, await fill(step, contract.meta.id, slug, shared)]
+        return [slot, await fill(step, contract.meta.id, given, slug, shared)]
       } catch (error) {
         if (error instanceof PexelsQuotaError) exhausted = true
         else unfilled.push(`${contract.meta.id}.${slot}`)
@@ -177,9 +180,12 @@ function choose(
   return candidate
 }
 
+// The picture for one slot, re-hosted: the visitor's own photograph with its alt, or the chosen
+// stock picture with Pexels' alt where the alt rule keeps it (lib/images/alt.ts).
 async function fill(
   step: SlotPlan,
   templateId: string,
+  given: ReadonlySet<string>,
   slug: string,
   shared: Shared,
 ): Promise<SlotImage | null> {
@@ -197,7 +203,7 @@ async function fill(
     rehostImage({
       bytes: await download(candidate.source, CONFIG.timeoutMs.download),
       key,
-      alt: candidate.alt,
+      alt: stockAlt(candidate.alt, given),
       credit: { photographer: candidate.photographer, url: candidate.photographerUrl },
     }),
   )

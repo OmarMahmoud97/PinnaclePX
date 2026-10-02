@@ -160,7 +160,29 @@ describe('imageryFor', () => {
     expect(searchPhotos).not.toHaveBeenCalled()
     expect(imagery.t01?.hero?.src).toBe(`${BLOB}/images/own-${SHA}.webp`)
     expect(imagery.t02?.hero?.src).toBe(`${BLOB}/images/own-${SHA}.webp`)
+    // The visitor's own photograph keeps its alt: the stock alt rule is for Pexels' words only.
+    expect(imagery.t01?.hero?.alt).toBe('Ashgrove Physio, photograph')
     expect(imagery.t01?.statement).toBeNull()
+  })
+
+  it("keeps a stock picture's alt only when it names nothing the visitor did not give", async () => {
+    vi.mocked(searchPhotos).mockImplementation((query) =>
+      Promise.resolve(
+        query.startsWith('treatment room')
+          ? [{ ...candidate(1), alt: 'A treatment room in Sheffield' }]
+          : [{ ...candidate(3), alt: 'A gym in Warsaw during autumn' }],
+      ),
+    )
+    const { imagery } = await imageryFor(
+      [contract('t01', ['hero', 'statement'])],
+      ANSWERS,
+      BRIEF,
+      'slug',
+    )
+
+    expect(imagery.t01?.hero?.alt).toBe('A treatment room in Sheffield')
+    expect(imagery.t01?.statement?.src).toBe(`${BLOB}/images/pexels-3.webp`)
+    expect(imagery.t01?.statement?.alt).toBe('')
   })
 
   it('leaves a slot empty in every template when its search fails, without asking again', async () => {

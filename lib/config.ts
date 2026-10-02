@@ -121,12 +121,14 @@ export const CONFIG = {
   },
   // Stock photographs (lib/images): how many candidates a search brings back for the ranking
   // model to judge, the one stored size (next/image serves every viewport from it), and the
-  // words added to every search for the look the visitor chose.
+  // words added to every search for the look the visitor chose. A stock picture's own alt text
+  // longer than altMaxChars is not used (lib/images/alt.ts, decision 7a).
   images: {
     perPage: 12,
     maxWidth: 1920,
     quality: 80,
     styleQuery: { warm: 'natural light', minimal: 'minimal', bold: 'vivid colour', dark: 'moody' },
+    altMaxChars: 120,
   },
   // Copy that breaks a limit is sent back this many times with what went wrong within one call;
   // a call whose answer still breaks a limit is made again on this many attempts of the step,
