@@ -1,4 +1,3 @@
-import { ArrowUpRight } from 'lucide-react'
 import { Fragment } from 'react'
 import type { HarborContent, HarborImage } from '../copy-slots'
 import { container } from '../styles'
@@ -15,11 +14,11 @@ const YEAR = new Date().getFullYear()
 // The source's Footer: the name set huge and almost invisible along its foot, then the logo, a
 // paragraph and a joined email field and arrow button at the left, three columns of links at
 // the right, and under a hairline the legal line, the ringed social marks and a line of small
-// print. The source's email field did nothing; here it posts to the owner's email as a mail
-// message when it is known, and otherwise leads to the page's ask. The source's own maker's
-// credit is not here; the photographers' credit the Pexels licence asks for is.
+// print. The email field offered news by email and the small print named privacy and terms
+// pages; no visitor's sentence offers news and a taster has neither page, so neither is drawn,
+// though the copy still carries their words. The source's own maker's credit is not here; the
+// photographers' credit the Pexels licence asks for is.
 export function HarborFooter({ brand, footer, credits }: Props) {
-  const { newsletter } = footer
   return (
     <footer className="relative overflow-hidden border-t border-border bg-surface pt-20 pb-10">
       <div
@@ -40,39 +39,9 @@ export function HarborFooter({ brand, footer, credits }: Props) {
             >
               <HarborLogo brand={brand} />
             </a>
-            <p className="mb-8 max-w-xs text-sm leading-relaxed text-on-surface-muted">
+            <p className="max-w-xs text-sm leading-relaxed text-on-surface-muted">
               {footer.description}
             </p>
-            <div>
-              <p className="mb-3 text-xs font-semibold tracking-widest text-on-surface uppercase">
-                {newsletter.label}
-              </p>
-              <form
-                className="flex"
-                action={
-                  newsletter.email === null
-                    ? '#cta'
-                    : `mailto:${newsletter.email}?subject=${encodeURIComponent(newsletter.label)}`
-                }
-                method={newsletter.email === null ? 'get' : 'post'}
-                encType={newsletter.email === null ? undefined : 'text/plain'}
-              >
-                <input
-                  type="email"
-                  name="email"
-                  aria-label={newsletter.label}
-                  placeholder={newsletter.placeholder}
-                  className="flex-1 rounded-l-full border border-r-0 border-on-surface/10 bg-accent px-5 py-3 text-sm text-on-surface placeholder:text-on-surface-muted focus:border-brand-deeper/30 focus:outline-none"
-                />
-                <button
-                  type="submit"
-                  aria-label={newsletter.label}
-                  className="rounded-r-full bg-brand-deeper px-5 py-3 text-sm font-bold text-on-brand transition-colors hover:bg-brand-deepest"
-                >
-                  <ArrowUpRight size={16} aria-hidden="true" />
-                </button>
-              </form>
-            </div>
           </div>
           <div className="grid grid-cols-1 gap-10 sm:grid-cols-3 lg:col-span-8">
             {footer.columns.map((column) => (
@@ -132,7 +101,6 @@ export function HarborFooter({ brand, footer, credits }: Props) {
               </a>
             </p>
           )}
-          <p className="text-xs text-on-surface-muted">{footer.smallPrint}</p>
         </div>
       </div>
     </footer>

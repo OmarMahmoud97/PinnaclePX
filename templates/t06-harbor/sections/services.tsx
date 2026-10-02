@@ -1,18 +1,20 @@
-import { Brain, Dumbbell, Heart, Timer, Trophy, Zap } from 'lucide-react'
+import { Check } from 'lucide-react'
 import type { HarborContent } from '../copy-slots'
 import { container, eyebrow, heading, motion, section } from '../styles'
 import { HeadingLines } from './lines'
 
 type Props = Pick<HarborContent, 'services'>
 
-// The source's six icons, in its order; a seventh card would take the first again.
-const ICONS = [Dumbbell, Zap, Brain, Heart, Timer, Trophy] as const
-
 // The source's Services: the eyebrow and heading at the left of a row with a short paragraph
 // at its right, then a hairline grid of cards, one column, two from md and three from lg,
 // each a tag, an icon in a square, a title and a paragraph, with a link that appears under
 // the pointer. The third card is lit: a hairline of the accent along its top, its tag and its
 // square filled with the accent. The cards rise in turn as they arrive.
+//
+// The source's six icons, a dumbbell first, belonged to its gym's classes by position; here
+// every square holds the same check, since a visitor's offerings are not in order and Harbor's
+// arrows mean a link. The source's line under the pointer was not a link and never showed on a
+// touch screen, so it is not drawn; its words stay in the copy.
 export function HarborServices({ services }: Props) {
   return (
     <section id="services" className={`${section} bg-surface`}>
@@ -35,7 +37,6 @@ export function HarborServices({ services }: Props) {
         <div className="grid grid-cols-1 gap-px overflow-hidden rounded-2xl border border-border bg-border md:grid-cols-2 lg:grid-cols-3">
           {services.items.map((item, index) => {
             const hot = index === 2
-            const Icon = ICONS[index % ICONS.length] ?? Dumbbell
             return (
               <div
                 key={item.title}
@@ -53,7 +54,7 @@ export function HarborServices({ services }: Props) {
                 <div
                   className={`mb-5 flex h-12 w-12 items-center justify-center rounded-xl transition-all duration-300 ${hot ? 'bg-brand-deeper group-hover:scale-110' : 'bg-border group-hover:bg-brand-deeper/10'}`}
                 >
-                  <Icon
+                  <Check
                     size={22}
                     aria-hidden="true"
                     className={hot ? 'text-on-brand' : 'text-brand-deeper'}
@@ -63,12 +64,6 @@ export function HarborServices({ services }: Props) {
                   {item.title}
                 </h3>
                 <p className="text-sm leading-relaxed text-on-surface-muted">{item.body}</p>
-                <div className="mt-6 flex items-center gap-1 text-brand-deeper opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                  <span className="text-xs font-semibold tracking-wider uppercase">
-                    {services.more}
-                  </span>
-                  <span className="text-xs">→</span>
-                </div>
               </div>
             )
           })}

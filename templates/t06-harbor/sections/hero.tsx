@@ -1,4 +1,4 @@
-import { ArrowRight, Zap } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 import Image from 'next/image'
 import type { HarborContent } from '../copy-slots'
 import { container, motion } from '../styles'
@@ -16,7 +16,8 @@ const LINE =
 // after another, a paragraph and two round buttons, a row of three figures over a hairline,
 // and a scroll hint pinned at the bottom right. Everything arrives on a timer at load, at the
 // source's travels, lengths and waits. The three rows are one heading here, and the row of
-// figures wraps where the screen is too narrow for it; the source's ran off the edge.
+// figures wraps where the screen is too narrow for it; the source's ran off the edge. The
+// pill's bolt, a mark of the source's trade, is a plain dot of the accent.
 //
 // The source dimmed its photograph to 40% under the fade. Over a visitor's pictures that left
 // the quieter words below AA, the scroll hint at the right edge worst of all, so the picture
@@ -48,7 +49,7 @@ export function HarborHero({ hero }: Props) {
           style={motion(0.2, '20px', 0.6, 'out')}
           className="mt-12 mb-8 inline-flex items-center gap-2 rounded-full border border-brand-deeper/30 bg-surface/30 px-4 py-2 backdrop-blur-sm"
         >
-          <Zap size={14} aria-hidden="true" className="fill-brand-deeper text-brand-deeper" />
+          <span aria-hidden="true" className="h-1.5 w-1.5 shrink-0 rounded-full bg-brand-deeper" />
           <span className="text-xs font-medium tracking-widest text-brand-deeper uppercase">
             {hero.badge}
           </span>

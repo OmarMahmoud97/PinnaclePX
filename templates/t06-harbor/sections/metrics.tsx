@@ -14,10 +14,11 @@ type Props = Pick<HarborContent, 'metrics'>
 // share it from md (a lone last cell taking the whole row, so no empty slot shows the hairline
 // fill) and three once the container is at its full width, the figure and the padding grow
 // with the room, and a word too long for its cell wraps rather than being cut.
+// Its anchor is #highlights, as a visitor's band holds phrases rather than figures.
 export function HarborMetrics({ metrics }: Props) {
   return (
     <section
-      id="metrics"
+      id="highlights"
       className={`${section} relative overflow-hidden border-y border-border bg-surface-muted`}
     >
       <div

@@ -154,6 +154,8 @@ export type HarborContent = Readonly<{
     | null
   footer: Readonly<{
     description: string
+    // The news field and the small print are written and checked but not drawn: no visitor's
+    // sentence offers news, and a taster has no privacy or terms pages (footer.tsx).
     newsletter: Readonly<{ label: string; placeholder: string; email: string | null }>
     columns: readonly Readonly<{ heading: string; links: readonly HarborLink[] }>[]
     note: string

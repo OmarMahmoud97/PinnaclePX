@@ -17,7 +17,8 @@ const LABEL = 'mb-2 block text-xs font-semibold tracking-wider text-on-surface-m
 // 440px, so a long word fits the card on a phone), a line and the form: name and email side
 // by side from sm, a message, and a round accent button. The source posted the form to a
 // form service under a placeholder id and showed a toast; here it posts to the owner's email
-// as a mail message when it is known, and otherwise leads to the page's ask.
+// as a mail message when it is known, and otherwise leads to the page's ask. The source's
+// hints named one made-up person on every page; these are plain.
 export function HarborContact({ contact }: Props) {
   const { form } = contact
   const { email } = form
@@ -91,7 +92,7 @@ export function HarborContact({ contact }: Props) {
                       name="name"
                       type="text"
                       required
-                      placeholder="John Doe"
+                      placeholder="Your name"
                       className={FIELD}
                     />
                   </div>
@@ -104,7 +105,7 @@ export function HarborContact({ contact }: Props) {
                       name="email"
                       type="email"
                       required
-                      placeholder="john@example.com"
+                      placeholder="your@email.com"
                       className={FIELD}
                     />
                   </div>

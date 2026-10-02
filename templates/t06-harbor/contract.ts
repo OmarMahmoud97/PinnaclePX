@@ -19,13 +19,16 @@ import { meta } from './meta'
 // form (the source's led to its plans, which a visitor's page does not have), the quieter ones
 // to About, and footer links point at one of the page's own anchors. The optional pieces are
 // not in the copy: the brief holds no such facts, so they stay null.
+//
+// The band of short phrases is at #highlights, since it shows no figures; the copy model still
+// names it by its target, metrics, which the guide gives it, so its copy is unchanged.
 
 const TARGETS = ['top', 'about', 'services', 'metrics', 'contact', 'cta'] as const
 const HREF: Readonly<Record<(typeof TARGETS)[number], string>> = {
   top: '#top',
   about: '#about',
   services: '#services',
-  metrics: '#metrics',
+  metrics: '#highlights',
   contact: '#contact',
   cta: '#cta',
 }
