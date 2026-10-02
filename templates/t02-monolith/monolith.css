@@ -135,3 +135,11 @@
 .monolith details > div > div {
   overflow: hidden;
 }
+
+/*
+ * A section the phone menu hands focus to (nav-menu.tsx) is not a control, so no ring is drawn
+ * round the whole of it; the next Tab goes on to its first control, which shows its own.
+ */
+.monolith section[tabindex='-1']:focus {
+  outline: none;
+}
