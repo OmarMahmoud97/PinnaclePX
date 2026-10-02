@@ -41,7 +41,7 @@ export function Summit({ content }: Props) {
       id="top"
       className="summit relative isolate bg-surface font-body text-on-surface antialiased"
     >
-      <SummitNav brand={brand} nav={nav} />
+      <SummitNav brand={brand} nav={nav} pictured={hero.background !== null} />
       <main id="main">
         <SummitHero hero={hero} />
         <SummitWhy why={why} />

@@ -6,7 +6,8 @@ import type { SummitContent } from '../copy-slots'
 import { arrow, menuButton, pad } from '../styles'
 import { SummitLogo } from './logo'
 
-type Props = Pick<SummitContent, 'brand' | 'nav'>
+// pictured: the first screen is a photograph, under the hero's veil (summit.css).
+type Props = Pick<SummitContent, 'brand' | 'nav'> & { pictured: boolean }
 
 const PANEL_ID = 'summit-menu'
 
@@ -20,8 +21,10 @@ const GLASS_AT = 10
 // bar itself is clear while the sheet is open. The source toggled the sheet by state and turned
 // the bar to glass by a scroll listener at ten pixels; both are the same here. The sheet is
 // inert while closed below md, so its links are out of the tab order there and still in it
-// from md where the same row is the menu, and Escape closes it.
-export function SummitNav({ brand, nav }: Props) {
+// from md where the same row is the menu, and Escape closes it. While the bar is clear over the
+// hero's photograph its name and links are on-scrim on the hero's veil, under the pointer too,
+// and they take their greys back as the bar turns to glass.
+export function SummitNav({ brand, nav, pictured }: Props) {
   const [open, setOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [narrow, setNarrow] = useState(false)
@@ -64,6 +67,8 @@ export function SummitNav({ brand, nav }: Props) {
     setOpen(false)
   }
 
+  const onPicture = pictured && !scrolled
+
   return (
     <nav
       className={`fixed top-0 right-0 left-0 z-50 flex w-full flex-col items-center transition-all duration-300 ${scrolled && !open ? 'bg-surface/70 backdrop-blur-md' : 'bg-transparent'}`}
@@ -71,7 +76,7 @@ export function SummitNav({ brand, nav }: Props) {
     >
       <div className={`relative flex w-full max-w-360 items-center justify-between ${pad} py-4`}>
         <a href="#top" aria-label={`${brand.name} home`}>
-          <SummitLogo brand={brand} />
+          <SummitLogo brand={brand} onPicture={onPicture} />
         </a>
         <div
           id={PANEL_ID}
@@ -83,7 +88,7 @@ export function SummitNav({ brand, nav }: Props) {
               key={link.href}
               href={link.href}
               onClick={close}
-              className="font-medium text-on-surface/75 hover:text-on-surface/55"
+              className={`font-medium text-on-surface/75 hover:text-on-surface/55 ${onPicture ? 'md:text-on-scrim md:hover:text-on-scrim' : ''}`}
             >
               {link.label}
             </a>
