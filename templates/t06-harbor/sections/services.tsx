@@ -10,7 +10,9 @@ type Props = Pick<HarborContent, 'services'>
 // at its right, then a hairline grid of cards, one column, two from md and three from lg,
 // each a tag, an icon in a square, a title and a paragraph, with a link that appears under
 // the pointer. The third card is lit: a hairline of the accent along its top, its tag and its
-// square filled with the accent. The cards rise in turn as they arrive.
+// square filled with the accent. The cards rise in turn as they arrive. At two columns a lone
+// last card takes the whole row, as the band's last cell does, so no empty slot shows the
+// hairline fill.
 //
 // The source's six icons, a dumbbell first, belonged to its gym's classes by position; here
 // every square holds the same check, since a visitor's offerings are not in order and Harbor's
@@ -53,7 +55,7 @@ export function HarborServices({ services }: Props) {
                 data-fade
                 data-margin="-50px"
                 style={motion(0.08 * index, '30px', 0.5, 'out')}
-                className={`group @container relative cursor-default p-8 transition-colors duration-300 ${hot ? 'harbor-hot bg-accent' : 'bg-surface hover:bg-accent'}`}
+                className={`group @container relative cursor-default p-8 transition-colors duration-300 md:last:odd:col-span-2 lg:last:odd:col-span-1 ${hot ? 'harbor-hot bg-accent' : 'bg-surface hover:bg-accent'}`}
               >
                 {hot && <div className="absolute top-0 right-0 left-0 h-px bg-brand-deeper" />}
                 <span
