@@ -115,7 +115,9 @@ const BRIEFS = [
 
 // Summit's fallback closing heading, "Ready to talk to {company}?" (16 to 50 characters): with the
 // unbroken name, dropping "to" would leave 13 characters, under the minimum, so the cut keeps it.
-// Summit's own pull request gives that heading a plain line when the name does not fit.
+// The fix belongs in Summit's fallback (templates/t07-summit/contract.ts), and Summit's follow-up
+// schedules it: a plain closing heading when the name does not fit. Until that lands, this one
+// cut is allowed here.
 const KNOWN = new Set(['t07-summit: Ready to talk to'])
 
 // The cuts fitToSlot made since it was last cleared: each output whose input ran past its slot.
