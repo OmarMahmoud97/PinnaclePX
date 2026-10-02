@@ -1,17 +1,15 @@
-import { ChefHat, Heart, Leaf } from 'lucide-react'
 import Image from 'next/image'
 import type { EmberContent } from '../copy-slots'
 import { anchored, delay, eyebrow, heading, pad } from '../styles'
 
 type Props = Pick<EmberContent, 'features'>
 
-// The source's three icons, in its order.
-const ICONS = [ChefHat, Leaf, Heart] as const
-
-// The source's Features: an eyebrow and heading, then three rows of an icon beside a title and
+// The source's Features: an eyebrow and heading, then three rows of a mark beside a title and
 // a paragraph at the left, rising in turn from further down, and a tall rounded portrait at the
 // right sliding in from the right. Without a picture a block of the quieter surface holds its
-// place.
+// place. The source marked its rows with a chef's hat, a leaf and a heart; here each row has one
+// small dot of the brand colour in the icon's place, since the rows are in no order and the
+// points above already number theirs (decision 1, docs/template-fit-decisions.md).
 export function EmberFeatures({ features }: Props) {
   const { image } = features
   return (
@@ -26,23 +24,22 @@ export function EmberFeatures({ features }: Props) {
       </div>
       <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-14 md:flex-row">
         <div className="max-w-md space-y-10">
-          {features.items.map((item, index) => {
-            const Icon = ICONS[index] ?? ChefHat
-            return (
-              <div
-                key={item.title}
-                data-fade="up-lg"
-                style={delay(0.15 * index)}
-                className="flex items-start gap-4 text-left"
-              >
-                <Icon aria-hidden="true" className="mt-0.5 size-5 shrink-0 text-brand-deeper" />
-                <div>
-                  <h3 className="mb-2 text-xl">{item.title}</h3>
-                  <p className="max-w-sm text-on-surface-muted">{item.body}</p>
-                </div>
+          {features.items.map((item, index) => (
+            <div
+              key={item.title}
+              data-fade="up-lg"
+              style={delay(0.15 * index)}
+              className="flex items-start gap-4 text-left"
+            >
+              <span aria-hidden="true" className="mt-0.5 grid size-5 shrink-0 place-content-center">
+                <span className="size-2 rounded-full bg-brand-deeper" />
+              </span>
+              <div>
+                <h3 className="mb-2 text-xl">{item.title}</h3>
+                <p className="max-w-sm text-on-surface-muted">{item.body}</p>
               </div>
-            )
-          })}
+            </div>
+          ))}
         </div>
         <div data-fade="right">
           {image === null ? (

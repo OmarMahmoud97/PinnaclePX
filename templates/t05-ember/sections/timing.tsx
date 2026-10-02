@@ -14,7 +14,7 @@ export function EmberTiming({ timing }: Props) {
   const background: CSSProperties | undefined =
     timing.image === null ? undefined : { backgroundImage: `url(${timing.image.src})` }
   return (
-    <section id="timing" className={`${pad} ${anchored} mt-44`}>
+    <section id="reach" className={`${pad} ${anchored} mt-44`}>
       <div
         data-fade="scale"
         className={`mx-auto flex h-162.5 w-full max-w-5xl items-center justify-center overflow-hidden rounded-3xl bg-cover bg-center px-6 md:justify-start md:px-14 ${timing.image === null ? 'bg-surface-muted' : ''}`}

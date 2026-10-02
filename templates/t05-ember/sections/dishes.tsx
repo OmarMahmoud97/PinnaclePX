@@ -11,7 +11,7 @@ type Props = Pick<EmberContent, 'dishes'>
 // Without a picture a disc of the quieter surface holds its place.
 export function EmberDishes({ dishes }: Props) {
   return (
-    <section id="dishes" className={`${pad} ${anchored} mt-44`}>
+    <section id="offers" className={`${pad} ${anchored} mt-44`}>
       <div className="mb-16 text-center">
         <div data-fade style={delay(0.2)}>
           <p className={`${eyebrow} mb-3.5`}>{dishes.eyebrow}</p>

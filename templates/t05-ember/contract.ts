@@ -21,6 +21,10 @@ import { meta } from './meta'
 // testimonials and the social links) are not in the copy: the brief holds no such facts, so
 // they stay null.
 
+// The names the copy model gives a footer link's target, kept as it knows them, and the
+// address each leads to. The grid, the card on the photograph and the steps were the source's
+// dishes, opening times and booking process; their addresses now name no trade (decision 1,
+// docs/template-fit-decisions.md).
 const TARGETS = [
   'top',
   'about',
@@ -34,14 +38,14 @@ const TARGETS = [
 const HREF: Readonly<Record<(typeof TARGETS)[number], string>> = {
   top: '#top',
   about: '#about',
-  dishes: '#dishes',
+  dishes: '#offers',
   features: '#features',
-  'booking-process': '#booking-process',
-  timing: '#timing',
+  'booking-process': '#steps',
+  timing: '#reach',
   faq: '#faq',
   cta: '#cta',
 }
-const NAV_HREFS = ['#about', '#dishes', '#timing', '#faq'] as const
+const NAV_HREFS = ['#about', '#offers', '#reach', '#faq'] as const
 
 const headed = { eyebrow: z.string(), heading: z.string() }
 const titled = z.object({ title: z.string(), body: z.string() })

@@ -34,7 +34,7 @@ function picture(file: StaticImage, alt: string): EmberImage {
   return { src: file.src, alt, width: file.width, height: file.height, credit: null }
 }
 
-const BOOK = { label: 'Book a table', href: '#booking-process' } as const
+const BOOK = { label: 'Book a table', href: '#steps' } as const
 
 const DISHES = [
   [dish1, 'Grilled Chicken Alfredo', '$24'],
@@ -52,8 +52,8 @@ export const KESTREL_EMBER: EmberContent = {
   nav: {
     links: [
       { label: 'About', href: '#about' },
-      { label: 'Dishes', href: '#dishes' },
-      { label: 'Contact', href: '#timing' },
+      { label: 'Dishes', href: '#offers' },
+      { label: 'Contact', href: '#reach' },
       { label: 'Faq', href: '#faq' },
     ],
     cta: BOOK,
@@ -83,7 +83,7 @@ export const KESTREL_EMBER: EmberContent = {
     location: {
       image: picture(about, 'Bistro Royale Location Preview'),
       name: 'Bistro Royale, NY',
-      link: { label: 'View on Map', href: '#timing' },
+      link: { label: 'View on Map', href: '#reach' },
     },
   },
   stats: [
@@ -245,7 +245,7 @@ export const KESTREL_EMBER: EmberContent = {
   cta: {
     heading: 'Every Meal Is Made To Be Remembered',
     body: 'Join us for fresh ingredients, signature recipes and an unforgettable dining experience.',
-    button: { label: 'Book Your Table', href: '#booking-process' },
+    button: { label: 'Book Your Table', href: '#steps' },
   },
   footer: {
     description:
@@ -261,9 +261,9 @@ export const KESTREL_EMBER: EmberContent = {
         links: [
           { label: 'Home', href: '#top' },
           { label: 'About', href: '#about' },
-          { label: 'Menu', href: '#dishes' },
-          { label: 'Gallery', href: '#dishes' },
-          { label: 'Book a Table', href: '#booking-process' },
+          { label: 'Menu', href: '#offers' },
+          { label: 'Gallery', href: '#offers' },
+          { label: 'Book a Table', href: '#steps' },
         ],
       },
       {
