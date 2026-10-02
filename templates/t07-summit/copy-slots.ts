@@ -48,7 +48,7 @@ export type SummitContent = Readonly<{
     // The photograph behind the whole first screen.
     background: SummitImage | null
   }>
-  // Four cards, two each side of a picture; the icons are the template's, by position.
+  // Four cards, two each side of a picture; each card's mark is the template's own check.
   why: Headed & Readonly<{ cards: Four<Titled>; image: SummitImage | null }>
   // The stacked deck: each card a pill, a title, a line, a checklist and a picture.
   services: Headed &
@@ -62,7 +62,7 @@ export type SummitContent = Readonly<{
       }>[]
     }>
   // The source's How it works: a line under the heading, then the steps down a hairline; the
-  // icons are the template's, by position.
+  // template numbers them, by position.
   steps: Headed & Readonly<{ body: string; items: readonly Titled[] }>
   // Four pictures in a seven-five, five-seven grid, each hiding a caption with the same link,
   // which slides up under the pointer.
@@ -188,7 +188,8 @@ export const SUMMIT_SLOTS = {
 } as const satisfies Record<string, CopySlot>
 
 // How many of each list the layout holds. The deck stacks any number of cards; the steps run
-// down one hairline with four icons; the lists in the form are as long as a menu can be.
+// down one hairline, at most the source's four; the lists in the form are as long as a menu
+// can be.
 const SUMMIT_COUNTS = {
   'nav.links': { min: 2, max: 4 },
   'hero.proof.avatars': { min: 1, max: 4 },

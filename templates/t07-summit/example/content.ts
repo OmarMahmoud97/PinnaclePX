@@ -34,7 +34,7 @@ function picture(file: StaticImage, alt: string): SummitImage {
   return { src: file.src, alt, width: file.width, height: file.height, credit: null }
 }
 
-const BOOK = { label: 'Book Appointment', href: '#booking-process' } as const
+const BOOK = { label: 'Book Appointment', href: '#steps' } as const
 
 const SERVICES = [
   [
@@ -124,7 +124,7 @@ export const KESTREL_SUMMIT: SummitContent = {
       { label: 'Home', href: '#home' },
       { label: 'About', href: '#why-choose-us' },
       { label: 'Services', href: '#our-services' },
-      { label: 'Facilities', href: '#facilities' },
+      { label: 'Facilities', href: '#photos' },
     ],
     cta: BOOK,
   },
@@ -228,7 +228,7 @@ export const KESTREL_SUMMIT: SummitContent = {
         image: picture(facility4, 'Critical Care & ICU'),
       },
     ],
-    link: { label: 'Explore Now', href: '#book-appointment' },
+    link: { label: 'Explore Now', href: '#contact' },
   },
   faq: {
     eyebrow: 'FAQs',
@@ -315,7 +315,7 @@ export const KESTREL_SUMMIT: SummitContent = {
   cta: {
     heading: 'Ready to prioritize your health?',
     body: 'Schedule your appointment today and receive trusted care from experienced medical professionals.',
-    button: { label: 'Book Appointment', href: '#book-appointment' },
+    button: { label: 'Book Appointment', href: '#contact' },
     image: picture(cta, 'Ready to prioritize your health?'),
   },
   footer: {
@@ -328,8 +328,8 @@ export const KESTREL_SUMMIT: SummitContent = {
           { label: 'Home', href: '#home' },
           { label: 'About', href: '#why-choose-us' },
           { label: 'Services', href: '#our-services' },
-          { label: 'Facilities', href: '#facilities' },
-          { label: 'Book Appointment', href: '#booking-process' },
+          { label: 'Facilities', href: '#photos' },
+          { label: 'Book Appointment', href: '#steps' },
         ],
       },
       {

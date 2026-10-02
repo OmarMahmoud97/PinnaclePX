@@ -1,31 +1,29 @@
-import { Ambulance, HeartPulse, Hospital, Stethoscope } from 'lucide-react'
+import { CircleCheck } from 'lucide-react'
 import Image from 'next/image'
 import type { SummitContent } from '../copy-slots'
 import { anchored, delay, eyebrow, pad, title } from '../styles'
 
 type Props = Pick<SummitContent, 'why'>
 
-// The source's four icons, in its order.
-const ICONS = [Stethoscope, HeartPulse, Hospital, Ambulance] as const
-
 // The source's Why choose us: an eyebrow and heading, then from lg three columns, two quiet
-// cards, a picture, two more cards; below lg the cards and the picture stack. Each card is an
-// icon in a white square over a title and a line, and takes a shade more under the pointer.
+// cards, a picture, two more cards; below lg the cards and the picture stack. Each card is a
+// mark in a white square over a title and a line, and takes a shade more under the pointer.
 // The eyebrow, the heading and the grid rise as they arrive. Without a picture the middle
-// column is a block of the quieter surface.
+// column is a block of the quieter surface. The source gave each card a medical icon; here
+// every card takes Summit's own check, the mark of the services' lists, since the reasons are
+// in no order and belong to any trade.
 export function SummitWhy({ why }: Props) {
   const { image } = why
   const card = (index: number) => {
     const item = why.cards[index]
-    const Icon = ICONS[index]
-    if (item === undefined || Icon === undefined) return null
+    if (item === undefined) return null
     return (
       <div
         key={item.title}
         className="flex min-h-56 flex-1 flex-col rounded-xl bg-surface-muted p-6 hover:bg-border/50"
       >
         <div className="flex size-11 items-center justify-center rounded bg-surface text-on-surface-muted">
-          <Icon size={24} strokeWidth={1.5} aria-hidden="true" />
+          <CircleCheck size={24} strokeWidth={1.5} aria-hidden="true" />
         </div>
         <div className="mt-auto">
           <h3 className="text-lg font-medium text-on-surface/75">{item.title}</h3>
