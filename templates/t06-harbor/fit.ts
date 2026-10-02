@@ -2,11 +2,11 @@ import type { CSSProperties } from 'react'
 
 // The source set its big type at fixed sizes, black and mostly in capitals, so a long word ran
 // off a phone or was cut off in its clipped row. Here the headline, the block headings, the
-// phrases and the card titles are sized at render by their longest word (decision 15,
-// docs/template-fit-decisions.md): the word's width in ems is added up from the table below and
-// set as --harbor-word, and the type is the smaller of its own size and 97% of its line's width
-// over that width, the line being the nearest @container (cqi). So the longest word always fits
-// its line whole, in any look's faces, and shorter words keep the source's size. Nothing is
+// phrases, the card titles and the wordmark are sized at render by their longest word (decision
+// 15, docs/template-fit-decisions.md): the word's width in ems is added up from the table below
+// and set as --harbor-word, and the type is the smaller of its own size and 97% of its line's
+// width over that width, the line being the nearest @container (cqi). So the longest word always
+// fits its line whole, in any look's faces, and shorter words keep the source's size. Nothing is
 // measured in the browser, so nothing moves once the page has drawn.
 
 // Each character's advance in hundredths of an em in the widest of every face a Harbor page can

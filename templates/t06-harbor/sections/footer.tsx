@@ -34,7 +34,7 @@ export function HarborFooter({ brand, footer, credits }: Props) {
         <div className="mb-20 grid grid-cols-1 gap-16 lg:grid-cols-12">
           <div className="lg:col-span-4">
             <a
-              className="mb-6 flex items-center gap-2"
+              className="@container mb-6 flex items-center gap-2"
               href="#top"
               aria-label={`${brand.name} home`}
             >
