@@ -26,3 +26,24 @@ The build guide (`docs/brand-concept-generator-build-guide.md`, steps 6 and 14) 
 - `TemplateMeta` is unchanged. Logo polarity and tone tags join it when the selector needs them; Aurora accepts either polarity because its chrome is plain `surface`.
 - Verified on 4 September 2026 at 1440, 768 and 390 px with no horizontal overflow and no console errors, and with axe (WCAG 2.2 AA tags) clean on both the dark example set and a light one.
 - The nine remaining templates follow this shape: `copy-slots.ts`, `meta.ts`, `index.tsx`, `sections/`, a scoped stylesheet if they animate, an `example/` folder, and one test that the example fits.
+
+## Amendment, 2 October 2026: the window stops picturing an app (ADR 0048)
+
+Aurora's window drew an application's chrome around the visitor's own words: three window dots, a title-bar pill, a selected first rail item, row dots with the first in the brand colour, progress bars at fixed fills, and on/off toggles beside the feature ticks. Each read wrong for most kinds of business (docs/template-fit-plan.md, fix list t01-L1 to L6). They go:
+
+- the dots and the progress bars are removed;
+- the three lines take one plain bullet each;
+- the name becomes a plain heading;
+- the rail loses its selected style;
+- the ticks lose their toggles.
+
+Also:
+
+- The window's fallback heading "Overview" becomes "What we do" (t01-L8).
+- At every width below 1024, the 767/768 and 1023/1024 seams included, the window shows its three lines whole and at least 65% of its picture. Below 1024 it showed 7% to 23% (t01-D4; docs/template-fit/records.md:1835, :1842-1843).
+- The header's ask, meant to hide below md, showed there because the button style's `inline-flex` won over `hidden`, pushing the menu button off a 390 px screen for longer names. It now hides as intended.
+- The nav fits at 768.
+- The closing button no longer points at its own band (docs/template-fit-decisions.md, decision 15).
+- The tone "product" becomes "sleek".
+
+These land with the pull request fix/aurora-template-fit and change /examples/aurora the same way.

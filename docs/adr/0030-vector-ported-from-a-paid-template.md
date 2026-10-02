@@ -29,3 +29,24 @@ An earlier revision of this record treated the source's own licence as a constra
 - Deviations from the source, all deliberate: the theme switch is not ported (a business page has one scheme, as ADR 0023 decided for a toggle); the source's Lenis is not ported (its 100px anchor offset is `scroll-mt-25` on every anchored block); the FAQ carries an id (`faq`) and the menu's fifth link leads to it, where the source's led to the bento; the logo links to the top of the page; the projects' cursor is hidden from readers and each card is a labelled button that also opens on Enter and Space; the overlay is a labelled dialog whose close disc takes focus; each question's button carries `aria-expanded` and each closed answer is inert; the footer's "Created with passion by Pulsewave" is a slot, its legal line is "© year, legal name" with the photographers' credit after it, and its big address is the owner's, with the button leading to the top when none is known; the services block loses the source's `overflow-hidden`, which the browser counts as a scroll container and which would stop the sticky pin and the letters' timeline; the source's `skip-to-content` link is the site's own; the footer's small print is at 60 percent rather than 40; the pictures' bloom pass is not ported; the demo's own Lenis is not ported, the site's driving the page instead.
 - `docs/claims-register.md` row "A person designs every layout" still needs the owner's decision: seven of the eight ready layouts were designed by other people and adapted here.
 - The porting guide gains: confirm the source's rendered faces and not only the port's; a GSAP scrub with `scrub: true` becomes a scroll-driven animation with `cover` lengths, one with a number becomes a chasing controller, pins become sticky blocks with `contain` ranges, growing masks become registered lengths, every view timeline gets a zero inset, no ancestor of any of them may clip, toggling entrances become observer-marked transitions that reverse in the timeline's order on mirrored curves, GSAP's powers count from quad, a trigger created before its parent's pin may never be seen to run, and motion is measured on both pages frame by frame with the GPU flags and without smooth scrolling.
+
+## Amendment, 2 October 2026: the source's trade is taken out (ADR 0048)
+
+- **Leftovers.**
+  - `#projects` becomes `#featured`, with the copy's target name kept and the scroll spy following the new id.
+  - On fallback pages "Work" and "Our Work" become "What we do", with the marquee reading "What" and "we do".
+- **Header.**
+  - The visitor's name pill clears the menu pill at 390, where it was covered on 4 of 8 stored pages.
+  - When a phone is held sideways, the headline clears the pills.
+- **Accessibility.**
+  - The heading set letter by letter gains a text alternative read as words.
+  - The menu button's name keeps its visible label and adds the word menu; it was announced as "Home".
+  - The heading outline no longer skips levels.
+  - The "Open" cursor disc no longer shows in the corner under reduced motion.
+- **Pictures and logo.**
+  - The open project view's title passes over any picture.
+  - An image logo sits on a pill of the page's surface, which takes the light scheme's surface when a dark logo meets the dark look, so the logo no longer vanishes (docs/template-fit-decisions.md, decision 23).
+- **Tone.** "studio" becomes "cinematic".
+- **Kept.** The fixed violet-to-pink picture treatment stays for now, with its open question for makers whose products need their colours (docs/template-fit-decisions.md, decision 6).
+
+These land with the pull request fix/vector-template-fit.

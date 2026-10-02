@@ -3,6 +3,8 @@
 - Status: accepted
 - Date: 26 September 2026
 - Departs from: `docs/standards.md` (the registry's "exactly ten" check and `CONFIG.templates.count`), ADR 0002 decision 6
+- Amended by: ADR 0048 (2 October 2026: the shortfall question moves to the visit-cap work, and a
+  CI minimum of six eligible templates per row guards it until then)
 
 ## Context
 

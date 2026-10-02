@@ -26,3 +26,23 @@ The port proceeds under the owner's confirmation of 15 September 2026 that Prebu
 - Deviations from the source, all deliberate: the section headings are `h2` and the service card titles `h3` (the source has nine `h1`s); the FAQ and the articles carry ids (`faq`, `articles`) so links and the comparison can name them; the logo links to the top of the page, not to prebuiltui.com; the form's labels carry `uppercase` (the source typed its own in capitals), are tied to their fields, and the fields are named so a mail message carries them; the form posts to the owner's email as a mail message when it is known and otherwise leads to the closing band (the source's posted nowhere); the form's button hovers to `brand-deepest` like every other button (the source's hovered to zinc-900, fifteen units darker than the others' zinc-800); a facility's caption link leads to the form (the source's led nowhere), and its text turns to the scrim's colour under the pointer rather than zinc-800, so it stays dark on the white button on a dark set; the "Our Services" column in the footer is links to the services (the source's were plain paragraphs with a hover colour); the FAQ's icon disc is a `span`, not a `div` inside a `span`; the "Designed by PrebuiltUI" line is not ported and the legal line is "© year, legal name. All rights reserved." with the photographers' credit after it; the page's default text is `on-surface` rather than the source's `#171717`, which no element on the page shows since every text carries its own grey.
 - `docs/claims-register.md` row "A person designs every layout" still needs the owner's decision: six of the seven ready layouts were designed by other people and adapted here.
 - The porting guide gains: read the stylesheet past the utilities for element rules and confirm every heading's rendered face; keep a state accordion when its rows must close with the transition they open with; keep a sticky deck's offsets and clip nothing above it; make a shared menu row inert only while closed and narrow.
+
+## Amendment, 2 October 2026: the source's trade is taken out (ADR 0048)
+
+- **Leftovers.**
+  - The reasons' stethoscope, heart pulse, hospital and ambulance become Summit's own check mark.
+  - The steps' icons, a calendar among them, become numerals, set in a checked colour.
+  - `#booking-process`, `#book-appointment` and `#facilities` become `#steps`, `#contact` and `#photos`, with the copy's target names kept.
+  - The form's `doctor` and `department` fields become `person` and `service`.
+- **The hero.** Its words sat straight on the photograph, and every text item met WCAG AA on 0 of 15 stored pictures. It gains the first treatment, in the order and within the caps of docs/template-fit-decisions.md decision 7, under which every word, the header's included, passes AA over any picture; any case that still fails is listed on the hero pull request. The visitor's logo stays visible over it. This ships in the hero-legibility pull request, with the done page's posters for Summit and Ember.
+- **The phone menu.** Its sheet was the surface colour at 25% over the photograph, and its links failed on most stored pictures. It rises to at least 70%.
+- **The photo cells.** Their captions pass over any picture.
+- **Readable faded text** below AA moves to a checked colour, the form's text included.
+- **Accessibility and loading.**
+  - The photo cells' caption links show when focused.
+  - The menu returns focus to its button.
+  - The closing picture, which phones never show, is no longer loaded with priority.
+  - The header fits at 768, and the form fields carry autofill.
+- **Tone.** "clinical" becomes "crisp".
+
+These land with the pull requests fix/summit-template-fit and the hero-legibility pull request, and change /examples/summit the same way.

@@ -4,6 +4,8 @@
 - Date: 4 September 2026
 - Plan: `docs/audit-plan.md`, "Do first"
 - Amends: ADR 0009 (decision 6), ADR 0012 (decisions 2 and 3), ADR 0015 (decisions 2 and 3)
+- Amended by: ADR 0048 (2 October 2026: the photograph rules ship in a set order; the
+  different-pictures rule stays)
 
 ## Context
 

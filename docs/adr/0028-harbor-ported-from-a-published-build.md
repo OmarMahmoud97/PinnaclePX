@@ -25,3 +25,24 @@ The port proceeds under the owner's confirmation of 15 September 2026 that Prebu
 - axe (WCAG 2.2 AA tags) reports one rule, colour contrast, on the source's own design: it sets its secondary text at 30 to 60 percent white on near-black (labels, descriptions, the partners' names, the small print) and at 60 to 70 percent near-black on lime, none of which reaches 4.5:1; 41 such nodes at 1920 on the example. Because those are alphas on the template's own text token rather than a token the solver can move, a derived set inherits them (65 nodes on the derived light set). Kept as the source has them, since the owner asks for the source's look; raising the alphas is the owner's call and is listed in `docs/claims-register.md` beside the other inherited findings.
 - Deviations from the source, all deliberate: the hero's three `h1` elements are one `h1` over three clipped rows; the bar's links sit in a `nav` and its buttons are labelled; the form's labels are tied to their fields and the newsletter's field and button are labelled; the logo links to the top of the page, not to `/`; each plan's `button`, which did nothing, is a link to the contact form; the form's success state and toasts are not ported; the source showed two close marks while the overlay was open (its bar's toggle, above the overlay, and the overlay's own), and here the toggle hides while the overlay is open and its close mark takes focus, at the owner's request on 16 September 2026; the document's 4px lime scrollbar is not ported (a template cannot style the document); the source's `Learn More` and the maker's line in the footer are slots; the unnamed blocks carry ids (`metrics`, `gallery`, `testimonials`, `partners`, `cta`, `blog`) so links and the comparison can name them.
 - `docs/claims-register.md` row "A person designs every layout" still needs the owner's decision: five of the six ready layouts were designed by other people and adapted here.
+
+## Amendment, 2 October 2026: the source's trade is taken out, and its faded text meets AA (ADR 0048)
+
+- **Leftovers.**
+  - The service cards' dumbbell, bolt, brain, heart, timer and trophy become one check mark, as Harbor's own pricing list draws it, and the hero pill's bolt becomes a plain dot.
+  - The form's placeholders "John Doe" and "john@example.com" become "Your name" and "your@email.com".
+  - `#metrics` becomes `#highlights`.
+  - The footer's news field and its "Privacy · Terms" small print are not drawn: no visitor's sentence offered news, and a taster has no such pages.
+  - The hover-only line that was not a link goes.
+- **Phone layout.** Harbor's text broke on phones with real answers. At 390 px the headline was clipped in 4 of 7 stored answers, longer trade words such as PHYSIOTHERAPY clipped at every phone width, the hero phrases ran off the screen, and the phrase tiles chopped words.
+  - The headline is now sized at render by its longest word, the phrases wrap, and the tiles are one column on phones.
+  - No word is clipped or split mid-word at any width checked.
+  - The header fits from 768 to 1024.
+  - The 12-character cap stays.
+- **Contrast, reversing this ADR's earlier choice.** The decision above kept the source's faded secondary text "since the owner asks for the source's look". Measured on palettes derived from visitors' colours, it falls to 3.4:1 and 2.5:1. The owner's delegated decision of 2 October 2026 is that a visitor's design meets WCAG AA. So:
+  - readable faded text moves to a checked colour, declared in HARBOR_CONTRAST_PAIRS;
+  - the hero follows the order docs/template-fit-decisions.md sets for words over a picture (decisions 7 and 15): a local gradient behind the words first, then the picture's strength, until every hero word passes over any picture. Any case that still fails is listed on the pull request.
+- **Accessibility.** The menu returns focus to its button, the footer's headings follow the outline, and the form fields carry autofill.
+- **Tone.** "athletic" becomes "energetic".
+
+These land with the pull request fix/harbor-template-fit and change /examples/harbor the same way.

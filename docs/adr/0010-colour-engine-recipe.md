@@ -3,6 +3,8 @@
 - Status: accepted
 - Date: 4 September 2026
 - Plan: `docs/pipeline-plan.md`, section 11
+- Amended by: ADR 0048 (2 October 2026: a dark logo on the dark look sits on a plate of the light
+  scheme's surface, so both of the visitor's choices stand)
 
 ## Context
 
