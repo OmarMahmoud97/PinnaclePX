@@ -15,7 +15,8 @@ const YEAR = new Date().getFullYear()
 // links, two more columns of links, and a fourth cell with a newsletter's title, line, input and
 // arrow button (or, without one, a note and a button); then the legal line, with the
 // photographers' credit the Pexels licence asks for. The cell borders are the source's, cell by
-// cell and breakpoint by breakpoint.
+// cell and breakpoint by breakpoint. The fourth cell is the page's closing block, #contact,
+// where every ask on the page leads.
 export function AtlasFooter({ brand, footer, credits }: Props) {
   const [first = [], second = [], third = []] = footer.columns
   const { newsletter } = footer
@@ -62,7 +63,10 @@ export function AtlasFooter({ brand, footer, credits }: Props) {
               ))}
             </ul>
           </div>
-          <div className="w-full border-border py-6 sm:w-1/2 sm:border-t sm:px-10 sm:py-12 md:w-full md:border-t lg:w-full xl:w-[22rem] [&>*+*]:mt-4">
+          <div
+            id="contact"
+            className="w-full border-border py-6 sm:w-1/2 sm:border-t sm:px-10 sm:py-12 md:w-full md:border-t lg:w-full xl:w-[22rem] [&>*+*]:mt-4"
+          >
             {newsletter === null ? (
               <>
                 <h5 className="text-sm font-medium text-on-surface-muted">{footer.note.title}</h5>

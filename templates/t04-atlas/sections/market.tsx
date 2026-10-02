@@ -53,10 +53,11 @@ function Sparkline({ data, up, id }: { data: readonly number[]; up: boolean; id:
 // The source's card of three market tables, overlapping the hero's foot on a shadow, each with
 // a title and a More link over rows of a coin, its price with a thick plus or minus, and its
 // chart from sm up; a rule between the tables from xl. Without tables the card carries three
-// columns of words with the same title row and rule.
+// columns of words with the same title row and rule, and no More link: the three would all
+// lead to the same reasons, and a reader would hear "More" beside each thing the business does.
 export function AtlasMarket({ market, glance }: Props) {
   const columns = market === null ? glance.columns : market.groups
-  const more = market === null ? glance.more : { label: market.more, href: glance.more.href }
+  const more = market === null ? null : { label: market.more, href: glance.more.href }
   return (
     <section className="mx-2 max-w-(--breakpoint-xl) transform rounded-[2.25rem] bg-surface px-4 py-6 pb-20 shadow-lg sm:mx-auto sm:rounded-xl sm:px-6 sm:py-8 sm:shadow-md lg:-translate-y-12 lg:px-0">
       <div className="flex w-full flex-col items-center justify-center lg:flex-row">
@@ -69,14 +70,16 @@ export function AtlasMarket({ market, glance }: Props) {
           >
             <div className="flex w-full items-center justify-between">
               <span className="font-medium">{column.title}</span>
-              <a
-                href={more.href}
-                aria-label={`${more.label}: ${column.title}`}
-                className="flex items-center rounded-md px-3 py-1 text-sm font-medium text-brand-deeper transition duration-300 hover:bg-brand-deeper/10 [&>*+*]:ml-1"
-              >
-                <span>{more.label}</span>
-                <Mdi name="chevronRight" size={16} />
-              </a>
+              {more !== null && (
+                <a
+                  href={more.href}
+                  aria-label={`${more.label}: ${column.title}`}
+                  className="flex items-center rounded-md px-3 py-1 text-sm font-medium text-brand-deeper transition duration-300 hover:bg-brand-deeper/10 [&>*+*]:ml-1"
+                >
+                  <span>{more.label}</span>
+                  <Mdi name="chevronRight" size={16} />
+                </a>
+              )}
             </div>
             {'rows' in column ? (
               <div className="flex flex-col">

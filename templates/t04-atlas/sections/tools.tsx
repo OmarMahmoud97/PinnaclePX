@@ -8,7 +8,8 @@ type Props = Pick<AtlasContent, 'tools'>
 // The source's Advanced trading tools: a rounded band on the faint haze with a shadow, the
 // words at the left as a heading with a lit phrase over three titled points and two buttons,
 // and the picture at the right (above the words on phones). The words slide in from the left
-// and the picture from the right.
+// and the picture from the right. Its address is #approach, a name that fits any business; the
+// copy still calls the band `tools` (contract.ts maps the one to the other).
 export function AtlasTools({ tools }: Props) {
   const picture =
     tools.image === null ? null : (
@@ -25,7 +26,7 @@ export function AtlasTools({ tools }: Props) {
     )
   return (
     <section
-      id="tools"
+      id="approach"
       className="atlas-band relative my-20 max-w-full overflow-hidden rounded-2xl py-16 shadow sm:mx-4"
     >
       <div className="relative mx-auto grid max-w-(--breakpoint-xl) grid-cols-12 gap-x-6 px-4 sm:px-2">
