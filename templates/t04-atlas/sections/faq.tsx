@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import type { AtlasContent } from '../copy-slots'
 import { eyebrow, section } from '../styles'
+import { Fitted } from './fitted'
 import { Mdi } from './mdi'
 
 type Props = Pick<AtlasContent, 'faq'>
@@ -34,7 +35,9 @@ export function AtlasFaq({ faq }: Props) {
           className="col-span-12 mt-8 px-4 sm:px-6 lg:col-span-6"
         >
           <span className={`${eyebrow} mb-4 sm:mb-2`}>{faq.eyebrow}</span>
-          <h2 className="mb-10 text-3xl font-semibold sm:mb-6 sm:text-4xl">{faq.heading}</h2>
+          <h2 className="@container mb-10 text-3xl font-semibold sm:mb-6 sm:text-4xl">
+            <Fitted text={faq.heading}>{faq.heading}</Fitted>
+          </h2>
 
           <ul>
             {faq.items.map((item) => (

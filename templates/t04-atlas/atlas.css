@@ -68,6 +68,16 @@
   );
 }
 
+/*
+ * A heading's words at the heading's own size, or smaller where its longest word (--atlas-word,
+ * its width in ems, fit.ts) would not fit 97% of the heading's width; the heading is the
+ * container. 1em is the heading's own size at that breakpoint.
+ */
+.atlas-fit {
+  display: block;
+  font-size: min(1em, 97cqi / var(--atlas-word, 1));
+}
+
 /* The source's number inputs hid their spinners. */
 .atlas input::-webkit-outer-spin-button,
 .atlas input::-webkit-inner-spin-button {

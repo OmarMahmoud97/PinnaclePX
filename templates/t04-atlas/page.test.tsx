@@ -47,4 +47,20 @@ describe('the Atlas page', () => {
     const toggle = controls.find((attributes) => attributes.includes('aria-label="Menu"'))
     expect(toggle).toContain('xl:hidden')
   })
+
+  // Decision 15: no word is cut off or runs past the screen. The headline and the six section
+  // headings are sized by their longest word, each heading the container its words fit.
+  it('sizes the headline and the section headings by their longest word', () => {
+    const fitted = all(
+      html,
+      /<h[12][^>]*class="@container[^"]*"[^>]*><span class="atlas-fit" style="--atlas-word:([\d.]+)">/g,
+    )
+    expect(fitted).toHaveLength(7)
+    for (const width of fitted) expect(Number(width)).toBeGreaterThan(1)
+  })
+
+  it('gives the closing cell a column as wide as itself from xl', () => {
+    expect(html).toContain('xl:grid-cols-[repeat(3,minmax(0,1fr))_22rem]')
+    expect(html).not.toContain('xl:grid-cols-4')
+  })
 })

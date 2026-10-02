@@ -15,8 +15,11 @@ const YEAR = new Date().getFullYear()
 // links, two more columns of links, and a fourth cell with a newsletter's title, line, input and
 // arrow button (or, without one, a note and a button); then the legal line, with the
 // photographers' credit the Pexels licence asks for. The cell borders are the source's, cell by
-// cell and breakpoint by breakpoint. The fourth cell is the page's closing block, #contact,
-// where every ask on the page leads; its title is a section heading, as the page's others are.
+// cell and breakpoint by breakpoint. From xl the fourth cell keeps the source's 22rem and its
+// column is that wide: in four equal columns it ran 48px past its own, and off a screen 1280 to
+// 1311px wide, so the page scrolled sideways there. The fourth cell is the page's closing
+// block, #contact, where every ask on the page leads; its title is a section heading, as the
+// page's others are.
 // The input's border and placeholder are the solid muted ink: at the source's 60% and 80% they
 // fell below AA on derived light palettes.
 export function AtlasFooter({ brand, footer, credits }: Props) {
@@ -26,7 +29,7 @@ export function AtlasFooter({ brand, footer, credits }: Props) {
   return (
     <footer className="mx-auto max-w-(--breakpoint-xl) px-8">
       <div className="w-full border-y border-border">
-        <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4">
+        <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-[repeat(3,minmax(0,1fr))_22rem]">
           <div className="flex w-full flex-col border-border py-6 sm:w-1/2 sm:flex-row sm:border-r-0 sm:px-6 sm:py-12 md:w-full lg:w-full xl:w-fit sm:[&>*+*]:ml-10">
             <div className="mb-6 sm:mb-0 sm:hidden xl:block">
               <a href="#top" aria-label={`${brand.name} home`}>

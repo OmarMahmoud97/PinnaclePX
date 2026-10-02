@@ -2,6 +2,7 @@ import Image from 'next/image'
 import type { AtlasContent } from '../copy-slots'
 import { button, paragraph } from '../styles'
 import { Emphasis } from './emphasis'
+import { Fitted } from './fitted'
 
 type Props = Pick<AtlasContent, 'tools'>
 
@@ -35,8 +36,10 @@ export function AtlasTools({ tools }: Props) {
           data-fade="right"
           className="col-span-12 mt-8 px-4 sm:px-6 lg:col-span-6 [&>*+*]:mt-8 sm:[&>*+*]:mt-6"
         >
-          <h2 className="text-4xl font-semibold">
-            <Emphasis heading={tools.heading} />
+          <h2 className="@container text-4xl font-semibold">
+            <Fitted text={tools.heading.text}>
+              <Emphasis heading={tools.heading} />
+            </Fitted>
           </h2>
           {tools.items.map((item) => (
             <div key={item.title} className="[&>*+*]:mt-2">

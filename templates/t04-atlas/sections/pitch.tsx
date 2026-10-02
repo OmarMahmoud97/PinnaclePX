@@ -2,6 +2,7 @@ import Image from 'next/image'
 import type { AtlasContent } from '../copy-slots'
 import { button, paragraph, section } from '../styles'
 import { Emphasis } from './emphasis'
+import { Fitted } from './fitted'
 import { Mdi } from './mdi'
 
 type Props = Pick<AtlasContent, 'pitch'>
@@ -34,8 +35,10 @@ export function AtlasPitch({ pitch }: Props) {
           data-fade="right"
           className="col-span-12 mt-4 px-4 lg:col-span-6 xl:mt-20 [&>*+*]:mt-6"
         >
-          <h2 className="text-4xl font-semibold sm:pr-8 xl:pr-12">
-            <Emphasis heading={pitch.heading} />
+          <h2 className="@container text-4xl font-semibold sm:pr-8 xl:pr-12">
+            <Fitted text={pitch.heading.text}>
+              <Emphasis heading={pitch.heading} />
+            </Fitted>
           </h2>
           <p className={paragraph}>{pitch.lead}</p>
           <div className="lg:pr-12 [&>*+*]:mt-6">
