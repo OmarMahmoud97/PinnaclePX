@@ -23,7 +23,7 @@ export function EmberFaq({ faq }: Props) {
         <div className="space-y-3">
           {faq.items.map((item, index) => (
             <div key={item.question} data-fade="up-lg" style={delay(0.15 * index)}>
-              <details className="group rounded-lg border border-border text-on-surface/55">
+              <details className="group rounded-lg border border-border text-on-surface-muted">
                 <summary className="flex cursor-pointer list-none items-center justify-between p-4 transition-colors hover:bg-surface-muted/50 [&::-webkit-details-marker]:hidden">
                   <span className="pr-4 text-on-surface/75">{item.question}</span>
                   <span className="grid size-7 shrink-0 place-content-center rounded-full bg-on-surface/5">
