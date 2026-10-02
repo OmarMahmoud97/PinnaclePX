@@ -11,17 +11,18 @@ const CHEVRON = 'pointer-events-none absolute right-3.5 text-on-surface/37'
 
 // The source's Book an appointment: two halves from lg. At the left the eyebrow and the
 // heading; at the right the form, rising after a longer wait: a grid of two columns from sm
-// holding the name, the email, the phone, the person to see, the department and the date,
-// each a small capital label over a bordered field (the two lists with a chevron at their
-// right, their chosen line in the quieter grey), then a full-width dark button with an arrow.
-// The source's form posted nowhere; here it posts to the owner's email as a mail message when
-// it is known, and otherwise leads to the closing band. Where no people are listed the fourth
-// field takes a typed name.
+// holding the name, the email, the phone, the person to see, the service and the date, each a
+// small capital label over a bordered field (the two lists with a chevron at their right, their
+// chosen line in the quieter grey), then a full-width dark button with an arrow. The source's
+// form posted nowhere; here it posts to the owner's email as a mail message when it is known,
+// and otherwise leads to the closing band. Where no people are listed the fourth field takes a
+// typed name. The fields are named for what they hold on any page, person and service, where
+// the source's were a hospital's doctor and department.
 export function SummitBooking({ booking }: Props) {
   const { form } = booking
   const { sendTo } = form
   return (
-    <section id="book-appointment" className={`${pad} ${anchored} ${gap}`}>
+    <section id="contact" className={`${pad} ${anchored} ${gap}`}>
       <div className="mx-auto flex w-full max-w-275 flex-col items-start justify-between gap-16 lg:flex-row">
         <div className="flex flex-col items-start lg:w-1/2">
           <span data-fade style={delay(0.2)} className={eyebrow}>
@@ -86,13 +87,13 @@ export function SummitBooking({ booking }: Props) {
                 />
               </div>
               <div className="relative">
-                <label htmlFor="summit-doctor" className={label}>
+                <label htmlFor="summit-person" className={label}>
                   {form.doctor.label}
                 </label>
                 {form.doctor.options === null ? (
                   <input
-                    id="summit-doctor"
-                    name="doctor"
+                    id="summit-person"
+                    name="person"
                     type="text"
                     placeholder={form.doctor.placeholder}
                     className={field}
@@ -100,8 +101,8 @@ export function SummitBooking({ booking }: Props) {
                 ) : (
                   <div className="relative flex items-center">
                     <select
-                      id="summit-doctor"
-                      name="doctor"
+                      id="summit-person"
+                      name="person"
                       defaultValue=""
                       className={`${SELECT} rounded-sm`}
                     >
@@ -119,13 +120,13 @@ export function SummitBooking({ booking }: Props) {
                 )}
               </div>
               <div className="relative">
-                <label htmlFor="summit-department" className={label}>
+                <label htmlFor="summit-service" className={label}>
                   {form.department.label}
                 </label>
                 <div className="relative flex items-center">
                   <select
-                    id="summit-department"
-                    name="department"
+                    id="summit-service"
+                    name="service"
                     defaultValue=""
                     className={`${SELECT} rounded-md`}
                   >

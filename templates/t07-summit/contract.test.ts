@@ -158,13 +158,15 @@ describe('assembleSummit', () => {
       '#home',
       '#why-choose-us',
       '#our-services',
-      '#facilities',
+      '#photos',
     ])
-    expect(content.nav.cta.href).toBe('#booking-process')
-    expect(content.hero.primary.href).toBe('#booking-process')
+    expect(content.nav.cta.href).toBe('#steps')
+    expect(content.hero.primary.href).toBe('#steps')
     expect(content.hero.secondary.href).toBe('#our-services')
-    expect(content.facilities.link.href).toBe('#book-appointment')
-    expect(content.cta.button.href).toBe('#book-appointment')
+    expect(content.facilities.link.href).toBe('#contact')
+    expect(content.cta.button.href).toBe('#contact')
+    expect(content.footer.columns[0]?.links[2]?.href).toBe('#steps')
+    expect(content.footer.columns[1]?.links[0]?.href).toBe('#contact')
     expect(content.footer.columns[1]?.links[1]?.href).toBe('#top')
   })
 })

@@ -20,7 +20,10 @@ import { meta } from './meta'
 // button to the services, a facility's link to the form (the source's led nowhere), and footer
 // links point at one of the page's own anchors. The optional pieces (the rating line, the
 // articles, the form's list of people) are not in the copy: the brief holds no such facts, so
-// they stay null; the form's list of departments is the page's own services.
+// they stay null; the form's list of departments is the page's own services. The link targets
+// keep the source's names, which the copy model writes; the anchors they lead to are named for
+// any trade (the steps, the photographs, the form), not a hospital's booking process,
+// facilities and appointments.
 
 const TARGETS = [
   'top',
@@ -38,13 +41,13 @@ const HREF: Readonly<Record<(typeof TARGETS)[number], string>> = {
   home: '#home',
   'why-choose-us': '#why-choose-us',
   'our-services': '#our-services',
-  'booking-process': '#booking-process',
-  facilities: '#facilities',
+  'booking-process': '#steps',
+  facilities: '#photos',
   faq: '#faq',
-  'book-appointment': '#book-appointment',
+  'book-appointment': '#contact',
   cta: '#cta',
 }
-const NAV_HREFS = ['#home', '#why-choose-us', '#our-services', '#facilities'] as const
+const NAV_HREFS = ['#home', '#why-choose-us', '#our-services', '#photos'] as const
 
 const headed = { eyebrow: z.string(), heading: z.string() }
 const titled = z.object({ title: z.string(), body: z.string() })

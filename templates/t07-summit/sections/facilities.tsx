@@ -14,7 +14,7 @@ type Props = Pick<SummitContent, 'facilities'>
 // Without a photograph the cell is the quieter surface.
 export function SummitFacilities({ facilities }: Props) {
   return (
-    <section id="facilities" className={`${pad} ${anchored} ${gap}`}>
+    <section id="photos" className={`${pad} ${anchored} ${gap}`}>
       <div className="mx-auto flex max-w-6xl flex-col items-center">
         <p data-fade style={delay(0.2)} className={`${eyebrow} font-medium`}>
           {facilities.eyebrow}
