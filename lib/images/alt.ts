@@ -41,9 +41,12 @@ export function givenWords(answers: SubmissionAnswers, brief: BrandBrief): Reado
 // page said so. They are kept only when they are short, hold no digit in any script, and name
 // nothing the visitor did not give, a name being a capitalised word that does not open a sentence
 // and is not "I" (or "I'm", "I've"). Anything else is empty, so a screen reader passes the
-// picture by rather than describe the business wrongly. The check reads every capitalised word
-// as a name, a dog's breed included, so it costs some alt text that was fine rather than let a
-// wrong one through. A visitor's own photographs keep theirs (lib/images/plan.ts).
+// picture by rather than describe the business wrongly. The rule reads a dog's breed as a name
+// too, so it costs some alt text that was fine. A capitalised word that opens a sentence is not
+// checked, so a place there stays: "Amsterdam canal view featuring a charming café and cyclists
+// on a bridge.", a Pexels alt offered for the same café, is kept. The word after an abbreviation
+// missing from ABBREVIATION opens a sentence too, so "Capt. Cook's cottage at dusk" is kept as
+// well. A visitor's own photographs keep theirs (lib/images/plan.ts).
 export function stockAlt(alt: string, given: ReadonlySet<string>): string {
   const text = collapse(alt)
   if (text.length > CONFIG.images.altMaxChars || /\p{Nd}/u.test(text)) return ''
