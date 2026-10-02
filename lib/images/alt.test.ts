@@ -58,6 +58,25 @@ describe('stockAlt', () => {
     expect(stockAlt("Coffee the way I like it, and I'm not sharing", GIVEN)).toBe(
       "Coffee the way I like it, and I'm not sharing",
     )
+    expect(stockAlt('Is it raining? Rain on a café window!', GIVEN)).toBe(
+      'Is it raining? Rain on a café window!',
+    )
+  })
+
+  it("reads the word after an abbreviation's dot as a name, not a sentence's first word", () => {
+    expect(stockAlt('St. Ives harbour at dusk', GIVEN)).toBe('')
+    expect(stockAlt('Mt. Fuji behind a tea house', GIVEN)).toBe('')
+    expect(stockAlt('Dr. Smith in his surgery', GIVEN)).toBe('')
+    expect(stockAlt('J. Smith at his desk', GIVEN)).toBe('')
+    expect(stockAlt('Cakes on a stand, e.g. Victoria sponge', GIVEN)).toBe('')
+  })
+
+  it('keeps a name after an abbreviation when the visitor gave it', () => {
+    const stIves = givenWords(
+      { ...ANSWERS, description: 'Gift shop in St Ives, open all year.' },
+      BRIEF,
+    )
+    expect(stockAlt('St. Ives harbour at dusk', stIves)).toBe('St. Ives harbour at dusk')
   })
 
   it('reads every other capitalised word as a name, so a breed or an acronym costs the alt', () => {
@@ -65,8 +84,10 @@ describe('stockAlt', () => {
     expect(stockAlt('A laptop showing a map of the UK', GIVEN)).toBe('')
   })
 
-  it('drops an alt with a number in it', () => {
+  it('drops an alt with a digit in it, in any script', () => {
     expect(stockAlt('Two cups of coffee on table 4', GIVEN)).toBe('')
+    // An Arabic-Indic three.
+    expect(stockAlt('Coffee at table ٣', GIVEN)).toBe('')
   })
 
   it('drops an alt longer than the limit, and keeps one at it', () => {
