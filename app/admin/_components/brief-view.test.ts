@@ -91,7 +91,7 @@ describe('briefView', () => {
     expect(own.photos).toEqual([])
   })
 
-  it('says why there are no designs: not chosen yet, or the free designs already had', () => {
+  it('says why there are no designs: not chosen yet, or its free designs already used', () => {
     const open = {
       ...row,
       templateIds: null,
