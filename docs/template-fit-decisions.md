@@ -409,7 +409,7 @@ Three principles replace the phase gates of the brief (brief:18) and of the plan
 **Behaviour.** Each decided behaviour has a one-line check:
 
 - every form field carries its autocomplete token;
-- every ask's link is its template's closing block, and the closing button is a mailto with its label as the subject, or the top with no email;
+- every ask's link is its template's closing block, and the closing button is a mailto with its label as the subject, or, with no email, a link to the top or to its own block;
 - Ember's grid picture rests upright once the pointer leaves;
 - Summit's caption link is visible on keyboard focus;
 - Summit's closing picture is not loaded with priority at 390;
@@ -958,8 +958,8 @@ Already untrue or open, and outside this change. The first is in the questionnai
 - **Monolith draws three steps.** The first three steps are the brief's three, in order, in 16 of 16 stored answers. how-it-works.tsx draws the first three, in one column, three from md. The fixed count, the guide, assembleMonolith and the fallback's four items stay as they are, so the copy call and its retries are unchanged.
 - **Harbor's footer.** The news field ("Hear from us", which no stored sentence offers) and the "Privacy · Terms" small print (pages the taster does not have) are no longer drawn. They are dropped in footer.tsx only.
 - **One rule for every ask.**
-  - **Where each ask points.** Every ask points at the template's closing block: Aurora #start, Monolith #contact (renamed from #cta under decision 1), Ember #cta instead of #booking-process, and Atlas's pitch at #start.
-  - **What the closing button does.** It opens a mail to the page's email, with the button's label as the subject. With no email it points at the top, as Vector's does. This follows the established rule that a form mails the page's address (docs/template-porting-guide.md, section 3; t08 contract.ts:171).
+  - **Where each ask points.** Every ask points at the template's closing block: Aurora #start, Monolith #contact (renamed from #cta under decision 1), Ember #cta instead of #booking-process, and Atlas's closing cell in its footer, the note headed "Get in touch", at a new #contact. Atlas's pitch (#start) is its third section, so it cannot close the page.
+  - **What the closing button does.** It opens a mail to the page's email, with the button's label as the subject. With no email it points at the top, as Vector's does, or at its own block. This follows the established rule that a form mails the page's address (docs/template-porting-guide.md, section 3; t08 contract.ts:171).
   - **On a taster** the page's email is the visitor's own, so this opens a mail addressed to them. docs/template-analysis.md flagged mail-to-self forms as high. So this ships as its own commit, which the owner can ask to drop before merge.
 - **Aurora's window.** At every width below 1024, the 767/768 and 1023/1024 seams included (today 14% at 767 and 7% at 1023, records.md:1842-1843), it shows its three lines whole and at least 65% of its picture (decision 7's 35% crop limit), for example by placing the picture before the rows or by raising the clip on narrow screens. If a measured render shows that 65% cannot be met, the pull request says so.
 - **Accessibility.**

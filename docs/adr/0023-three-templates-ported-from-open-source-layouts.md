@@ -61,6 +61,6 @@ Each layout kept icons, placeholders and anchors from its source. They are repla
   - The header's drop-down works by pointer and keyboard; it closed before a click could land.
   - The nav fits at 1024, and the table headings move to a checked colour.
   - `#tools` becomes `#approach`, and the heading levels are fixed.
-  - Every ask points at the pitch block, whose button opens a mail to the page's address.
+  - Every ask points at the footer's closing cell (`#contact`, new), whose button opens a mail to the page's address with its label as the subject. The pitch block, the page's third section, keeps `#start`.
 
 These land with the pull requests fix/monolith-template-fit, fix/meridian-template-fit and fix/atlas-template-fit.
