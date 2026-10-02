@@ -4,8 +4,8 @@ export const meta = {
   id: 't05-ember',
   name: 'Ember',
   description:
-    'A full-screen photograph behind a centred hero with an uppercase eyebrow, a floating header that turns to glass as the page scrolls, a split About with a picture and an ornamented eyebrow, three numbered points, a grid of pictured items, three icon features beside a portrait, a three-step process, a card of rows on a photograph, an FAQ of disclosure rows, a coloured closing band with pictures at its corners, and a footer under a giant watermark of the name. Round buttons filled with the brand colour. Works on a dark or a light surface.',
+    'A full-screen photograph behind the centred headline, under a floating header that turns to glass as the page scrolls. Below it: a split About with a picture and an ornamented eyebrow, three numbered points, a grid of offerings over small square pictures, three features marked with a brand-colour dot beside a tall picture, three numbered steps, a card with a line and a button on a wide photograph, questions that open in place, a closing band in the brand colour with the first four pictures at its corners, and a footer under a giant watermark of the name. Most section headings carry an eyebrow in capitals, the buttons are round and filled with the brand colour, and the sections have wide space between them; works on a light or a dark surface. It needs a full-screen photograph behind the headline and a grid of four to eight named offerings, each over a small square picture. Not yet judged for any kind of business.',
   ready: true,
   polarity: 'either',
-  tones: ['warm', 'photographic', 'hospitable'],
+  tones: ['warm', 'photographic', 'welcoming'],
 } as const satisfies TemplateMeta
