@@ -1,6 +1,7 @@
 import { ArrowRight } from 'lucide-react'
 import Image from 'next/image'
 import type { HarborContent } from '../copy-slots'
+import { fitWord } from '../fit'
 import { container, eyebrow, motion } from '../styles'
 import { HeadingLines } from './lines'
 
@@ -9,7 +10,8 @@ type Props = Pick<HarborContent, 'cta'>
 // The source's closing band: a photograph dimmed to a fifth under a dark wash and a breath of
 // the accent from the top left, then the eyebrow, a two-line heading, a paragraph and two
 // round buttons, all centred, rising in turn as they arrive. Below about 670px the heading
-// follows the screen, as the block headings do (styles.ts).
+// follows the screen, as the block headings do (styles.ts), and it is smaller where its longest
+// word would not fit its 56rem measure or the screen (fit.ts).
 export function HarborCta({ cta }: Props) {
   return (
     <section id="cta" className="relative overflow-hidden py-32">
@@ -30,8 +32,11 @@ export function HarborCta({ cta }: Props) {
         <div data-fade data-margin="-80px">
           <span className={`${eyebrow} mb-6`}>{cta.eyebrow}</span>
         </div>
-        <div data-fade data-margin="-80px" style={motion(0.1)}>
-          <h2 className="mx-auto mb-8 max-w-4xl font-display text-[clamp(1.75rem,9vw,3.75rem)] leading-none font-black wrap-break-word text-on-surface uppercase">
+        <div data-fade data-margin="-80px" style={motion(0.1)} className="@container">
+          <h2
+            className="mx-auto mb-8 max-w-4xl font-display text-[length:min(clamp(1.75rem,9vw,3.75rem),min(97cqi,54rem)/var(--harbor-word,1))] leading-none font-black wrap-break-word text-on-surface uppercase"
+            style={fitWord(cta.heading.lines)}
+          >
             <HeadingLines heading={cta.heading} />
           </h2>
         </div>

@@ -1,4 +1,5 @@
 import type { HarborContent } from '../copy-slots'
+import { fitWord } from '../fit'
 import { container, eyebrow, heading, motion, section } from '../styles'
 import { HarborCount } from './count'
 import { HeadingLines } from './lines'
@@ -12,9 +13,11 @@ type Props = Pick<HarborContent, 'metrics'>
 // stands. The cells rise in turn as they arrive. The source's two columns, three from md, cut
 // a phrase off on a phone and a tablet; here a cell has the row to itself on a phone, two
 // share it from md (a lone last cell taking the whole row, so no empty slot shows the hairline
-// fill) and three once the container is at its full width, the figure and the padding grow
-// with the room, and a word too long for its cell wraps rather than being cut.
-// Its anchor is #highlights, as a visitor's band holds phrases rather than figures.
+// fill) and three once the container is at its full width, and the padding grows with the
+// room. The figures share one size, the source's text-5xl, smaller with the screen below about
+// 530px, and smaller again where the longest of them would not fit its cell (fit.ts), so no
+// word is cut off or broken. Its anchor is #highlights, as a visitor's band holds phrases
+// rather than figures.
 export function HarborMetrics({ metrics }: Props) {
   return (
     <section
@@ -30,28 +33,34 @@ export function HarborMetrics({ metrics }: Props) {
         </span>
       </div>
       <div className={`${container} relative z-10`}>
-        <div className="mb-16 text-center">
+        <div className="@container mb-16 text-center">
           <div data-fade data-margin="-80px">
             <span className={`${eyebrow} mb-4`}>{metrics.eyebrow}</span>
           </div>
           <div data-fade data-margin="-80px" style={motion(0.1)}>
-            <h2 className={heading}>
+            <h2 className={heading} style={fitWord(metrics.heading.lines)}>
               <HeadingLines heading={metrics.heading} />
             </h2>
           </div>
         </div>
-        <div className="grid grid-cols-1 gap-px overflow-hidden rounded-2xl border border-border bg-border md:grid-cols-2 min-[90rem]:grid-cols-3">
+        <div
+          className="grid grid-cols-1 gap-px overflow-hidden rounded-2xl border border-border bg-border md:grid-cols-2 min-[90rem]:grid-cols-3"
+          style={fitWord(
+            metrics.items.map((item) => item.value),
+            false,
+          )}
+        >
           {metrics.items.map((item, index) => (
             <div
               key={item.label}
               data-fade
               data-margin="-40px"
               style={motion(0.1 * index, '20px', 0.5, 'out')}
-              className="group bg-surface p-8 transition-colors duration-300 hover:bg-accent md:last:odd:col-span-2 lg:p-12 min-[90rem]:last:odd:col-span-1"
+              className="group @container bg-surface p-8 transition-colors duration-300 hover:bg-accent md:last:odd:col-span-2 lg:p-12 min-[90rem]:last:odd:col-span-1"
             >
               <HarborCount
                 value={item.value}
-                className="mb-2 block origin-left text-[clamp(1.75rem,9vw,3rem)] leading-none font-black wrap-break-word text-brand-deeper transition-transform duration-300 group-hover:scale-105 md:text-4xl lg:text-5xl"
+                className="mb-2 block origin-left text-[length:min(clamp(1.75rem,9vw,3rem),97cqi/var(--harbor-word,1))] leading-none font-black wrap-break-word text-brand-deeper transition-transform duration-300 group-hover:scale-105"
               />
               <p className="mb-1 font-display text-base font-bold tracking-wide text-on-surface uppercase">
                 {item.label}

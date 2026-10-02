@@ -1,5 +1,6 @@
 import { Minus, Plus, Send } from 'lucide-react'
 import type { HarborContent } from '../copy-slots'
+import { fitWord } from '../fit'
 import { container, eyebrow, heading, motion, section } from '../styles'
 import { HeadingLines } from './lines'
 
@@ -14,8 +15,9 @@ const LABEL = 'mb-2 block text-xs font-semibold tracking-wider text-on-surface-m
 // when open, the question turning to the accent and the answer sliding open; the source
 // toggled each by state, these are native disclosure rows (harbor.css). At the right, sliding
 // in from the right, a card with the eyebrow, a heading (which follows the screen below about
-// 440px, so a long word fits the card on a phone), a line and the form: name and email side
-// by side from sm, a message, and a round accent button. The source posted the form to a
+// 440px, and is smaller again where its longest word would not fit the card, fit.ts), a line
+// and the form: name and email side by side from sm, a message, and a round accent button.
+// Both headings fit their own column the same way. The source posted the form to a
 // form service under a placeholder id and showed a toast; here it posts to the owner's email
 // as a mail message when it is known, and otherwise leads to the page's ask. The source's
 // hints named one made-up person on every page; these are plain. The name and email fields
@@ -27,12 +29,12 @@ export function HarborContact({ contact }: Props) {
     <section id="contact" className={`${section} bg-surface`}>
       <div className={container}>
         <div className="grid grid-cols-1 gap-20 lg:grid-cols-2">
-          <div>
+          <div className="@container">
             <div data-fade data-margin="-80px">
               <span className={`${eyebrow} mb-4`}>{contact.eyebrow}</span>
             </div>
             <div data-fade data-margin="-80px" style={motion(0.1)}>
-              <h2 className={`${heading} mb-10`}>
+              <h2 className={`${heading} mb-10`} style={fitWord(contact.heading.lines)}>
                 <HeadingLines heading={contact.heading} />
               </h2>
             </div>
@@ -67,9 +69,12 @@ export function HarborContact({ contact }: Props) {
             </div>
           </div>
           <div data-fade="right" data-margin="-80px" style={motion(0, undefined, 0.7)}>
-            <div className="rounded-2xl border border-border bg-accent p-8 md:p-10">
+            <div className="@container rounded-2xl border border-border bg-accent p-8 md:p-10">
               <span className={`${eyebrow} mb-4`}>{form.eyebrow}</span>
-              <h3 className="mb-2 font-display text-[clamp(1.25rem,6.75vw,1.875rem)] leading-tight font-black wrap-break-word text-on-surface uppercase md:text-4xl">
+              <h3
+                className="mb-2 font-display text-[length:min(clamp(1.25rem,6.75vw,1.875rem),97cqi/var(--harbor-word,1))] leading-tight font-black wrap-break-word text-on-surface uppercase md:text-[length:min(2.25rem,97cqi/var(--harbor-word,1))]"
+                style={fitWord(form.heading.lines)}
+              >
                 <HeadingLines heading={form.heading} />
               </h3>
               <p className="mb-8 text-sm text-on-surface-muted">{form.lead}</p>
