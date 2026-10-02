@@ -325,6 +325,25 @@
   border-radius: 1cqi;
 }
 
+/* Ember and Summit set their words straight over the photograph, so wherever those words show
+   (the headline from 8.5rem, the name from 10rem) the photograph takes a veil, as Summit's hero
+   takes one over a phone's whole first screen: the ink at 60% over all of it, with the words in
+   white, which holds WCAG AA over any picture. A poster with no photograph yet keeps its ink. */
+@container poster (width >= 8.5rem) {
+  .design-poster:is([data-layout='photo'], [data-layout='airy']):has(.design-poster-photo img) {
+    & .design-poster-photo::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: color-mix(in oklab, var(--ink-foot) 60%, transparent);
+    }
+
+    & .design-poster-page {
+      color: #fff;
+    }
+  }
+}
+
 /* Vector, "Bold and editorial": a dark glass pill for its bar, three rows of type as tall as its
    headline with the paragraph under them, no button on its first screen, a band of its colour
    behind, and its picture the about block's wide pill (t08-vector/sections/header.tsx, hero.tsx,
