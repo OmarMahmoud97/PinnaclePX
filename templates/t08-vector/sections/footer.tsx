@@ -17,7 +17,8 @@ const LINK = 'text-surface transition-colors hover:text-surface/60'
 // top a giant address (the owner's email when it is known) over a round button; a rule; the
 // name and a tagline beside columns of places, services, links and social links; and the small
 // links, the legal line (with the photographers' credit the Pexels licence asks for) and a
-// closing line.
+// closing line. The name and the legal line wrap a name with no break in it rather than run
+// it off the screen.
 export function VectorFooter({ brand, footer, credits }: Props) {
   const { places, social } = footer
   return (
@@ -49,7 +50,7 @@ export function VectorFooter({ brand, footer, credits }: Props) {
       <div className={`${pad} py-16 lg:py-24 ${container}`}>
         <div className="flex flex-col justify-between gap-12 lg:flex-row lg:gap-8">
           <div>
-            <span className="text-4xl font-medium tracking-tight">{brand.name}</span>
+            <span className="text-4xl font-medium tracking-tight wrap-anywhere">{brand.name}</span>
             <p className="mt-4 text-4xl text-surface/60">{footer.tagline}</p>
           </div>
           <div className="flex flex-col gap-16 sm:flex-row lg:gap-24">
@@ -131,7 +132,7 @@ export function VectorFooter({ brand, footer, credits }: Props) {
               </a>
             ))}
           </div>
-          <p className="text-sm text-surface/60">
+          <p className="text-sm wrap-anywhere text-surface/60">
             &copy; {YEAR} {brand.legalName} - All rights reserved
             {credits.length > 0 && (
               <>

@@ -23,8 +23,12 @@ const MENU_WAIT = { '--dur': '0.4s' } as CSSProperties
 // current one underlined; the plus turns into a cross. The source animated the pill's height
 // with a motion library; here the list opens on a grid row and the links arrive by
 // starting-style transitions, and closing plays the same out before the list goes. The name
-// swells a little under the pointer and shrinks under the finger. The whole bar goes while a
-// project is open full screen (vector.css).
+// swells a little under the pointer and shrinks under the finger. Its pill never reaches under
+// the menu's: it stops half a rem short of it at any width, its sides are 12px below 640px (the
+// source's 16px left fewer names on one line), on phones narrower than 390px its name steps
+// down towards 14px, and a name too long for one line takes a second, then ends in an ellipsis,
+// the whole name staying in the link's label. The whole bar goes while a project is open full
+// screen (vector.css).
 export function VectorHeader({ brand, nav }: Props) {
   const [open, setOpen] = useState(false)
   const [closing, setClosing] = useState(false)
@@ -92,7 +96,7 @@ export function VectorHeader({ brand, nav }: Props) {
           href="#top"
           data-rise="drop"
           style={LOGO_WAIT}
-          className="flex h-12 shrink-0 items-center justify-center rounded-xl bg-scrim/70 px-4 text-base font-medium tracking-tight text-on-scrim shadow-lg backdrop-blur-lg transition-transform duration-200 hover:scale-105 active:scale-95 sm:h-16 sm:rounded-2xl sm:px-5 sm:text-xl"
+          className="flex h-12 max-w-[calc(100%-12.5rem)] shrink-0 items-center justify-center rounded-xl bg-scrim/70 px-3 text-[clamp(0.875rem,4.11vw,1rem)] leading-tight font-medium tracking-tight text-on-scrim shadow-lg backdrop-blur-lg transition-transform duration-200 hover:scale-105 active:scale-95 sm:h-16 sm:max-w-[calc(100%-15.5rem)] sm:rounded-2xl sm:px-5 sm:text-xl"
           aria-label={`${brand.name} home`}
         >
           <VectorLogo brand={brand} />
