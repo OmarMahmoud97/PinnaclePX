@@ -28,7 +28,9 @@ describe('the Atlas page', () => {
     for (const target of targets) expect(ids).toContain(target)
   })
 
-  it('opens a mail from the closing cell', () => {
-    expect(all(html, /href="(mailto:[^"]+)"/g)).toEqual(['mailto:owner@example.com'])
+  it('opens a mail from the closing cell, under the button label', () => {
+    const mails = all(html, /href="(mailto:[^"]+)"/g)
+    expect(mails).toHaveLength(1)
+    expect(mails[0]).toMatch(/^mailto:owner@example\.com\?subject=\S+$/)
   })
 })

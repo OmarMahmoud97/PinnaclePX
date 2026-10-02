@@ -150,7 +150,7 @@ describe('assembleAtlas', () => {
     content.tools.primary.href,
   ]
 
-  it('leads every ask to the closing cell, whose button opens a mail to the page email', () => {
+  it('leads every ask to the closing cell, whose button mails the page email under its label', () => {
     const assets: TemplateAssets = {
       logo: { kind: 'wordmark' },
       images: {},
@@ -158,7 +158,9 @@ describe('assembleAtlas', () => {
     }
     const content = assembleAtlas(copy, assets)
     expect(asks(content)).toEqual(Array.from({ length: 5 }, () => '#contact'))
-    expect(content.footer.action.href).toBe('mailto:owner@example.com')
+    expect(content.footer.action.href).toBe(
+      `mailto:owner@example.com?subject=${encodeURIComponent(copy.footer.action)}`,
+    )
   })
 
   it('leads the closing cell button to its own cell when no email is known', () => {

@@ -35,8 +35,9 @@ const HREF: Readonly<Record<(typeof TARGETS)[number], string>> = {
 }
 const NAV_HREFS = ['#start', '#offer', '#approach', '#why', '#faq'] as const
 // Every ask leads to the closing cell at the foot of the page: the note, its line and its
-// button (footer.tsx). That button opens a mail to the page's email, which a visitor's page
-// always has; with none, as in validation, it is a link to its own cell.
+// button (footer.tsx). That button opens a mail to the page's email, with its own label as the
+// subject; a visitor's page always has an email, and with none, as in validation, the button is
+// a link to its own cell.
 const ASK = '#contact'
 
 const emphasised = z.object({ text: z.string(), emphasis: z.string() })
@@ -269,7 +270,10 @@ export function assembleAtlas(copy: AtlasCopy, assets: TemplateAssets): AtlasCon
       ),
       newsletter: null,
       note: footer.note,
-      action: { label: footer.action, href: email === null ? ASK : `mailto:${email}` },
+      action: {
+        label: footer.action,
+        href: email === null ? ASK : `mailto:${email}?subject=${encodeURIComponent(footer.action)}`,
+      },
     },
   }
 }
