@@ -123,12 +123,26 @@ export const CONFIG = {
   // model to judge, the one stored size (next/image serves every viewport from it), and the
   // words added to every search for the look the visitor chose. A stock picture's own alt text
   // longer than altMaxChars is not used (lib/images/alt.ts, decision 7a).
+  // Two lists of image slots by template, which the contracts cannot say because the stage sees
+  // only their slot names (decision 7a; tests/integration/image-slots.test.ts holds both to the
+  // contracts). optionalSlots: the pictures of the items past the copy's minimum count, which a
+  // design draws only when its copy has that many; the imagery runs beside the copy, so it
+  // fills them after every slot the three designs are sure to draw (lib/images/stage.ts).
+  // stockFreeSlots: slots stock never fills, Monolith's circles beside a name and a quote, which
+  // draw the template's initials when empty; a visitor's own photograph still goes there.
   images: {
     perPage: 12,
     maxWidth: 1920,
     quality: 80,
     styleQuery: { warm: 'natural light', minimal: 'minimal', bold: 'vivid colour', dark: 'moody' },
     altMaxChars: 120,
+    optionalSlots: {
+      't05-ember': ['dish-5', 'dish-6', 'dish-7', 'dish-8'],
+      't07-summit': ['service-4', 'service-5', 'service-6'],
+      't08-vector': ['project-3', 'project-4'],
+      't09-inegro': ['service-4', 'service-5', 'service-6'],
+    },
+    stockFreeSlots: { 't02-monolith': ['quote', 'profile'] },
   },
   // Copy that breaks a limit is sent back this many times with what went wrong within one call;
   // a call whose answer still breaks a limit is made again on this many attempts of the step,

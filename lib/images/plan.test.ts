@@ -1,6 +1,6 @@
 import type { SubmissionAnswers } from '@/lib/brief/submission'
 import { fallbackBrief } from '@/lib/copy-slots/brief'
-import { orderByVerdict, planImagery } from '@/lib/images/plan'
+import { optionalSlots, orderByVerdict, planImagery, stockFreeSlots } from '@/lib/images/plan'
 
 const BLOB = 'https://x.public.blob.vercel-storage.com/photos'
 const ANSWERS: SubmissionAnswers = {
@@ -55,6 +55,38 @@ describe('planImagery', () => {
   it('leaves a slot empty when the brief has no query for it', () => {
     const brief = { ...BRIEF, imageQueries: { hero: [' '], detail: [] } }
     expect(planImagery(['hero'], ANSWERS, brief).hero).toEqual({ kind: 'none' })
+  })
+
+  it('searches for no stock-free slot, but puts an own photograph there as before', () => {
+    const slots = ['about', 'services', 'quote', 'profile']
+    const plan = planImagery(slots, ANSWERS, BRIEF, ['quote', 'profile'])
+    expect(plan.services).toMatchObject({ kind: 'search' })
+    expect(plan.quote).toEqual({ kind: 'none' })
+    expect(plan.profile).toEqual({ kind: 'none' })
+
+    const photos = ['a', 'b', 'c'].map((name) => ({
+      fileName: `${name}.jpg`,
+      url: `${BLOB}/${name}.jpg`,
+    }))
+    const own = planImagery(slots, { ...ANSWERS, imagery: { style: 'warm', photos } }, BRIEF, [
+      'quote',
+      'profile',
+    ])
+    expect(own.quote).toEqual({
+      kind: 'own',
+      url: `${BLOB}/c.jpg`,
+      alt: 'Ashgrove Physio, photograph',
+    })
+    expect(own.profile).toEqual({ kind: 'none' })
+  })
+})
+
+describe('optionalSlots and stockFreeSlots', () => {
+  it("read a template's lists, and give a template with none an empty list", () => {
+    expect(optionalSlots('t08-vector')).toEqual(['project-3', 'project-4'])
+    expect(stockFreeSlots('t02-monolith')).toEqual(['quote', 'profile'])
+    expect(optionalSlots('t01-aurora')).toEqual([])
+    expect(stockFreeSlots('t01-aurora')).toEqual([])
   })
 })
 

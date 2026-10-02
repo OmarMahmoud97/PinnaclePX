@@ -120,6 +120,45 @@ describe('imageryFor', () => {
     expect(rehostImage).toHaveBeenCalledTimes(2)
   })
 
+  it("chooses the pictures of items past the copy's minimum after every slot a design draws", async () => {
+    vi.mocked(searchPhotos).mockImplementation((query) =>
+      Promise.resolve(
+        query.startsWith('treatment room')
+          ? [candidate(1), candidate(2)]
+          : [candidate(3), candidate(4), candidate(5)],
+      ),
+    )
+    // Vector draws its third project only when the copy has three; Aurora always draws its
+    // statement. Vector comes first, yet its third project waits for Aurora's statement.
+    const contracts = [
+      contract('t08-vector', ['about', 'project-1', 'project-2', 'project-3']),
+      contract('t01-aurora', ['hero', 'statement']),
+    ]
+    const { imagery } = await imageryFor(contracts, ANSWERS, BRIEF, 'slug')
+
+    expect(imagery['t08-vector']?.['project-1']?.src).toBe(`${BLOB}/images/pexels-3.webp`)
+    expect(imagery['t08-vector']?.['project-2']?.src).toBe(`${BLOB}/images/pexels-4.webp`)
+    expect(imagery['t01-aurora']?.statement?.src).toBe(`${BLOB}/images/pexels-5.webp`)
+    // With nothing fresh left, the optional slot shares a picture rather than the statement.
+    expect(imagery['t08-vector']?.['project-3']?.src).toBe(`${BLOB}/images/pexels-5.webp`)
+  })
+
+  it("never puts stock in Monolith's circles, so its initials show", async () => {
+    const slots = ['about', 'services', 'feature-1', 'quote', 'profile']
+    const { imagery, unfilled } = await imageryFor(
+      [contract('t02-monolith', slots)],
+      ANSWERS,
+      BRIEF,
+      'slug',
+    )
+
+    expect(imagery['t02-monolith']?.services?.src).toBe(`${BLOB}/images/pexels-3.webp`)
+    expect(imagery['t02-monolith']?.quote).toBeNull()
+    expect(imagery['t02-monolith']?.profile).toBeNull()
+    expect(unfilled).toEqual([])
+    expect(rehostImage).toHaveBeenCalledTimes(3)
+  })
+
   it('never shows a picture twice on one page, even with nothing else to show', async () => {
     vi.mocked(searchPhotos).mockResolvedValue([candidate(1)])
     const brief = { ...BRIEF, imageQueries: { hero: ['clinic'], detail: ['clinic'] } }
