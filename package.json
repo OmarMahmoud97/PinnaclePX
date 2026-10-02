@@ -27,7 +27,16 @@
     "capture:work": "node scripts/capture-work.mjs",
     "template:compare": "node scripts/template-compare.mjs",
     "eval": "vitest run --config vitest.eval.config.ts",
-    "eval:shots": "node tests/eval/screenshots.mjs"
+    "eval:shots": "node tests/eval/screenshots.mjs",
+    "check:text-fit": "node scripts/checks/text-fit.mjs",
+    "check:over-picture": "node scripts/checks/over-picture.mjs",
+    "check:contrast": "node scripts/checks/contrast.mjs",
+    "check:gradient-text": "node scripts/checks/gradient-text.mjs",
+    "check:behaviour": "node scripts/checks/behaviour.mjs",
+    "check:menus": "node scripts/checks/menus.mjs",
+    "check:layout-shift": "node scripts/checks/layout-shift.mjs",
+    "check:a11y-names": "node scripts/checks/a11y-names.mjs",
+    "check:leftovers": "node scripts/checks/leftovers.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "0.128.0",
