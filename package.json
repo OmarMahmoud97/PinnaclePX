@@ -28,6 +28,7 @@
     "template:compare": "node scripts/template-compare.mjs",
     "eval": "vitest run --config vitest.eval.config.ts",
     "eval:shots": "node tests/eval/screenshots.mjs",
+    "eval:scorecard": "node tests/eval/scorecard.mjs",
     "check:text-fit": "node scripts/checks/text-fit.mjs",
     "check:over-picture": "node scripts/checks/over-picture.mjs",
     "check:contrast": "node scripts/checks/contrast.mjs",
