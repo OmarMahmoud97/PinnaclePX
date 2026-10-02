@@ -60,6 +60,9 @@ describe("Summit's hero", () => {
       )
     expect(bar(true)).toContain('hover:underline')
     expect(bar(true)).not.toContain('hover:text-on-surface/55')
-    expect(bar(false)).toContain('hover:text-on-surface/55')
+    // A plain page has no picture to fade over, but the lighter grey is below AA on any palette
+    // (the faded-text commit), so its links darken to on-surface instead.
+    expect(bar(false)).not.toContain('hover:text-on-surface/55')
+    expect(bar(false)).toContain('hover:text-on-surface')
   })
 })

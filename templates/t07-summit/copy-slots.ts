@@ -204,8 +204,10 @@ const SUMMIT_COUNTS = {
 } as const satisfies Record<string, CopySlot>
 
 // Every text-on-background pair the template paints. Text sits on the page, on the quieter
-// cards and on the tinted ones; the buttons carry on-brand on brand-deeper; a facility's
-// caption is on-scrim over the scrim's wash on its photograph.
+// cards and on the tinted ones, and a reason card's line on the border's wash the card takes
+// under the pointer; the buttons carry on-brand on brand-deeper; a facility's caption is on-scrim
+// over the scrim's wash on its photograph. Body text is on-surface-muted, a token the solver
+// sees, never on-surface at an alpha.
 export const SUMMIT_CONTRAST_PAIRS: readonly ContrastPair[] = [
   { text: 'on-surface', background: 'surface' },
   { text: 'on-surface-muted', background: 'surface' },
@@ -213,6 +215,7 @@ export const SUMMIT_CONTRAST_PAIRS: readonly ContrastPair[] = [
   { text: 'on-surface-muted', background: 'surface-muted' },
   { text: 'on-surface', background: 'accent' },
   { text: 'on-surface-muted', background: 'accent' },
+  { text: 'on-surface-muted', background: 'border' },
   { text: 'on-brand', background: 'brand-deeper' },
   { text: 'on-scrim', background: 'scrim' },
 ]

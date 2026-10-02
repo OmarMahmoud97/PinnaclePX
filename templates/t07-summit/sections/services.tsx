@@ -39,7 +39,7 @@ export function SummitServices({ services }: Props) {
                 <h3 className="mt-6 max-w-104 font-display text-3xl leading-tight font-medium tracking-tight text-on-surface/85 md:text-[40px]">
                   {item.title}
                 </h3>
-                <p className="mt-3 max-w-94 text-sm text-on-surface/55">{item.body}</p>
+                <p className="mt-3 max-w-94 text-sm text-on-surface-muted">{item.body}</p>
                 <div className="mt-8 flex flex-col gap-3.5">
                   {item.checklist.map((line) => (
                     <div key={line} className="flex items-center gap-3">
@@ -49,7 +49,7 @@ export function SummitServices({ services }: Props) {
                         aria-hidden="true"
                         className="text-on-surface/37"
                       />
-                      <span className="text-sm text-on-surface/55">{line}</span>
+                      <span className="text-sm text-on-surface-muted">{line}</span>
                     </div>
                   ))}
                 </div>

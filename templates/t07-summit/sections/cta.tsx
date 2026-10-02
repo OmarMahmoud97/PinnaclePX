@@ -29,7 +29,7 @@ export function SummitCta({ cta }: Props) {
             data-fade
             data-spring="soft"
             style={delay(0.2)}
-            className="mt-4 max-w-80 text-center text-sm leading-relaxed text-on-surface/55 lg:text-left"
+            className="mt-4 max-w-80 text-center text-sm leading-relaxed text-on-surface-muted lg:text-left"
           >
             {cta.body}
           </p>

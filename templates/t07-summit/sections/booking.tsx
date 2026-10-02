@@ -5,7 +5,7 @@ import { anchored, delay, eyebrow, field, gap, label, pad, title } from '../styl
 type Props = Pick<SummitContent, 'booking'>
 
 const SELECT =
-  'w-full cursor-pointer appearance-none border border-on-surface/11 bg-transparent px-3 py-3 pr-10 text-xs text-on-surface/37 transition focus:border-on-surface/37 focus:outline-none'
+  'w-full cursor-pointer appearance-none border border-on-surface/11 bg-transparent px-3 py-3 pr-10 text-xs text-on-surface-muted transition focus:border-on-surface/37 focus:outline-none'
 const OPTION = 'text-sm text-on-surface/75'
 const CHEVRON = 'pointer-events-none absolute right-3.5 text-on-surface/37'
 
@@ -149,7 +149,7 @@ export function SummitBooking({ booking }: Props) {
                   id="summit-date"
                   name="date"
                   type="date"
-                  className="w-full cursor-pointer rounded-md border border-on-surface/11 bg-transparent px-3 py-3 text-xs text-on-surface/37 transition focus:border-on-surface/37 focus:outline-none"
+                  className="w-full cursor-pointer rounded-md border border-on-surface/11 bg-transparent px-3 py-3 text-xs text-on-surface-muted transition focus:border-on-surface/37 focus:outline-none"
                 />
               </div>
             </div>

@@ -56,7 +56,7 @@ export function SummitSteps({ steps }: Props) {
               </div>
               <div className="pt-2.5">
                 <h3 className="text-lg text-on-surface/75 md:text-xl">{item.title}</h3>
-                <p className="mt-2 max-w-84 text-sm text-on-surface/55">{item.body}</p>
+                <p className="mt-2 max-w-84 text-sm text-on-surface-muted">{item.body}</p>
               </div>
             </div>
           )

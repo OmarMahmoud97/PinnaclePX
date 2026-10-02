@@ -12,6 +12,10 @@ import type { CSSProperties } from 'react'
 // body grey on-surface-muted; its zinc-800, 700, 500, 400 and 300 the same black at 85, 75, 55,
 // 37 and 17 percent; its orange stars glow and the green dot before a reading time
 // glow-secondary; the black wash under a facility's caption scrim and the white on it on-scrim.
+// The black at 55 and 37 percent falls below WCAG AA as text on a light page, and the colour
+// solver cannot see a shade, so the text the source set in zinc-500 and 400 (and its links'
+// lighter hover) is on-surface-muted here, with its links darkening to on-surface under the
+// pointer; the shades stay on marks, rules and a list's disabled hint.
 
 // The source's container padding: 1.5rem, 3rem from md, 4rem from lg and 6rem from xl.
 export const pad = 'px-6 md:px-12 lg:px-16 xl:px-24'
