@@ -16,7 +16,9 @@ const YEAR = new Date().getFullYear()
 // arrow button (or, without one, a note and a button); then the legal line, with the
 // photographers' credit the Pexels licence asks for. The cell borders are the source's, cell by
 // cell and breakpoint by breakpoint. The fourth cell is the page's closing block, #contact,
-// where every ask on the page leads.
+// where every ask on the page leads; its title is a section heading, as the page's others are.
+// The input's border and placeholder are the solid muted ink: at the source's 60% and 80% they
+// fell below AA on derived light palettes.
 export function AtlasFooter({ brand, footer, credits }: Props) {
   const [first = [], second = [], third = []] = footer.columns
   const { newsletter } = footer
@@ -69,7 +71,7 @@ export function AtlasFooter({ brand, footer, credits }: Props) {
           >
             {newsletter === null ? (
               <>
-                <h5 className="text-sm font-medium text-on-surface-muted">{footer.note.title}</h5>
+                <h2 className="text-sm font-medium text-on-surface-muted">{footer.note.title}</h2>
                 <p className="text-sm text-on-surface-muted">{footer.note.body}</p>
                 <a href={footer.action.href} className={`${button.gradient} px-6 py-3`}>
                   {footer.action.label}
@@ -77,7 +79,7 @@ export function AtlasFooter({ brand, footer, credits }: Props) {
               </>
             ) : (
               <>
-                <h5 className="text-sm font-medium text-on-surface-muted">{newsletter.title}</h5>
+                <h2 className="text-sm font-medium text-on-surface-muted">{newsletter.title}</h2>
                 <p className="text-sm text-on-surface-muted">{newsletter.body}</p>
                 <form
                   className="flex items-center [&>*+*]:ml-2"
@@ -93,7 +95,7 @@ export function AtlasFooter({ brand, footer, credits }: Props) {
                     type="email"
                     name="email"
                     aria-label={newsletter.title}
-                    className="w-full rounded-lg border border-on-surface-muted/60 px-2 py-4 text-sm placeholder:text-on-surface-muted/80 focus:outline-none sm:rounded-md sm:py-3"
+                    className="w-full rounded-lg border border-on-surface-muted px-2 py-4 text-sm placeholder:text-on-surface-muted focus:outline-none sm:rounded-md sm:py-3"
                     placeholder={newsletter.placeholder}
                   />
                   <button

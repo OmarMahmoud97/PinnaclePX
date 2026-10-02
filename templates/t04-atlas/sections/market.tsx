@@ -55,6 +55,8 @@ function Sparkline({ data, up, id }: { data: readonly number[]; up: boolean; id:
 // chart from sm up; a rule between the tables from xl. Without tables the card carries three
 // columns of words with the same title row and rule, and no More link: the three would all
 // lead to the same reasons, and a reader would hear "More" beside each thing the business does.
+// The tables' column heads are the solid muted ink, not the source's 80%, which fell below AA
+// on derived light palettes.
 export function AtlasMarket({ market, glance }: Props) {
   const columns = market === null ? glance.columns : market.groups
   const more = market === null ? null : { label: market.more, href: glance.more.href }
@@ -88,13 +90,13 @@ export function AtlasMarket({ market, glance }: Props) {
                     <table className="min-w-full">
                       <thead>
                         <tr>
-                          <th className="text-left text-sm font-medium text-on-surface-muted/80">
+                          <th className="text-left text-sm font-medium text-on-surface-muted">
                             Name
                           </th>
-                          <th className="text-left text-sm font-medium text-on-surface-muted/80">
+                          <th className="text-left text-sm font-medium text-on-surface-muted">
                             Price
                           </th>
-                          <th className="hidden text-left text-sm font-medium text-on-surface-muted/80 sm:block">
+                          <th className="hidden text-left text-sm font-medium text-on-surface-muted sm:block">
                             Chart
                           </th>
                         </tr>

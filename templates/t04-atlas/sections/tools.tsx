@@ -40,7 +40,7 @@ export function AtlasTools({ tools }: Props) {
           </h2>
           {tools.items.map((item) => (
             <div key={item.title} className="[&>*+*]:mt-2">
-              <h4 className="text-lg font-medium">{item.title}</h4>
+              <h3 className="text-lg font-medium">{item.title}</h3>
               <p className={`${paragraph} text-sm xl:text-base`}>{item.body}</p>
             </div>
           ))}
