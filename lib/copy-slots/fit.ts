@@ -14,6 +14,15 @@ const JOINING_WORD =
 // Punctuation that joins, left at the end of a cut.
 const TRAILING_JOINERS = /[\s,;:]+$/
 
+// Marks that open and close an aside: brackets, and quotation marks by where they sit. A straight
+// quote opens at the start of a word and closes at its end, so the apostrophe in "we're" does
+// neither.
+const ASIDES = [
+  { open: /[([{]/g, close: /[)\]}]/g },
+  { open: /“|(?<![^\s([{])"/g, close: /[”"](?![\p{L}\p{N}])/gu },
+  { open: /‘|(?<![^\s([{])'/g, close: /[’'](?![\p{L}\p{N}])/gu },
+] as const
+
 function lastWord(text: string): string {
   return text.slice(text.lastIndexOf(' ') + 1)
 }
@@ -22,11 +31,17 @@ function endsOnJoiningWord(text: string): boolean {
   return JOINING_WORD.test(lastWord(text))
 }
 
-// Where a mark falls in the first `max` characters with a space or the text's end after it, so
-// the point in "4.9" is not a sentence end. Latest first.
-function breaksAt(text: string, max: number, mark: RegExp): number[] {
+// Whether a cut stops inside brackets or a quotation, leaving it open.
+function leavesOpen(text: string): boolean {
+  const count = (mark: RegExp) => text.match(mark)?.length ?? 0
+  return ASIDES.some(({ open, close }) => count(open) > count(close))
+}
+
+// Where a mark falls before index `end` with a space or the text's end after it, so the point in
+// "4.9" is not a sentence end. Latest first.
+function breaksAt(text: string, end: number, mark: RegExp): number[] {
   const at: number[] = []
-  for (const match of text.slice(0, max).matchAll(mark)) {
+  for (const match of text.slice(0, end).matchAll(mark)) {
     const next = text.charAt(match.index + 1)
     if (next === '' || /\s/.test(next)) at.push(match.index)
   }
@@ -35,17 +50,19 @@ function breaksAt(text: string, max: number, mark: RegExp): number[] {
 
 // Cuts to at most `max` characters where a phrase ends (decision 18). In order of preference: the
 // last sentence end; just before the last colon or semicolon; the last comma, which goes; the last
-// word boundary, with the joining words left at its end dropped. Each counts only while `min`
-// characters remain, and a clause only when it does not end on a joining word. When none does,
-// the cut stays at the last word boundary, or hard in a word longer than the slot, and the
-// fillers complete it.
+// word boundary, with the joining words left at its end dropped. A colon, semicolon or comma goes
+// with the cut, so it may fall just past the `max` characters. Each counts only while `min`
+// characters remain, and a clause only when it does not end on a joining word or inside brackets
+// or a quotation. When none does, the cut stays at the last word boundary, or hard in a word
+// longer than the slot, and the fillers complete it.
 function shorten(text: string, min: number, max: number): string {
   if (text.length <= max) return text
+  const before = (at: number) => text.slice(0, at).replace(TRAILING_JOINERS, '')
   const clause = [
     ...breaksAt(text, max, /[.!?]/g).map((at) => text.slice(0, at + 1)),
-    ...breaksAt(text, max, /[:;]/g).map((at) => text.slice(0, at).replace(TRAILING_JOINERS, '')),
-    ...breaksAt(text, max, /,/g).map((at) => text.slice(0, at).replace(TRAILING_JOINERS, '')),
-  ].find((cut) => cut.length >= min && !endsOnJoiningWord(cut))
+    ...breaksAt(text, max + 1, /[:;]/g).map(before),
+    ...breaksAt(text, max + 1, /,/g).map(before),
+  ].find((cut) => cut.length >= min && !endsOnJoiningWord(cut) && !leavesOpen(cut))
   if (clause !== undefined) return clause
   const head = text.slice(0, max)
   // The cut already falls between words when the next character is a space.

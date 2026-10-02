@@ -90,6 +90,35 @@ describe('fitToSlot, where a cut ends', () => {
     expect(fitToSlot(text, { min: 18, max: 40 }, FILLERS)).toBe('Wedding flowers and bouquets')
   })
 
+  it('takes a clause whose colon or comma falls just past the slot, since the mark goes', () => {
+    // Each clause is exactly the slot's maximum: Meridian's badge (10 to 44) with the electrician
+    // fixture, and a comma one character past a 26-character slot.
+    const colon =
+      'Domestic electrician covering York and Selby: rewires, consumer units, EV chargers and fault finding.'
+    expect(fitToSlot(colon, { min: 10, max: 44 }, FILLERS)).toBe(
+      'Domestic electrician covering York and Selby',
+    )
+    const comma = 'Garden design and planting, maintenance for homes in Leeds'
+    expect(fitToSlot(comma, { min: 10, max: 26 }, FILLERS)).toBe('Garden design and planting')
+  })
+
+  it('passes over a clause that would leave brackets or a quotation open', () => {
+    const brackets =
+      'Domestic plumbing and heating (gas, oil and LPG boilers) for homes across Leeds'
+    expect(fitToSlot(brackets, HEADLINE, FILLERS)).toBe(
+      'Domestic plumbing and heating (gas, oil and LPG boilers)',
+    )
+    // The apostrophe in "We're" neither opens nor closes the quotation.
+    const quote = "We're known for our 'fair price, no fuss' promise across Leeds and Bradford"
+    expect(fitToSlot(quote, { min: 10, max: 50 }, FILLERS)).toBe(
+      "We're known for our 'fair price, no fuss' promise",
+    )
+    const curly = 'Known for our “fair price, no fuss” promise across Leeds and Bradford'
+    expect(fitToSlot(curly, { min: 10, max: 40 }, FILLERS)).toBe(
+      'Known for our “fair price, no fuss”',
+    )
+  })
+
   it('ends at a comma, which goes, passing over one that follows a joining word', () => {
     const range = { min: 5, max: 40 }
     const text = 'Cakes, tarts and, on Sundays only, pies baked fresh every single morning'
