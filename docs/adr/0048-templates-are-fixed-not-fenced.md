@@ -93,8 +93,10 @@ The decisions, with their evidence, are in docs/template-fit-decisions.md, Part 
      An optional after-round of the owner's labels measures acceptance before and after.
    - No approved picture set for now.
 7. **Money.**
-   - No paid call before the owner reads production's key settings, and none before 1 November
-     unless the owner raises the organisation's monthly limit, which every workspace shares.
+   - No paid call before the owner reads production's key settings. On 2 October 2026 the owner
+     did, and gave the go-ahead with $11.44 available: passes 1 to 4 run now, one at a time within
+     their caps ($4.81 in all), leaving at least $6.63 for production. Passes 5 and 6 wait for
+     November.
    - Before each pass the owner reads the month's spend and gives the go-ahead. A pass starts only
      if that spend plus its cap leaves $10 of the limit: at most $20 of today's $30.
    - November's evals are capped at $7.50, a pass at a time.

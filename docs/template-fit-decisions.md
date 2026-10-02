@@ -99,7 +99,7 @@ Code paths are at origin/main 11940ad.
 - **Words over a photograph must pass over any picture,** not just the stored ones.
 - **Machinery that cannot change a page waits until it can.** The category step and the tiers are built when the owner's first label could change a pick. No shortfall path and no category column are built: the category is worked out, never stored (decision 3), and the shortfall question returns with the visit-cap work (decision 4).
 - **Photograph rules ship in a set order.** Designed empty states come first, then "never unjudged" one slot class at a time, then a floor only once it is calibrated.
-- **No paid call before 1 November**, unless the owner first raises the organisation's monthly limit, which every workspace shares. After that, paid passes go one change at a time, each capped, and each starts on the owner's go-ahead once they have read the month's spend.
+- **Paid passes 1 to 4 run now, on the owner's go-ahead of 2 October 2026.** $11.44 is available on the console. They go one change at a time, each capped ($4.81 for all four), which leaves at least $6.63, about 49 submissions, for production. Passes 5 and 6 wait for November and their own go-ahead.
 - **Labelling becomes optional and capped.** A core round of about 70 minutes (an estimate) plus optional picture samples. Every visible fix ships without it.
 
 **What happens next.** Phase 2 starts now from origin/main as pull requests:
@@ -497,7 +497,7 @@ Three principles replace the phase gates of the brief (brief:18) and of the plan
   - Both are costed at two views of 10 s each, as the core round is (estimates).
   - The other range pages, the look pages and the stress pages, all capped.
 
-### Paid passes: from 1 November
+### Paid passes: 1 to 4 now, on the owner's go-ahead; 5 and 6 from November
 
 Each pass runs one change at a time, so its effect can be measured, and each is capped (decision 10). In this order:
 
@@ -810,6 +810,12 @@ Picture acceptance follows decision 7.
 
 **No paid pass runs before the owner has answered Part 5's first item.** None runs in October unless the owner raises the organisation's monthly limit: the organisation has spent about $28 of its $30 (docs/pipeline-quality-plan.md:77), so no pass fits under the $10 reserve below. A spend limit on production's own workspace would not change that: the $30 limit is the organisation's (ADR 0044:28), and a workspace's own limit sits inside it.
 
+**Answered on 2 October 2026.** The owner gave the go-ahead: $11.44 is available on the console, ANTHROPIC_WORKSPACE_ID is set on Vercel, and production's Pexels key is the eval's. Production is taken to draw on the same balance.
+
+- **October.** Passes 1 to 4 run, one at a time, each within its cap ($4.81 for all four), which leaves at least $6.63 for production: about 49 submissions at $0.135, or 28 at the $0.235 maximum. If the organisation's $30 monthly limit still applies (about $28 was spent by 1 October), the API refuses calls once it is reached, and refused calls cost nothing; the pass then stops and the owner is told.
+- **From November.** The $10 reserve below applies again, and passes 5 and 6 wait for their prerequisites and their own go-ahead.
+- **Pexels.** The key is shared, so no eval sends more than 100 requests in an hour, and the probes may now run.
+
 **Before each paid pass, the owner reads the organisation's month-to-date spend and gives the go-ahead on the pass's row of the table below (brief:20).** A pass starts only if that spend plus the pass's cap leaves at least $10 of the organisation's monthly limit: at most $20 of today's $30 (a proposal). That $10 is for visitors and the organisation's other project together: about 74 submissions at $0.135, about 51 once Phase 4 adds its median cost, and about 44 at its most. Also recommended: give the eval key a workspace of its own with a monthly spend limit, so the API enforces the eval's budget. The spend check still runs, because that workspace shares the organisation's limit.
 
 **November's eval budget is $7.50 (a proposal).** A pass starts only if the month's eval spend so far, plus its cap, fits within it; a pass that does not fit waits for December. The eval's spend stop (EVAL_MAX_USD) is set to each pass's cap.
@@ -828,7 +834,7 @@ Picture acceptance follows decision 7.
   - Pass 4 runs as one eval with EVAL_MAX_USD at $1.78. Its 18 cells alone passed $1.00 in 0.1% of bootstrap draws (review/evidence/cap-risk.cjs). The own-photograph fixture's two extra variants re-run only the rank stage, about $0.01 each at l6's rank cost a submission (test-results/eval/l6-all-fixes/summary.md).
   - Pass 5 is the decided spec on the model of review2/verify-critic-coherence/spec-cost.cjs over the 20 l6 sets, $3.86 to $3.90.
   - Pass 6 is 40 rank calls at l6's $0.00624. The second crops it sends are not priced, so its cap is twice its estimate (a proposal).
-- **What fits in November.** Passes 1 to 4 ($4.81 at their caps). Pass 5 cannot follow them within November's $7.50 (their estimates, $3.70, plus its $5.07 cap), so it runs in December at the earliest. It needs no labels. Pass 6 waits for the picture samples' labels.
+- **When they run.** Passes 1 to 4 now, on the owner's go-ahead ($4.81 at their caps). Pass 5 from November, within November's $7.50, once class-aware judging is built; it needs no labels. Pass 6 waits for the picture samples' labels.
 
 **Ceilings per submission.**
 
@@ -1092,7 +1098,7 @@ Already untrue or open, and outside this change. The first is in the questionnai
    - **In the Vercel project's Production environment variables:** whether ANTHROPIC_WORKSPACE_ID is set, if production's key needs it (lib/ai/client.ts:13-15).
    - **Pexels:** whether production's PEXELS_API_KEY is the eval's.
 
-   Until then nothing is spent.
+   **Answered on 2 October 2026:** $11.44 is available on the console, ANTHROPIC_WORKSPACE_ID is set on Vercel, and production's Pexels key is the eval's. The owner said to go ahead, so passes 1 to 4 run now within their caps (decision 10).
 
 2. **Merge the pull requests.** Each lands as one squashed commit. To drop part of one, name the commit in a review comment and it is removed before merge. Two commits are flagged for this: the ask rule's mail to the page's own address (decision 15) and the stock fill for the slots a visitor's own photographs leave (decision 7a).
 3. **Optional labelling,** once the sheet exists. The core round is about 70 minutes, an estimate, and the first ten pages are timed. The picture samples (about 70 minutes more) and Phase 4's after-round (about 8 minutes per 100 pictures) are optional.
