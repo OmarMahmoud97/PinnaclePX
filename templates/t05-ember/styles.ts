@@ -25,6 +25,16 @@ export const pill =
 // The dark square button that opens and closes the phone sheet.
 export const menuButton = 'aspect-square rounded-md bg-on-surface/85 p-2 text-surface'
 
+// The page surface behind the hero's words over a photograph, and under the header's at the top of
+// it (hero.tsx). Each is blurred so it fades out with no edge, and reaches twice the blur past its
+// words, so under them it keeps all but a few hundredths of its strength and most of the
+// photograph stays clear. Each is the lightest that meets decision 7 over any picture, pure white
+// or pure black, in both schemes: at 65 percent on-surface keeps 4.5:1 (at 60 it falls to 4.4:1),
+// and at 75 percent a logo at either end of its polarity keeps 3:1 (at 70 a light one falls to
+// 2.85:1).
+export const veil = 'bg-surface/65 blur-[30px]'
+export const headerVeil = 'bg-surface/75 blur-[30px]'
+
 // The coloured uppercase line over a section's heading, and the heading under it.
 export const eyebrow = 'font-medium text-brand-deeper uppercase'
 export const heading = 'text-4xl md:text-5xl'
