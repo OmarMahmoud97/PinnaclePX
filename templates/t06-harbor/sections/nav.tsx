@@ -1,7 +1,7 @@
 'use client'
 
 import { Menu, X } from 'lucide-react'
-import { type CSSProperties, useEffect, useRef, useState } from 'react'
+import { type CSSProperties, type MouseEvent, useEffect, useRef, useState } from 'react'
 import type { HarborContent } from '../copy-slots'
 import { textEms } from '../fit'
 import { container, motion } from '../styles'
@@ -60,9 +60,10 @@ function twoLines(name: string): number {
 // the source's delays, and it fades out before it goes. Escape closes it. The source showed two
 // close marks while the overlay was open, its toggle's over the overlay's own; here the toggle
 // hides and the overlay's close mark, which arrives with it, is the one control. The bar stays
-// above the overlay so the logo shows, but lets clicks through to that mark. However the
-// overlay closes, by Escape, its close mark or a link, focus goes back to the toggle, which
-// the source left on the page's body.
+// above the overlay so the logo shows, but lets clicks through to that mark. The source left
+// focus on the page's body however the overlay closed. Here, closed by Escape or its close
+// mark, focus goes back to the toggle; when a link is chosen, focus goes to the block it leads
+// to, so a keyboard's next Tab carries on from there rather than from the top of the page.
 //
 // From md to past lg the source's links, button and name wrapped inside themselves and ran
 // past the bar, so here the links and the button show from the first of lg, xl and 2xl whose
@@ -78,6 +79,8 @@ export function HarborNav({ brand, nav }: Props) {
   // Whether the overlay has been open, so focus returns when it closes but not on the first
   // render.
   const wasOpen = useRef(false)
+  // The block a link chosen in the overlay leads to, which takes focus once the overlay has gone.
+  const chosen = useRef<string | null>(null)
   const bar = BARS.find((option) => barWidth({ brand, nav }, option.gap) <= option.room)
   const show = bar?.show ?? ''
   const hide = bar?.hide ?? ''
@@ -108,9 +111,17 @@ export function HarborNav({ brand, nav }: Props) {
     setClosing(true)
   }
 
+  // A link chosen in the overlay closes it and records the block its address leads to.
+  const follow = (event: MouseEvent<HTMLAnchorElement>) => {
+    const href = event.currentTarget.getAttribute('href') ?? ''
+    chosen.current = href.startsWith('#') ? href.slice(1) : null
+    close()
+  }
+
   // The toggle is hidden while the overlay shows, so focus can go back to it only once the
   // overlay has gone and the toggle is drawn again. A link's jump has already scrolled the page
-  // by then, so the focus leaves the scroll where it is.
+  // by then, so the focus leaves the scroll where it is. A block is not a control, so it holds
+  // focus only until focus moves on (harbor.css draws it no ring).
   useEffect(() => {
     if (open) {
       wasOpen.current = true
@@ -118,7 +129,23 @@ export function HarborNav({ brand, nav }: Props) {
     }
     if (!wasOpen.current) return
     wasOpen.current = false
-    toggleRef.current?.focus({ preventScroll: true })
+    const block = chosen.current === null ? null : document.getElementById(chosen.current)
+    chosen.current = null
+    if (block === null) {
+      toggleRef.current?.focus({ preventScroll: true })
+      return
+    }
+    if (!block.hasAttribute('tabindex')) {
+      block.setAttribute('tabindex', '-1')
+      block.addEventListener(
+        'blur',
+        () => {
+          block.removeAttribute('tabindex')
+        },
+        { once: true },
+      )
+    }
+    block.focus({ preventScroll: true })
   }, [open])
 
   useEffect(() => {
@@ -210,7 +237,7 @@ export function HarborNav({ brand, nav }: Props) {
             >
               <a
                 href={link.href}
-                onClick={close}
+                onClick={follow}
                 className="font-display text-3xl font-black tracking-widest text-on-surface uppercase transition-colors hover:text-brand-deeper"
               >
                 {link.label}
@@ -219,7 +246,7 @@ export function HarborNav({ brand, nav }: Props) {
           ))}
           <a
             href={nav.cta.href}
-            onClick={close}
+            onClick={follow}
             className="mt-4 rounded-full bg-brand-deeper px-8 py-3 font-display text-lg font-bold tracking-wider text-on-brand uppercase transition-[opacity,translate] duration-300 starting:translate-y-5 starting:opacity-0"
             style={stagger(nav.links.length)}
           >
