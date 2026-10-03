@@ -1,4 +1,4 @@
-import { fitWord, textEms } from './fit'
+import { fitWord, longestWord, textEms } from './fit'
 
 describe('monolith fit', () => {
   it('adds up a word from the widest face of each character', () => {
@@ -25,5 +25,11 @@ describe('monolith fit', () => {
       '--monolith-word': textEms('Independent').toFixed(2),
     })
     expect(fitWord([''])).toEqual({ '--monolith-word': '1.00' })
+  })
+
+  it('counts a hyphenated word whole, or by its parts where the text may break after a hyphen', () => {
+    expect(longestWord(['End-Of-Tenancy'])).toBeCloseTo(textEms('End-Of-Tenancy'))
+    expect(longestWord(['End-Of-Tenancy'], true)).toBeCloseTo(textEms('Tenancy'))
+    expect(longestWord(['Get in touch', 'Eco-friendly'], true)).toBeCloseTo(textEms('friendly'))
   })
 })
