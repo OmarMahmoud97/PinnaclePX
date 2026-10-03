@@ -17,11 +17,11 @@ const LABEL = 'mb-2 block text-xs font-semibold tracking-wider text-on-surface-m
 // in from the right, a card with the eyebrow, a heading (at the source's sizes, smaller only
 // where its longest word would not fit the card, fit.ts), a line and the form: name and email
 // side by side from sm, a message, and a round accent button. Both headings fit their own
-// column the same way. The source posted the form to a
-// form service under a placeholder id and showed a toast; here it posts to the owner's email
-// as a mail message when it is known, and otherwise leads to the page's ask. The source's
-// hints named one made-up person on every page; these are plain. The name and email fields
-// let the browser fill them in.
+// column the same way. The source posted the form to a form service under a placeholder id
+// and showed a toast; here it posts to the owner's email as a mail message when it is known,
+// and otherwise leads to the page's ask. The source's hints named one made-up person on every
+// page; these are plain. The name and email fields let the browser fill them in; the message
+// is the visitor's own words, so it says the browser has nothing to fill (autocomplete off).
 export function HarborContact({ contact }: Props) {
   const { form } = contact
   const { email } = form
@@ -125,6 +125,7 @@ export function HarborContact({ contact }: Props) {
                   <textarea
                     id="harbor-message"
                     name="message"
+                    autoComplete="off"
                     required
                     rows={5}
                     placeholder={form.placeholder}
