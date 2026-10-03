@@ -118,7 +118,19 @@ describe('assembleAurora', () => {
       '#how-it-works',
       '#why',
     ])
-    expect(content.cta.action.href).toBe('#start')
+    expect(content.cta.action.href).toBe('#top')
     expect(content.footer.groups[1]?.links[1]?.href).toBe('#top')
+  })
+
+  it('leads every ask to the closing band, whose button mails the page email under its label', () => {
+    const content = assembleAurora(
+      { ...copy, cta: { ...copy.cta, action: 'Book a visit & a chat' } },
+      { logo: { kind: 'wordmark' }, images: {}, email: 'owner@example.com' },
+    )
+    expect(content.nav.cta.href).toBe('#start')
+    expect(content.hero.primary.href).toBe('#start')
+    expect(content.cta.action.href).toBe(
+      'mailto:owner@example.com?subject=Book%20a%20visit%20%26%20a%20chat',
+    )
   })
 })

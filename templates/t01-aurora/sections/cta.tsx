@@ -4,8 +4,9 @@ import { AuroraField } from './aurora-field'
 
 type Props = Pick<AuroraContent, 'cta'>
 
-// The closing ask, in a panel lit from below by the same light as the hero, so the page ends
-// where it began.
+// The closing ask, where every other ask on the page leads, in a panel lit from below by the
+// same light as the hero, so the page ends where it began. Its button opens a mail to the page's
+// email (contract.ts).
 export function AuroraCta({ cta }: Props) {
   return (
     <section id="start" className="border-t border-border py-section">

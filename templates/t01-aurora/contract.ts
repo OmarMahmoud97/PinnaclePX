@@ -16,7 +16,8 @@ import { meta } from './meta'
 // Aurora's side of the pipeline contract: the copy the copy stage writes, the fallback when it
 // cannot, and how copy and assets become the content object the component renders. Links are
 // never written: the nav follows the page's sections in order, and every other link points at
-// one of the page's own anchors.
+// one of the page's own anchors, but for the closing button, which opens a mail to the page's
+// email when there is one.
 
 // Where a link may point. The model chooses one of these names for a footer link; code owns
 // the anchor, so a template link never leaves the page.
@@ -137,6 +138,12 @@ function triple<T>(items: readonly T[]): Three<T> {
 }
 
 export function assembleAurora(copy: AuroraCopy, assets: TemplateAssets): AuroraContent {
+  // Every ask leads to the closing band, whose own button opens a mail to the page's email with
+  // its label as the subject (decision 15). A visitor's page always has an email; with none, as
+  // in validation, the button leads to the top.
+  const { email } = assets
+  const mail =
+    email === null ? HREF.top : `mailto:${email}?subject=${encodeURIComponent(copy.cta.action)}`
   return {
     brand: { ...copy.brand, logo: assets.logo },
     nav: {
@@ -161,7 +168,7 @@ export function assembleAurora(copy: AuroraCopy, assets: TemplateAssets): Aurora
     cta: {
       headline: copy.cta.headline,
       body: copy.cta.body,
-      action: { label: copy.cta.action, href: HREF.start },
+      action: { label: copy.cta.action, href: mail },
       reassurance: copy.cta.reassurance,
     },
     footer: {

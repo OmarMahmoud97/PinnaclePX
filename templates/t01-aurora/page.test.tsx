@@ -49,4 +49,17 @@ describe('the Aurora page', () => {
     expect(motif).not.toContain('h-5 w-9')
     expect(motif).not.toContain('translate-x-4')
   })
+
+  it('opens a mail from the closing band alone, under its button label', () => {
+    const closing = between(html, 'id="start"', '</section>')
+    const mail = `mailto:owner@example.com?subject=${encodeURIComponent('Get in touch')}`
+    expect([...html.matchAll(/href="(mailto:[^"]+)"/g)].map((m) => m[1])).toEqual([mail])
+    expect(closing).toContain(`href="${mail}"`)
+  })
+
+  it('leads the closing button to the top when no email is known', () => {
+    const closing = between(page(null), 'id="start"', '</section>')
+    expect(closing).toContain('href="#top"')
+    expect(closing).not.toContain('mailto:')
+  })
 })
