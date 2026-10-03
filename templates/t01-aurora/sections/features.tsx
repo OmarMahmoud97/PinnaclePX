@@ -4,8 +4,9 @@ import { AuroraField } from './aurora-field'
 
 type Props = Pick<AuroraContent, 'features'>
 
-// Three rows of a list, two done and one waiting: the shape of work getting done, in no
-// language, so it belongs to any product. Drawn from tokens.
+// Three rows of a list, two ticked and one waiting: the shape of work getting done, in no
+// language, so it belongs to any business. Drawn from tokens, with no switch or other control
+// of an app.
 function RowsMotif() {
   const rows = [
     { width: 'w-3/5', done: true },
@@ -29,13 +30,6 @@ function RowsMotif() {
             )}
           </span>
           <span className={`h-2 ${width} rounded-full bg-on-surface/15`} />
-          <span
-            className={`ml-auto h-5 w-9 shrink-0 rounded-full p-0.5 ${done ? 'bg-brand-deeper' : 'bg-on-surface/15'}`}
-          >
-            <span
-              className={`block size-4 rounded-full ${done ? 'translate-x-4 bg-on-brand' : 'bg-surface'}`}
-            />
-          </span>
         </div>
       ))}
     </div>
