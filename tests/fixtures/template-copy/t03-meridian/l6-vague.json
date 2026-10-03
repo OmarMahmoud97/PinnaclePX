@@ -1,0 +1,204 @@
+{
+  "source": "l6-all-fixes/vague",
+  "answers": {
+    "description": "We help people with things around the house and garden, all sorts really, just give us a ring.",
+    "company": "Dave and Sons",
+    "logo": {
+      "kind": "wordmark"
+    },
+    "imagery": {
+      "style": "warm",
+      "photos": []
+    },
+    "colours": {
+      "kind": "palette",
+      "paletteId": "clay"
+    }
+  },
+  "chosen": ["t07-summit", "t03-meridian", "t04-atlas"],
+  "ctaLabel": "Give us a ring",
+  "copy": {
+    "brand": {
+      "name": "Dave and Sons",
+      "legalName": "Dave and Sons"
+    },
+    "nav": {
+      "links": ["Why us", "Services", "Contact", "Questions"],
+      "cta": "Give us a ring",
+      "menu": {
+        "label": "What we do",
+        "items": [
+          {
+            "title": "All sorts of jobs",
+            "body": "From little fixes to bigger tasks, we help with all sorts."
+          },
+          {
+            "title": "House and garden",
+            "body": "Whatever needs doing indoors or out, we're happy to help."
+          },
+          {
+            "title": "Easy to reach",
+            "body": "Just give us a ring and we'll have a chat about it."
+          }
+        ]
+      }
+    },
+    "hero": {
+      "badge": {
+        "label": "Hello",
+        "text": "A friendly hand, house and garden"
+      },
+      "headline": {
+        "text": "A friendly hand for house and garden jobs",
+        "emphasis": "friendly hand"
+      },
+      "subhead": "We help homeowners with all sorts of jobs around the house and garden, big or small.",
+      "primary": "Give us a ring",
+      "secondary": "See what we do"
+    },
+    "sponsors": {
+      "heading": "What we cover",
+      "items": ["House jobs", "Garden jobs", "Little fixes", "Bigger tasks", "Indoors", "Outdoors"]
+    },
+    "benefits": {
+      "eyebrow": "Benefits",
+      "heading": "Why people call Dave and Sons",
+      "lead": "We just like helping people sort things out around their house and garden. No job too small or complicated.",
+      "items": [
+        {
+          "title": "All sorts of jobs",
+          "body": "From little fixes to bigger tasks, we help with all sorts around the house and garden."
+        },
+        {
+          "title": "Easy to reach",
+          "body": "No need for anything complicated, just give us a ring and we'll have a chat."
+        },
+        {
+          "title": "House and garden covered",
+          "body": "Whatever needs doing indoors or out, we're happy to take a look and help out."
+        },
+        {
+          "title": "Happy to help",
+          "body": "We just like helping people sort things out around their house and garden."
+        }
+      ]
+    },
+    "features": {
+      "eyebrow": "What we do",
+      "heading": "Jobs around the house and garden",
+      "lead": "Whatever needs doing, indoors or out, we're happy to take a look.",
+      "items": [
+        {
+          "title": "Little fixes",
+          "body": "Small jobs that need sorting, we're happy to come round and help."
+        },
+        {
+          "title": "Bigger tasks",
+          "body": "Larger jobs around the house and garden, we'll work out how to help."
+        },
+        {
+          "title": "Indoor jobs",
+          "body": "Whatever needs doing inside your home, just give us a call."
+        }
+      ]
+    },
+    "services": {
+      "eyebrow": "Services",
+      "heading": "House and garden help",
+      "lead": "Just give us a ring and we'll have a chat about what needs doing.",
+      "items": [
+        {
+          "title": "Around the house",
+          "body": "We help with all sorts of jobs around your home."
+        },
+        {
+          "title": "Around the garden",
+          "body": "We help with all sorts of jobs around your garden."
+        }
+      ]
+    },
+    "community": {
+      "heading": {
+        "text": "Give us a ring and let's talk",
+        "emphasis": "let's talk"
+      },
+      "body": "We just like helping people sort things out around their house and garden.",
+      "action": "Give us a ring"
+    },
+    "contact": {
+      "eyebrow": "Contact",
+      "heading": "Get in touch",
+      "lead": "Give us a ring and tell us what needs doing, big or small.",
+      "rows": [
+        {
+          "title": "Give us a ring",
+          "lines": ["Call us and tell us what needs doing."]
+        },
+        {
+          "title": "We talk it through",
+          "lines": ["We'll have a chat and work out how to help."]
+        },
+        {
+          "title": "We get it sorted",
+          "lines": ["We come round and get the job done."]
+        }
+      ],
+      "form": {
+        "subjects": ["House job", "Garden job", "Something else"],
+        "button": "Send message"
+      }
+    },
+    "faq": {
+      "eyebrow": "FAQ",
+      "heading": "Common questions",
+      "items": [
+        {
+          "question": "What kind of jobs do you help with?",
+          "answer": "All sorts, from little fixes to bigger tasks, around the house and garden."
+        },
+        {
+          "question": "How do I get in touch?",
+          "answer": "Just give us a ring and we'll have a chat about what you need."
+        },
+        {
+          "question": "Do you do garden jobs as well as house jobs?",
+          "answer": "Yes, whatever needs doing indoors or out, we're happy to take a look."
+        }
+      ]
+    },
+    "footer": {
+      "groups": [
+        {
+          "heading": "Explore",
+          "links": [
+            {
+              "label": "Why us",
+              "target": "benefits"
+            },
+            {
+              "label": "Services",
+              "target": "services"
+            },
+            {
+              "label": "Questions",
+              "target": "faq"
+            }
+          ]
+        },
+        {
+          "heading": "Get in touch",
+          "links": [
+            {
+              "label": "Contact",
+              "target": "contact"
+            },
+            {
+              "label": "Back to top",
+              "target": "top"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

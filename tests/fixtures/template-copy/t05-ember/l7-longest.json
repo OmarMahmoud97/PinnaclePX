@@ -1,0 +1,189 @@
+{
+  "source": "l7-sentence/longest",
+  "answers": {
+    "description": "Fenwick Associates is a two-person management consultancy in Durham that helps owner-managed firms get ready to sell, or to hand over to the next generation. We start with a plain review of how the business runs, then stay alongside the owners through valuation, tidying up the paperwork, finding the right buyer and the first year after the deal. Most of our work comes from accountants who know us.",
+    "company": "Fenwick Associates",
+    "logo": {
+      "kind": "wordmark"
+    },
+    "imagery": {
+      "style": "dark",
+      "photos": []
+    },
+    "colours": {
+      "kind": "palette",
+      "paletteId": "plum"
+    }
+  },
+  "chosen": ["t03-meridian", "t07-summit", "t05-ember"],
+  "ctaLabel": "Get in touch",
+  "copy": {
+    "brand": {
+      "name": "Fenwick Associates",
+      "legalName": "Fenwick Associates"
+    },
+    "nav": {
+      "links": ["About", "Services", "Durham", "FAQs"],
+      "cta": "Get in touch"
+    },
+    "hero": {
+      "eyebrow": "GET READY FOR WHAT COMES NEXT",
+      "headline": "Ready your business for its next chapter",
+      "subhead": "We help owner-managed firms in Durham get ready to sell, or hand over to the next generation.",
+      "cta": "Get in touch"
+    },
+    "about": {
+      "eyebrow": "How we work",
+      "heading": "A two-person consultancy that stays close to you",
+      "body": "Fenwick Associates is a two-person management consultancy in Durham, working closely with owner-managers."
+    },
+    "stats": [
+      {
+        "title": "Plain review first",
+        "body": "We start with a plain review of how your business runs, before anything else."
+      },
+      {
+        "title": "Alongside you",
+        "body": "We stay alongside owners through valuation, paperwork and finding the right buyer."
+      },
+      {
+        "title": "Support after the deal",
+        "body": "We stay involved through the first year after the deal, not just up to it."
+      }
+    ],
+    "dishes": {
+      "eyebrow": "What we help with",
+      "heading": "Getting your business ready",
+      "items": [
+        {
+          "title": "Plain review",
+          "note": "How it runs"
+        },
+        {
+          "title": "Valuation",
+          "note": "What it's worth"
+        },
+        {
+          "title": "Paperwork",
+          "note": "Getting things tidy"
+        },
+        {
+          "title": "Finding a buyer",
+          "note": "Or a successor"
+        }
+      ]
+    },
+    "features": {
+      "eyebrow": "What sets us apart",
+      "heading": "Steady guidance, start to finish",
+      "items": [
+        {
+          "title": "Small and hands-on",
+          "body": "We're a two-person firm, so you always deal directly with us, not a team of strangers."
+        },
+        {
+          "title": "Known to accountants",
+          "body": "Most of our work comes from accountants who know us and recommend us to their clients."
+        },
+        {
+          "title": "There for the whole journey",
+          "body": "We stay with owners from the first review through to the first year after the deal."
+        }
+      ]
+    },
+    "booking": {
+      "eyebrow": "How it works",
+      "heading": "Three steps, start to finish",
+      "steps": [
+        {
+          "title": "Initial conversation",
+          "body": "We talk through your situation and what selling or handing over might look like for you."
+        },
+        {
+          "title": "Plain business review",
+          "body": "We look closely at how the business runs today, so we know where to focus next."
+        },
+        {
+          "title": "Ongoing support",
+          "body": "We stay alongside you through valuation, paperwork, finding a buyer and the year after."
+        }
+      ]
+    },
+    "timing": {
+      "title": "Based in Durham",
+      "body": "Get in touch for a plain conversation about selling or handing over your business.",
+      "cta": "Get in touch"
+    },
+    "faq": {
+      "eyebrow": "FAQs",
+      "heading": "Frequently asked questions",
+      "items": [
+        {
+          "question": "What does Fenwick Associates actually do?",
+          "answer": "We help owner-managed firms get ready to sell, or hand over to the next generation."
+        },
+        {
+          "question": "Where are you based?",
+          "answer": "We're a two-person management consultancy based in Durham."
+        },
+        {
+          "question": "How do you start working with a business?",
+          "answer": "We start with a plain review of how the business runs, before anything else."
+        },
+        {
+          "question": "Do you help after the deal is done?",
+          "answer": "Yes, we stay alongside owners through the first year after the deal."
+        },
+        {
+          "question": "How do most clients find you?",
+          "answer": "Most of our work comes from accountants who already know us."
+        }
+      ]
+    },
+    "cta": {
+      "heading": "Thinking about selling or handing over?",
+      "body": "Get in touch for a plain conversation about what comes next.",
+      "button": "Get in touch"
+    },
+    "footer": {
+      "description": "Fenwick Associates is a two-person management consultancy in Durham helping owners prepare to sell or hand over.",
+      "groups": [
+        {
+          "heading": "Explore",
+          "links": [
+            {
+              "label": "About",
+              "target": "about"
+            },
+            {
+              "label": "Services",
+              "target": "dishes"
+            },
+            {
+              "label": "Process",
+              "target": "booking-process"
+            },
+            {
+              "label": "FAQs",
+              "target": "faq"
+            }
+          ]
+        },
+        {
+          "heading": "Company",
+          "links": [
+            {
+              "label": "Durham",
+              "target": "timing"
+            },
+            {
+              "label": "Get in touch",
+              "target": "cta"
+            }
+          ]
+        }
+      ],
+      "contact": "Get in touch"
+    }
+  }
+}

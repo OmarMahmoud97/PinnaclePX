@@ -1,0 +1,241 @@
+{
+  "source": "l6-all-fixes/dentist-claims",
+  "answers": {
+    "description": "Rated 4.9 on Google by over 300 patients, we have been the number one family dentist in Harrogate since 1998. Two surgeries, 0% finance on treatment over £500, open 7 days a week from 8am to 8pm, award-winning hygienists and a 10 year guarantee on crowns.",
+    "company": "Oakfield Dental Practice",
+    "logo": {
+      "kind": "wordmark"
+    },
+    "imagery": {
+      "style": "bold",
+      "photos": []
+    },
+    "colours": {
+      "kind": "custom",
+      "hex": "#0e7490"
+    }
+  },
+  "chosen": ["t01-aurora", "t08-vector", "t02-monolith"],
+  "ctaLabel": "Book a visit",
+  "copy": {
+    "brand": {
+      "name": "Oakfield Dental Practice",
+      "legalName": "Oakfield Dental Practice"
+    },
+    "nav": {
+      "links": ["What We Do", "About", "How It Works", "Questions"],
+      "cta": "Book a visit"
+    },
+    "hero": {
+      "headline": {
+        "text": "Your family dentist, open every day of the week",
+        "first": "family dentist",
+        "second": "every day"
+      },
+      "subhead": "A family dentist in Harrogate, open every day for your dental care. Book a visit whenever it suits you.",
+      "primary": "Book a visit",
+      "secondary": "See how it works",
+      "cards": {
+        "quote": {
+          "text": "We set up Oakfield to give Harrogate families a dentist they can see any day of the week.",
+          "role": "Why we started"
+        },
+        "profile": {
+          "role": "For local families",
+          "body": "Come along for a check-up, treatment or hygiene visit, whenever suits you."
+        },
+        "plan": {
+          "title": "What you get",
+          "badge": "Included",
+          "body": "Everything you need from a family dentist, open across the week.",
+          "action": "Book a visit",
+          "points": ["Open seven days", "Two surgeries", "Flexible appointments"]
+        },
+        "service": {
+          "title": "Open Every Day",
+          "body": "We open seven days a week, from 8am to 8pm, so you can book a visit when it suits you."
+        }
+      }
+    },
+    "sponsors": {
+      "heading": "What we cover",
+      "items": ["Check-ups", "Hygiene visits", "Treatment", "Family dental care"]
+    },
+    "about": {
+      "heading": {
+        "text": "About Oakfield Dental Practice",
+        "emphasis": "Oakfield"
+      },
+      "body": "We set up Oakfield to give Harrogate families a dentist they can see any day of the week. We run two surgeries, open seven days, with flexible appointments to fit around your family.",
+      "highlights": [
+        {
+          "value": "Open daily",
+          "label": "every day of the week"
+        },
+        {
+          "value": "Two surgeries",
+          "label": "ready for your visit"
+        },
+        {
+          "value": "Flexible finance",
+          "label": "for larger treatment"
+        },
+        {
+          "value": "Trusted hygiene",
+          "label": "caring for your smile"
+        }
+      ]
+    },
+    "steps": {
+      "heading": {
+        "text": "How it works, from first call to ongoing care",
+        "emphasis": "How it works"
+      },
+      "lead": "Getting started with Oakfield is simple, whatever your family needs.",
+      "items": [
+        {
+          "title": "Get In Touch",
+          "body": "Contact our practice by phone or online to ask about an appointment that suits you."
+        },
+        {
+          "title": "Visit The Practice",
+          "body": "Come along to one of our two surgeries for your check-up, treatment or hygiene visit."
+        },
+        {
+          "title": "Ongoing Care",
+          "body": "We look after your dental health over time, with flexible appointments across the week."
+        },
+        {
+          "title": "Book Again",
+          "body": "Get in touch whenever you need us, any day of the week, for your next visit."
+        }
+      ]
+    },
+    "features": {
+      "heading": {
+        "text": "Dental care built around your family",
+        "emphasis": "your family"
+      },
+      "tags": [
+        "Open seven days",
+        "Two surgeries",
+        "Flexible finance",
+        "Hygienist visits",
+        "Check-ups",
+        "Treatment"
+      ],
+      "items": [
+        {
+          "title": "Open Every Day",
+          "body": "We open seven days a week, from 8am to 8pm, so you can book a visit when it suits you."
+        },
+        {
+          "title": "Flexible Payment",
+          "body": "We offer 0% finance on treatment over £500, making larger dental work easier to plan for."
+        },
+        {
+          "title": "Trusted Hygienists",
+          "body": "Our hygienists bring care and attention to every visit, helping you look after your smile."
+        }
+      ]
+    },
+    "services": {
+      "heading": {
+        "text": "Dental care in Harrogate, for your family",
+        "emphasis": "your family"
+      },
+      "lead": "Two surgeries, open seven days, ready for your visit whenever you need us.",
+      "items": [
+        {
+          "title": "Family Check-ups",
+          "body": "Come along to one of our two surgeries for your check-up, whenever suits your family."
+        },
+        {
+          "title": "Dental Treatment",
+          "body": "We offer flexible finance on larger treatment, making dental work easier to plan for."
+        },
+        {
+          "title": "Hygiene Visits",
+          "body": "Our hygienists bring care and attention to every visit, helping you look after your smile."
+        }
+      ]
+    },
+    "cta": {
+      "heading": {
+        "text": "Ready to book your family's next visit?",
+        "emphasis": "Ready"
+      },
+      "body": "We're open every day of the week, so get in touch whenever it suits you.",
+      "primary": "Book a visit",
+      "secondary": "What we do"
+    },
+    "faq": {
+      "heading": {
+        "text": "Frequently asked questions",
+        "emphasis": "Frequently"
+      },
+      "items": [
+        {
+          "question": "Are you open every day?",
+          "answer": "Yes, we open seven days a week, from 8am to 8pm, so you can book a visit when it suits you."
+        },
+        {
+          "question": "Do you offer payment plans?",
+          "answer": "We offer 0% finance on treatment over £500, making larger dental work easier to plan for."
+        },
+        {
+          "question": "Where are your surgeries?",
+          "answer": "We have two surgeries in Harrogate, both ready for your check-up, treatment or hygiene visit."
+        },
+        {
+          "question": "Do you see families?",
+          "answer": "Yes, we're a family dentist in Harrogate, set up to give families a dentist they can see any day."
+        },
+        {
+          "question": "What does a hygiene visit involve?",
+          "answer": "Our hygienists bring care and attention to every visit, helping you look after your smile."
+        }
+      ],
+      "prompt": "Still have questions?",
+      "link": "Contact us"
+    },
+    "footer": {
+      "groups": [
+        {
+          "heading": "Practice",
+          "links": [
+            {
+              "label": "What We Do",
+              "target": "features"
+            },
+            {
+              "label": "About Us",
+              "target": "about"
+            },
+            {
+              "label": "Services",
+              "target": "services"
+            }
+          ]
+        },
+        {
+          "heading": "Visiting",
+          "links": [
+            {
+              "label": "How It Works",
+              "target": "how-it-works"
+            },
+            {
+              "label": "Book A Visit",
+              "target": "cta"
+            },
+            {
+              "label": "Questions",
+              "target": "faq"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

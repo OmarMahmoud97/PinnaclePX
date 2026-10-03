@@ -1,0 +1,249 @@
+{
+  "source": "l7-sentence/florist",
+  "answers": {
+    "description": "Flower shop on Otley Road with bouquets, wedding flowers and weekly arrangements for offices. Same-day delivery across north Leeds if you order before noon.",
+    "company": "Thistle and Fern",
+    "logo": {
+      "kind": "wordmark"
+    },
+    "imagery": {
+      "style": "bold",
+      "photos": []
+    },
+    "colours": {
+      "kind": "custom",
+      "hex": "#be123c"
+    }
+  },
+  "chosen": ["t01-aurora", "t08-vector", "t07-summit"],
+  "ctaLabel": "Order Flowers",
+  "copy": {
+    "brand": {
+      "name": "Thistle and Fern",
+      "legalName": "Thistle and Fern"
+    },
+    "nav": {
+      "links": ["Home", "About", "Services", "Flowers"],
+      "cta": "Order Flowers"
+    },
+    "hero": {
+      "badge": {
+        "tag": "Otley Road",
+        "text": "Same-day delivery across north Leeds"
+      },
+      "headline": "Bright Blooms From Otley Road, Delivered Same Day",
+      "subhead": "Bouquets, wedding flowers and weekly office arrangements made fresh on Otley Road, for all of north Leeds.",
+      "primary": "Order Flowers",
+      "secondary": "See what we do"
+    },
+    "why": {
+      "eyebrow": "Why choose us",
+      "heading": "Why people choose Thistle and Fern",
+      "cards": [
+        {
+          "title": "Fresh Bouquets",
+          "body": "Colourful bouquets made fresh on Otley Road for birthdays, thank yous or just because."
+        },
+        {
+          "title": "Wedding Flowers",
+          "body": "We create wedding flowers that fit your day, from bouquets to venue arrangements."
+        },
+        {
+          "title": "Office Arrangements",
+          "body": "Weekly flower arrangements keep offices bright, arranged to suit your space."
+        },
+        {
+          "title": "Same-Day Delivery",
+          "body": "Order before noon and we deliver across north Leeds the same day."
+        }
+      ]
+    },
+    "services": {
+      "eyebrow": "What we do",
+      "heading": "Flowers for every moment",
+      "items": [
+        {
+          "tag": "Bouquets",
+          "title": "Bouquets For Every Occasion",
+          "body": "Colourful bouquets made fresh on Otley Road, ready for birthdays, thank yous or just because.",
+          "checklist": [
+            "Made fresh on Otley Road",
+            "Suited to any occasion",
+            "Ready for same-day delivery"
+          ]
+        },
+        {
+          "tag": "Wedding Flowers",
+          "title": "Wedding Flowers For Your Day",
+          "body": "We create wedding flowers that fit your day, from bouquets to venue arrangements, all made with care.",
+          "checklist": ["Bridal bouquets", "Venue arrangements", "Made with care for your day"]
+        },
+        {
+          "tag": "Office Flowers",
+          "title": "Weekly Office Arrangements",
+          "body": "Keep your workplace bright with fresh flowers delivered weekly, arranged to suit your office space.",
+          "checklist": [
+            "Delivered weekly",
+            "Arranged to suit your space",
+            "Keeps your office bright"
+          ]
+        }
+      ]
+    },
+    "steps": {
+      "eyebrow": "How it works",
+      "heading": "Three simple steps",
+      "body": "From your first message to flowers at your door, here's how we work with you on Otley Road.",
+      "items": [
+        {
+          "title": "Tell Us What You Need",
+          "body": "Share your occasion, style and budget, whether it's a bouquet or wedding flowers."
+        },
+        {
+          "title": "We Create Your Order",
+          "body": "Our team puts together your flowers on Otley Road, choosing fresh blooms to match."
+        },
+        {
+          "title": "Same-Day Delivery",
+          "body": "Order before noon and we'll deliver across north Leeds the same day, straight to your door."
+        }
+      ]
+    },
+    "facilities": {
+      "eyebrow": "What you get",
+      "heading": "A look at what we create",
+      "items": [
+        {
+          "title": "Our Flower Shop",
+          "body": "Find us on Otley Road, where every bouquet and arrangement is made fresh."
+        },
+        {
+          "title": "Bouquet Displays",
+          "body": "Bright, colourful bouquets ready for any occasion, made on Otley Road."
+        },
+        {
+          "title": "Wedding Flowers",
+          "body": "Bouquets and venue arrangements created with care for your wedding day."
+        },
+        {
+          "title": "Office Flowers",
+          "body": "Weekly arrangements delivered to keep offices across north Leeds bright."
+        }
+      ],
+      "link": "Find out more"
+    },
+    "faq": {
+      "eyebrow": "FAQs",
+      "heading": "Frequently asked questions",
+      "items": [
+        {
+          "question": "Where is your flower shop?",
+          "answer": "We're a flower shop on Otley Road, making bouquets, wedding flowers and weekly office arrangements."
+        },
+        {
+          "question": "Do you deliver the same day?",
+          "answer": "Yes, order before noon and we'll deliver across north Leeds the same day."
+        },
+        {
+          "question": "Do you do wedding flowers?",
+          "answer": "Yes, we create wedding flowers for your day, from bouquets to venue arrangements, all made with care."
+        },
+        {
+          "question": "Can you arrange flowers for my office every week?",
+          "answer": "Yes, we offer weekly arrangements for offices, arranged to suit your space and delivered fresh."
+        },
+        {
+          "question": "How far does delivery reach?",
+          "answer": "We deliver same-day across north Leeds, as long as your order is placed before noon."
+        }
+      ]
+    },
+    "booking": {
+      "eyebrow": "Get in touch",
+      "heading": "Order your flowers today",
+      "form": {
+        "name": {
+          "label": "Your name",
+          "placeholder": "Enter your full name"
+        },
+        "email": {
+          "label": "Your email",
+          "placeholder": "Enter your email address"
+        },
+        "phone": {
+          "label": "Your phone",
+          "placeholder": "Enter your phone number"
+        },
+        "doctor": {
+          "label": "Who to ask for",
+          "placeholder": "A name, if you have one"
+        },
+        "department": {
+          "label": "What you need",
+          "placeholder": "Choose one"
+        },
+        "date": "Preferred date",
+        "button": "Order Flowers"
+      }
+    },
+    "cta": {
+      "heading": "Ready to order your flowers?",
+      "body": "Get in touch for bouquets, wedding flowers or weekly office arrangements on Otley Road.",
+      "button": "Order Flowers"
+    },
+    "footer": {
+      "description": "Thistle and Fern is a flower shop on Otley Road offering bouquets, wedding flowers and office arrangements.",
+      "columns": [
+        {
+          "heading": "Explore",
+          "links": [
+            {
+              "label": "Home",
+              "target": "home"
+            },
+            {
+              "label": "Why Us",
+              "target": "why-choose-us"
+            },
+            {
+              "label": "Services",
+              "target": "our-services"
+            },
+            {
+              "label": "FAQs",
+              "target": "faq"
+            }
+          ]
+        },
+        {
+          "heading": "Flowers",
+          "links": [
+            {
+              "label": "Our Flowers",
+              "target": "facilities"
+            },
+            {
+              "label": "How It Works",
+              "target": "booking-process"
+            },
+            {
+              "label": "Order Now",
+              "target": "cta"
+            }
+          ]
+        }
+      ],
+      "contact": "Get in touch",
+      "smallLinks": [
+        {
+          "label": "Home",
+          "target": "home"
+        },
+        {
+          "label": "Order Flowers",
+          "target": "book-appointment"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,213 @@
+{
+  "source": "l6-all-fixes/photographer",
+  "answers": {
+    "description": "Wedding and family photography across Northumberland in a relaxed documentary style with no forced poses. Albums printed in the UK.",
+    "company": "Coldharbour Photography",
+    "logo": {
+      "kind": "wordmark"
+    },
+    "imagery": {
+      "style": "minimal",
+      "photos": []
+    },
+    "colours": {
+      "kind": "custom",
+      "hex": "#0f766e"
+    }
+  },
+  "chosen": ["t03-meridian", "t04-atlas", "t06-harbor"],
+  "ctaLabel": "Get in touch",
+  "copy": {
+    "brand": {
+      "name": "Coldharbour Photography",
+      "legalName": "Coldharbour Photography"
+    },
+    "nav": {
+      "links": ["Get Started", "What's Included", "How It Works", "Why Us", "Questions"],
+      "menu": {
+        "label": "More",
+        "items": [
+          {
+            "label": "Get Started",
+            "target": "start"
+          },
+          {
+            "label": "What's Included",
+            "target": "offer"
+          },
+          {
+            "label": "FAQs",
+            "target": "faq"
+          }
+        ]
+      },
+      "secondary": "How It Works",
+      "cta": "Get In Touch"
+    },
+    "hero": {
+      "eyebrow": "COLDHARBOUR PHOTOGRAPHY",
+      "headline": {
+        "text": "Your day, captured naturally across Northumberland",
+        "emphasis": "captured naturally"
+      },
+      "subhead": "Wedding and family photography across Northumberland in a relaxed documentary style, with no forced poses.",
+      "primary": "Get In Touch",
+      "secondary": "How It Works"
+    },
+    "glance": {
+      "columns": [
+        {
+          "title": "Documentary Style",
+          "body": "Natural, relaxed photographs rather than stiff, posed shots. Your day unfolds as it happens."
+        },
+        {
+          "title": "Weddings and Family",
+          "body": "Covering weddings and family sessions across Northumberland, with a calm approach that puts you at ease."
+        },
+        {
+          "title": "UK Printed Albums",
+          "body": "Your albums are printed in the UK, so your photographs become something you can hold and keep."
+        }
+      ],
+      "more": "More"
+    },
+    "pitch": {
+      "heading": {
+        "text": "Photographs the way your day really happened",
+        "emphasis": "really happened"
+      },
+      "lead": "We stay quietly in the background, so your photographs feel natural rather than arranged.",
+      "label": "Why",
+      "statement": "We photograph weddings and families the way they really are, without forced poses or fuss.",
+      "action": "Get In Touch"
+    },
+    "offer": {
+      "heading": {
+        "text": "What your photography includes",
+        "emphasis": ""
+      },
+      "body": "Wedding and family sessions across Northumberland, photographed in a relaxed documentary style.",
+      "points": ["Documentary-style coverage", "Weddings and family sessions", "UK printed albums"],
+      "action": "Get In Touch"
+    },
+    "tools": {
+      "heading": {
+        "text": "How we approach your day",
+        "emphasis": ""
+      },
+      "items": [
+        {
+          "title": "A calm presence",
+          "body": "We stay quietly in the background, so you and your family can simply enjoy the day as it happens."
+        },
+        {
+          "title": "No forced poses",
+          "body": "Rather than arranging stiff shots, we let your day unfold naturally and photograph it as it is."
+        },
+        {
+          "title": "Albums you can hold",
+          "body": "Your photographs are printed into albums in the UK, turning the day into something you can keep."
+        }
+      ],
+      "primary": "Get In Touch",
+      "secondary": "How It Works"
+    },
+    "why": {
+      "heading": "Why couples and families choose Coldharbour",
+      "items": [
+        {
+          "title": "Relaxed, not posed",
+          "body": "You get natural, relaxed photographs rather than stiff, posed shots of your day."
+        },
+        {
+          "title": "A calm approach",
+          "body": "A calm approach to weddings and family sessions that puts you at ease across Northumberland."
+        },
+        {
+          "title": "Something to keep",
+          "body": "Your albums are printed in the UK, so your photographs become something you can hold."
+        }
+      ]
+    },
+    "steps": {
+      "heading": "How your photography session works",
+      "items": [
+        {
+          "title": "Get In Touch",
+          "body": "Send a message about your wedding or family session. Tell us your date and what you have in mind."
+        },
+        {
+          "title": "Meet And Plan",
+          "body": "We talk through the day, your family, and how the relaxed documentary style will work for you."
+        },
+        {
+          "title": "The Day Itself",
+          "body": "On the day, we stay quietly in the background, capturing things as they naturally happen."
+        }
+      ]
+    },
+    "faq": {
+      "eyebrow": "Questions",
+      "heading": "Frequently asked questions",
+      "items": [
+        {
+          "question": "Do you only photograph weddings?",
+          "answer": "No, we cover weddings and family sessions across Northumberland, both in the same relaxed documentary style."
+        },
+        {
+          "question": "Will you pose us for photographs?",
+          "answer": "No. We photograph your day as it happens naturally, without forced poses or fuss."
+        },
+        {
+          "question": "Do you cover areas outside Northumberland?",
+          "answer": "We photograph weddings and family sessions across Northumberland."
+        },
+        {
+          "question": "Can we get a printed album?",
+          "answer": "Yes, your albums are printed in the UK, so your photographs become something you can hold and keep."
+        },
+        {
+          "question": "How do we book a session?",
+          "answer": "Send a message about your wedding or family session, telling us your date and what you have in mind."
+        }
+      ]
+    },
+    "footer": {
+      "columns": [
+        [
+          {
+            "label": "Get Started",
+            "target": "start"
+          },
+          {
+            "label": "What's Included",
+            "target": "offer"
+          },
+          {
+            "label": "How It Works",
+            "target": "how-it-works"
+          }
+        ],
+        [
+          {
+            "label": "Why Us",
+            "target": "why"
+          },
+          {
+            "label": "FAQs",
+            "target": "faq"
+          },
+          {
+            "label": "Back To Top",
+            "target": "top"
+          }
+        ]
+      ],
+      "note": {
+        "title": "Get In Touch",
+        "body": "Tell us your date and what you have in mind for your day."
+      },
+      "action": "Get In Touch"
+    }
+  }
+}

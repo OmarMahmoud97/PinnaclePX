@@ -1,0 +1,221 @@
+{
+  "source": "l6-all-fixes/it-support",
+  "answers": {
+    "description": "Outsourced IT for small offices in Nottingham: helpdesk, Microsoft 365, backups and security. One fixed monthly price per user, and a real person who answers the phone.",
+    "company": "Beacon IT Support",
+    "logo": {
+      "kind": "wordmark"
+    },
+    "imagery": {
+      "style": "minimal",
+      "photos": []
+    },
+    "colours": {
+      "kind": "palette",
+      "paletteId": "ink"
+    }
+  },
+  "chosen": ["t07-summit", "t04-atlas", "t03-meridian"],
+  "ctaLabel": "Get in touch",
+  "copy": {
+    "brand": {
+      "name": "Beacon IT Support",
+      "legalName": "Beacon IT Support"
+    },
+    "nav": {
+      "links": ["Get started", "What's included", "How it works", "Why us", "Questions"],
+      "menu": {
+        "label": "More",
+        "items": [
+          {
+            "label": "Our tools",
+            "target": "tools"
+          },
+          {
+            "label": "Why us",
+            "target": "why"
+          },
+          {
+            "label": "FAQs",
+            "target": "faq"
+          },
+          {
+            "label": "Back to top",
+            "target": "top"
+          }
+        ]
+      },
+      "secondary": "How it works",
+      "cta": "Get in touch"
+    },
+    "hero": {
+      "eyebrow": "BEACON IT SUPPORT",
+      "headline": {
+        "text": "IT support for small offices in Nottingham",
+        "emphasis": "small offices"
+      },
+      "subhead": "Outsourced IT for small offices in Nottingham, covering helpdesk, Microsoft 365, backups and security.",
+      "primary": "Get in touch",
+      "secondary": "How it works"
+    },
+    "glance": {
+      "columns": [
+        {
+          "title": "Helpdesk",
+          "body": "Get help with everyday IT problems from a helpdesk that understands small offices."
+        },
+        {
+          "title": "Microsoft 365",
+          "body": "We set up and manage Microsoft 365 so your office can work smoothly, without worries."
+        },
+        {
+          "title": "Backups and security",
+          "body": "Your data stays backed up and protected, so you can focus on your business."
+        }
+      ],
+      "more": "More"
+    },
+    "pitch": {
+      "heading": {
+        "text": "Straightforward IT support, from people who answer",
+        "emphasis": "answer"
+      },
+      "lead": "We started this because small offices deserve IT support that is simple and honest.",
+      "label": "Why",
+      "statement": "We started this because small offices deserve straightforward IT support from someone who actually answers the phone.",
+      "action": "Get in touch"
+    },
+    "offer": {
+      "heading": {
+        "text": "Everything your office needs, handled",
+        "emphasis": "handled"
+      },
+      "body": "Helpdesk, Microsoft 365, backups and security, set up and managed for your small office.",
+      "points": [
+        "Helpdesk for everyday problems",
+        "Microsoft 365 set up and managed",
+        "Backups and security in place"
+      ],
+      "action": "Get in touch"
+    },
+    "tools": {
+      "heading": {
+        "text": "One fixed price, a real person answers",
+        "emphasis": "real person"
+      },
+      "items": [
+        {
+          "title": "Fixed monthly price",
+          "body": "You pay one fixed monthly price per user, so you know what to expect each month."
+        },
+        {
+          "title": "A real person answers",
+          "body": "When you call, a real person picks up and helps, not a queue or a script."
+        },
+        {
+          "title": "Support that fits your office",
+          "body": "We arrange your helpdesk, Microsoft 365, backups and security to suit your small office."
+        }
+      ],
+      "primary": "Get in touch",
+      "secondary": "How it works"
+    },
+    "why": {
+      "heading": "Steady IT support, no fuss, no jargon",
+      "items": [
+        {
+          "title": "Built for small offices",
+          "body": "Our helpdesk understands small offices and what they need from IT support."
+        },
+        {
+          "title": "No jargon, no fuss",
+          "body": "We explain things plainly, so you are never left confused about your own IT."
+        },
+        {
+          "title": "A real person answers",
+          "body": "One fixed price, and when you call, a real person answers, every time."
+        }
+      ]
+    },
+    "steps": {
+      "heading": "How Beacon IT Support works",
+      "items": [
+        {
+          "title": "Get in touch",
+          "body": "Call or email us to tell us about your office and what support you need right now."
+        },
+        {
+          "title": "We set things up",
+          "body": "We arrange your helpdesk, Microsoft 365, backups and security to suit your office."
+        },
+        {
+          "title": "Ongoing support",
+          "body": "You pay one fixed monthly price per user, and a real person answers when you call."
+        }
+      ]
+    },
+    "faq": {
+      "eyebrow": "Support",
+      "heading": "Frequently asked questions",
+      "items": [
+        {
+          "question": "What does Beacon IT Support cover?",
+          "answer": "We cover helpdesk, Microsoft 365, backups and security for small offices in Nottingham."
+        },
+        {
+          "question": "How much does it cost?",
+          "answer": "You pay one fixed monthly price per user, so your costs stay steady and predictable."
+        },
+        {
+          "question": "Who will I speak to when I call?",
+          "answer": "A real person answers when you call, rather than an automated system or queue."
+        },
+        {
+          "question": "Is this support meant for small offices?",
+          "answer": "Yes, we focus on small offices in Nottingham and understand their everyday IT needs."
+        },
+        {
+          "question": "What happens after I get in touch?",
+          "answer": "We arrange your helpdesk, Microsoft 365, backups and security to suit your office."
+        }
+      ]
+    },
+    "footer": {
+      "columns": [
+        [
+          {
+            "label": "Get started",
+            "target": "start"
+          },
+          {
+            "label": "What's included",
+            "target": "offer"
+          },
+          {
+            "label": "Our tools",
+            "target": "tools"
+          }
+        ],
+        [
+          {
+            "label": "Why us",
+            "target": "why"
+          },
+          {
+            "label": "How it works",
+            "target": "how-it-works"
+          },
+          {
+            "label": "Questions",
+            "target": "faq"
+          }
+        ]
+      ],
+      "note": {
+        "title": "Get in touch",
+        "body": "Tell us about your office and the support you need right now."
+      },
+      "action": "Get in touch"
+    }
+  }
+}

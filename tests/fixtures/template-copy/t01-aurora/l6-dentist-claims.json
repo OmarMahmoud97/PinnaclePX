@@ -1,0 +1,123 @@
+{
+  "source": "l6-all-fixes/dentist-claims",
+  "answers": {
+    "description": "Rated 4.9 on Google by over 300 patients, we have been the number one family dentist in Harrogate since 1998. Two surgeries, 0% finance on treatment over £500, open 7 days a week from 8am to 8pm, award-winning hygienists and a 10 year guarantee on crowns.",
+    "company": "Oakfield Dental Practice",
+    "logo": {
+      "kind": "wordmark"
+    },
+    "imagery": {
+      "style": "bold",
+      "photos": []
+    },
+    "colours": {
+      "kind": "custom",
+      "hex": "#0e7490"
+    }
+  },
+  "chosen": ["t01-aurora", "t08-vector", "t02-monolith"],
+  "ctaLabel": "Book a visit",
+  "copy": {
+    "brand": {
+      "name": "Oakfield Dental Practice",
+      "legalName": "Oakfield Dental Practice",
+      "tagline": "A family dentist in Harrogate, open every day for your dental care."
+    },
+    "nav": {
+      "links": ["Our Care", "How It Works", "Why Oakfield"],
+      "cta": "Book a visit"
+    },
+    "hero": {
+      "headline": "Your family dentist, open every day of the week",
+      "subhead": "Dental care in Harrogate, built around your family. Two surgeries, open seven days, ready for your visit.",
+      "primary": "Book a visit",
+      "secondary": "How it works",
+      "reassurance": "Get in touch and we'll find a time that suits your family.",
+      "frame": {
+        "title": "Oakfield",
+        "rows": [
+          "Check-ups for all the family",
+          "Hygiene visits every week",
+          "Treatment across two surgeries"
+        ]
+      }
+    },
+    "features": {
+      "title": "A dentist that fits around your family",
+      "lead": "We built Oakfield to make dental care simple for Harrogate families, whenever you need us.",
+      "items": [
+        {
+          "title": "Open Every Day",
+          "body": "We open seven days a week, from 8am to 8pm, so you can book a visit when it suits you."
+        },
+        {
+          "title": "Flexible Payment",
+          "body": "We offer 0% finance on treatment over £500, making larger dental work easier to plan for."
+        },
+        {
+          "title": "Trusted Hygienists",
+          "body": "Our hygienists bring care and attention to every visit, helping you look after your smile."
+        }
+      ]
+    },
+    "steps": {
+      "title": "Getting care at Oakfield is simple",
+      "lead": "Here's how your family can start getting dental care that fits around your week.",
+      "items": [
+        {
+          "title": "Get In Touch",
+          "body": "Contact our practice by phone or online to ask about an appointment that suits you."
+        },
+        {
+          "title": "Visit The Practice",
+          "body": "Come along to one of our two surgeries for your check-up, treatment or hygiene visit."
+        },
+        {
+          "title": "Ongoing Care",
+          "body": "We look after your dental health over time, with flexible appointments across the week."
+        }
+      ]
+    },
+    "statement": "We set up Oakfield to give Harrogate families a dentist they can see any day of the week.",
+    "cta": {
+      "headline": "Ready to find a dentist for your family?",
+      "body": "Get in touch and book a visit at one of our two surgeries, any day of the week.",
+      "action": "Book a visit",
+      "reassurance": "Call or book online, whichever suits your family."
+    },
+    "footer": {
+      "groups": [
+        {
+          "heading": "Practice",
+          "links": [
+            {
+              "label": "Our Care",
+              "target": "features"
+            },
+            {
+              "label": "How It Works",
+              "target": "how-it-works"
+            },
+            {
+              "label": "Why Oakfield",
+              "target": "why"
+            }
+          ]
+        },
+        {
+          "heading": "Get Started",
+          "links": [
+            {
+              "label": "Book a visit",
+              "target": "start"
+            },
+            {
+              "label": "Back to top",
+              "target": "top"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

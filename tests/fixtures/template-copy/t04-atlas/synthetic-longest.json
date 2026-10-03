@@ -1,0 +1,227 @@
+{
+  "source": "synthetic: every text slot at its longest allowed length, from l6-a1-gas",
+  "answers": {
+    "description": "Boiler repairs, servicing and new installs across Bradford and Shipley. Gas Safe registered, same-week appointments and no call-out charge for quotes.",
+    "company": "A1 Gas and Plumbing",
+    "logo": {
+      "kind": "wordmark"
+    },
+    "imagery": {
+      "style": "dark",
+      "photos": []
+    },
+    "colours": {
+      "kind": "custom",
+      "hex": "#1f2937"
+    }
+  },
+  "chosen": ["t06-harbor", "t04-atlas", "t02-monolith"],
+  "ctaLabel": "Book a visit",
+  "copy": {
+    "brand": {
+      "name": "Plain words fill this sp",
+      "legalName": "words fill this space to the longest length it allows so eve"
+    },
+    "nav": {
+      "links": [
+        "fill this space to",
+        "this space to thes",
+        "space to the longe",
+        "to the longest len",
+        "the longest length"
+      ],
+      "menu": {
+        "label": "longest length i",
+        "items": [
+          {
+            "label": "length it allows s",
+            "target": "offer"
+          },
+          {
+            "label": "allows so every li",
+            "target": "why"
+          },
+          {
+            "label": "every line shows h",
+            "target": "faq"
+          },
+          {
+            "label": "shows how far thes",
+            "target": "top"
+          }
+        ]
+      },
+      "secondary": "far the layout s",
+      "cta": "the layout stret"
+    },
+    "hero": {
+      "eyebrow": "layout stretches befores",
+      "headline": {
+        "text": "stretches before it gives Plain words fill this space to the",
+        "emphasis": "before it gives Plain words fi"
+      },
+      "subhead": "it gives Plain words fill this space to the longest length it allows so every line shows how far the layout stretches before it gives Plain words fill this spac",
+      "primary": "gives Plain words fill",
+      "secondary": "Plain words fill thiss"
+    },
+    "glance": {
+      "columns": [
+        {
+          "title": "words fill this space to t",
+          "body": "fill this space to the longest length it allows so every line shows how far the layout stretches before it gives Plain words fill this space"
+        },
+        {
+          "title": "this space to the longests",
+          "body": "space to the longest length it allows so every line shows how far the layout stretches before it gives Plain words fill this space to the lo"
+        },
+        {
+          "title": "to the longest length it a",
+          "body": "the longest length it allows so every line shows how far the layout stretches before it gives Plain words fill this space to the longest len"
+        }
+      ],
+      "more": "longest leng"
+    },
+    "pitch": {
+      "heading": {
+        "text": "length it allows so every line shows how far the layout stre",
+        "emphasis": "it allows so every line showss"
+      },
+      "lead": "allows so every line shows how far the layout stretches before it gives Plain words fill this space to the longest length it allows so every line shows how far the layout",
+      "label": "so every lin",
+      "statement": "every line shows how far the layout stretches before it gives Plain words fill this space to the longest length it allows so every line shows how far the layout stretches before it",
+      "action": "line shows how far the"
+    },
+    "offer": {
+      "heading": {
+        "text": "shows how far the layout stretches before it gives",
+        "emphasis": "how far the layout stretches b"
+      },
+      "body": "far the layout stretches before it gives Plain words fill this space to the longest length it allows so every line shows how far the layout stretches before it gives Plai",
+      "points": [
+        "the layout stretches before it gives Plain words fill this s",
+        "layout stretches before it gives Plain words fill this space",
+        "stretches before it gives Plain words fill this space to the"
+      ],
+      "action": "before it gives Plains"
+    },
+    "tools": {
+      "heading": {
+        "text": "it gives Plain words fill this space to the longes",
+        "emphasis": "gives Plain words fill this sp"
+      },
+      "items": [
+        {
+          "title": "Plain words fill this space to the longest lengths",
+          "body": "words fill this space to the longest length it allows so every line shows how far the layout stretches before it gives Plain words fill this space to the longest length it allows so every line shows how far the layout st"
+        },
+        {
+          "title": "fill this space to the longest length it allows so",
+          "body": "this space to the longest length it allows so every line shows how far the layout stretches before it gives Plain words fill this space to the longest length it allows so every line shows how far the layout stretches bef"
+        },
+        {
+          "title": "space to the longest length it allows so every lin",
+          "body": "to the longest length it allows so every line shows how far the layout stretches before it gives Plain words fill this space to the longest length it allows so every line shows how far the layout stretches before it give"
+        }
+      ],
+      "primary": "the longest length its",
+      "secondary": "longest length it allo"
+    },
+    "why": {
+      "heading": "length it allows so every line shows how far the layout stre",
+      "items": [
+        {
+          "title": "it allows so every line shows how far th",
+          "body": "allows so every line shows how far the layout stretches before it gives Plain words fill this space to the longest length it allows so every line shows how far the layout stretches before it gives Plain words fill this space to the longest length it allows so every line shows how far the layout stre"
+        },
+        {
+          "title": "so every line shows how far the layout s",
+          "body": "every line shows how far the layout stretches before it gives Plain words fill this space to the longest length it allows so every line shows how far the layout stretches before it gives Plain words fill this space to the longest length it allows so every line shows how far the layout stretches befo"
+        },
+        {
+          "title": "line shows how far the layout stretchess",
+          "body": "shows how far the layout stretches before it gives Plain words fill this space to the longest length it allows so every line shows how far the layout stretches before it gives Plain words fill this space to the longest length it allows so every line shows how far the layout stretches before it gives"
+        }
+      ]
+    },
+    "steps": {
+      "heading": "how far the layout stretches before it gives Plain words fil",
+      "items": [
+        {
+          "title": "far the layout stretches",
+          "body": "the layout stretches before it gives Plain words fill this space to the longest length it allows so every line shows how far the layout stretches before it give"
+        },
+        {
+          "title": "layout stretches befores",
+          "body": "stretches before it gives Plain words fill this space to the longest length it allows so every line shows how far the layout stretches before it gives Plain wor"
+        },
+        {
+          "title": "before it gives Plain wo",
+          "body": "it gives Plain words fill this space to the longest length it allows so every line shows how far the layout stretches before it gives Plain words fill this spac"
+        }
+      ]
+    },
+    "faq": {
+      "eyebrow": "gives Plain word",
+      "heading": "Plain words fill this space to the longest lengths",
+      "items": [
+        {
+          "question": "words fill this space to the longest length it allows so every line shows how far the layo",
+          "answer": "No, we don't charge a call-out fee for quotes, so you can find out costs without any pressure."
+        },
+        {
+          "question": "this space to the longest length it allows so every line shows how far the layout stretche",
+          "answer": "We offer same-week appointments, so your boiler problem doesn't have to wait around for long."
+        },
+        {
+          "question": "to the longest length it allows so every line shows how far the layout stretches before it",
+          "answer": "Yes, all our gas work is carried out by Gas Safe registered engineers, so you know it's handled properly."
+        },
+        {
+          "question": "longest length it allows so every line shows how far the layout stretches before it givess",
+          "answer": "We cover Bradford and Shipley, offering boiler repairs, servicing and new installs to local homes."
+        },
+        {
+          "question": "it allows so every line shows how far the layout stretches before it gives Plain words fil",
+          "answer": "We carry out boiler repairs, servicing and new installs, depending on what your home needs."
+        }
+      ]
+    },
+    "footer": {
+      "columns": [
+        [
+          {
+            "label": "so every line shows hows",
+            "target": "start"
+          },
+          {
+            "label": "line shows how far the l",
+            "target": "offer"
+          },
+          {
+            "label": "how far the layout stret",
+            "target": "how-it-works"
+          }
+        ],
+        [
+          {
+            "label": "the layout stretches bef",
+            "target": "why"
+          },
+          {
+            "label": "stretches before it give",
+            "target": "faq"
+          },
+          {
+            "label": "it gives Plain words fil",
+            "target": "top"
+          }
+        ]
+      ],
+      "note": {
+        "title": "Plain words fill this sp",
+        "body": "words fill this space to the longest length it allows so every line shows how far the layo"
+      },
+      "action": "fill this space to the"
+    }
+  }
+}

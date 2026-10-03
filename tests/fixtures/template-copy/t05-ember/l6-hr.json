@@ -1,0 +1,176 @@
+{
+  "source": "l6-all-fixes/hr",
+  "answers": {
+    "description": "HR consultancy for growing firms with 10 to 80 staff. Contracts, handbooks, difficult conversations and TUPE, on a retainer or by the day. Based in Manchester and working across the north west.",
+    "company": "Northgate People",
+    "logo": {
+      "kind": "wordmark"
+    },
+    "imagery": {
+      "style": "bold",
+      "photos": []
+    },
+    "colours": {
+      "kind": "palette",
+      "paletteId": "ink"
+    }
+  },
+  "chosen": ["t06-harbor", "t05-ember", "t01-aurora"],
+  "ctaLabel": "Get in touch",
+  "copy": {
+    "brand": {
+      "name": "Northgate People",
+      "legalName": "Northgate People"
+    },
+    "nav": {
+      "links": ["About", "Services", "Areas", "FAQs"],
+      "cta": "Get in touch"
+    },
+    "hero": {
+      "eyebrow": "HR SUPPORT FOR GROWING FIRMS",
+      "headline": "HR support for growing firms, on your terms",
+      "subhead": "We help firms with 10 to 80 staff across Manchester and the north west, with practical HR support.",
+      "cta": "Get in touch"
+    },
+    "about": {
+      "eyebrow": "Why we started",
+      "heading": "Proper HR support without the fuss",
+      "body": "We set up Northgate People to give growing firms proper HR support without the fuss."
+    },
+    "stats": [
+      {
+        "title": "Contracts and handbooks",
+        "body": "Clear contracts and handbooks so your team knows where it stands from day one."
+      },
+      {
+        "title": "Difficult conversations",
+        "body": "Support when conversations get hard, so you handle them fairly and with confidence."
+      },
+      {
+        "title": "TUPE guidance",
+        "body": "Guidance through TUPE, so transfers and changes are managed properly and without panic."
+      }
+    ],
+    "dishes": {
+      "eyebrow": "What we offer",
+      "heading": "Practical HR help across the north west",
+      "items": [
+        {
+          "title": "Contracts",
+          "note": "Fit for your firm"
+        },
+        {
+          "title": "Handbooks",
+          "note": "Clear from day one"
+        },
+        {
+          "title": "Difficult conversations",
+          "note": "Handled fairly"
+        },
+        {
+          "title": "TUPE guidance",
+          "note": "Managed properly"
+        }
+      ]
+    },
+    "features": {
+      "eyebrow": "How we work",
+      "heading": "HR support on your terms",
+      "items": [
+        {
+          "title": "Retainer or day rate",
+          "body": "We work out whether a retainer or day rate suits your firm."
+        },
+        {
+          "title": "Alongside your firm",
+          "body": "We work alongside your firm, handling HR matters as they come up."
+        },
+        {
+          "title": "Across the north west",
+          "body": "We support growing firms with 10 to 80 staff across Manchester and the north west."
+        }
+      ]
+    },
+    "booking": {
+      "eyebrow": "How it works",
+      "heading": "Three simple steps",
+      "steps": [
+        {
+          "title": "Get in touch",
+          "body": "Tell us about your firm and what you need help with, and we will take it from there."
+        },
+        {
+          "title": "We look at your needs",
+          "body": "We talk through your situation and work out whether a retainer or day rate suits you."
+        },
+        {
+          "title": "Ongoing support",
+          "body": "We work alongside your firm, handling HR matters as they come up or as agreed in advance."
+        }
+      ]
+    },
+    "timing": {
+      "title": "Where to find us",
+      "body": "We work with growing firms across Manchester and the north west. Get in touch to talk through your needs.",
+      "cta": "Get in touch"
+    },
+    "faq": {
+      "eyebrow": "FAQs",
+      "heading": "Frequently asked questions",
+      "items": [
+        {
+          "question": "What size of firm do you work with?",
+          "answer": "We work with growing firms with 10 to 80 staff across Manchester and the north west."
+        },
+        {
+          "question": "Do you help with contracts and handbooks?",
+          "answer": "Yes, we write clear contracts and handbooks that fit your firm, so your team knows where it stands."
+        },
+        {
+          "question": "Can you help with difficult conversations?",
+          "answer": "Yes, we support you when conversations get hard, so you can handle them fairly and with confidence."
+        },
+        {
+          "question": "Do you offer help with TUPE?",
+          "answer": "Yes, we guide you through TUPE so transfers and changes are managed properly and without panic."
+        },
+        {
+          "question": "How do you charge for your support?",
+          "answer": "We talk through your situation and work out whether a retainer or day rate suits you."
+        }
+      ]
+    },
+    "cta": {
+      "heading": "Ready for proper HR support?",
+      "body": "Get in touch and tell us about your firm and what you need help with.",
+      "button": "Get in touch"
+    },
+    "footer": {
+      "description": "Northgate People gives growing firms across Manchester and the north west proper HR support without the fuss.",
+      "groups": [
+        {
+          "heading": "Explore",
+          "links": [
+            {
+              "label": "About",
+              "target": "about"
+            },
+            {
+              "label": "Services",
+              "target": "dishes"
+            },
+            {
+              "label": "How it works",
+              "target": "booking-process"
+            },
+            {
+              "label": "FAQs",
+              "target": "faq"
+            }
+          ]
+        }
+      ],
+      "contact": "Get in touch"
+    }
+  }
+}

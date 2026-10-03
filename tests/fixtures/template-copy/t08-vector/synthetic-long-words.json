@@ -1,0 +1,148 @@
+{
+  "source": "synthetic: the long real words in every headline and phrase slot, from l6-bakery",
+  "answers": {
+    "description": "Wholesale and retail bakery in Todmorden. Sourdough, tin loaves and buns for cafés and farm shops across Calderdale, delivered before 7am from Tuesday to Saturday.",
+    "company": "Pennine Loaf",
+    "logo": {
+      "kind": "wordmark"
+    },
+    "imagery": {
+      "style": "warm",
+      "photos": []
+    },
+    "colours": {
+      "kind": "palette",
+      "paletteId": "clay"
+    }
+  },
+  "chosen": ["t01-aurora", "t07-summit", "t08-vector"],
+  "ctaLabel": "Get in touch",
+  "copy": {
+    "brand": {
+      "name": "pennine loaf",
+      "legalName": "Pennine Loaf"
+    },
+    "nav": {
+      "links": ["Home", "Our Work", "What We Offer", "About", "Questions", "Contact"]
+    },
+    "hero": {
+      "headline": ["STRAIGHTFORWARD", "NORTHUMBERLAND", "PHYSIOTHERAPY"],
+      "subhead": "We bake sourdough, tin loaves and buns for cafés and farm shops across Calderdale, delivered fresh each morning.",
+      "scrollHint": "Scroll"
+    },
+    "projects": {
+      "marquee": {
+        "text": "CONVEYANCING",
+        "accent": "ARCHITECTURE"
+      },
+      "items": [
+        {
+          "titleUp": "ARCHITECTURE",
+          "titleDown": "ACCOUNTANCY",
+          "description": "Proper sourdough baked each morning for cafés and farm shops who want the real thing."
+        },
+        {
+          "titleUp": "STRAIGHTFORWARD",
+          "titleDown": "NORTHUMBERLAND",
+          "description": "Tin loaves and buns baked fresh, ready for your shelves before opening time."
+        },
+        {
+          "titleUp": "PHYSIOTHERAPY",
+          "titleDown": "KNARESBOROUGH",
+          "description": "Regular wholesale baking for cafés and farm shops across Calderdale."
+        }
+      ]
+    },
+    "services": {
+      "heading": "CONVEYANCING STRAIGHTFORWARD NORTHUMBERLAND PHYSIOTHERAPY KNARESBOROUGH",
+      "items": [
+        "ARCHITECTURE ACCOUNTANCY",
+        "ACCOUNTANCY CONVEYANCING",
+        "STRAIGHTFORWARD",
+        "NORTHUMBERLAND",
+        "PHYSIOTHERAPY",
+        "KNARESBOROUGH"
+      ]
+    },
+    "about": {
+      "statement": "CONVEYANCING STRAIGHTFORWARD NORTHUMBERLAND PHYSIOTHERAPY KNARESBOROUGH ARCHITECTURE ACCOUNTANCY",
+      "cta": "Get in touch"
+    },
+    "faq": {
+      "heading": ["ARCHITECTURE ACCOUNTANCY", "ACCOUNTANCY CONVEYANCING"],
+      "items": [
+        {
+          "question": "What kind of bread do you bake?",
+          "answer": "We bake sourdough, tin loaves and buns for cafés and farm shops who want proper bread each morning."
+        },
+        {
+          "question": "When does delivery arrive?",
+          "answer": "Every order reaches you before seven, Tuesday to Saturday, so your shelves are ready for opening time."
+        },
+        {
+          "question": "Do you do wholesale and retail?",
+          "answer": "Whether you need regular wholesale orders or smaller retail amounts, we bake to suit your shop."
+        },
+        {
+          "question": "How do we get started?",
+          "answer": "Tell us what you need, whether that's sourdough, tin loaves or buns, and how often you'd like deliveries."
+        },
+        {
+          "question": "How do you plan our order?",
+          "answer": "We work out quantities and timings together, so your order fits your shop and your customers."
+        },
+        {
+          "question": "Which days do you deliver?",
+          "answer": "Your bread arrives before seven each morning, Tuesday to Saturday, ready for your day ahead."
+        }
+      ]
+    },
+    "footer": {
+      "cta": "Get in touch",
+      "tagline": "Baked early for Calderdale",
+      "servicesHeading": "Our Bread",
+      "navigationHeading": "Navigation",
+      "navigation": [
+        {
+          "label": "Home",
+          "target": "top"
+        },
+        {
+          "label": "Our Work",
+          "target": "projects"
+        },
+        {
+          "label": "What We Offer",
+          "target": "services"
+        },
+        {
+          "label": "About",
+          "target": "about"
+        },
+        {
+          "label": "Questions",
+          "target": "faq"
+        },
+        {
+          "label": "Contact",
+          "target": "contact"
+        }
+      ],
+      "bottomLinks": [
+        {
+          "label": "About",
+          "target": "about"
+        },
+        {
+          "label": "Questions",
+          "target": "faq"
+        },
+        {
+          "label": "Contact",
+          "target": "contact"
+        }
+      ],
+      "credit": "Pennine Loaf, Todmorden"
+    }
+  }
+}

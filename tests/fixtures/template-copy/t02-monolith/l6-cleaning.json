@@ -1,0 +1,250 @@
+{
+  "source": "l6-all-fixes/cleaning",
+  "answers": {
+    "description": "Domestic and end-of-tenancy cleaning across Newcastle and Gateshead. Insured, DBS-checked cleaners, the same person each visit, and a checklist you agree in advance.",
+    "company": "Spotless Tyne",
+    "logo": {
+      "kind": "wordmark"
+    },
+    "imagery": {
+      "style": "bold",
+      "photos": []
+    },
+    "colours": {
+      "kind": "palette",
+      "paletteId": "plum"
+    }
+  },
+  "chosen": ["t07-summit", "t05-ember", "t02-monolith"],
+  "ctaLabel": "Get in touch",
+  "copy": {
+    "brand": {
+      "name": "Spotless Tyne",
+      "legalName": "Spotless Tyne"
+    },
+    "nav": {
+      "links": ["Cleaning", "About", "How It Works", "Questions"],
+      "cta": "Get in touch"
+    },
+    "hero": {
+      "headline": {
+        "text": "Your Home Cleaned, Your Way, Every Time",
+        "first": "Home",
+        "second": "Every Time"
+      },
+      "subhead": "Domestic and end-of-tenancy cleaning across Newcastle and Gateshead for households that want it done properly.",
+      "primary": "Get in touch",
+      "secondary": "See how it works",
+      "cards": {
+        "quote": {
+          "text": "We believe a clean home comes from trust, every time.",
+          "role": "Why we started"
+        },
+        "profile": {
+          "role": "Homeowners and tenants",
+          "body": "Every cleaner is insured and DBS-checked, so you can let them in with confidence."
+        },
+        "plan": {
+          "title": "What you get",
+          "badge": "Included",
+          "body": "You agree a checklist before we start, so you know what gets cleaned.",
+          "action": "Get in touch",
+          "points": ["Same cleaner each visit", "Insured and DBS-checked", "Agreed checklist"]
+        },
+        "service": {
+          "title": "One Trusted Cleaner",
+          "body": "You get the same person each visit, so they get to know your home and how you like things done."
+        }
+      }
+    },
+    "sponsors": {
+      "heading": "What we cover",
+      "items": ["Newcastle", "Gateshead", "Domestic Cleaning", "End-of-Tenancy"]
+    },
+    "about": {
+      "heading": {
+        "text": "About Spotless Tyne",
+        "emphasis": "Spotless"
+      },
+      "body": "Spotless Tyne cleans homes across Newcastle and Gateshead for people who want it done properly. We send the same checked cleaner every time, so they get to know your home. You agree a checklist upfront, so you always know what to expect.",
+      "highlights": [
+        {
+          "value": "Same cleaner",
+          "label": "every visit"
+        },
+        {
+          "value": "Insured",
+          "label": "and DBS-checked"
+        },
+        {
+          "value": "Agreed",
+          "label": "checklist"
+        },
+        {
+          "value": "Newcastle",
+          "label": "and Gateshead"
+        }
+      ]
+    },
+    "steps": {
+      "heading": {
+        "text": "How It Works, Start To Finish",
+        "emphasis": "How It Works"
+      },
+      "lead": "Getting your home cleaned properly takes three simple steps.",
+      "items": [
+        {
+          "title": "Get In Touch",
+          "body": "Tell us about your home and what you need cleaned, whether regular or end-of-tenancy."
+        },
+        {
+          "title": "Agree A Checklist",
+          "body": "We work out a checklist together, so you know exactly what to expect from each visit."
+        },
+        {
+          "title": "Meet Your Cleaner",
+          "body": "The same insured, DBS-checked cleaner visits each time, getting to know your home properly."
+        },
+        {
+          "title": "Enjoy Your Home",
+          "body": "Relax knowing your home is cleaned your way, by someone you know and trust."
+        }
+      ]
+    },
+    "features": {
+      "heading": {
+        "text": "Cleaning Done Properly, Every Time",
+        "emphasis": "Properly"
+      },
+      "tags": [
+        "Domestic Cleaning",
+        "End-of-Tenancy",
+        "Same Cleaner",
+        "Insured",
+        "DBS-Checked",
+        "Agreed Checklist"
+      ],
+      "items": [
+        {
+          "title": "One Trusted Cleaner",
+          "body": "You get the same person each visit, so they get to know your home and how you like things done."
+        },
+        {
+          "title": "Insured And DBS-Checked",
+          "body": "Every cleaner is insured and DBS-checked, so you can let them into your home with confidence."
+        },
+        {
+          "title": "Agreed In Advance",
+          "body": "You agree a checklist before we start, so you know exactly what gets cleaned every time."
+        }
+      ]
+    },
+    "services": {
+      "heading": {
+        "text": "Cleaning For Your Home Or Tenancy",
+        "emphasis": "Your Home"
+      },
+      "lead": "Domestic and end-of-tenancy cleaning across Newcastle and Gateshead, done properly.",
+      "items": [
+        {
+          "title": "Domestic Cleaning",
+          "body": "Regular cleaning for your home, carried out by the same trusted cleaner every visit."
+        },
+        {
+          "title": "End-Of-Tenancy Cleaning",
+          "body": "A thorough clean when you move, agreed against a checklist so nothing gets missed."
+        },
+        {
+          "title": "Checklist Planning",
+          "body": "We agree exactly what gets cleaned before we start, so you always know what to expect."
+        }
+      ]
+    },
+    "cta": {
+      "heading": {
+        "text": "Ready For A Home Cleaned Properly?",
+        "emphasis": "Properly"
+      },
+      "body": "Get in touch to arrange domestic or end-of-tenancy cleaning across Newcastle and Gateshead.",
+      "primary": "Get in touch",
+      "secondary": "See what we offer"
+    },
+    "faq": {
+      "heading": {
+        "text": "Frequently Asked Questions",
+        "emphasis": "Questions"
+      },
+      "items": [
+        {
+          "question": "Will the same cleaner come every time?",
+          "answer": "Yes. You get the same person each visit, so they get to know your home and how you like things done."
+        },
+        {
+          "question": "Are your cleaners insured and checked?",
+          "answer": "Every cleaner is insured and DBS-checked, so you can let them into your home with confidence."
+        },
+        {
+          "question": "How do I know what will be cleaned?",
+          "answer": "You agree a checklist before we start, so you know exactly what gets cleaned every time."
+        },
+        {
+          "question": "Do you cover end-of-tenancy cleaning?",
+          "answer": "Yes, we offer domestic and end-of-tenancy cleaning across Newcastle and Gateshead."
+        },
+        {
+          "question": "Which areas do you work in?",
+          "answer": "We cover Newcastle and Gateshead for households that want their home cleaned properly."
+        }
+      ],
+      "prompt": "Still have questions?",
+      "link": "Contact us"
+    },
+    "footer": {
+      "groups": [
+        {
+          "heading": "Cleaning",
+          "links": [
+            {
+              "label": "Domestic Cleaning",
+              "target": "services"
+            },
+            {
+              "label": "End-Of-Tenancy",
+              "target": "services"
+            },
+            {
+              "label": "What We Offer",
+              "target": "features"
+            }
+          ]
+        },
+        {
+          "heading": "Company",
+          "links": [
+            {
+              "label": "About Us",
+              "target": "about"
+            },
+            {
+              "label": "How It Works",
+              "target": "how-it-works"
+            }
+          ]
+        },
+        {
+          "heading": "Support",
+          "links": [
+            {
+              "label": "Questions",
+              "target": "faq"
+            },
+            {
+              "label": "Get In Touch",
+              "target": "cta"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

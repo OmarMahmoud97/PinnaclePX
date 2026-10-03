@@ -1,0 +1,123 @@
+{
+  "source": "l6-all-fixes/florist",
+  "answers": {
+    "description": "Flower shop on Otley Road with bouquets, wedding flowers and weekly arrangements for offices. Same-day delivery across north Leeds if you order before noon.",
+    "company": "Thistle and Fern",
+    "logo": {
+      "kind": "wordmark"
+    },
+    "imagery": {
+      "style": "bold",
+      "photos": []
+    },
+    "colours": {
+      "kind": "custom",
+      "hex": "#be123c"
+    }
+  },
+  "chosen": ["t01-aurora", "t08-vector", "t07-summit"],
+  "ctaLabel": "Order Flowers",
+  "copy": {
+    "brand": {
+      "name": "Thistle and Fern",
+      "legalName": "Thistle and Fern",
+      "tagline": "A flower shop on Otley Road offering bouquets, wedding flowers and office blooms."
+    },
+    "nav": {
+      "links": ["Our Flowers", "How It Works", "Why Us"],
+      "cta": "Order Flowers"
+    },
+    "hero": {
+      "headline": "Bold Bouquets And Wedding Flowers In North Leeds",
+      "subhead": "Fresh bouquets, wedding flowers and weekly office arrangements, made on Otley Road for local customers and couples.",
+      "primary": "Order Flowers",
+      "secondary": "How It Works",
+      "reassurance": "Just tell us what you need, we'll take care of the rest.",
+      "frame": {
+        "title": "Otley Road",
+        "rows": [
+          "Fresh bouquets made daily",
+          "Wedding flowers for your day",
+          "Weekly office arrangements"
+        ]
+      }
+    },
+    "features": {
+      "title": "Flowers For Every Occasion And Every Workplace",
+      "lead": "From birthdays to weddings to office spaces, we make flowers to suit the moment.",
+      "items": [
+        {
+          "title": "Bouquets For Every Occasion",
+          "body": "Colourful bouquets made fresh on Otley Road, ready for birthdays, thank yous or just because."
+        },
+        {
+          "title": "Wedding Flowers",
+          "body": "We create wedding flowers that fit your day, from bouquets to venue arrangements, all made with care."
+        },
+        {
+          "title": "Weekly Office Arrangements",
+          "body": "Keep your workplace bright with fresh flowers delivered weekly, arranged to suit your office space."
+        }
+      ]
+    },
+    "steps": {
+      "title": "Getting Your Flowers Is Simple",
+      "lead": "From first message to delivery, here's how we bring your flowers to life.",
+      "items": [
+        {
+          "title": "Tell Us What You Need",
+          "body": "Get in touch to share your occasion, style and budget, whether it's a bouquet or wedding flowers."
+        },
+        {
+          "title": "We Create Your Order",
+          "body": "Our team puts together your flowers on Otley Road, choosing fresh blooms to match your request."
+        },
+        {
+          "title": "Same-Day Delivery",
+          "body": "Order before noon and we'll deliver across north Leeds the same day, straight to your door."
+        }
+      ]
+    },
+    "statement": "We love bringing colour and life to north Leeds, one bouquet and one office arrangement at a time.",
+    "cta": {
+      "headline": "Ready To Order Your Flowers?",
+      "body": "Whether it's a bouquet, wedding flowers or weekly office arrangements, we're ready to help.",
+      "action": "Order Flowers",
+      "reassurance": "Just tell us your occasion, style and budget to get started."
+    },
+    "footer": {
+      "groups": [
+        {
+          "heading": "Explore",
+          "links": [
+            {
+              "label": "Our Flowers",
+              "target": "features"
+            },
+            {
+              "label": "How It Works",
+              "target": "how-it-works"
+            },
+            {
+              "label": "Why Us",
+              "target": "why"
+            }
+          ]
+        },
+        {
+          "heading": "Get Started",
+          "links": [
+            {
+              "label": "Order Flowers",
+              "target": "start"
+            },
+            {
+              "label": "Back To Top",
+              "target": "top"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,218 @@
+{
+  "source": "l6-all-fixes/hr",
+  "answers": {
+    "description": "HR consultancy for growing firms with 10 to 80 staff. Contracts, handbooks, difficult conversations and TUPE, on a retainer or by the day. Based in Manchester and working across the north west.",
+    "company": "Northgate People",
+    "logo": {
+      "kind": "wordmark"
+    },
+    "imagery": {
+      "style": "bold",
+      "photos": []
+    },
+    "colours": {
+      "kind": "palette",
+      "paletteId": "ink"
+    }
+  },
+  "chosen": ["t06-harbor", "t05-ember", "t01-aurora"],
+  "ctaLabel": "Get in touch",
+  "copy": {
+    "brand": {
+      "name": "Northgate People",
+      "legalName": "Northgate People"
+    },
+    "nav": {
+      "links": ["Home", "About", "Services", "Contact", "Get in touch"],
+      "cta": "Get in touch"
+    },
+    "hero": {
+      "badge": "HR support for growing firms",
+      "headline": ["HR SUPPORT", "ON YOUR", "TERMS"],
+      "subhead": "Contracts, handbooks and tricky conversations handled, for growing firms across the north west.",
+      "primary": "Get in touch",
+      "secondary": "Who we are",
+      "stats": [
+        {
+          "value": "Contracts",
+          "label": "and handbooks sorted"
+        },
+        {
+          "value": "Hard talks",
+          "label": "handled with confidence"
+        },
+        {
+          "value": "TUPE",
+          "label": "guidance without panic"
+        }
+      ]
+    },
+    "about": {
+      "eyebrow": "Our story",
+      "heading": {
+        "lines": ["PROPER HR SUPPORT", "WITHOUT THE FUSS"],
+        "emphasis": "WITHOUT THE FUSS"
+      },
+      "paragraphs": [
+        "We set up Northgate People to give growing firms proper HR support without the fuss.",
+        "We work with firms of 10 to 80 staff across Manchester and the north west."
+      ],
+      "tags": [
+        "Contracts and handbooks",
+        "Difficult conversations",
+        "TUPE guidance",
+        "Ongoing support"
+      ]
+    },
+    "services": {
+      "eyebrow": "What we do",
+      "heading": {
+        "lines": ["PRACTICAL HR HELP", "ACROSS THE", "NORTH WEST"],
+        "emphasis": "NORTH WEST"
+      },
+      "lead": "Practical HR help across the north west, built around your firm.",
+      "items": [
+        {
+          "tag": "Contracts",
+          "title": "Contracts and handbooks",
+          "body": "Clear contracts and handbooks that fit your firm, so your team knows where it stands from day one."
+        },
+        {
+          "tag": "People",
+          "title": "Difficult conversations",
+          "body": "Support when conversations get hard, so you handle them fairly and with confidence."
+        },
+        {
+          "tag": "Transfers",
+          "title": "TUPE guidance",
+          "body": "Guidance through TUPE, so transfers and changes are managed properly and without panic."
+        }
+      ],
+      "more": "Find out more"
+    },
+    "metrics": {
+      "eyebrow": "How we work",
+      "heading": {
+        "lines": ["HELP THAT FITS", "YOUR FIRM"],
+        "emphasis": "YOUR FIRM"
+      },
+      "watermark": "SUPPORT",
+      "items": [
+        {
+          "value": "Get in touch",
+          "label": "Tell us what you need",
+          "description": "We take it from there"
+        },
+        {
+          "value": "We look",
+          "label": "At your needs",
+          "description": "Retainer or day rate"
+        },
+        {
+          "value": "Ongoing",
+          "label": "Support as it comes up",
+          "description": "Or as agreed in advance"
+        }
+      ]
+    },
+    "contact": {
+      "eyebrow": "FAQ",
+      "heading": {
+        "lines": ["QUESTIONS YOU", "MIGHT HAVE"],
+        "emphasis": ""
+      },
+      "faq": [
+        {
+          "question": "What size of firm do you work with?",
+          "answer": "We work with growing firms with 10 to 80 staff, across Manchester and the north west."
+        },
+        {
+          "question": "How does support work?",
+          "answer": "We talk through your situation and work out whether a retainer or day rate suits you."
+        },
+        {
+          "question": "Can you help with TUPE?",
+          "answer": "Yes, we guide you through TUPE so transfers and changes are managed properly and without panic."
+        },
+        {
+          "question": "Do you help with difficult conversations?",
+          "answer": "Yes, we support you when conversations get hard, so you handle them fairly and with confidence."
+        },
+        {
+          "question": "What happens after I get in touch?",
+          "answer": "Tell us about your firm and what you need help with, and we will take it from there."
+        }
+      ],
+      "form": {
+        "eyebrow": "Get in touch",
+        "heading": {
+          "lines": ["TELL US ABOUT", "YOUR FIRM"],
+          "emphasis": ""
+        },
+        "lead": "Tell us about your firm and what you need help with.",
+        "labels": {
+          "name": "Name",
+          "email": "Email",
+          "message": "Message"
+        },
+        "placeholder": "What do you need help with?",
+        "button": "Send message"
+      }
+    },
+    "cta": {
+      "eyebrow": "Get in touch",
+      "heading": {
+        "lines": ["HR SUPPORT ON", "YOUR TERMS"],
+        "emphasis": "YOUR TERMS"
+      },
+      "body": "We set up Northgate People to give growing firms proper HR support without the fuss. Get in touch to find out more.",
+      "primary": "Get in touch",
+      "secondary": "Who we are"
+    },
+    "footer": {
+      "description": "Northgate People is an HR consultancy for growing firms with 10 to 80 staff, across Manchester and the north west.",
+      "newsletter": {
+        "label": "Hear from us",
+        "placeholder": "your@email.com"
+      },
+      "columns": [
+        {
+          "heading": "Company",
+          "links": [
+            {
+              "label": "About",
+              "target": "about"
+            },
+            {
+              "label": "Services",
+              "target": "services"
+            },
+            {
+              "label": "Contact",
+              "target": "contact"
+            }
+          ]
+        },
+        {
+          "heading": "Get started",
+          "links": [
+            {
+              "label": "Get in touch",
+              "target": "cta"
+            },
+            {
+              "label": "How we work",
+              "target": "metrics"
+            },
+            {
+              "label": "Home",
+              "target": "top"
+            }
+          ]
+        }
+      ],
+      "note": "",
+      "smallPrint": "Privacy · Terms"
+    }
+  }
+}

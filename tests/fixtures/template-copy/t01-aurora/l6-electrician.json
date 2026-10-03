@@ -1,0 +1,119 @@
+{
+  "source": "l6-all-fixes/electrician",
+  "answers": {
+    "description": "Domestic electrician covering York and Selby: rewires, consumer units, EV chargers and fault finding. NICEIC approved, tidy work, and a written quote before anything starts.",
+    "company": "Bright Spark Electrical",
+    "logo": {
+      "kind": "wordmark"
+    },
+    "imagery": {
+      "style": "warm",
+      "photos": []
+    },
+    "colours": {
+      "kind": "custom",
+      "hex": "#b45309"
+    }
+  },
+  "chosen": ["t01-aurora", "t03-meridian", "t08-vector"],
+  "ctaLabel": "Get in touch",
+  "copy": {
+    "brand": {
+      "name": "Bright Spark Electrical",
+      "legalName": "Bright Spark Electrical",
+      "tagline": "Domestic electrician covering York and Selby, for homes that need work done properly."
+    },
+    "nav": {
+      "links": ["What We Do", "How It Works", "Why Choose Us"],
+      "cta": "Get in touch"
+    },
+    "hero": {
+      "headline": "Your local electrician for York and Selby",
+      "subhead": "Rewires, consumer units, EV chargers and fault finding for homeowners in York and Selby.",
+      "primary": "Get in touch",
+      "secondary": "How it works",
+      "reassurance": "Written quote before any work starts, so there are no surprises.",
+      "frame": {
+        "title": "Our Work",
+        "rows": ["Rewires done properly", "Consumer unit upgrades", "EV charger installs"]
+      }
+    },
+    "features": {
+      "title": "Honest electrical work, done properly",
+      "lead": "Tidy, reliable electrics for your home, handled with care from start to finish.",
+      "items": [
+        {
+          "title": "NICEIC approved",
+          "body": "We're NICEIC approved, so you know the work meets proper standards from start to finish."
+        },
+        {
+          "title": "Written quotes first",
+          "body": "You get a written quote before any work begins, so there are no surprises along the way."
+        },
+        {
+          "title": "Tidy, careful work",
+          "body": "We treat your home with care and leave things tidy once the job is done."
+        }
+      ]
+    },
+    "steps": {
+      "title": "How we work with you",
+      "lead": "A straightforward process, from your first message through to finished work.",
+      "items": [
+        {
+          "title": "Get in touch",
+          "body": "Tell us what you need, whether it's a rewire, consumer unit, EV charger or a fault to track down."
+        },
+        {
+          "title": "Receive your quote",
+          "body": "We'll visit, have a look, and give you a written quote before any work starts."
+        },
+        {
+          "title": "We get to work",
+          "body": "Once you're happy with the quote, we carry out the work tidily and to a proper standard."
+        }
+      ]
+    },
+    "statement": "We care about doing electrical work properly, so your home stays safe and sound.",
+    "cta": {
+      "headline": "Ready to sort your electrics?",
+      "body": "Get in touch about your rewire, consumer unit, EV charger or fault, and we'll take it from there.",
+      "action": "Get in touch",
+      "reassurance": "You'll get a written quote before any work begins."
+    },
+    "footer": {
+      "groups": [
+        {
+          "heading": "Explore",
+          "links": [
+            {
+              "label": "What We Do",
+              "target": "features"
+            },
+            {
+              "label": "How It Works",
+              "target": "how-it-works"
+            },
+            {
+              "label": "Why Choose Us",
+              "target": "why"
+            }
+          ]
+        },
+        {
+          "heading": "Get Started",
+          "links": [
+            {
+              "label": "Get In Touch",
+              "target": "start"
+            },
+            {
+              "label": "Back To Top",
+              "target": "top"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,142 @@
+{
+  "source": "l6-all-fixes/electrician",
+  "answers": {
+    "description": "Domestic electrician covering York and Selby: rewires, consumer units, EV chargers and fault finding. NICEIC approved, tidy work, and a written quote before anything starts.",
+    "company": "Bright Spark Electrical",
+    "logo": {
+      "kind": "wordmark"
+    },
+    "imagery": {
+      "style": "warm",
+      "photos": []
+    },
+    "colours": {
+      "kind": "custom",
+      "hex": "#b45309"
+    }
+  },
+  "chosen": ["t01-aurora", "t03-meridian", "t08-vector"],
+  "ctaLabel": "Get in touch",
+  "copy": {
+    "brand": {
+      "name": "bright spark electrical",
+      "legalName": "Bright Spark Electrical"
+    },
+    "nav": {
+      "links": ["Home", "Our Work", "What We Offer", "About", "Questions", "Contact"]
+    },
+    "hero": {
+      "headline": ["Your local", "electrician for", "York and Selby"],
+      "subhead": "Domestic electrical work for homeowners in York and Selby, from rewires to EV chargers and fault finding.",
+      "scrollHint": "Scroll"
+    },
+    "projects": {
+      "marquee": {
+        "text": "Recent",
+        "accent": "Work"
+      },
+      "items": [
+        {
+          "titleUp": "Full",
+          "titleDown": "Rewire",
+          "description": "A complete rewire carried out tidily and to a proper standard, start to finish."
+        },
+        {
+          "titleUp": "Consumer",
+          "titleDown": "Units",
+          "description": "Consumer unit upgrades done properly, so your home stays safe and sound."
+        },
+        {
+          "titleUp": "EV Charger",
+          "titleDown": "Install",
+          "description": "EV chargers fitted neatly at home, with a written quote before we start."
+        },
+        {
+          "titleUp": "Fault",
+          "titleDown": "Finding",
+          "description": "Tracking down electrical faults carefully, without fuss or mess left behind."
+        }
+      ]
+    },
+    "services": {
+      "heading": "Honest electrical work for homes across York and Selby.",
+      "items": ["Rewires", "Consumer units", "EV chargers", "Fault finding"]
+    },
+    "about": {
+      "statement": "We care about doing electrical work properly, so your home stays safe and sound.",
+      "cta": "Get in touch"
+    },
+    "faq": {
+      "heading": ["Frequently asked", "Questions"],
+      "items": [
+        {
+          "question": "Do you cover York and Selby?",
+          "answer": "Yes, we're a local electrician covering homes across both York and Selby."
+        },
+        {
+          "question": "What work do you do?",
+          "answer": "We handle rewires, consumer units, EV chargers and fault finding for homeowners."
+        },
+        {
+          "question": "Will I get a quote first?",
+          "answer": "Yes, you'll always get a written quote before any work begins, so there are no surprises."
+        },
+        {
+          "question": "Are you NICEIC approved?",
+          "answer": "Yes, we're NICEIC approved, so you know the work meets proper standards throughout."
+        },
+        {
+          "question": "Will you leave my home tidy?",
+          "answer": "Yes, we treat your home with care and leave everything tidy once the job is done."
+        }
+      ]
+    },
+    "footer": {
+      "cta": "Get in touch",
+      "tagline": "Honest electrical work, done properly.",
+      "servicesHeading": "Services",
+      "navigationHeading": "Navigation",
+      "navigation": [
+        {
+          "label": "Home",
+          "target": "top"
+        },
+        {
+          "label": "Our Work",
+          "target": "projects"
+        },
+        {
+          "label": "What We Offer",
+          "target": "services"
+        },
+        {
+          "label": "About",
+          "target": "about"
+        },
+        {
+          "label": "Questions",
+          "target": "faq"
+        },
+        {
+          "label": "Contact",
+          "target": "contact"
+        }
+      ],
+      "bottomLinks": [
+        {
+          "label": "Our Work",
+          "target": "projects"
+        },
+        {
+          "label": "Services",
+          "target": "services"
+        },
+        {
+          "label": "Contact",
+          "target": "contact"
+        }
+      ],
+      "credit": "Bright Spark Electrical, York and Selby."
+    }
+  }
+}

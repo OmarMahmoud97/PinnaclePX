@@ -2,23 +2,18 @@ import { existsSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { notFound } from 'next/navigation'
 import * as z from 'zod'
-import { typeStyle } from '@/app/preview/_components/fonts'
-import { paletteFor } from '@/lib/brief/palettes'
+import { DevConcept, viewOf } from '@/app/dev/_render/concept'
 import { submissionAnswersSchema } from '@/lib/brief/submission'
 import { env } from '@/lib/env'
-import type { TemplateAssets } from '@/lib/copy-slots/assets'
-import { tokenStyle } from '@/lib/tokens/css'
-import { deriveTokens } from '@/lib/tokens/derive'
-import { schemeFor } from '@/lib/tokens/scheme'
-import type { ContrastPair } from '@/lib/tokens/types'
-import { contractFor } from '@/templates/registry'
-import { renderConcept } from '@/templates/render'
 
 // A development-only look at what an eval run wrote (tests/eval/pipeline.eval.ts): one
 // template's copy from one fixture, rendered through renderConcept exactly as the preview page
 // renders a row, with the tokens the pipeline would derive, the fonts of the chosen look, a
-// wordmark logo and no pictures. Outside development the route does not exist.
+// wordmark logo and no pictures. The address can ask for another look, scheme, stand-in
+// pictures, a stand-in logo or an email (app/dev/_render/concept.tsx), which is how the checks
+// in scripts/checks measure every state. Outside development the route does not exist.
 type Params = Promise<{ run: string; fixture: string; templateId: string }>
+type Search = Promise<Record<string, string | string[] | undefined>>
 
 const segment = z.string().regex(/^[a-z0-9-]+$/)
 
@@ -28,7 +23,13 @@ const recordSchema = z.object({
   copy: z.record(z.string(), z.object({ final: z.unknown(), fallback: z.boolean() })),
 })
 
-export default async function EvalConceptPage({ params }: { params: Params }) {
+export default async function EvalConceptPage({
+  params,
+  searchParams,
+}: {
+  params: Params
+  searchParams: Search
+}) {
   if (env.NODE_ENV !== 'development') notFound()
   const { run, fixture, templateId } = await params
   if (![run, fixture, templateId].every((part) => segment.safeParse(part).success)) notFound()
@@ -37,19 +38,11 @@ export default async function EvalConceptPage({ params }: { params: Params }) {
   const record = recordSchema.parse(JSON.parse(readFileSync(file, 'utf8')))
   const written = record.copy[templateId]
   if (written === undefined || !record.templates.includes(templateId)) notFound()
-
-  const { answers } = record
-  const hex =
-    answers.colours.kind === 'palette'
-      ? paletteFor(answers.colours.paletteId).hex
-      : answers.colours.hex
-  // The pipeline solves the tokens over every chosen template's pairs (build-concepts.ts).
-  const pairs: ContrastPair[] = record.templates.flatMap((id) => [...contractFor(id).contrastPairs])
-  const tokens = deriveTokens(hex, schemeFor(answers.imagery.style, 'mixed'), pairs)
-  const assets: TemplateAssets = { logo: { kind: 'wordmark' }, images: {}, email: null }
+  const view = viewOf(await searchParams, record.answers)
+  if (view === null) notFound()
 
   return (
-    <div style={{ ...tokenStyle(tokens), ...typeStyle(answers.imagery.style) }}>
+    <>
       {written.fallback ? (
         <p
           style={{
@@ -62,7 +55,13 @@ export default async function EvalConceptPage({ params }: { params: Params }) {
           Fallback copy: the answers to this template broke their limits or the call failed.
         </p>
       ) : null}
-      {renderConcept(templateId, written.final, assets)}
-    </div>
+      <DevConcept
+        templateId={templateId}
+        copy={written.final}
+        answers={record.answers}
+        chosen={record.templates}
+        view={view}
+      />
+    </>
   )
 }

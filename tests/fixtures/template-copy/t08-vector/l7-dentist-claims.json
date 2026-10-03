@@ -1,0 +1,137 @@
+{
+  "source": "l7-sentence/dentist-claims",
+  "answers": {
+    "description": "Rated 4.9 on Google by over 300 patients, we have been the number one family dentist in Harrogate since 1998. Two surgeries, 0% finance on treatment over £500, open 7 days a week from 8am to 8pm, award-winning hygienists and a 10 year guarantee on crowns.",
+    "company": "Oakfield Dental Practice",
+    "logo": {
+      "kind": "wordmark"
+    },
+    "imagery": {
+      "style": "bold",
+      "photos": []
+    },
+    "colours": {
+      "kind": "custom",
+      "hex": "#0e7490"
+    }
+  },
+  "chosen": ["t01-aurora", "t08-vector", "t02-monolith"],
+  "ctaLabel": "Book a visit",
+  "copy": {
+    "brand": {
+      "name": "oakfield dental practice",
+      "legalName": "Oakfield Dental Practice"
+    },
+    "nav": {
+      "links": ["Home", "Our Work", "We Offer", "About", "Questions", "Contact"]
+    },
+    "hero": {
+      "headline": ["Your family", "dentist, open", "every day"],
+      "subhead": "A family dentist in Harrogate, open every day for your dental care, whenever your family needs it.",
+      "scrollHint": "Scroll"
+    },
+    "projects": {
+      "marquee": {
+        "text": "Our",
+        "accent": "Care"
+      },
+      "items": [
+        {
+          "titleUp": "Two",
+          "titleDown": "Surgeries",
+          "description": "Two surgeries in Harrogate, ready for your check-up, treatment or hygiene visit."
+        },
+        {
+          "titleUp": "Open",
+          "titleDown": "Daily",
+          "description": "Open seven days a week, from 8am to 8pm, so you can book when it suits your family."
+        },
+        {
+          "titleUp": "Flexible",
+          "titleDown": "Finance",
+          "description": "0% finance on treatment over £500, making larger dental work easier to plan for."
+        }
+      ]
+    },
+    "services": {
+      "heading": "Dental care for your family, built around your week.",
+      "items": ["Family Check-ups", "Hygiene Visits", "Crowns", "0% Finance Plans"]
+    },
+    "about": {
+      "statement": "We set up Oakfield to give Harrogate families a dentist they can see any day of the week.",
+      "cta": "Book a visit"
+    },
+    "faq": {
+      "heading": ["Frequently", "Asked"],
+      "items": [
+        {
+          "question": "What are your opening hours?",
+          "answer": "We open seven days a week, from 8am to 8pm, so you can find a time that works for your family."
+        },
+        {
+          "question": "Do you offer payment plans?",
+          "answer": "Yes, we offer 0% finance on treatment over £500, making larger dental work easier to plan for."
+        },
+        {
+          "question": "How many surgeries do you have?",
+          "answer": "We have two surgeries, both ready for your check-up, treatment or hygiene visit."
+        },
+        {
+          "question": "Do you offer any guarantee on crowns?",
+          "answer": "Yes, we offer a 10 year guarantee on crowns, giving you peace of mind about your treatment."
+        },
+        {
+          "question": "Are you based in Harrogate?",
+          "answer": "Yes, we are a family dentist based in Harrogate, open every day for your dental care."
+        }
+      ]
+    },
+    "footer": {
+      "cta": "Book a visit",
+      "tagline": "Your family dentist, every day.",
+      "servicesHeading": "Services",
+      "navigationHeading": "Navigation",
+      "navigation": [
+        {
+          "label": "Home",
+          "target": "top"
+        },
+        {
+          "label": "Our Work",
+          "target": "projects"
+        },
+        {
+          "label": "We Offer",
+          "target": "services"
+        },
+        {
+          "label": "About",
+          "target": "about"
+        },
+        {
+          "label": "Questions",
+          "target": "faq"
+        },
+        {
+          "label": "Contact",
+          "target": "contact"
+        }
+      ],
+      "bottomLinks": [
+        {
+          "label": "About",
+          "target": "about"
+        },
+        {
+          "label": "Questions",
+          "target": "faq"
+        },
+        {
+          "label": "Contact",
+          "target": "contact"
+        }
+      ],
+      "credit": "Oakfield Dental Practice, Harrogate."
+    }
+  }
+}

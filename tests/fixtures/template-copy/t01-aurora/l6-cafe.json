@@ -1,0 +1,123 @@
+{
+  "source": "l6-all-fixes/cafe",
+  "answers": {
+    "description": "Independent café on the canal in Hebden Bridge. Breakfasts, sourdough toasties and cakes baked here each morning. Dogs, prams and muddy boots all welcome.",
+    "company": "Bramble and Bean",
+    "logo": {
+      "kind": "wordmark"
+    },
+    "imagery": {
+      "style": "warm",
+      "photos": []
+    },
+    "colours": {
+      "kind": "palette",
+      "paletteId": "clay"
+    }
+  },
+  "chosen": ["t08-vector", "t02-monolith", "t01-aurora"],
+  "ctaLabel": "Visit us today",
+  "copy": {
+    "brand": {
+      "name": "Bramble and Bean",
+      "legalName": "Bramble and Bean",
+      "tagline": "An independent café on the canal in Hebden Bridge, open each morning"
+    },
+    "nav": {
+      "links": ["What We Do", "How It Works", "Why Us"],
+      "cta": "Visit us today"
+    },
+    "hero": {
+      "headline": "Your independent café by the canal",
+      "subhead": "Breakfasts, sourdough toasties and cakes baked each morning, for locals and visitors wanting a relaxed canalside café.",
+      "primary": "Visit us today",
+      "secondary": "How it works",
+      "reassurance": "No need to book, just follow the towpath and find our door.",
+      "frame": {
+        "title": "Today's Menu",
+        "rows": [
+          "Breakfasts cooked with care",
+          "Sourdough toasties made to order",
+          "Cakes baked fresh this morning"
+        ]
+      }
+    },
+    "features": {
+      "title": "Breakfasts, toasties and cakes, made each morning",
+      "lead": "Simple food done well, served by the water in Hebden Bridge.",
+      "items": [
+        {
+          "title": "Baked here each morning",
+          "body": "Our cakes are baked fresh on site every morning. Come and see what's just come out of the oven today."
+        },
+        {
+          "title": "Hearty breakfasts",
+          "body": "Start your day with a proper breakfast by the water. Simple, satisfying food cooked with care."
+        },
+        {
+          "title": "Sourdough toasties",
+          "body": "Our sourdough toasties are made to order using good bread and simple fillings. A canalside favourite."
+        }
+      ]
+    },
+    "steps": {
+      "title": "Finding us and settling in is easy",
+      "lead": "Here's what to expect when you visit us on the canal.",
+      "items": [
+        {
+          "title": "Find us by the canal",
+          "body": "We're easy to spot on the canal in Hebden Bridge. Just follow the towpath and look out for our door."
+        },
+        {
+          "title": "Settle in",
+          "body": "Bring the dog, the pram or your muddy boots. Grab a table and take a moment by the water."
+        },
+        {
+          "title": "Order at the counter",
+          "body": "Choose from breakfasts, toasties and cakes baked that morning. We'll bring it over when it's ready."
+        }
+      ]
+    },
+    "statement": "We wanted a café on the canal where everyone feels welcome, muddy boots, dogs and prams included.",
+    "cta": {
+      "headline": "Come and find us on the canal",
+      "body": "Drop by for breakfast, a toastie or a slice of cake baked this morning. Everyone is welcome.",
+      "action": "Visit us today",
+      "reassurance": "Just follow the towpath and look out for our door."
+    },
+    "footer": {
+      "groups": [
+        {
+          "heading": "Explore",
+          "links": [
+            {
+              "label": "What We Do",
+              "target": "features"
+            },
+            {
+              "label": "How It Works",
+              "target": "how-it-works"
+            },
+            {
+              "label": "Why Us",
+              "target": "why"
+            }
+          ]
+        },
+        {
+          "heading": "Visit",
+          "links": [
+            {
+              "label": "Visit Us Today",
+              "target": "start"
+            },
+            {
+              "label": "Back To Top",
+              "target": "top"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

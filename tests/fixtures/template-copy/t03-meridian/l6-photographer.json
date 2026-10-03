@@ -1,0 +1,216 @@
+{
+  "source": "l6-all-fixes/photographer",
+  "answers": {
+    "description": "Wedding and family photography across Northumberland in a relaxed documentary style with no forced poses. Albums printed in the UK.",
+    "company": "Coldharbour Photography",
+    "logo": {
+      "kind": "wordmark"
+    },
+    "imagery": {
+      "style": "minimal",
+      "photos": []
+    },
+    "colours": {
+      "kind": "custom",
+      "hex": "#0f766e"
+    }
+  },
+  "chosen": ["t03-meridian", "t04-atlas", "t06-harbor"],
+  "ctaLabel": "Get in touch",
+  "copy": {
+    "brand": {
+      "name": "Coldharbour Photography",
+      "legalName": "Coldharbour Photography"
+    },
+    "nav": {
+      "links": ["Why us", "Services", "Contact", "Questions"],
+      "cta": "Get in touch",
+      "menu": {
+        "label": "What we do",
+        "items": [
+          {
+            "title": "Documentary style",
+            "body": "Natural, relaxed photographs rather than stiff, posed shots of your day."
+          },
+          {
+            "title": "Weddings and family",
+            "body": "Covering weddings and family sessions across Northumberland, calmly."
+          },
+          {
+            "title": "UK printed albums",
+            "body": "Your photographs printed in the UK, as something you can hold and keep."
+          }
+        ]
+      }
+    },
+    "hero": {
+      "badge": {
+        "label": "Relaxed",
+        "text": "Documentary photography, no forced poses"
+      },
+      "headline": {
+        "text": "Your day, captured naturally across Northumberland",
+        "emphasis": "captured naturally"
+      },
+      "subhead": "Wedding and family photography across Northumberland, in a relaxed documentary style. No forced poses, just your day as it happens.",
+      "primary": "Get in touch",
+      "secondary": "See what we do"
+    },
+    "sponsors": {
+      "heading": "What we cover",
+      "items": ["Weddings", "Family sessions", "Northumberland", "Documentary style"]
+    },
+    "benefits": {
+      "eyebrow": "Benefits",
+      "heading": "Photographs that feel like you",
+      "lead": "You get a calm, honest approach to your wedding or family photographs. Nothing posed, nothing forced, just your day as it really was.",
+      "items": [
+        {
+          "title": "Natural, not posed",
+          "body": "You get natural, relaxed photographs rather than stiff, posed shots of your day."
+        },
+        {
+          "title": "Quietly captured",
+          "body": "Your day unfolds as it happens, quietly captured without fuss or direction."
+        },
+        {
+          "title": "Calm approach",
+          "body": "A calm approach that puts you at ease, whether it is your wedding or a family session."
+        },
+        {
+          "title": "Something to keep",
+          "body": "Your albums are printed in the UK, so your photographs become something you can hold."
+        }
+      ]
+    },
+    "features": {
+      "eyebrow": "What we do",
+      "heading": "Weddings and family, covered calmly",
+      "lead": "We photograph weddings and family sessions across Northumberland, staying quietly in the background throughout.",
+      "items": [
+        {
+          "title": "Weddings",
+          "body": "Your wedding day captured as it happens, without forced poses or fuss."
+        },
+        {
+          "title": "Family sessions",
+          "body": "Family photographs that feel natural, with a calm approach that puts you at ease."
+        },
+        {
+          "title": "Across Northumberland",
+          "body": "Covering weddings and family sessions across Northumberland."
+        }
+      ]
+    },
+    "services": {
+      "eyebrow": "Services",
+      "heading": "How we work with you",
+      "lead": "From your first message to the finished album, we keep things calm and straightforward.",
+      "items": [
+        {
+          "title": "Wedding photography",
+          "body": "Documentary coverage of your wedding day, without forced poses."
+        },
+        {
+          "title": "Family photography",
+          "body": "Relaxed family sessions, captured as they naturally happen."
+        },
+        {
+          "title": "UK printed albums",
+          "body": "Your photographs printed into albums you can hold and keep."
+        }
+      ]
+    },
+    "community": {
+      "heading": {
+        "text": "Ready to talk about your day?",
+        "emphasis": "your day"
+      },
+      "body": "Send a message about your wedding or family session, and tell us your date and what you have in mind.",
+      "action": "Get in touch"
+    },
+    "contact": {
+      "eyebrow": "Contact",
+      "heading": "Get in touch",
+      "lead": "Tell us about your wedding or family session, your date, and what you have in mind.",
+      "rows": [
+        {
+          "title": "Get in touch",
+          "lines": ["Send a message about your wedding or family session."]
+        },
+        {
+          "title": "Meet and plan",
+          "lines": ["We talk through your day, your family, and how the style will work."]
+        },
+        {
+          "title": "Photograph the day",
+          "lines": ["We stay quietly in the background, capturing things as they happen."]
+        }
+      ],
+      "form": {
+        "subjects": ["Wedding enquiry", "Family session", "General question"],
+        "button": "Send message"
+      }
+    },
+    "faq": {
+      "eyebrow": "FAQ",
+      "heading": "Common questions",
+      "items": [
+        {
+          "question": "Do you cover weddings and family sessions?",
+          "answer": "Yes, we cover weddings and family sessions across Northumberland."
+        },
+        {
+          "question": "Will you pose us for the photographs?",
+          "answer": "No, we work in a relaxed documentary style with no forced poses."
+        },
+        {
+          "question": "What is your approach on the day?",
+          "answer": "We stay quietly in the background, capturing things as they naturally happen."
+        },
+        {
+          "question": "Can we get a printed album?",
+          "answer": "Yes, your albums are printed in the UK, so you have something to hold and keep."
+        },
+        {
+          "question": "Where are you based?",
+          "answer": "We work across Northumberland, covering weddings and family sessions."
+        }
+      ]
+    },
+    "footer": {
+      "groups": [
+        {
+          "heading": "Explore",
+          "links": [
+            {
+              "label": "Why us",
+              "target": "benefits"
+            },
+            {
+              "label": "What we do",
+              "target": "features"
+            },
+            {
+              "label": "Services",
+              "target": "services"
+            }
+          ]
+        },
+        {
+          "heading": "Help",
+          "links": [
+            {
+              "label": "Contact",
+              "target": "contact"
+            },
+            {
+              "label": "Questions",
+              "target": "faq"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

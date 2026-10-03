@@ -1,0 +1,176 @@
+{
+  "source": "l6-all-fixes/longest",
+  "answers": {
+    "description": "Fenwick Associates is a two-person management consultancy in Durham that helps owner-managed firms get ready to sell, or to hand over to the next generation. We start with a plain review of how the business runs, then stay alongside the owners through valuation, tidying up the paperwork, finding the right buyer and the first year after the deal. Most of our work comes from accountants who know us.",
+    "company": "Fenwick Associates",
+    "logo": {
+      "kind": "wordmark"
+    },
+    "imagery": {
+      "style": "dark",
+      "photos": []
+    },
+    "colours": {
+      "kind": "palette",
+      "paletteId": "plum"
+    }
+  },
+  "chosen": ["t03-meridian", "t07-summit", "t05-ember"],
+  "ctaLabel": "Get in touch",
+  "copy": {
+    "brand": {
+      "name": "Fenwick Associates",
+      "legalName": "Fenwick Associates"
+    },
+    "nav": {
+      "links": ["About", "What we do", "Contact", "FAQs"],
+      "cta": "Get in touch"
+    },
+    "hero": {
+      "eyebrow": "STEADY GUIDANCE FOR OWNERS",
+      "headline": "Ready your business for its next chapter",
+      "subhead": "We help owner-managed firms in Durham prepare to sell or hand over to the next generation.",
+      "cta": "Get in touch"
+    },
+    "about": {
+      "eyebrow": "How we work",
+      "heading": "A calm, steady approach to a big decision",
+      "body": "We are a two-person consultancy in Durham, helping owners prepare for sale or handover with care."
+    },
+    "stats": [
+      {
+        "title": "Plain review first",
+        "body": "We start by looking honestly at how your business runs, before anything else is decided."
+      },
+      {
+        "title": "Alongside you throughout",
+        "body": "We stay with you through valuation, paperwork and finding the right buyer."
+      },
+      {
+        "title": "Support after the deal",
+        "body": "We remain involved through the first year after handover, so the transition stays steady."
+      }
+    ],
+    "dishes": {
+      "eyebrow": "What we offer",
+      "heading": "Support at every stage",
+      "items": [
+        {
+          "title": "Initial conversation",
+          "note": "Talking it through"
+        },
+        {
+          "title": "Plain business review",
+          "note": "An honest look first"
+        },
+        {
+          "title": "Valuation support",
+          "note": "Through the process"
+        },
+        {
+          "title": "Ongoing support",
+          "note": "Into the first year"
+        }
+      ]
+    },
+    "features": {
+      "eyebrow": "What sets us apart",
+      "heading": "Why owners come to us",
+      "items": [
+        {
+          "title": "Honest first look",
+          "body": "We start by looking honestly at how your business runs, before anything else is decided."
+        },
+        {
+          "title": "There throughout",
+          "body": "We stay with you through valuation, paperwork and finding the right buyer, not just at the start."
+        },
+        {
+          "title": "Care after handover",
+          "body": "We remain involved through the first year after handover, so the transition stays steady."
+        }
+      ]
+    },
+    "booking": {
+      "eyebrow": "How it works",
+      "heading": "Three steady steps",
+      "steps": [
+        {
+          "title": "Initial conversation",
+          "body": "We talk through your situation and what selling or handing over might look like for you."
+        },
+        {
+          "title": "Plain business review",
+          "body": "We look closely at how the business runs today, so we know where to focus next."
+        },
+        {
+          "title": "Ongoing support",
+          "body": "We stay alongside you through valuation, paperwork, finding a buyer and the year after."
+        }
+      ]
+    },
+    "timing": {
+      "title": "Based in Durham",
+      "body": "If you are thinking about selling or handing over your business, we are happy to talk it through.",
+      "cta": "Get in touch"
+    },
+    "faq": {
+      "eyebrow": "FAQs",
+      "heading": "Frequently asked questions",
+      "items": [
+        {
+          "question": "What kind of businesses do you work with?",
+          "answer": "We work with owner-managed firms planning a sale or a handover to the next generation."
+        },
+        {
+          "question": "Where are you based?",
+          "answer": "We are a two-person consultancy based in Durham."
+        },
+        {
+          "question": "How do you start working with a business?",
+          "answer": "We begin with a plain, honest review of how your business runs before anything else is decided."
+        },
+        {
+          "question": "Do you help after the sale or handover?",
+          "answer": "Yes, we remain involved through the first year after handover, so the transition stays steady."
+        },
+        {
+          "question": "How do most clients find you?",
+          "answer": "Most clients come to us through trusted accountants."
+        }
+      ]
+    },
+    "cta": {
+      "heading": "Ready to talk about your next chapter?",
+      "body": "Get in touch and we can talk through what selling or handing over might look like.",
+      "button": "Get in touch"
+    },
+    "footer": {
+      "description": "Fenwick Associates helps owner-managed firms in Durham prepare to sell or hand over with care.",
+      "groups": [
+        {
+          "heading": "Explore",
+          "links": [
+            {
+              "label": "About",
+              "target": "about"
+            },
+            {
+              "label": "What we do",
+              "target": "dishes"
+            },
+            {
+              "label": "How it works",
+              "target": "booking-process"
+            },
+            {
+              "label": "FAQs",
+              "target": "faq"
+            }
+          ]
+        }
+      ],
+      "contact": "Get in touch"
+    }
+  }
+}

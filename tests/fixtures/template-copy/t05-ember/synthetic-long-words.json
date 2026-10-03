@@ -1,0 +1,193 @@
+{
+  "source": "synthetic: the long real words in every headline and phrase slot, from l6-cleaning",
+  "answers": {
+    "description": "Domestic and end-of-tenancy cleaning across Newcastle and Gateshead. Insured, DBS-checked cleaners, the same person each visit, and a checklist you agree in advance.",
+    "company": "Spotless Tyne",
+    "logo": {
+      "kind": "wordmark"
+    },
+    "imagery": {
+      "style": "bold",
+      "photos": []
+    },
+    "colours": {
+      "kind": "palette",
+      "paletteId": "plum"
+    }
+  },
+  "chosen": ["t07-summit", "t05-ember", "t02-monolith"],
+  "ctaLabel": "Get in touch",
+  "copy": {
+    "brand": {
+      "name": "Spotless Tyne",
+      "legalName": "Spotless Tyne"
+    },
+    "nav": {
+      "links": ["About", "Services", "Areas", "FAQs"],
+      "cta": "Get in touch"
+    },
+    "hero": {
+      "eyebrow": "CLEANED PROPERLY, EVERY TIME",
+      "headline": "STRAIGHTFORWARD NORTHUMBERLAND PHYSIOTHERAPY KNARESBOROUGH",
+      "subhead": "Domestic and end-of-tenancy cleaning across Newcastle and Gateshead, for households that want it done properly.",
+      "cta": "Get in touch"
+    },
+    "about": {
+      "eyebrow": "Made with care",
+      "heading": "NORTHUMBERLAND STRAIGHTFORWARD PHYSIOTHERAPY KNARESBOROUGH",
+      "body": "We believe a clean home comes from trust, so we send the same checked cleaner every time."
+    },
+    "stats": [
+      {
+        "title": "PHYSIOTHERAPY NORTHUMBERLAND",
+        "body": "You get the same person each visit, so they get to know your home and how you like things done."
+      },
+      {
+        "title": "KNARESBOROUGH NORTHUMBERLAND",
+        "body": "Every cleaner is insured and DBS-checked, so you can let them into your home with confidence."
+      },
+      {
+        "title": "CONVEYANCING STRAIGHTFORWARD",
+        "body": "You agree a checklist before we start, so you know exactly what gets cleaned every time."
+      }
+    ],
+    "dishes": {
+      "eyebrow": "What we offer",
+      "heading": "ARCHITECTURE STRAIGHTFORWARD NORTHUMBERLAND",
+      "items": [
+        {
+          "title": "ACCOUNTANCY STRAIGHTFORWARD",
+          "note": "For regular homes"
+        },
+        {
+          "title": "STRAIGHTFORWARD CONVEYANCING",
+          "note": "Tenants, landlords"
+        },
+        {
+          "title": "NORTHUMBERLAND PHYSIOTHERAPY",
+          "note": "Set in advance"
+        },
+        {
+          "title": "PHYSIOTHERAPY NORTHUMBERLAND",
+          "note": "Same cleaner"
+        }
+      ]
+    },
+    "features": {
+      "eyebrow": "What sets us apart",
+      "heading": "KNARESBOROUGH STRAIGHTFORWARD NORTHUMBERLAND",
+      "items": [
+        {
+          "title": "CONVEYANCING STRAIGHTFORWARD",
+          "body": "The same cleaner visits every time, so they get to know your home and how you like things done."
+        },
+        {
+          "title": "ARCHITECTURE STRAIGHTFORWARD",
+          "body": "Every cleaner is insured and DBS-checked, so you can feel confident letting them in."
+        },
+        {
+          "title": "ACCOUNTANCY STRAIGHTFORWARD",
+          "body": "You agree exactly what gets cleaned before we start, so nothing is left to guesswork."
+        }
+      ]
+    },
+    "booking": {
+      "eyebrow": "How it works",
+      "heading": "STRAIGHTFORWARD NORTHUMBERLAND PHYSIOTHERAPY KNARESBOROUGH",
+      "steps": [
+        {
+          "title": "NORTHUMBERLAND STRAIGHTFORWARD",
+          "body": "Tell us about your home and what you need cleaned, whether regular or end-of-tenancy."
+        },
+        {
+          "title": "PHYSIOTHERAPY STRAIGHTFORWARD",
+          "body": "We work out a checklist together, so you know exactly what to expect from each visit."
+        },
+        {
+          "title": "KNARESBOROUGH STRAIGHTFORWARD",
+          "body": "The same insured, DBS-checked cleaner visits each time, getting to know your home properly."
+        }
+      ]
+    },
+    "timing": {
+      "title": "CONVEYANCING STRAIGHTFORWARD",
+      "body": "Tell us about your home in Newcastle or Gateshead, and we will sort the rest with you.",
+      "cta": "Get in touch"
+    },
+    "faq": {
+      "eyebrow": "FAQs",
+      "heading": "ARCHITECTURE STRAIGHTFORWARD NORTHUMBERLAND",
+      "items": [
+        {
+          "question": "Do I get the same cleaner every visit?",
+          "answer": "Yes, you get the same person each visit, so they get to know your home and how you like things done."
+        },
+        {
+          "question": "Are your cleaners insured and checked?",
+          "answer": "Every cleaner is insured and DBS-checked, so you can let them into your home with confidence."
+        },
+        {
+          "question": "How do you know what to clean?",
+          "answer": "You agree a checklist with us before we start, so you know exactly what gets cleaned every time."
+        },
+        {
+          "question": "Do you cover end-of-tenancy cleaning?",
+          "answer": "Yes, we offer domestic and end-of-tenancy cleaning across Newcastle and Gateshead."
+        },
+        {
+          "question": "Which areas do you cover?",
+          "answer": "We clean homes across Newcastle and Gateshead."
+        }
+      ]
+    },
+    "cta": {
+      "heading": "ACCOUNTANCY STRAIGHTFORWARD NORTHUMBERLAND PHYSIOTHERAPY",
+      "body": "Get in touch and tell us what you need cleaned, regular or end-of-tenancy.",
+      "button": "Get in touch"
+    },
+    "footer": {
+      "description": "Domestic and end-of-tenancy cleaning across Newcastle and Gateshead, done properly every time.",
+      "groups": [
+        {
+          "heading": "STRAIGHTFORWARD",
+          "links": [
+            {
+              "label": "About",
+              "target": "about"
+            },
+            {
+              "label": "Services",
+              "target": "dishes"
+            },
+            {
+              "label": "How It Works",
+              "target": "booking-process"
+            },
+            {
+              "label": "FAQs",
+              "target": "faq"
+            }
+          ]
+        },
+        {
+          "heading": "NORTHUMBERLAND",
+          "links": [
+            {
+              "label": "Features",
+              "target": "features"
+            },
+            {
+              "label": "Areas",
+              "target": "timing"
+            },
+            {
+              "label": "Get In Touch",
+              "target": "cta"
+            }
+          ]
+        }
+      ],
+      "contact": "Get in touch"
+    }
+  }
+}

@@ -1,0 +1,119 @@
+{
+  "source": "l7-sentence/dentist-claims",
+  "answers": {
+    "description": "Rated 4.9 on Google by over 300 patients, we have been the number one family dentist in Harrogate since 1998. Two surgeries, 0% finance on treatment over £500, open 7 days a week from 8am to 8pm, award-winning hygienists and a 10 year guarantee on crowns.",
+    "company": "Oakfield Dental Practice",
+    "logo": {
+      "kind": "wordmark"
+    },
+    "imagery": {
+      "style": "bold",
+      "photos": []
+    },
+    "colours": {
+      "kind": "custom",
+      "hex": "#0e7490"
+    }
+  },
+  "chosen": ["t01-aurora", "t08-vector", "t02-monolith"],
+  "ctaLabel": "Book a visit",
+  "copy": {
+    "brand": {
+      "name": "Oakfield Dental Practice",
+      "legalName": "Oakfield Dental Practice",
+      "tagline": "Your family dentist in Harrogate, open every day for your dental care."
+    },
+    "nav": {
+      "links": ["Our Care", "How It Works", "Why Oakfield"],
+      "cta": "Book a visit"
+    },
+    "hero": {
+      "headline": "Your family dentist, open every day",
+      "subhead": "Dental care in Harrogate, built around your family. Two surgeries, open seven days, ready for your visit.",
+      "primary": "Book a visit",
+      "secondary": "See how it works",
+      "reassurance": "Get in touch any day of the week, we're here to help.",
+      "frame": {
+        "title": "Oakfield Care",
+        "rows": ["Family check-ups", "Hygiene visits", "Flexible appointments"]
+      }
+    },
+    "features": {
+      "title": "Dental care built around your family",
+      "lead": "We bring together flexible hours, easy payment and caring hygienists for every visit.",
+      "items": [
+        {
+          "title": "Open Every Day",
+          "body": "We open seven days a week, from 8am to 8pm, so you can book a visit when it suits you."
+        },
+        {
+          "title": "Flexible Payment",
+          "body": "We offer 0% finance on treatment over £500, making larger dental work easier to plan for."
+        },
+        {
+          "title": "Trusted Hygienists",
+          "body": "Our hygienists bring care and attention to every visit, helping you look after your smile."
+        }
+      ]
+    },
+    "steps": {
+      "title": "How your visit to Oakfield works",
+      "lead": "From your first call to ongoing care, we make visiting the dentist simple for your family.",
+      "items": [
+        {
+          "title": "Get In Touch",
+          "body": "Contact our practice by phone or online to ask about an appointment that suits you."
+        },
+        {
+          "title": "Visit The Practice",
+          "body": "Come along to one of our two surgeries for your check-up, treatment or hygiene visit."
+        },
+        {
+          "title": "Ongoing Care",
+          "body": "We look after your dental health over time, with flexible appointments across the week."
+        }
+      ]
+    },
+    "statement": "We set up Oakfield to give Harrogate families a dentist they can see any day of the week.",
+    "cta": {
+      "headline": "Ready to visit your family dentist?",
+      "body": "Get in touch with Oakfield Dental Practice to book a visit that fits your family's week.",
+      "action": "Book a visit",
+      "reassurance": "Open seven days a week, from 8am to 8pm."
+    },
+    "footer": {
+      "groups": [
+        {
+          "heading": "Practice",
+          "links": [
+            {
+              "label": "Our Care",
+              "target": "features"
+            },
+            {
+              "label": "How It Works",
+              "target": "how-it-works"
+            },
+            {
+              "label": "Why Oakfield",
+              "target": "why"
+            }
+          ]
+        },
+        {
+          "heading": "Get Started",
+          "links": [
+            {
+              "label": "Book a Visit",
+              "target": "start"
+            },
+            {
+              "label": "Back to Top",
+              "target": "top"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

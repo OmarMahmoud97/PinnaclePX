@@ -1,0 +1,123 @@
+{
+  "source": "l6-all-fixes/physio-unbroken",
+  "answers": {
+    "description": "Physiotherapy for sports injuries, back pain and post-operative rehab, with clinics in Sheffield and Leeds. Evening appointments, and direct referrals from GPs and consultants.",
+    "company": "AshgrovePhysiotherapyAndSportsInjuryClinicsSheffieldAndLeeds",
+    "logo": {
+      "kind": "wordmark"
+    },
+    "imagery": {
+      "style": "minimal",
+      "photos": []
+    },
+    "colours": {
+      "kind": "palette",
+      "paletteId": "forest"
+    }
+  },
+  "chosen": ["t02-monolith", "t08-vector", "t01-aurora"],
+  "ctaLabel": "Book an appointment",
+  "copy": {
+    "brand": {
+      "name": "Ashgrove Physiotherapy",
+      "legalName": "Ashgrove Physiotherapy And Sports Injury Clinics",
+      "tagline": "Physiotherapy for sports injuries, back pain and post-operative rehab, in Sheffield and Leeds."
+    },
+    "nav": {
+      "links": ["What We Do", "How It Works", "Why Choose Us"],
+      "cta": "Book an appointment"
+    },
+    "hero": {
+      "headline": "Physiotherapy for recovery, in Sheffield and Leeds",
+      "subhead": "Support for sports injuries, back pain and post-operative rehab. Clinics in Sheffield and Leeds, with evening appointments available.",
+      "primary": "Book an appointment",
+      "secondary": "See how it works",
+      "reassurance": "Contact the clinic directly, or come through a GP or consultant referral.",
+      "frame": {
+        "title": "Your Recovery",
+        "rows": [
+          "Sports injury treatment plan",
+          "Back pain assessment notes",
+          "Post-operative rehab progress"
+        ]
+      }
+    },
+    "features": {
+      "title": "Support for sports injuries, back pain and rehab",
+      "lead": "Physiotherapy aimed at helping you move, recover and return to daily life.",
+      "items": [
+        {
+          "title": "Sports injury care",
+          "body": "Treatment for sports injuries, helping you move and train again with less pain."
+        },
+        {
+          "title": "Back pain support",
+          "body": "Physiotherapy aimed at easing back pain and helping you return to daily life."
+        },
+        {
+          "title": "Post-operative rehab",
+          "body": "Guided rehabilitation after surgery, supporting your recovery step by step."
+        }
+      ]
+    },
+    "steps": {
+      "title": "How your treatment works, from start to finish",
+      "lead": "A clear path from first contact to a tailored physiotherapy plan.",
+      "items": [
+        {
+          "title": "Get in touch",
+          "body": "Contact the clinic directly, or come through a referral from your GP or consultant."
+        },
+        {
+          "title": "Book an appointment",
+          "body": "Choose a time that suits you, including evening appointments in Sheffield or Leeds."
+        },
+        {
+          "title": "Begin your treatment",
+          "body": "Start your physiotherapy plan, tailored to your injury or recovery needs."
+        }
+      ]
+    },
+    "statement": "We set up these clinics to help people recover from injury, pain and surgery.",
+    "cta": {
+      "headline": "Ready to start your recovery?",
+      "body": "Get in touch to book an appointment at our Sheffield or Leeds clinic.",
+      "action": "Book an appointment",
+      "reassurance": "Contact the clinic directly, or come through a GP or consultant referral."
+    },
+    "footer": {
+      "groups": [
+        {
+          "heading": "Clinic",
+          "links": [
+            {
+              "label": "What We Do",
+              "target": "features"
+            },
+            {
+              "label": "How It Works",
+              "target": "how-it-works"
+            },
+            {
+              "label": "Why Choose Us",
+              "target": "why"
+            }
+          ]
+        },
+        {
+          "heading": "Get Started",
+          "links": [
+            {
+              "label": "Book Now",
+              "target": "start"
+            },
+            {
+              "label": "Back to Top",
+              "target": "top"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

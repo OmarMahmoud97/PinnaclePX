@@ -1,0 +1,208 @@
+{
+  "source": "l6-all-fixes/a1-gas",
+  "answers": {
+    "description": "Boiler repairs, servicing and new installs across Bradford and Shipley. Gas Safe registered, same-week appointments and no call-out charge for quotes.",
+    "company": "A1 Gas and Plumbing",
+    "logo": {
+      "kind": "wordmark"
+    },
+    "imagery": {
+      "style": "dark",
+      "photos": []
+    },
+    "colours": {
+      "kind": "custom",
+      "hex": "#1f2937"
+    }
+  },
+  "chosen": ["t06-harbor", "t04-atlas", "t02-monolith"],
+  "ctaLabel": "Book a visit",
+  "copy": {
+    "brand": {
+      "name": "A1 Gas and Plumbing",
+      "legalName": "A1 Gas and Plumbing"
+    },
+    "nav": {
+      "links": ["Home", "About", "Services", "Contact", "Book a visit"],
+      "cta": "Book a visit"
+    },
+    "hero": {
+      "badge": "Trusted local boiler engineers",
+      "headline": ["BOILER", "REPAIRS", "NEAR YOU"],
+      "subhead": "Boiler repairs, servicing and new installs across Bradford and Shipley.",
+      "primary": "Book a visit",
+      "secondary": "Who we are",
+      "stats": [
+        {
+          "value": "Gas Safe",
+          "label": "registered engineers"
+        },
+        {
+          "value": "Same week",
+          "label": "appointments available"
+        },
+        {
+          "value": "No call-out",
+          "label": "charge for quotes"
+        }
+      ]
+    },
+    "about": {
+      "eyebrow": "Our approach",
+      "heading": {
+        "lines": ["RELIABLE LOCAL", "GAS AND PLUMBING", "HELP"],
+        "emphasis": "RELIABLE LOCAL"
+      },
+      "paragraphs": [
+        "We cover Bradford and Shipley because we want local homes to have reliable, properly qualified gas and plumbing help."
+      ],
+      "tags": ["Boiler repairs", "Boiler servicing", "New installs", "Gas Safe work"]
+    },
+    "services": {
+      "eyebrow": "What we do",
+      "heading": {
+        "lines": ["BOILER WORK", "DONE PROPERLY"],
+        "emphasis": "DONE PROPERLY"
+      },
+      "lead": "Boiler repairs, servicing and new installs across Bradford and Shipley.",
+      "items": [
+        {
+          "tag": "Repairs",
+          "title": "Boiler repairs",
+          "body": "Something gone wrong with your boiler? We'll come and sort it out properly."
+        },
+        {
+          "tag": "Servicing",
+          "title": "Boiler servicing",
+          "body": "Regular servicing keeps your boiler running the way it should."
+        },
+        {
+          "tag": "Installs",
+          "title": "New installs",
+          "body": "Need a new boiler fitted? We handle installs across Bradford and Shipley."
+        }
+      ],
+      "more": "Find out more"
+    },
+    "metrics": {
+      "eyebrow": "What matters",
+      "heading": {
+        "lines": ["WHY HOMEOWNERS", "CHOOSE US"],
+        "emphasis": "CHOOSE US"
+      },
+      "watermark": "TRUST",
+      "items": [
+        {
+          "value": "Gas Safe",
+          "label": "Registered engineers",
+          "description": "Handled properly, every time"
+        },
+        {
+          "value": "Same week",
+          "label": "Appointments",
+          "description": "No long waits around"
+        },
+        {
+          "value": "No charge",
+          "label": "Call-out for quotes",
+          "description": "No pressure, just costs"
+        }
+      ]
+    },
+    "contact": {
+      "eyebrow": "FAQ",
+      "heading": {
+        "lines": ["QUESTIONS YOU", "MIGHT HAVE"],
+        "emphasis": ""
+      },
+      "faq": [
+        {
+          "question": "Are your engineers Gas Safe registered?",
+          "answer": "Yes, all our gas work is carried out by Gas Safe registered engineers, so it's handled properly."
+        },
+        {
+          "question": "Do you charge for a call-out?",
+          "answer": "No, we don't charge a call-out fee for quotes, so you can find out costs without any pressure."
+        },
+        {
+          "question": "How soon can you fit a boiler appointment?",
+          "answer": "We offer same-week appointments, so your boiler problem doesn't have to wait around for long."
+        },
+        {
+          "question": "Which areas do you cover?",
+          "answer": "We cover Bradford and Shipley because we want local homes to have reliable, qualified gas and plumbing help."
+        }
+      ],
+      "form": {
+        "eyebrow": "Get in touch",
+        "heading": {
+          "lines": ["TELL US WHAT", "YOU NEED"],
+          "emphasis": ""
+        },
+        "lead": "Tell us what's wrong with your boiler or what work you need.",
+        "labels": {
+          "name": "Name",
+          "email": "Email",
+          "message": "Message"
+        },
+        "placeholder": "Tell us about your boiler problem",
+        "button": "Send message"
+      }
+    },
+    "cta": {
+      "eyebrow": "Ready when you are",
+      "heading": {
+        "lines": ["LET'S SORT", "YOUR BOILER"],
+        "emphasis": "YOUR BOILER"
+      },
+      "body": "Get in touch and we'll arrange a time to visit. We'll quote the job with no call-out charge involved.",
+      "primary": "Book a visit",
+      "secondary": "Who we are"
+    },
+    "footer": {
+      "description": "Boiler repairs, servicing and new installs across Bradford and Shipley, from Gas Safe registered engineers.",
+      "newsletter": {
+        "label": "Hear from us",
+        "placeholder": "your@email.com"
+      },
+      "columns": [
+        {
+          "heading": "Site",
+          "links": [
+            {
+              "label": "Home",
+              "target": "top"
+            },
+            {
+              "label": "About",
+              "target": "about"
+            },
+            {
+              "label": "Services",
+              "target": "services"
+            },
+            {
+              "label": "Contact",
+              "target": "contact"
+            }
+          ]
+        },
+        {
+          "heading": "Get help",
+          "links": [
+            {
+              "label": "Book a visit",
+              "target": "cta"
+            },
+            {
+              "label": "Our figures",
+              "target": "metrics"
+            }
+          ]
+        }
+      ],
+      "note": "",
+      "smallPrint": "Privacy · Terms"
+    }
+  }
+}

@@ -1,0 +1,250 @@
+{
+  "source": "l6-all-fixes/physio-unbroken",
+  "answers": {
+    "description": "Physiotherapy for sports injuries, back pain and post-operative rehab, with clinics in Sheffield and Leeds. Evening appointments, and direct referrals from GPs and consultants.",
+    "company": "AshgrovePhysiotherapyAndSportsInjuryClinicsSheffieldAndLeeds",
+    "logo": {
+      "kind": "wordmark"
+    },
+    "imagery": {
+      "style": "minimal",
+      "photos": []
+    },
+    "colours": {
+      "kind": "palette",
+      "paletteId": "forest"
+    }
+  },
+  "chosen": ["t02-monolith", "t08-vector", "t01-aurora"],
+  "ctaLabel": "Book an appointment",
+  "copy": {
+    "brand": {
+      "name": "AshgrovePhysio",
+      "legalName": "AshgrovePhysiotherapyAndSportsInjuryClinicsSheffieldAndLeeds"
+    },
+    "nav": {
+      "links": ["Treatments", "About", "How it works", "Questions"],
+      "cta": "Book an appointment"
+    },
+    "hero": {
+      "headline": {
+        "text": "Physiotherapy for recovery, in Sheffield and Leeds",
+        "first": "Physiotherapy",
+        "second": "recovery"
+      },
+      "subhead": "Support for sports injuries, back pain and post-operative rehab, with clinics in Sheffield and Leeds.",
+      "primary": "Book an appointment",
+      "secondary": "How it works",
+      "cards": {
+        "quote": {
+          "text": "We set up these clinics to help people recover from injury, pain and surgery.",
+          "role": "Why we started"
+        },
+        "profile": {
+          "role": "People recovering from injury",
+          "body": "Come to us directly, or through a referral from your GP or consultant."
+        },
+        "plan": {
+          "title": "What you get",
+          "badge": "Included",
+          "body": "Treatment tailored to your injury, pain or recovery needs.",
+          "action": "Book an appointment",
+          "points": ["Sports injury care", "Back pain support", "Post-operative rehab"]
+        },
+        "service": {
+          "title": "Sports injury care",
+          "body": "Treatment for sports injuries, helping you move and train again with less pain."
+        }
+      }
+    },
+    "sponsors": {
+      "heading": "What we cover",
+      "items": ["Sports injuries", "Back pain", "Post-op rehab", "Evening slots"]
+    },
+    "about": {
+      "heading": {
+        "text": "About Ashgrove Physiotherapy",
+        "emphasis": "Ashgrove"
+      },
+      "body": "We set up these clinics to help people recover from injury, pain and surgery. You'll find us in Sheffield and Leeds, with evening appointments available. Whether you're recovering from a sports injury, living with back pain, or working through rehab after an operation, we're here to help.",
+      "highlights": [
+        {
+          "value": "Sheffield",
+          "label": "and Leeds clinics"
+        },
+        {
+          "value": "Evening",
+          "label": "appointments"
+        },
+        {
+          "value": "Sports injury",
+          "label": "treatment"
+        },
+        {
+          "value": "Post-op",
+          "label": "rehabilitation"
+        }
+      ]
+    },
+    "steps": {
+      "heading": {
+        "text": "How your treatment begins",
+        "emphasis": "treatment"
+      },
+      "lead": "Getting started is straightforward, whether you come to us directly or through a referral.",
+      "items": [
+        {
+          "title": "Get in touch",
+          "body": "Contact the clinic directly, or come through a referral from your GP or consultant."
+        },
+        {
+          "title": "Book an appointment",
+          "body": "Choose a time that suits you, including evening appointments in Sheffield or Leeds."
+        },
+        {
+          "title": "Begin your treatment",
+          "body": "Start your physiotherapy plan, tailored to your injury or recovery needs."
+        },
+        {
+          "title": "Keep recovering",
+          "body": "Continue your sessions, with support adjusted as your recovery moves forward."
+        }
+      ]
+    },
+    "features": {
+      "heading": {
+        "text": "Physiotherapy for your recovery",
+        "emphasis": "recovery"
+      },
+      "tags": [
+        "Sports injuries",
+        "Back pain",
+        "Post-op rehab",
+        "Sheffield clinic",
+        "Leeds clinic",
+        "Evening slots"
+      ],
+      "items": [
+        {
+          "title": "Sports injury care",
+          "body": "Treatment for sports injuries, helping you move and train again with less pain."
+        },
+        {
+          "title": "Back pain support",
+          "body": "Physiotherapy aimed at easing back pain and helping you return to daily life."
+        },
+        {
+          "title": "Post-operative rehab",
+          "body": "Guided rehabilitation after surgery, supporting your recovery step by step."
+        }
+      ]
+    },
+    "services": {
+      "heading": {
+        "text": "Support across Sheffield and Leeds",
+        "emphasis": "Sheffield and Leeds"
+      },
+      "lead": "Clinics in both cities, with evening appointments if daytime doesn't suit you.",
+      "items": [
+        {
+          "title": "Direct or referred care",
+          "body": "Contact the clinic directly, or come through a referral from your GP or consultant."
+        },
+        {
+          "title": "Flexible appointments",
+          "body": "Choose a time that suits you, including evening appointments in Sheffield or Leeds."
+        },
+        {
+          "title": "Tailored treatment plans",
+          "body": "Begin a physiotherapy plan built around your injury or recovery needs."
+        }
+      ]
+    },
+    "cta": {
+      "heading": {
+        "text": "Ready to begin your recovery?",
+        "emphasis": "recovery"
+      },
+      "body": "Get in touch directly, or come through a referral from your GP or consultant.",
+      "primary": "Book an appointment",
+      "secondary": "See our treatments"
+    },
+    "faq": {
+      "heading": {
+        "text": "Frequently asked questions",
+        "emphasis": "questions"
+      },
+      "items": [
+        {
+          "question": "Do I need a referral to book?",
+          "answer": "No, you can contact the clinic directly, or come through a referral from your GP or consultant."
+        },
+        {
+          "question": "Where are the clinics?",
+          "answer": "We have clinics in both Sheffield and Leeds for you to choose from."
+        },
+        {
+          "question": "Can I book an evening appointment?",
+          "answer": "Yes, evening appointments are available in both Sheffield and Leeds."
+        },
+        {
+          "question": "What kind of treatment do you offer?",
+          "answer": "We support sports injuries, back pain, and rehabilitation after surgery."
+        }
+      ],
+      "prompt": "Still have questions?",
+      "link": "Contact us"
+    },
+    "footer": {
+      "groups": [
+        {
+          "heading": "Explore",
+          "links": [
+            {
+              "label": "Treatments",
+              "target": "features"
+            },
+            {
+              "label": "Services",
+              "target": "services"
+            },
+            {
+              "label": "How it works",
+              "target": "how-it-works"
+            }
+          ]
+        },
+        {
+          "heading": "Clinic",
+          "links": [
+            {
+              "label": "About us",
+              "target": "about"
+            },
+            {
+              "label": "Questions",
+              "target": "faq"
+            },
+            {
+              "label": "Back to top",
+              "target": "top"
+            }
+          ]
+        },
+        {
+          "heading": "Get started",
+          "links": [
+            {
+              "label": "Book now",
+              "target": "cta"
+            },
+            {
+              "label": "Back to top",
+              "target": "top"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

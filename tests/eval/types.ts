@@ -25,14 +25,37 @@ export type CallRecord = Readonly<{
   at: string
 }>
 
-type JudgedViolation = CopyViolation & Readonly<{ kind: 'shape' | 'count' | 'length' | 'rule' }>
+export type JudgedViolation = CopyViolation &
+  Readonly<{ kind: 'shape' | 'count' | 'length' | 'rule' }>
 
-type CopyAttempt = Readonly<{
+export type CopyAttempt = Readonly<{
   step: number
   call: number
+  // The answer as the pipeline's reader parsed it, or null when it was not JSON.
   parsed: unknown
+  // An unreadable answer's text, cut to RAW_TEXT_LIMIT characters (notes.ts), so the defect
+  // that stopped it parsing can be read. Records written before 2 October 2026 have none, and
+  // their unreadable answers carry no violation; the summary counts those as not JSON too.
+  raw?: string
   violations: readonly JudgedViolation[]
   usage: CallRecord
+}>
+
+// What a run records about itself beside its fixtures, in test-results/eval/<run>/_run.json
+// (the underscore keeps it from ever being a fixture id): the switches that limited it and what
+// it spent. Runs from before 2 October 2026 have none.
+export type RunFacts = Readonly<{
+  // EVAL_TEMPLATES: the only templates whose copy the run wrote, or null for every chosen one.
+  templates: readonly string[] | null
+  // EVAL_MAX_USD, or null with no spend stop.
+  maxUsd: number | null
+  // The priced cost of the calls this run made, reused stages not included.
+  spent: number
+  concurrency: number
+  notStarted: readonly string[]
+  // Fixtures set aside before the first call: the run skipped the brief stage and the reused run
+  // held no record of theirs to build on (plan.ts, splitByRecord).
+  noRecord?: readonly string[]
 }>
 
 export type PoolRecord = {

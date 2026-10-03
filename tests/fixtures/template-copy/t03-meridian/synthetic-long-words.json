@@ -1,0 +1,230 @@
+{
+  "source": "synthetic: the long real words in every headline and phrase slot, from l7-longest",
+  "answers": {
+    "description": "Fenwick Associates is a two-person management consultancy in Durham that helps owner-managed firms get ready to sell, or to hand over to the next generation. We start with a plain review of how the business runs, then stay alongside the owners through valuation, tidying up the paperwork, finding the right buyer and the first year after the deal. Most of our work comes from accountants who know us.",
+    "company": "Fenwick Associates",
+    "logo": {
+      "kind": "wordmark"
+    },
+    "imagery": {
+      "style": "dark",
+      "photos": []
+    },
+    "colours": {
+      "kind": "palette",
+      "paletteId": "plum"
+    }
+  },
+  "chosen": ["t03-meridian", "t07-summit", "t05-ember"],
+  "ctaLabel": "Get in touch",
+  "copy": {
+    "brand": {
+      "name": "Fenwick Associates",
+      "legalName": "Fenwick Associates"
+    },
+    "nav": {
+      "links": ["Why us", "Services", "Contact", "Questions"],
+      "cta": "Get in touch",
+      "menu": {
+        "label": "What we do",
+        "items": [
+          {
+            "title": "STRAIGHTFORWARD NORTHUMBERLAND",
+            "body": "An honest look at how your business runs today, before anything else."
+          },
+          {
+            "title": "NORTHUMBERLAND STRAIGHTFORWARD",
+            "body": "We stay with you through valuation, paperwork and finding a buyer."
+          },
+          {
+            "title": "PHYSIOTHERAPY STRAIGHTFORWARD",
+            "body": "We remain involved through the first year after handover."
+          }
+        ]
+      }
+    },
+    "hero": {
+      "badge": {
+        "label": "Durham",
+        "text": "A two-person consultancy in Durham"
+      },
+      "headline": {
+        "text": "KNARESBOROUGH STRAIGHTFORWARD NORTHUMBERLAND PHYSIOTHERAPY",
+        "emphasis": "next chapter"
+      },
+      "subhead": "We help owner-managed firms get ready to sell, or to hand over to the next generation, with steady guidance throughout.",
+      "primary": "Get in touch",
+      "secondary": "See what we do"
+    },
+    "sponsors": {
+      "heading": "CONVEYANCING STRAIGHTFORWARD ACCOUNTANCY",
+      "items": ["ARCHITECTURE", "ACCOUNTANCY", "STRAIGHTFORWARD", "NORTHUMBERLAND", "PHYSIOTHERAPY"]
+    },
+    "benefits": {
+      "eyebrow": "Benefits",
+      "heading": "KNARESBOROUGH STRAIGHTFORWARD NORTHUMBERLAND",
+      "lead": "We work alongside owner-managers through every stage of a sale or handover. Most of our work comes through accountants who know us.",
+      "items": [
+        {
+          "title": "CONVEYANCING STRAIGHTFORWARD",
+          "body": "We start by looking honestly at how your business runs, before anything else is decided."
+        },
+        {
+          "title": "ARCHITECTURE STRAIGHTFORWARD",
+          "body": "We stay with you through valuation, paperwork and finding the right buyer, not just at the start."
+        },
+        {
+          "title": "ACCOUNTANCY STRAIGHTFORWARD",
+          "body": "We remain involved through the first year after handover, so the transition stays steady."
+        },
+        {
+          "title": "STRAIGHTFORWARD NORTHUMBERLAND",
+          "body": "Most of our work comes from accountants who know us and send their clients our way."
+        }
+      ]
+    },
+    "features": {
+      "eyebrow": "What we do",
+      "heading": "NORTHUMBERLAND STRAIGHTFORWARD PHYSIOTHERAPY",
+      "lead": "A two-person consultancy in Durham, helping owner-managed firms prepare to sell or hand over.",
+      "items": [
+        {
+          "title": "PHYSIOTHERAPY NORTHUMBERLAND",
+          "body": "We look closely at how the business runs today, so we know where to focus next."
+        },
+        {
+          "title": "KNARESBOROUGH NORTHUMBERLAND",
+          "body": "We help you understand what your business is worth before you go further."
+        },
+        {
+          "title": "CONVEYANCING STRAIGHTFORWARD",
+          "body": "We work through the paperwork with you, so everything is in order."
+        },
+        {
+          "title": "ARCHITECTURE STRAIGHTFORWARD",
+          "body": "We help you find a buyer who fits, not just the first offer that comes along."
+        }
+      ]
+    },
+    "services": {
+      "eyebrow": "Services",
+      "heading": "ACCOUNTANCY STRAIGHTFORWARD NORTHUMBERLAND",
+      "lead": "From the first conversation to the year after the deal, we stay close by.",
+      "items": [
+        {
+          "title": "STRAIGHTFORWARD NORTHUMBERLAND",
+          "body": "We review how your business runs and help you understand its value."
+        },
+        {
+          "title": "NORTHUMBERLAND STRAIGHTFORWARD",
+          "body": "We get the paperwork and the business itself ready for a sale or handover."
+        },
+        {
+          "title": "PHYSIOTHERAPY STRAIGHTFORWARD",
+          "body": "We stay involved through the first year after the deal is done."
+        }
+      ]
+    },
+    "community": {
+      "heading": {
+        "text": "KNARESBOROUGH STRAIGHTFORWARD NORTHUMBERLAND PHYSIOTHERAPY",
+        "emphasis": "handing over?"
+      },
+      "body": "Talk to us early, before anything is decided, and we will talk it through with you.",
+      "action": "Get in touch"
+    },
+    "contact": {
+      "eyebrow": "Contact",
+      "heading": "CONVEYANCING STRAIGHTFORWARD ACCOUNTANCY",
+      "lead": "Tell us a little about your business and what you are thinking about, and we will take it from there.",
+      "rows": [
+        {
+          "title": "ARCHITECTURE PHYSIOTHERAPY",
+          "lines": [
+            "ACCOUNTANCY STRAIGHTFORWARD NORTHUMBERLAND PHYSIOTHERAPY KNARESBOROUGH CONVEYANCING"
+          ]
+        },
+        {
+          "title": "STRAIGHTFORWARD",
+          "lines": [
+            "NORTHUMBERLAND STRAIGHTFORWARD PHYSIOTHERAPY KNARESBOROUGH CONVEYANCING ARCHITECTURE"
+          ]
+        },
+        {
+          "title": "PHYSIOTHERAPY CONVEYANCING",
+          "lines": [
+            "KNARESBOROUGH STRAIGHTFORWARD NORTHUMBERLAND PHYSIOTHERAPY CONVEYANCING ARCHITECTURE"
+          ]
+        }
+      ],
+      "form": {
+        "subjects": ["Selling my business", "Handing over to family", "General enquiry"],
+        "button": "Send message"
+      }
+    },
+    "faq": {
+      "eyebrow": "FAQ",
+      "heading": "CONVEYANCING STRAIGHTFORWARD ACCOUNTANCY",
+      "items": [
+        {
+          "question": "What kind of businesses do you work with?",
+          "answer": "We work with owner-managed firms getting ready to sell or hand over to the next generation."
+        },
+        {
+          "question": "Where are you based?",
+          "answer": "We are a two-person management consultancy based in Durham."
+        },
+        {
+          "question": "What happens first?",
+          "answer": "We start with a plain review of how your business runs, before anything else is decided."
+        },
+        {
+          "question": "Do you help after the sale?",
+          "answer": "Yes, we stay alongside owners through the first year after the deal."
+        },
+        {
+          "question": "How do most clients find you?",
+          "answer": "Most of our work comes from accountants who know us."
+        }
+      ]
+    },
+    "footer": {
+      "groups": [
+        {
+          "heading": "ARCHITECTURE",
+          "links": [
+            {
+              "label": "Why us",
+              "target": "benefits"
+            },
+            {
+              "label": "What we do",
+              "target": "features"
+            },
+            {
+              "label": "Services",
+              "target": "services"
+            }
+          ]
+        },
+        {
+          "heading": "ACCOUNTANCY",
+          "links": [
+            {
+              "label": "Contact",
+              "target": "contact"
+            },
+            {
+              "label": "Questions",
+              "target": "faq"
+            },
+            {
+              "label": "Back to top",
+              "target": "top"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

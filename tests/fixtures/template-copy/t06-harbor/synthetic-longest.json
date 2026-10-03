@@ -1,0 +1,222 @@
+{
+  "source": "synthetic: every text slot at its longest allowed length, from l6-photographer",
+  "answers": {
+    "description": "Wedding and family photography across Northumberland in a relaxed documentary style with no forced poses. Albums printed in the UK.",
+    "company": "Coldharbour Photography",
+    "logo": {
+      "kind": "wordmark"
+    },
+    "imagery": {
+      "style": "minimal",
+      "photos": []
+    },
+    "colours": {
+      "kind": "custom",
+      "hex": "#0f766e"
+    }
+  },
+  "chosen": ["t03-meridian", "t04-atlas", "t06-harbor"],
+  "ctaLabel": "Get in touch",
+  "copy": {
+    "brand": {
+      "name": "Plain words fill this sp",
+      "legalName": "words fill this space to the longest length it allows so eve"
+    },
+    "nav": {
+      "links": ["fill this sp", "this space t", "space to the", "to the longe", "the longests"],
+      "cta": "longest length i"
+    },
+    "hero": {
+      "badge": "length it allows so every line shows how",
+      "headline": ["it allows so every l", "allows so every line", "so every line showss"],
+      "subhead": "every line shows how far the layout stretches before it gives Plain words fill this space to the longest length it allows so every line show",
+      "primary": "line shows how far t",
+      "secondary": "shows how far the la",
+      "stats": [
+        {
+          "value": "how far thes",
+          "label": "far the layout stretches befor"
+        },
+        {
+          "value": "the layout s",
+          "label": "layout stretches before it giv"
+        },
+        {
+          "value": "stretches be",
+          "label": "before it gives Plain words fi"
+        }
+      ]
+    },
+    "about": {
+      "eyebrow": "it gives Plain words fill this",
+      "heading": {
+        "lines": ["gives Plain words fill t", "Plain words fill this sp"],
+        "emphasis": "words fill this space to"
+      },
+      "paragraphs": [
+        "fill this space to the longest length it allows so every line shows how far the layout stretches before it gives Plain words fill this space to the longest length it allows so every line shows how far the layout stretches before it gives Plain words fill thiss",
+        "this space to the longest length it allows so every line shows how far the layout stretches before it gives Plain words fill this space to the longest length it allows so every line shows how far the layout stretches before it gives Plain words fill this space"
+      ],
+      "tags": [
+        "space to the longest len",
+        "to the longest length it",
+        "the longest length it al",
+        "longest length it allows"
+      ]
+    },
+    "services": {
+      "eyebrow": "length it allows so every line",
+      "heading": {
+        "lines": ["it allows so every lines", "allows so every line sho"],
+        "emphasis": "so every line shows hows"
+      },
+      "lead": "every line shows how far the layout stretches before it gives Plain words fill this space to the longest length it allows so every line show",
+      "items": [
+        {
+          "tag": "line shows how",
+          "title": "shows how far the layout str",
+          "body": "how far the layout stretches before it gives Plain words fill this space to the longest length it allows so every line shows how f"
+        },
+        {
+          "tag": "far the layout",
+          "title": "the layout stretches befores",
+          "body": "layout stretches before it gives Plain words fill this space to the longest length it allows so every line shows how far the layou"
+        },
+        {
+          "tag": "stretches befo",
+          "title": "before it gives Plain wordss",
+          "body": "it gives Plain words fill this space to the longest length it allows so every line shows how far the layout stretches before it gi"
+        }
+      ],
+      "more": "gives Plain words fi"
+    },
+    "metrics": {
+      "eyebrow": "Plain words fill this space to",
+      "heading": {
+        "lines": ["words fill this space to", "fill this space to the l"],
+        "emphasis": "this space to the longes"
+      },
+      "watermark": "space to the",
+      "items": [
+        {
+          "value": "to the longe",
+          "label": "the longest length it allo",
+          "description": "longest length it allows so ev"
+        },
+        {
+          "value": "length it al",
+          "label": "it allows so every line sh",
+          "description": "allows so every line shows how"
+        },
+        {
+          "value": "so every lin",
+          "label": "every line shows how far t",
+          "description": "line shows how far the layouts"
+        }
+      ]
+    },
+    "contact": {
+      "eyebrow": "shows how far the layout stret",
+      "heading": {
+        "lines": ["how far the layout stret", "far the layout stretches"],
+        "emphasis": "the layout stretches bef"
+      },
+      "faq": [
+        {
+          "question": "layout stretches before it gives Plain words fill this space to the lo",
+          "answer": "stretches before it gives Plain words fill this space to the longest length it allows so every line shows how far the layout stretches before it gives Plain words fill this space to the longest length it allows so everys"
+        },
+        {
+          "question": "before it gives Plain words fill this space to the longest length it a",
+          "answer": "it gives Plain words fill this space to the longest length it allows so every line shows how far the layout stretches before it gives Plain words fill this space to the longest length it allows so every line shows how fa"
+        },
+        {
+          "question": "gives Plain words fill this space to the longest length it allows so e",
+          "answer": "Plain words fill this space to the longest length it allows so every line shows how far the layout stretches before it gives Plain words fill this space to the longest length it allows so every line shows how far the lay"
+        },
+        {
+          "question": "words fill this space to the longest length it allows so every line sh",
+          "answer": "fill this space to the longest length it allows so every line shows how far the layout stretches before it gives Plain words fill this space to the longest length it allows so every line shows how far the layout stretche"
+        },
+        {
+          "question": "this space to the longest length it allows so every line shows how far",
+          "answer": "space to the longest length it allows so every line shows how far the layout stretches before it gives Plain words fill this space to the longest length it allows so every line shows how far the layout stretches before i"
+        }
+      ],
+      "form": {
+        "eyebrow": "to the longest length it allow",
+        "heading": {
+          "lines": ["the longest length it al", "longest length it allows"],
+          "emphasis": "length it allows so ever"
+        },
+        "lead": "it allows so every line shows how far the layout stretches before it gives Plain words fil",
+        "labels": {
+          "name": "allows so everys",
+          "email": "so every line sh",
+          "message": "every line shows how"
+        },
+        "placeholder": "line shows how far the layout stretches before it gives Plai",
+        "button": "shows how far the la"
+      }
+    },
+    "cta": {
+      "eyebrow": "how far the layout stretches b",
+      "heading": {
+        "lines": [
+          "far the layout stretches b",
+          "the layout stretches befor",
+          "layout stretches before it"
+        ],
+        "emphasis": "stretches before it givess"
+      },
+      "body": "before it gives Plain words fill this space to the longest length it allows so every line shows how far the layout stretches before it gives Plain words fill this space to the longest length it allows so every line shows",
+      "primary": "it gives Plain words fil",
+      "secondary": "gives Plain words fill t"
+    },
+    "footer": {
+      "description": "Plain words fill this space to the longest length it allows so every line shows how far the layout stretches before it gives Plain words fill this space to thes",
+      "newsletter": {
+        "label": "words fill this space to the longest len",
+        "placeholder": "fill this space to the longest"
+      },
+      "columns": [
+        {
+          "heading": "this space to th",
+          "links": [
+            {
+              "label": "space to the longest len",
+              "target": "top"
+            },
+            {
+              "label": "the longest length it al",
+              "target": "about"
+            },
+            {
+              "label": "length it allows so ever",
+              "target": "services"
+            },
+            {
+              "label": "allows so every line sho",
+              "target": "contact"
+            }
+          ]
+        },
+        {
+          "heading": "every line shows",
+          "links": [
+            {
+              "label": "line shows how far the l",
+              "target": "cta"
+            },
+            {
+              "label": "how far the layout stret",
+              "target": "about"
+            }
+          ]
+        }
+      ],
+      "note": "the layout stretches before it gives Pla",
+      "smallPrint": "layout stretches before it gives Plain w"
+    }
+  }
+}

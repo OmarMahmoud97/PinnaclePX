@@ -1,0 +1,245 @@
+{
+  "source": "l6-all-fixes/bakery",
+  "answers": {
+    "description": "Wholesale and retail bakery in Todmorden. Sourdough, tin loaves and buns for cafés and farm shops across Calderdale, delivered before 7am from Tuesday to Saturday.",
+    "company": "Pennine Loaf",
+    "logo": {
+      "kind": "wordmark"
+    },
+    "imagery": {
+      "style": "warm",
+      "photos": []
+    },
+    "colours": {
+      "kind": "palette",
+      "paletteId": "clay"
+    }
+  },
+  "chosen": ["t01-aurora", "t07-summit", "t08-vector"],
+  "ctaLabel": "Get in touch",
+  "copy": {
+    "brand": {
+      "name": "Pennine Loaf",
+      "legalName": "Pennine Loaf"
+    },
+    "nav": {
+      "links": ["Home", "About", "What We Do", "What We Have"],
+      "cta": "Get in touch"
+    },
+    "hero": {
+      "badge": {
+        "tag": "Bakery",
+        "text": "Baked fresh, every morning"
+      },
+      "headline": "Sourdough and tin loaves baked in Todmorden",
+      "subhead": "We bake sourdough, tin loaves and buns for cafés and farm shops across Calderdale, delivered fresh each morning.",
+      "primary": "Get in touch",
+      "secondary": "See what we do"
+    },
+    "why": {
+      "eyebrow": "Why choose us",
+      "heading": "Why cafés and farm shops choose us",
+      "cards": [
+        {
+          "title": "Proper bread daily",
+          "body": "We bake sourdough, tin loaves and buns for cafés and farm shops who want proper bread each morning."
+        },
+        {
+          "title": "Early delivery",
+          "body": "Every order reaches you before seven, Tuesday to Saturday, ready for opening time."
+        },
+        {
+          "title": "Wholesale or retail",
+          "body": "Whether you need regular wholesale orders or smaller retail amounts, we bake to suit your shop."
+        },
+        {
+          "title": "Local and personal",
+          "body": "We're a bakery in Todmorden, baking for cafés and farm shops across Calderdale."
+        }
+      ]
+    },
+    "services": {
+      "eyebrow": "What we do",
+      "heading": "Bread baked for your shop",
+      "items": [
+        {
+          "tag": "Sourdough",
+          "title": "Sourdough baked fresh each morning",
+          "body": "Proper sourdough baked for cafés and farm shops who want it fresh and ready to sell.",
+          "checklist": ["Baked early each morning", "Delivered before seven"]
+        },
+        {
+          "tag": "Tin loaves",
+          "title": "Tin loaves for your shelves",
+          "body": "Classic tin loaves baked to fit your shop's daily bread needs.",
+          "checklist": ["Baked fresh daily", "Wholesale or retail amounts"]
+        },
+        {
+          "tag": "Buns",
+          "title": "Buns baked to order",
+          "body": "Buns baked alongside our loaves, ready for your counter each morning.",
+          "checklist": ["Baked early each morning", "Fits your order size"]
+        }
+      ]
+    },
+    "steps": {
+      "eyebrow": "How it works",
+      "heading": "Three simple steps",
+      "body": "From your first message to bread on your shelves, we plan it together so it fits your shop.",
+      "items": [
+        {
+          "title": "Get in touch",
+          "body": "Tell us what you need, whether that's sourdough, tin loaves or buns, and how often."
+        },
+        {
+          "title": "We plan your bake",
+          "body": "We work out quantities and timings together, so your order fits your shop."
+        },
+        {
+          "title": "Early delivery begins",
+          "body": "Your bread arrives before seven each morning, Tuesday to Saturday."
+        }
+      ]
+    },
+    "facilities": {
+      "eyebrow": "What you get",
+      "heading": "What your shop can expect",
+      "items": [
+        {
+          "title": "Fresh bread each morning",
+          "body": "Sourdough, tin loaves and buns baked fresh and ready for your shelves."
+        },
+        {
+          "title": "Reliable early delivery",
+          "body": "Bread arrives before seven, Tuesday to Saturday, ready for opening time."
+        },
+        {
+          "title": "Orders that fit your shop",
+          "body": "Wholesale or retail, we bake to the amounts your shop actually needs."
+        },
+        {
+          "title": "A bakery that listens",
+          "body": "We plan quantities and timings together, so your order suits your customers."
+        }
+      ],
+      "link": "Find out more"
+    },
+    "faq": {
+      "eyebrow": "FAQs",
+      "heading": "Frequently asked questions",
+      "items": [
+        {
+          "question": "What kind of bread do you bake?",
+          "answer": "We bake sourdough, tin loaves and buns for cafés and farm shops who want proper bread each morning."
+        },
+        {
+          "question": "When is bread delivered?",
+          "answer": "Every order reaches you before seven, Tuesday to Saturday, so your shelves are ready for opening time."
+        },
+        {
+          "question": "Do you supply both wholesale and retail orders?",
+          "answer": "Yes, whether you need regular wholesale orders or smaller retail amounts, we bake to suit your shop."
+        },
+        {
+          "question": "Which areas do you deliver to?",
+          "answer": "We bake for cafés and farm shops across Calderdale, from our bakery in Todmorden."
+        },
+        {
+          "question": "How do we get started?",
+          "answer": "Get in touch and tell us what you need, whether that's sourdough, tin loaves or buns, and how often you'd like deliveries."
+        }
+      ]
+    },
+    "booking": {
+      "eyebrow": "Get in touch",
+      "heading": "Tell us what your shop needs",
+      "form": {
+        "name": {
+          "label": "Your name",
+          "placeholder": "Enter your name"
+        },
+        "email": {
+          "label": "Your email",
+          "placeholder": "Enter your email"
+        },
+        "phone": {
+          "label": "Your phone",
+          "placeholder": "Enter your phone number"
+        },
+        "doctor": {
+          "label": "Who to ask for",
+          "placeholder": "A name, if you have one"
+        },
+        "department": {
+          "label": "What you need",
+          "placeholder": "Choose one"
+        },
+        "date": "Preferred start date",
+        "button": "Get in touch"
+      }
+    },
+    "cta": {
+      "heading": "Ready for fresh bread each morning?",
+      "body": "Get in touch and tell us what you need, and we'll plan your bake together.",
+      "button": "Get in touch"
+    },
+    "footer": {
+      "description": "A wholesale and retail bakery in Todmorden, baking for cafés and farm shops across Calderdale.",
+      "columns": [
+        {
+          "heading": "Explore",
+          "links": [
+            {
+              "label": "Home",
+              "target": "home"
+            },
+            {
+              "label": "Why Us",
+              "target": "why-choose-us"
+            },
+            {
+              "label": "Our Bakes",
+              "target": "our-services"
+            },
+            {
+              "label": "How It Works",
+              "target": "booking-process"
+            }
+          ]
+        },
+        {
+          "heading": "More",
+          "links": [
+            {
+              "label": "What You Get",
+              "target": "facilities"
+            },
+            {
+              "label": "FAQs",
+              "target": "faq"
+            },
+            {
+              "label": "Get In Touch",
+              "target": "cta"
+            }
+          ]
+        }
+      ],
+      "contact": "Get in touch",
+      "smallLinks": [
+        {
+          "label": "Home",
+          "target": "home"
+        },
+        {
+          "label": "FAQs",
+          "target": "faq"
+        },
+        {
+          "label": "Get In Touch",
+          "target": "cta"
+        }
+      ]
+    }
+  }
+}

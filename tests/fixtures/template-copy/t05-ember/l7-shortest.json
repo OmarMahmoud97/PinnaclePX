@@ -1,0 +1,172 @@
+{
+  "source": "l7-sentence/shortest",
+  "answers": {
+    "description": "Dog grooming and walking in Chorlton.",
+    "company": "Muddy Paws",
+    "logo": {
+      "kind": "wordmark"
+    },
+    "imagery": {
+      "style": "minimal",
+      "photos": []
+    },
+    "colours": {
+      "kind": "palette",
+      "paletteId": "ink"
+    }
+  },
+  "chosen": ["t06-harbor", "t05-ember", "t03-meridian"],
+  "ctaLabel": "Get in touch",
+  "copy": {
+    "brand": {
+      "name": "Muddy Paws",
+      "legalName": "Muddy Paws"
+    },
+    "nav": {
+      "links": ["About", "Services", "Chorlton", "FAQs"],
+      "cta": "Get in touch"
+    },
+    "hero": {
+      "eyebrow": "DOG GROOMING AND WALKING",
+      "headline": "Dog grooming and walking in Chorlton",
+      "subhead": "Gentle grooming and regular walks for your dog, right here in Chorlton. Local care for local dogs.",
+      "cta": "Get in touch"
+    },
+    "about": {
+      "eyebrow": "Made with care",
+      "heading": "We care about your dog's comfort and happiness",
+      "body": "We look after dogs in Chorlton because we care about their comfort and happiness."
+    },
+    "stats": [
+      {
+        "title": "Gentle grooming",
+        "body": "Careful, gentle grooming for your dog, done close to home."
+      },
+      {
+        "title": "Regular walks",
+        "body": "Walks that keep your dog happy, exercised and well looked after."
+      },
+      {
+        "title": "Local care",
+        "body": "Based in Chorlton, so your dog is cared for in your own neighbourhood."
+      }
+    ],
+    "dishes": {
+      "eyebrow": "What we offer",
+      "heading": "Grooming and walking for your dog",
+      "items": [
+        {
+          "title": "Dog grooming",
+          "note": "Gentle and careful"
+        },
+        {
+          "title": "Dog walking",
+          "note": "Regular walks"
+        },
+        {
+          "title": "Grooming visits",
+          "note": "Close to home"
+        },
+        {
+          "title": "Walking visits",
+          "note": "In Chorlton"
+        }
+      ]
+    },
+    "features": {
+      "eyebrow": "Why choose us",
+      "heading": "Dog care you can trust in Chorlton",
+      "items": [
+        {
+          "title": "Local to Chorlton",
+          "body": "Based right in Chorlton, so your dog is cared for in your own neighbourhood."
+        },
+        {
+          "title": "Gentle approach",
+          "body": "We take a gentle, careful approach to every grooming session."
+        },
+        {
+          "title": "Happy, healthy dogs",
+          "body": "Regular walks keep your dog happy, exercised and well looked after."
+        }
+      ]
+    },
+    "booking": {
+      "eyebrow": "How it works",
+      "heading": "Three simple steps",
+      "steps": [
+        {
+          "title": "Get in touch",
+          "body": "Contact us to tell us about your dog and what you need, grooming or walking."
+        },
+        {
+          "title": "We arrange a visit",
+          "body": "We find a time that suits you and your dog, and talk through the details."
+        },
+        {
+          "title": "Ongoing care",
+          "body": "Your dog settles into regular grooming or walks, cared for by us in Chorlton."
+        }
+      ]
+    },
+    "timing": {
+      "title": "Based in Chorlton",
+      "body": "Get in touch to tell us about your dog, and we'll take it from there.",
+      "cta": "Get in touch"
+    },
+    "faq": {
+      "eyebrow": "FAQs",
+      "heading": "Frequently asked questions",
+      "items": [
+        {
+          "question": "Do you offer both grooming and walking?",
+          "answer": "Yes, we offer dog grooming and walking in Chorlton."
+        },
+        {
+          "question": "Where are you based?",
+          "answer": "We're based in Chorlton, caring for dogs in the local area."
+        },
+        {
+          "question": "How do I get started?",
+          "answer": "Get in touch to tell us about your dog and what you need, grooming or walking."
+        },
+        {
+          "question": "Will the same person look after my dog?",
+          "answer": "We arrange a visit to talk through the details, so your dog settles into regular care with us."
+        }
+      ]
+    },
+    "cta": {
+      "heading": "Get in touch about your dog",
+      "body": "Contact us to tell us about your dog and what you need, grooming or walking.",
+      "button": "Get in touch"
+    },
+    "footer": {
+      "description": "Muddy Paws offers dog grooming and walking in Chorlton, for local dog owners.",
+      "groups": [
+        {
+          "heading": "Explore",
+          "links": [
+            {
+              "label": "About",
+              "target": "about"
+            },
+            {
+              "label": "Services",
+              "target": "dishes"
+            },
+            {
+              "label": "How it works",
+              "target": "booking-process"
+            },
+            {
+              "label": "FAQs",
+              "target": "faq"
+            }
+          ]
+        }
+      ],
+      "contact": "Get in touch"
+    }
+  }
+}

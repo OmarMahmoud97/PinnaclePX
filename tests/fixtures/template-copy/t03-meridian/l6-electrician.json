@@ -1,0 +1,224 @@
+{
+  "source": "l6-all-fixes/electrician",
+  "answers": {
+    "description": "Domestic electrician covering York and Selby: rewires, consumer units, EV chargers and fault finding. NICEIC approved, tidy work, and a written quote before anything starts.",
+    "company": "Bright Spark Electrical",
+    "logo": {
+      "kind": "wordmark"
+    },
+    "imagery": {
+      "style": "warm",
+      "photos": []
+    },
+    "colours": {
+      "kind": "custom",
+      "hex": "#b45309"
+    }
+  },
+  "chosen": ["t01-aurora", "t03-meridian", "t08-vector"],
+  "ctaLabel": "Get in touch",
+  "copy": {
+    "brand": {
+      "name": "Bright Spark Electrical",
+      "legalName": "Bright Spark Electrical"
+    },
+    "nav": {
+      "links": ["Why us", "Services", "Contact", "Questions"],
+      "cta": "Get in touch",
+      "menu": {
+        "label": "What we do",
+        "items": [
+          {
+            "title": "Rewires",
+            "body": "Full house rewires carried out properly and tidily."
+          },
+          {
+            "title": "Consumer units",
+            "body": "Consumer unit upgrades fitted to a proper standard."
+          },
+          {
+            "title": "EV chargers",
+            "body": "EV charger installs for your home, done with care."
+          }
+        ]
+      }
+    },
+    "hero": {
+      "badge": {
+        "label": "York",
+        "text": "Serving York and Selby homes"
+      },
+      "headline": {
+        "text": "Honest electrical work, done properly",
+        "emphasis": "done properly"
+      },
+      "subhead": "Your local electrician for York and Selby, covering rewires, consumer units, EV chargers and fault finding.",
+      "primary": "Get in touch",
+      "secondary": "See our services"
+    },
+    "sponsors": {
+      "heading": "What we cover",
+      "items": ["Rewires", "Consumer units", "EV chargers", "Fault finding", "York", "Selby"]
+    },
+    "benefits": {
+      "eyebrow": "Benefits",
+      "heading": "Why homeowners choose us",
+      "lead": "We care about doing electrical work properly, so your home stays safe and sound. Here's what you can expect from us.",
+      "items": [
+        {
+          "title": "NICEIC approved",
+          "body": "We're NICEIC approved, so you know the work meets proper standards from start to finish."
+        },
+        {
+          "title": "Written quotes first",
+          "body": "You get a written quote before any work begins, so there are no surprises along the way."
+        },
+        {
+          "title": "Tidy, careful work",
+          "body": "We treat your home with care and leave things tidy once the job is done."
+        },
+        {
+          "title": "Local to you",
+          "body": "We're your local electrician, covering homes across York and Selby."
+        }
+      ]
+    },
+    "features": {
+      "eyebrow": "What we do",
+      "heading": "Electrical work we handle",
+      "lead": "From rewires to fault finding, we cover the jobs your home needs.",
+      "items": [
+        {
+          "title": "Rewires",
+          "body": "Full or partial rewires, carried out properly and tidily from start to finish."
+        },
+        {
+          "title": "Consumer units",
+          "body": "Consumer unit installs and upgrades done to a proper standard."
+        },
+        {
+          "title": "EV chargers",
+          "body": "EV charger fitting for your home, handled with care."
+        },
+        {
+          "title": "Fault finding",
+          "body": "Tracking down electrical faults and putting them right."
+        }
+      ]
+    },
+    "services": {
+      "eyebrow": "Services",
+      "heading": "How we can help",
+      "lead": "Whatever the job, we start with a look and a written quote.",
+      "items": [
+        {
+          "title": "Home rewires",
+          "body": "We rewire homes properly, leaving everything safe and tidy."
+        },
+        {
+          "title": "Consumer unit upgrades",
+          "body": "We fit consumer units to a proper standard."
+        },
+        {
+          "title": "EV charger installs",
+          "body": "We install EV chargers at your home."
+        },
+        {
+          "title": "Fault finding and repairs",
+          "body": "We track down electrical faults and sort them out."
+        }
+      ]
+    },
+    "community": {
+      "heading": {
+        "text": "Ready to sort your electrics",
+        "emphasis": "your electrics"
+      },
+      "body": "Get in touch and tell us what you need, whether it's a rewire, consumer unit, EV charger or a fault to find.",
+      "action": "Get in touch"
+    },
+    "contact": {
+      "eyebrow": "Contact",
+      "heading": "Get in touch",
+      "lead": "Tell us what's going on and we'll take it from there.",
+      "rows": [
+        {
+          "title": "Get in touch",
+          "lines": ["Tell us what you need, whatever the job."]
+        },
+        {
+          "title": "Receive your quote",
+          "lines": ["We visit, have a look, and send a written quote."]
+        },
+        {
+          "title": "We get to work",
+          "lines": ["We carry out the work tidily and properly."]
+        }
+      ],
+      "form": {
+        "subjects": ["Rewire", "Consumer unit", "EV charger", "Fault finding", "General enquiry"],
+        "button": "Send message"
+      }
+    },
+    "faq": {
+      "eyebrow": "FAQ",
+      "heading": "Common questions",
+      "items": [
+        {
+          "question": "Do you cover my area?",
+          "answer": "We cover homes across York and Selby."
+        },
+        {
+          "question": "Will I get a quote before work starts?",
+          "answer": "Yes, you get a written quote before any work begins, so there are no surprises."
+        },
+        {
+          "question": "Are you NICEIC approved?",
+          "answer": "Yes, we're NICEIC approved, so the work meets proper standards."
+        },
+        {
+          "question": "What jobs do you take on?",
+          "answer": "Rewires, consumer units, EV chargers and fault finding, among other electrical work."
+        },
+        {
+          "question": "Will you leave my home tidy?",
+          "answer": "Yes, we treat your home with care and leave things tidy once finished."
+        }
+      ]
+    },
+    "footer": {
+      "groups": [
+        {
+          "heading": "Explore",
+          "links": [
+            {
+              "label": "Why us",
+              "target": "benefits"
+            },
+            {
+              "label": "Services",
+              "target": "services"
+            },
+            {
+              "label": "Questions",
+              "target": "faq"
+            }
+          ]
+        },
+        {
+          "heading": "Get in touch",
+          "links": [
+            {
+              "label": "Contact us",
+              "target": "contact"
+            },
+            {
+              "label": "Back to top",
+              "target": "top"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

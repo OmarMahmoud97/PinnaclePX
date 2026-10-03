@@ -1,0 +1,249 @@
+{
+  "source": "l6-all-fixes/longest",
+  "answers": {
+    "description": "Fenwick Associates is a two-person management consultancy in Durham that helps owner-managed firms get ready to sell, or to hand over to the next generation. We start with a plain review of how the business runs, then stay alongside the owners through valuation, tidying up the paperwork, finding the right buyer and the first year after the deal. Most of our work comes from accountants who know us.",
+    "company": "Fenwick Associates",
+    "logo": {
+      "kind": "wordmark"
+    },
+    "imagery": {
+      "style": "dark",
+      "photos": []
+    },
+    "colours": {
+      "kind": "palette",
+      "paletteId": "plum"
+    }
+  },
+  "chosen": ["t03-meridian", "t07-summit", "t05-ember"],
+  "ctaLabel": "Get in touch",
+  "copy": {
+    "brand": {
+      "name": "Fenwick Associates",
+      "legalName": "Fenwick Associates"
+    },
+    "nav": {
+      "links": ["Home", "About", "What We Do", "Our Work"],
+      "cta": "Get in touch"
+    },
+    "hero": {
+      "badge": {
+        "tag": "Durham",
+        "text": "A two-person consultancy in Durham"
+      },
+      "headline": "Ready your business for its next chapter",
+      "subhead": "We help owner-managed firms in Durham get ready to sell or hand over to the next generation.",
+      "primary": "Get in touch",
+      "secondary": "See what we do"
+    },
+    "why": {
+      "eyebrow": "Why choose us",
+      "heading": "Why owner-managers choose Fenwick",
+      "cards": [
+        {
+          "title": "Plain review first",
+          "body": "We start by looking honestly at how your business runs, before anything else is decided."
+        },
+        {
+          "title": "Alongside you throughout",
+          "body": "We stay with you through valuation, paperwork and finding the right buyer, not just at the start."
+        },
+        {
+          "title": "Support after the deal",
+          "body": "We remain involved through the first year after handover, so the transition stays steady."
+        },
+        {
+          "title": "Steady guidance",
+          "body": "From first review to first year after, our guidance stays calm and steady throughout."
+        }
+      ]
+    },
+    "services": {
+      "eyebrow": "What we do",
+      "heading": "Preparing firms for sale or handover",
+      "items": [
+        {
+          "tag": "Business Review",
+          "title": "A plain, honest review of your firm",
+          "body": "We look closely at how the business runs today, so we know where to focus next.",
+          "checklist": [
+            "Honest look at operations",
+            "No decisions made in haste",
+            "Clear starting point"
+          ]
+        },
+        {
+          "tag": "Valuation",
+          "title": "Support through valuation",
+          "body": "We stay alongside you as the business is valued, so you understand where things stand.",
+          "checklist": ["Clear view of value", "Ongoing guidance", "Steady support"]
+        },
+        {
+          "tag": "Paperwork",
+          "title": "Help with the paperwork",
+          "body": "We work through the paperwork with you, so nothing is left to chance.",
+          "checklist": ["Document preparation", "Careful attention to detail"]
+        },
+        {
+          "tag": "Finding a Buyer",
+          "title": "Finding the right buyer",
+          "body": "We help find a buyer or successor who fits what you have built.",
+          "checklist": ["Search for the right fit", "Introductions handled with care"]
+        },
+        {
+          "tag": "Handover Support",
+          "title": "Support through the first year after",
+          "body": "We remain involved through the first year after handover, so the transition stays steady.",
+          "checklist": ["Year-long involvement", "Steady, ongoing support"]
+        }
+      ]
+    },
+    "steps": {
+      "eyebrow": "How it works",
+      "heading": "Steady guidance from start to first year after",
+      "body": "We work with you from the first conversation through to a year after handover, step by step.",
+      "items": [
+        {
+          "title": "Initial conversation",
+          "body": "We talk through your situation and what selling or handing over might look like for you."
+        },
+        {
+          "title": "Plain business review",
+          "body": "We look closely at how the business runs today, so we know where to focus next."
+        },
+        {
+          "title": "Ongoing support",
+          "body": "We stay alongside you through valuation, paperwork, finding a buyer and the year after."
+        }
+      ]
+    },
+    "facilities": {
+      "eyebrow": "What you get",
+      "heading": "Steady support at every stage",
+      "items": [
+        {
+          "title": "An honest starting point",
+          "body": "We begin with a plain review of how your business runs, before anything is decided."
+        },
+        {
+          "title": "Help through valuation",
+          "body": "We stay with you as your business is valued, explaining what it means."
+        },
+        {
+          "title": "Paperwork handled with care",
+          "body": "We work through the paperwork alongside you, step by step."
+        },
+        {
+          "title": "A steady year after handover",
+          "body": "We remain involved through the first year after, so the transition stays steady."
+        }
+      ],
+      "link": "Find out more"
+    },
+    "faq": {
+      "eyebrow": "FAQs",
+      "heading": "Frequently asked questions",
+      "items": [
+        {
+          "question": "What does Fenwick Associates do?",
+          "answer": "We are a two-person consultancy in Durham, helping owner-managed firms get ready to sell or hand over to the next generation."
+        },
+        {
+          "question": "Who do you work with?",
+          "answer": "We work with owner-managers who are planning a sale or a handover to the next generation."
+        },
+        {
+          "question": "Where do you start?",
+          "answer": "We start by looking honestly at how your business runs, before anything else is decided."
+        },
+        {
+          "question": "Do you help after the sale is agreed?",
+          "answer": "Yes, we remain involved through the first year after handover, so the transition stays steady."
+        },
+        {
+          "question": "How do most clients find you?",
+          "answer": "Most of our clients come to us through trusted accountants."
+        }
+      ]
+    },
+    "booking": {
+      "eyebrow": "Get in touch",
+      "heading": "Talk to us about your next chapter",
+      "form": {
+        "name": {
+          "label": "Your name",
+          "placeholder": "Enter your name"
+        },
+        "email": {
+          "label": "Your email",
+          "placeholder": "Enter your email"
+        },
+        "phone": {
+          "label": "Your phone",
+          "placeholder": "Enter your number"
+        },
+        "doctor": {
+          "label": "Who to ask for",
+          "placeholder": "A name, if you have one"
+        },
+        "department": {
+          "label": "What you need",
+          "placeholder": "Choose one"
+        },
+        "date": "Preferred date",
+        "button": "Get in touch"
+      }
+    },
+    "cta": {
+      "heading": "Ready to talk about what's next?",
+      "body": "Get in touch to start with a plain, honest conversation about your plans.",
+      "button": "Get in touch"
+    },
+    "footer": {
+      "description": "A two-person consultancy in Durham, helping owner-managed firms prepare for sale or handover.",
+      "columns": [
+        {
+          "heading": "Company",
+          "links": [
+            {
+              "label": "About",
+              "target": "why-choose-us"
+            },
+            {
+              "label": "What We Do",
+              "target": "our-services"
+            },
+            {
+              "label": "How It Works",
+              "target": "booking-process"
+            }
+          ]
+        },
+        {
+          "heading": "More",
+          "links": [
+            {
+              "label": "FAQs",
+              "target": "faq"
+            },
+            {
+              "label": "Get In Touch",
+              "target": "cta"
+            }
+          ]
+        }
+      ],
+      "contact": "Get in touch",
+      "smallLinks": [
+        {
+          "label": "Home",
+          "target": "home"
+        },
+        {
+          "label": "FAQs",
+          "target": "faq"
+        }
+      ]
+    }
+  }
+}

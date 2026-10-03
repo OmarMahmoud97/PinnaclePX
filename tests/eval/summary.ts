@@ -1,4 +1,5 @@
-import type { CallRecord, FixtureRecord } from './types'
+import { NOT_JSON } from './notes'
+import type { CallRecord, CopyAttempt, FixtureRecord, JudgedViolation, RunFacts } from './types'
 
 // A run's numbers: tokens and cost by stage and template, how often a first answer fitted, how
 // often the retry or the fallback did the work, what the picture judge rejected and why, and
@@ -19,7 +20,8 @@ function priceOf(model: string) {
   return key === undefined ? null : PRICE[key]
 }
 
-function costOf(call: CallRecord): number {
+// A call's price in dollars, or NaN for a model the table does not hold.
+export function costOf(call: CallRecord): number {
   const price = priceOf(call.model)
   if (price === null || price === undefined) return Number.NaN
   return (
@@ -182,9 +184,46 @@ function rejectKind(reason: string): string {
   return REJECT_KINDS.find(([, re]) => re.test(reason))?.[0] ?? 'other'
 }
 
+const isNotJson = (v: JudgedViolation) => v.kind === NOT_JSON.kind && v.reason === NOT_JSON.reason
+
+// An attempt's violations, with an answer that did not parse counted as "not JSON" once. Records
+// written before 2 October 2026 kept no violation for such an answer (an empty list), which
+// counted it as a fit; counting it here makes old and new runs agree.
+function violationsOf(attempt: CopyAttempt): readonly JudgedViolation[] {
+  if (attempt.parsed !== null || attempt.violations.some(isNotJson)) return attempt.violations
+  return [...attempt.violations, NOT_JSON]
+}
+
+// The run's own line: which templates it wrote copy for, and its spend stop. The cost table
+// prices every call in the records, reused stages included, so a copy-only run reads as a whole
+// submission would; the spend here is what this run itself paid.
+function runLine(facts: RunFacts | null): string {
+  if (facts === null) return 'Spend stop: none recorded (the run has no _run.json).'
+  const noRecord = facts.noRecord ?? []
+  const written = `${
+    facts.templates === null
+      ? ''
+      : `Copy written for EVAL_TEMPLATES only: ${facts.templates.join(', ')}. `
+  }${
+    noRecord.length === 0
+      ? ''
+      : `Not run, with no record in the reused run to build on: ${noRecord.join(', ')}. `
+  }`
+  if (facts.maxUsd === null) {
+    return `${written}Spend stop: none (EVAL_MAX_USD unset). This run spent ${usd(facts.spent)}.`
+  }
+  const reached = !(facts.spent < facts.maxUsd)
+  const skipped =
+    facts.notStarted.length === 0
+      ? 'every fixture started'
+      : `${String(facts.notStarted.length)} fixtures not started (${facts.notStarted.join(', ')})`
+  return `${written}Spend stop: EVAL_MAX_USD ${usd(facts.maxUsd)}, ${reached ? 'reached' : 'not reached'}; this run spent ${usd(facts.spent)}; ${skipped}. A fixture already started when the stop was reached ran to its end, so a run can pass its cap by the cost of up to ${String(facts.concurrency)} fixtures (EVAL_CONCURRENCY).`
+}
+
 export function summarise(
   run: string,
   records: readonly FixtureRecord[],
+  facts: RunFacts | null = null,
 ): { json: unknown; markdown: string } {
   const byStage = { brief: tally(), copy: tally(), rank: tally() }
   const byTemplate = new Map<
@@ -212,6 +251,18 @@ export function summarise(
   let retryPassed = 0
   let stepRetries = 0
   let copyCalls = 0
+  // Answers the pipeline's reader could not parse (lib/ai/json.ts, extractJson): where each one
+  // fell, whether its text was kept, and what the call after it cost, since that call was spent
+  // only because of it.
+  const unreadable = {
+    calls: 0,
+    firstAnswers: 0,
+    stepStarts: 0,
+    inCallRetries: 0,
+    withText: 0,
+    costAfter: 0,
+  }
+  const unreadableByTemplate = new Map<string, number>()
   const filler: Record<string, number> = {}
   const american: Record<string, number> = {}
   let emphasisBroken = 0
@@ -256,11 +307,12 @@ export function summarise(
         )
       }
       const first = copy.attempts.find((a) => a.step === 0 && a.call === 0)
-      if (first?.violations.length === 0) {
+      if (first !== undefined && violationsOf(first).length === 0) {
         firstPass += 1
         t.firstPass += 1
       }
-      for (const attempt of copy.attempts) {
+      copy.attempts.forEach((attempt, index) => {
+        const violations = violationsOf(attempt)
         copyCalls += 1
         add(byStage.copy, attempt.usage)
         add(t, attempt.usage)
@@ -268,7 +320,7 @@ export function summarise(
         if (attempt.call > 0) {
           inCallRetries += 1
           t.inCallRetries += 1
-          if (attempt.violations.length === 0) {
+          if (violations.length === 0) {
             retryPassed += 1
             t.retryPassed += 1
           }
@@ -277,9 +329,21 @@ export function summarise(
           stepRetries += 1
           t.stepRetries += 1
         }
-        for (const v of attempt.violations) {
+        if (attempt.parsed === null) {
+          unreadable.calls += 1
+          if (attempt.call > 0) unreadable.inCallRetries += 1
+          else if (attempt.step > 0) unreadable.stepStarts += 1
+          else unreadable.firstAnswers += 1
+          if (attempt.raw !== undefined) unreadable.withText += 1
+          unreadableByTemplate.set(templateId, (unreadableByTemplate.get(templateId) ?? 0) + 1)
+          // Attempts are kept in the order they were made, so the next one is the call this
+          // answer caused: the retry inside writeCopy, or the next fresh start.
+          const next = copy.attempts[index + 1]
+          if (next !== undefined) unreadable.costAfter += costOf(next.usage)
+        }
+        for (const v of violations) {
           violationsByKind[v.kind] += 1
-          const slot = v.path.replace(/\[\d+\]/g, '[]')
+          const slot = isNotJson(v) ? '(not JSON)' : v.path.replace(/\[\d+\]/g, '[]')
           violationsBySlot.set(
             `${templateId} ${slot}`,
             (violationsBySlot.get(`${templateId} ${slot}`) ?? 0) + 1,
@@ -289,7 +353,7 @@ export function summarise(
             ruleReasons.set(reason, (ruleReasons.get(reason) ?? 0) + 1)
           }
         }
-      }
+      })
       byTemplate.set(templateId, t)
       const texts = stringsIn(copy.final)
       for (const [w, n] of Object.entries(wordHits(texts, FILLER))) filler[w] = (filler[w] ?? 0) + n
@@ -338,6 +402,7 @@ export function summarise(
     fixtures: n,
     stagesRun,
     reusedFrom: records[0]?.reusedFrom ?? null,
+    runFacts: facts,
     cost: {
       pass: totalCost,
       perSubmissionMean: n === 0 ? 0 : totalCost / n,
@@ -373,6 +438,11 @@ export function summarise(
       stepRetries,
       fallbacks,
       fallbackReasons: Object.fromEntries(fallbackReasons),
+      unreadable: {
+        ...unreadable,
+        costAfterShare: byStage.copy.cost === 0 ? 0 : unreadable.costAfter / byStage.copy.cost,
+        byTemplate: Object.fromEntries(unreadableByTemplate),
+      },
       violationsByKind,
       violationsBySlot: Object.fromEntries(
         [...violationsBySlot.entries()].sort((a, b) => b[1] - a[1]).slice(0, 25),
@@ -434,6 +504,8 @@ export function summarise(
 
 ${String(n)} fixtures, stages ${stagesRun.join('+')}${json.reusedFrom === null ? '' : ` (the rest from ${json.reusedFrom})`}. Prices: the claude-api skill's table, 25 September 2026.
 
+${runLine(facts)}
+
 | Stage | Calls | Input | Output | Mean in | Mean out | Mean ms | Cost | Per submission |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 ${stageRows}
@@ -442,6 +514,7 @@ ${stageRows}
 Brief: ${String(briefSources.model)} from the model, ${String(briefSources.fallback)} fallback; ${String(briefRuleViolations)} rule hits inside model briefs.
 
 Copy: ${String(templatesTotal)} template answers, ${String(copyCalls)} calls. First answer fitted ${String(firstPass)}/${String(templatesTotal)} (${pct(firstPass, templatesTotal)}). In-call retries ${String(inCallRetries)}, of which ${String(retryPassed)} fitted. Step retries ${String(stepRetries)}. Fallbacks ${String(fallbacks)} (${JSON.stringify(json.copy.fallbackReasons)}). Violations: shape ${String(violationsByKind.shape)}, count ${String(violationsByKind.count)}, length ${String(violationsByKind.length)}, rule ${String(violationsByKind.rule)}; rule reasons ${JSON.stringify(json.copy.ruleReasons)}.
+Unreadable answers (not JSON, counted as a shape violation and never as a fit): ${String(unreadable.calls)} of ${String(copyCalls)} calls (${pct(unreadable.calls, copyCalls)}): ${String(unreadable.firstAnswers)} first answers, ${String(unreadable.stepStarts)} later fresh starts, ${String(unreadable.inCallRetries)} in-call retries; by template ${JSON.stringify(json.copy.unreadable.byTemplate)}. The calls after them cost ${usd(unreadable.costAfter)} (${pct(unreadable.costAfter, byStage.copy.cost)} of copy spend). Text kept for ${String(unreadable.withText)} of ${String(unreadable.calls)}.
 Most violated slots: ${topSlots}.
 Quality checks: filler ${JSON.stringify(filler)}; American spellings ${JSON.stringify(american)}; emphasis not in its text ${String(emphasisBroken)} of ${String(emphasisSlots)}.
 

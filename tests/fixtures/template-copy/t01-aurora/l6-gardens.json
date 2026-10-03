@@ -1,0 +1,123 @@
+{
+  "source": "l6-all-fixes/gardens",
+  "answers": {
+    "description": "Garden design, planting plans and ongoing maintenance for homes in Harrogate and Knaresborough. We also build paths, patios and raised beds.",
+    "company": "Hawthorn Gardens",
+    "logo": {
+      "kind": "wordmark"
+    },
+    "imagery": {
+      "style": "dark",
+      "photos": []
+    },
+    "colours": {
+      "kind": "palette",
+      "paletteId": "forest"
+    }
+  },
+  "chosen": ["t01-aurora", "t06-harbor", "t02-monolith"],
+  "ctaLabel": "Get in touch",
+  "copy": {
+    "brand": {
+      "name": "Hawthorn Gardens",
+      "legalName": "Hawthorn Gardens",
+      "tagline": "Garden design, planting plans and ongoing maintenance for your home."
+    },
+    "nav": {
+      "links": ["What We Do", "How It Works", "Why Us"],
+      "cta": "Get in touch"
+    },
+    "hero": {
+      "headline": "Thoughtful gardens for Harrogate and Knaresborough",
+      "subhead": "Garden design, planting plans and ongoing maintenance for homes in Harrogate and Knaresborough.",
+      "primary": "Get in touch",
+      "secondary": "See how it works",
+      "reassurance": "Tell us about your garden, no pressure, just a chat.",
+      "frame": {
+        "title": "Your Garden",
+        "rows": [
+          "Design sketch and plan",
+          "Planting chosen for the space",
+          "Paths, patios and raised beds"
+        ]
+      }
+    },
+    "features": {
+      "title": "Design, planting and maintenance, done with care",
+      "lead": "We plan, plant and look after gardens around your home and how you want to use it.",
+      "items": [
+        {
+          "title": "Garden Design",
+          "body": "We plan gardens around your home, your space and how you want to use it, from first sketch onward."
+        },
+        {
+          "title": "Planting Plans",
+          "body": "We choose and arrange planting that suits your garden, so it grows well and looks right through the seasons."
+        },
+        {
+          "title": "Paths and Patios",
+          "body": "We build paths, patios and raised beds, adding structure and practical spaces to your garden."
+        }
+      ]
+    },
+    "steps": {
+      "title": "How we work with you",
+      "lead": "From first conversation to finished garden, here's what happens along the way.",
+      "items": [
+        {
+          "title": "Get In Touch",
+          "body": "Tell us about your garden and what you'd like to change, and we'll arrange a time to talk it through."
+        },
+        {
+          "title": "Design and Plan",
+          "body": "We visit, discuss ideas and put together a design and planting plan suited to your space."
+        },
+        {
+          "title": "Build and Maintain",
+          "body": "We carry out the work, from paths and planting to raised beds, then keep your garden looked after."
+        }
+      ]
+    },
+    "statement": "We care about gardens that work for the people who use them, in Harrogate and Knaresborough.",
+    "cta": {
+      "headline": "Ready to talk about your garden?",
+      "body": "Get in touch and tell us about your garden and what you'd like to change.",
+      "action": "Get in touch",
+      "reassurance": "We'll arrange a time to talk it through, no obligation."
+    },
+    "footer": {
+      "groups": [
+        {
+          "heading": "Explore",
+          "links": [
+            {
+              "label": "What We Do",
+              "target": "features"
+            },
+            {
+              "label": "How It Works",
+              "target": "how-it-works"
+            },
+            {
+              "label": "Why Us",
+              "target": "why"
+            }
+          ]
+        },
+        {
+          "heading": "Get Started",
+          "links": [
+            {
+              "label": "Get In Touch",
+              "target": "start"
+            },
+            {
+              "label": "Back To Top",
+              "target": "top"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

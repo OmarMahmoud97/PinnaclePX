@@ -1,0 +1,123 @@
+{
+  "source": "l7-sentence/architects",
+  "answers": {
+    "description": "Small architecture studio working on house extensions, loft conversions and barn conversions in the Peak District and Sheffield. We draw, we handle the planning, and we stay involved until the builder leaves.",
+    "company": "Studio Marlowe",
+    "logo": {
+      "kind": "wordmark"
+    },
+    "imagery": {
+      "style": "dark",
+      "photos": []
+    },
+    "colours": {
+      "kind": "custom",
+      "hex": "#334155"
+    }
+  },
+  "chosen": ["t01-aurora", "t07-summit", "t03-meridian"],
+  "ctaLabel": "Get in touch",
+  "copy": {
+    "brand": {
+      "name": "Studio Marlowe",
+      "legalName": "Studio Marlowe",
+      "tagline": "A small architecture studio for extensions, loft and barn conversions."
+    },
+    "nav": {
+      "links": ["What We Do", "How It Works", "Why Us"],
+      "cta": "Get in touch"
+    },
+    "hero": {
+      "headline": "Architecture for extensions, lofts and barns",
+      "subhead": "A small architecture studio designing house extensions, loft conversions and barn conversions in the Peak District and Sheffield.",
+      "primary": "Get in touch",
+      "secondary": "How it works",
+      "reassurance": "We listen first, before we start drawing anything.",
+      "frame": {
+        "title": "Our Projects",
+        "rows": [
+          "House extension, Sheffield",
+          "Loft conversion, in progress",
+          "Barn conversion, planning stage"
+        ]
+      }
+    },
+    "features": {
+      "title": "Considered design for Peak District and Sheffield homes",
+      "lead": "We design extensions, lofts and barn conversions, drawing up plans and handling planning for you.",
+      "items": [
+        {
+          "title": "House extensions",
+          "body": "We design extensions that fit how you live, drawing up plans that suit your home and your space."
+        },
+        {
+          "title": "Loft and barn conversions",
+          "body": "We turn lofts and barns into rooms you'll actually use, handling the design from start to finish."
+        },
+        {
+          "title": "Planning handled",
+          "body": "We manage the planning process for you, so you can focus on the result rather than the paperwork."
+        }
+      ]
+    },
+    "steps": {
+      "title": "From first sketch to finished build, we stay close",
+      "lead": "Here's how we work with you, from the first conversation through to the builder leaving.",
+      "items": [
+        {
+          "title": "We talk it through",
+          "body": "You tell us what you need from your home, and we listen before we start drawing anything."
+        },
+        {
+          "title": "We draw and plan",
+          "body": "We prepare the drawings and handle the planning application, keeping you updated as it moves along."
+        },
+        {
+          "title": "We stay involved",
+          "body": "We remain part of the project right through construction, until the builder finally leaves."
+        }
+      ]
+    },
+    "statement": "We stay close to every project, from the first drawing until the builder packs up and leaves.",
+    "cta": {
+      "headline": "Thinking about an extension or conversion?",
+      "body": "Tell us what you need from your home. We'll listen, then start drawing.",
+      "action": "Get in touch",
+      "reassurance": "We listen first, before we start drawing anything."
+    },
+    "footer": {
+      "groups": [
+        {
+          "heading": "Studio",
+          "links": [
+            {
+              "label": "What We Do",
+              "target": "features"
+            },
+            {
+              "label": "How It Works",
+              "target": "how-it-works"
+            },
+            {
+              "label": "Why Us",
+              "target": "why"
+            }
+          ]
+        },
+        {
+          "heading": "Start",
+          "links": [
+            {
+              "label": "Get In Touch",
+              "target": "start"
+            },
+            {
+              "label": "Back To Top",
+              "target": "top"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

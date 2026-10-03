@@ -1,0 +1,20 @@
+{
+  "note": "What the checks expect of this template on main, measured on 3 October 2026. textFit is the CI text-fit guard’s (e2e/reduced-motion-template-fit.spec.ts): a case in failing is expected to fail, and one in unsettled is skipped, with why. outline is the accessible-names check’s (scripts/checks/a11y-names.mjs): each block, by its address (a renamed address after a comma), and the heading level it opens with. The template’s own pull request edits this file and no other outside its folder: a case its fix makes pass leaves failing (Playwright reports it until it does), and an address it renames is renamed here.",
+  "fixedBy": "Atlas’s next pull request (#59 fixed its other cases)",
+  "textFit": {
+    "failing": ["synthetic-name-60"],
+    "unsettled": {
+      "synthetic-long-words": "passes on Windows but fails with its text 0.05em wider, and CI's Linux Chromium sets text about 4% wider"
+    }
+  },
+  "outline": [
+    ["#hero", 1],
+    ["#start", 2],
+    ["#offer", 2],
+    ["#tools, #approach", 2],
+    ["#why", 2],
+    ["#how-it-works", 2],
+    ["#faq", 2],
+    ["#contact", 2]
+  ]
+}

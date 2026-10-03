@@ -1,0 +1,243 @@
+{
+  "source": "l6-all-fixes/architects",
+  "answers": {
+    "description": "Small architecture studio working on house extensions, loft conversions and barn conversions in the Peak District and Sheffield. We draw, we handle the planning, and we stay involved until the builder leaves.",
+    "company": "Studio Marlowe",
+    "logo": {
+      "kind": "wordmark"
+    },
+    "imagery": {
+      "style": "dark",
+      "photos": []
+    },
+    "colours": {
+      "kind": "custom",
+      "hex": "#334155"
+    }
+  },
+  "chosen": ["t01-aurora", "t07-summit", "t03-meridian"],
+  "ctaLabel": "Get in touch",
+  "copy": {
+    "brand": {
+      "name": "Studio Marlowe",
+      "legalName": "Studio Marlowe"
+    },
+    "nav": {
+      "links": ["Home", "About", "Services", "Projects"],
+      "cta": "Get in touch"
+    },
+    "hero": {
+      "badge": {
+        "tag": "Studio",
+        "text": "Serving the Peak District and Sheffield"
+      },
+      "headline": "Architecture for extensions, lofts and barns",
+      "subhead": "We design house extensions, loft conversions and barn conversions for homeowners in the Peak District and Sheffield.",
+      "primary": "Get in touch",
+      "secondary": "See what we do"
+    },
+    "why": {
+      "eyebrow": "Why choose us",
+      "heading": "Why people choose Studio Marlowe",
+      "cards": [
+        {
+          "title": "We stay close",
+          "body": "We stay close to every project, from the first drawing until the builder packs up and leaves."
+        },
+        {
+          "title": "We listen first",
+          "body": "You tell us what you need from your home, and we listen before we start drawing anything."
+        },
+        {
+          "title": "Planning handled",
+          "body": "We manage the planning process for you, so you can focus on the result rather than the paperwork."
+        },
+        {
+          "title": "Considered design",
+          "body": "We offer considered design for Peak District and Sheffield homes, built around how you live."
+        }
+      ]
+    },
+    "services": {
+      "eyebrow": "What we do",
+      "heading": "Extensions, lofts and barn conversions",
+      "items": [
+        {
+          "tag": "Extensions",
+          "title": "House extensions that fit your life",
+          "body": "We design extensions that fit how you live, drawing up plans that suit your home and your space.",
+          "checklist": ["Plans suited to your home", "Design around your space"]
+        },
+        {
+          "tag": "Loft conversions",
+          "title": "Lofts turned into rooms you'll use",
+          "body": "We turn lofts into rooms you'll actually use, handling the design from start to finish.",
+          "checklist": ["Design handled start to finish", "Rooms built for everyday use"]
+        },
+        {
+          "tag": "Barn conversions",
+          "title": "Barns turned into rooms you'll use",
+          "body": "We turn barns into rooms you'll actually use, handling the design from start to finish.",
+          "checklist": ["Design handled start to finish", "Rooms built for everyday use"]
+        },
+        {
+          "tag": "Planning",
+          "title": "Planning managed on your behalf",
+          "body": "We manage the planning process for you, so you can focus on the result rather than the paperwork.",
+          "checklist": ["Planning application prepared", "Progress updates as it moves"]
+        }
+      ]
+    },
+    "steps": {
+      "eyebrow": "How it works",
+      "heading": "From first sketch to finished build",
+      "body": "We stay close to every project, from the first drawing until the builder packs up and leaves.",
+      "items": [
+        {
+          "title": "We talk it through",
+          "body": "You tell us what you need from your home, and we listen before we start drawing anything."
+        },
+        {
+          "title": "We draw and plan",
+          "body": "We prepare the drawings and handle the planning application, keeping you updated as it moves along."
+        },
+        {
+          "title": "We stay involved",
+          "body": "We remain part of the project right through construction, until the builder finally leaves."
+        }
+      ]
+    },
+    "facilities": {
+      "eyebrow": "What you get",
+      "heading": "Considered design, close involvement",
+      "items": [
+        {
+          "title": "First sketches",
+          "body": "We start by listening, then prepare drawings that suit your home and how you live in it."
+        },
+        {
+          "title": "Planning paperwork",
+          "body": "We handle the planning application for you, keeping you updated as it moves along."
+        },
+        {
+          "title": "Loft spaces",
+          "body": "We turn lofts into rooms you'll actually use, with design handled from start to finish."
+        },
+        {
+          "title": "Barn spaces",
+          "body": "We turn barns into rooms you'll actually use, with design handled from start to finish."
+        }
+      ],
+      "link": "Find out more"
+    },
+    "faq": {
+      "eyebrow": "FAQs",
+      "heading": "Frequently asked questions",
+      "items": [
+        {
+          "question": "Which areas do you work in?",
+          "answer": "We work with homeowners in the Peak District and Sheffield, designing extensions, loft conversions and barn conversions."
+        },
+        {
+          "question": "Do you handle planning applications?",
+          "answer": "Yes, we manage the planning process for you, so you can focus on the result rather than the paperwork."
+        },
+        {
+          "question": "Will you be involved during construction?",
+          "answer": "We stay close to every project, from the first drawing until the builder packs up and leaves."
+        },
+        {
+          "question": "What happens at the start of a project?",
+          "answer": "You tell us what you need from your home, and we listen before we start drawing anything."
+        },
+        {
+          "question": "What kinds of projects do you design?",
+          "answer": "We design house extensions, loft conversions and barn conversions for homes in the Peak District and Sheffield."
+        }
+      ]
+    },
+    "booking": {
+      "eyebrow": "Get in touch",
+      "heading": "Tell us about your project",
+      "form": {
+        "name": {
+          "label": "Your name",
+          "placeholder": "Enter your full name"
+        },
+        "email": {
+          "label": "Your email",
+          "placeholder": "Enter your email address"
+        },
+        "phone": {
+          "label": "Your phone",
+          "placeholder": "Enter your phone number"
+        },
+        "doctor": {
+          "label": "Who to ask for",
+          "placeholder": "A name, if you have one"
+        },
+        "department": {
+          "label": "What you need",
+          "placeholder": "Choose one"
+        },
+        "date": "Preferred date",
+        "button": "Get in touch"
+      }
+    },
+    "cta": {
+      "heading": "Ready to talk about your home?",
+      "body": "Get in touch and tell us what you need, and we'll take it from there.",
+      "button": "Get in touch"
+    },
+    "footer": {
+      "description": "Studio Marlowe designs house extensions, loft conversions and barn conversions in the Peak District and Sheffield.",
+      "columns": [
+        {
+          "heading": "Studio",
+          "links": [
+            {
+              "label": "About us",
+              "target": "why-choose-us"
+            },
+            {
+              "label": "Services",
+              "target": "our-services"
+            },
+            {
+              "label": "How it works",
+              "target": "booking-process"
+            }
+          ]
+        },
+        {
+          "heading": "Explore",
+          "links": [
+            {
+              "label": "Projects",
+              "target": "facilities"
+            },
+            {
+              "label": "FAQs",
+              "target": "faq"
+            },
+            {
+              "label": "Get in touch",
+              "target": "book-appointment"
+            }
+          ]
+        }
+      ],
+      "contact": "Get in touch",
+      "smallLinks": [
+        {
+          "label": "Home",
+          "target": "home"
+        },
+        {
+          "label": "Get in touch",
+          "target": "cta"
+        }
+      ]
+    }
+  }
+}
