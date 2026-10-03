@@ -107,6 +107,13 @@ describe('vectorCopySchema', () => {
     expect(vectorContract.guide).not.toContain('their work')
   })
 
+  it('keeps the capitals of the name the owner typed', () => {
+    expect(vectorContract.guide.split('\n')).toContain(
+      '- brand.name: 2 to 24 characters, the company name as given, keeping its capitals, shortened only if it is longer than the range',
+    )
+    expect(vectorContract.guide).not.toContain('lower case')
+  })
+
   it('rejects a footer link with an unknown target', () => {
     const copy = vectorFallbackCopy(fallbackBrief('Kestrel', 'Job scheduling.'))
     const broken = {
