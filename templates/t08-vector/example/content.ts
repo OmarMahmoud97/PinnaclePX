@@ -22,7 +22,7 @@ export const KESTREL_VECTOR: VectorContent = {
   nav: {
     links: [
       { label: 'Home', href: '#top', section: 'hero' },
-      { label: 'Work', href: '#projects', section: 'projects' },
+      { label: 'Work', href: '#featured', section: 'featured' },
       { label: 'Services', href: '#services-menu', section: 'services' },
       { label: 'About us', href: '#about', section: 'about' },
       { label: 'Testimonials', href: '#social-proof', section: 'social-proof' },
@@ -144,7 +144,7 @@ export const KESTREL_VECTOR: VectorContent = {
       heading: 'Navigation',
       links: [
         { label: 'Home', href: '#top' },
-        { label: 'Work', href: '#projects' },
+        { label: 'Work', href: '#featured' },
         { label: 'Services', href: '#services' },
         { label: 'About', href: '#about' },
         { label: 'Contact', href: '#contact' },
@@ -162,7 +162,7 @@ export const KESTREL_VECTOR: VectorContent = {
     },
     bottomLinks: [
       { label: 'About Us', href: '#about' },
-      { label: 'Our Work', href: '#projects' },
+      { label: 'Our Work', href: '#featured' },
       { label: 'Contact', href: '#contact' },
     ],
     credit: 'Created with passion by Kestrel',

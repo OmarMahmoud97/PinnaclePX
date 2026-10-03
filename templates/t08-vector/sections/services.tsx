@@ -9,7 +9,8 @@ type Props = Pick<VectorContent, 'services'> & { href: string }
 // scrolls a screen and a half, each of its letters growing up from its foot a twentieth of a
 // second after the last, tied to the scroll (the block is the two and a half screens tall, the
 // sentence sticks inside it, and the letters run on the block's timeline, vector.css); then the
-// flowing menu. Words are kept whole so a line never breaks inside one.
+// flowing menu. Words are kept whole so a line never breaks inside one. A screen reader hears
+// the sentence once, as words, from a hidden copy, and never the letters it is drawn in.
 export function VectorServices({ services, href }: Props) {
   const words = services.heading.split(' ')
   const total = words.reduce(
@@ -25,8 +26,13 @@ export function VectorServices({ services, href }: Props) {
             style={{ '--n': String(total) } as CSSProperties}
             className="max-w-350 text-center text-[clamp(2.5rem,7vw,7rem)] leading-[1.1] font-medium tracking-tight text-on-surface"
           >
+            <span className="sr-only">{services.heading}</span>
             {words.map((word, w) => (
-              <span key={`${word}-${String(w)}`} className="inline-block whitespace-nowrap">
+              <span
+                key={`${word}-${String(w)}`}
+                aria-hidden="true"
+                className="inline-block whitespace-nowrap"
+              >
                 {[...Array.from(word), ...(w < words.length - 1 ? [' '] : [])].map((letter, l) => {
                   const i = count
                   count += 1

@@ -4,8 +4,8 @@ export const meta = {
   id: 't08-vector',
   name: 'Vector',
   description:
-    'A near-black studio page in one sans with serif italic accents: two floating glass pills for a bar, one the name and one a menu that unfolds; a full-screen hero over sweeping coloured waves whose three headline lines rise out of clipped rows; a giant italic marquee that runs with the scroll over pill-shaped project pictures that open through a growing circle, follow the pointer and show an Open cursor; a pinned sentence that grows letter by letter with the scroll over a flowing menu whose rows flip to their inverse under the pointer; a wide pill picture over a statement; a bento of quiet cards; an FAQ; and an inverted footer that the page slides up to reveal, with a giant email. Works on a dark or a light surface.',
+    'One sans with serif italic accents, on a dark or a light surface, led by type and motion. The bar is two floating glass pills: the name, and a menu that names the block on screen and unfolds. The first screen is a headline of two or three lines over sweeping coloured bands, with no picture and no button. A giant two-word marquee runs with the scroll over two to four named items, each a rounded picture in two tones with a number, a two-part title and a sentence, and each opening full screen. One sentence stays pinned while its letters grow, over three to six full-width rows that flip to their inverse under the pointer. Then a wide picture over a centred statement and a round button, questions, and an inverted footer that the page slides off, with the email address set huge as the only contact. Its structures need two to four things that can be named, each worth a full-screen picture and a title in two short parts; one short sentence and three to six offerings; and an email address. Not yet judged for any kind of business.',
   ready: true,
   polarity: 'either',
-  tones: ['bold', 'editorial', 'studio'],
+  tones: ['bold', 'editorial', 'cinematic'],
 } as const satisfies TemplateMeta

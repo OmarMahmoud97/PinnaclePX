@@ -406,11 +406,25 @@
     }
   }
 
-  /* The cursor grows in and shrinks away over 0.3s, its scale on the source's back curve and
-   * its opacity easing out, both ways. */
+  /* A lit menu row's letters hop. */
+  .vector-row[data-lit] .vector-letter {
+    animation: vector-hop 0.35s var(--vector-sine-out) both;
+    animation-delay: calc(var(--i) * 0.01s);
+  }
+}
+
+/* The cursor is never drawn but where it can do its job: under a pointer that can hover, over a
+ * project, with motion allowed, since only then does it follow the pointer (projects.tsx). On a
+ * touch screen, or with motion reduced, it stays hidden where it waits in the corner. It grows
+ * in and shrinks away over 0.3s, its scale on the source's back curve and its opacity easing
+ * out, both ways. */
+.vector-cursor {
+  opacity: 0;
+  scale: 0;
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
   .vector-cursor {
-    opacity: 0;
-    scale: 0;
     transition:
       opacity 0.3s ease-out,
       scale 0.3s var(--vector-back);
@@ -420,12 +434,28 @@
     opacity: 1;
     scale: 1;
   }
+}
 
-  /* A lit menu row's letters hop. */
-  .vector-row[data-lit] .vector-letter {
-    animation: vector-hop 0.35s var(--vector-sine-out) both;
-    animation-delay: calc(var(--i) * 0.01s);
-  }
+/* A block a chosen menu link sent focus to holds it only so the next Tab starts there
+ * (header.tsx). It is not a control, so it draws no ring. */
+.vector [data-vector-focus]:focus {
+  outline: none;
+}
+
+/* The open project view's title sits on a shade of the scrim of its own (projects.tsx): a fifth
+ * strong across the title's box, fading to nothing at twice its size, over the source's lighter
+ * wash of the whole picture. Together they keep the title at 3:1 and more on every brand's
+ * scrim, whatever the picture under it, a white one included. */
+.vector-shade {
+  position: absolute;
+  inset: -50%;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(
+    farthest-side,
+    color-mix(in srgb, var(--scrim) 20%, transparent) 72%,
+    transparent
+  );
 }
 
 /* The header goes while a project is open full screen. */

@@ -8,18 +8,22 @@ type Props = Pick<VectorContent, 'hero'>
 // headline whose lines rise out of clipped rows in three dimensions (from 120% below, tilted
 // back a quarter turn and 200px deep, over 1.6s, a fifth of a second apart from 0.3s), the last
 // line in the serif; a paragraph that rises at 1.2s; and a "Scroll" at the foot that fades in
-// at two seconds. The waves stand in for the shader until the WebGL arrives (waves.tsx).
+// at two seconds. The waves stand in for the shader until the WebGL arrives (waves.tsx). The
+// words are centred between two bands that clear the bar's pills, so they sit where the source
+// set them wherever they fit; where they do not (a phone held sideways, a long headline), the
+// screen grows to hold them below the pills and above the "Scroll", rather than running them
+// under the pills or cutting them off at its foot.
 export function VectorHero({ hero }: Props) {
   const last = hero.headline.length - 1
   return (
-    <section id="hero" className="hero relative h-screen w-full overflow-hidden bg-surface">
+    <section id="hero" className="hero relative min-h-screen w-full overflow-hidden bg-surface">
       <div className="absolute inset-0 z-0">
         <div className="h-full w-full opacity-50 saturate-125 md:opacity-85">
           <VectorWaves />
         </div>
       </div>
       <div
-        className={`relative z-10 ${container} flex h-full flex-col justify-start pt-44 ${pad} text-left sm:pt-48 md:justify-center md:pt-0`}
+        className={`relative z-10 ${container} flex min-h-screen flex-col justify-start pt-44 pb-24 ${pad} text-left sm:pt-48 md:justify-center md:py-36`}
         style={{ perspective: '1200px' }}
       >
         <h1 className="text-[clamp(3rem,8vw,12rem)] leading-[1.05] tracking-tight text-on-surface">
