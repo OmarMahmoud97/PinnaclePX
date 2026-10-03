@@ -126,6 +126,18 @@ describe('vectorCopySchema', () => {
     expect(vectorContract.guide).not.toMatch(/such as Work\b/)
   })
 
+  it("offers none of the source's own lines to copy into the pinned sentence or the footer", () => {
+    const lines = vectorContract.guide.split('\n')
+    expect(lines).toContain(
+      '- services.heading: 30 to 80 characters, one or two short sentences that fill a screen, letter by letter, in their words',
+    )
+    expect(lines).toContain(
+      '- footer.tagline: 6 to 40 characters, a short line under the name in the footer, in their words',
+    )
+    expect(vectorContract.guide).not.toContain('We craft')
+    expect(vectorContract.guide).not.toContain('Built to evolve')
+  })
+
   it('rejects a footer link with an unknown target', () => {
     const copy = vectorFallbackCopy(fallbackBrief('Kestrel', 'Job scheduling.'))
     const broken = {
