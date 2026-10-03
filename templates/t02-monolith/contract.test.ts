@@ -63,6 +63,14 @@ describe('monolithFallbackCopy', () => {
       'You hear from us',
     ])
     expect(copy.hero.cards.profile.role).toBe('In our own words')
+    expect(copy.hero.cards.quote.role).toBe('Why we do this')
+  })
+
+  it('labels the quote "What we do" when the brief fell back too, since it is the visitor\'s own words', () => {
+    const copy = monolithFallbackCopy(
+      fallbackBrief('Kestrel', 'Job scheduling for trades businesses.'),
+    )
+    expect(copy.hero.cards.quote.role).toBe('What we do')
   })
 
   it('never colours a word it did not choose', () => {
@@ -95,6 +103,49 @@ describe('monolithCopySchema', () => {
     expect(optional.length).toBeGreaterThan(0)
     expect(lines).toHaveLength(Object.keys(MONOLITH_SLOTS).length - optional.length)
     for (const slot of optional) expect(monolithContract.guide).not.toContain(`- ${slot}:`)
+  })
+
+  // The model copied the old examples onto every page (paid pass 1; decisions 1 and 12), so the
+  // guide says what each slot is for and gives no words to copy. The badge's line went back to
+  // its measured wording after the run, so it alone keeps its example.
+  it('has a guide that gives the model no example words to copy, except on the badge line', () => {
+    const lines = monolithContract.guide.split('\n')
+    const REVERTED = ['hero.cards.plan.badge']
+    for (const line of [
+      '- hero.cards.quote.role: 4 to 30 characters, a short line under the company name on that card, two or three of their own words for their main work',
+      '- hero.cards.plan.title: 3 to 18 characters, the title of the card listing what is included',
+      '- sponsors.heading: 6 to 40 characters, a short heading over a row of labels, in their words',
+      '- about.heading.text: 10 to 40 characters, the About heading, naming the company',
+      '- about.highlights[].value: 1 to 16 characters, exactly four short phrases set large, a few words each with no numbers',
+      '- about.highlights[].label: 3 to 24 characters, exactly four labels under those phrases',
+      '- faq.heading.text: 10 to 50 characters, the heading over the questions',
+      '- faq.prompt: 10 to 60 characters, a line under the questions',
+      '- faq.link.label: 4 to 22 characters, the link after that line, the same as ctaLabel',
+    ]) {
+      expect(lines).toContain(line)
+    }
+    expect(lines).toContain(
+      '- hero.cards.plan.badge: 4 to 16 characters, a short badge on that card, such as Included',
+    )
+    expect(
+      lines.filter(
+        (line) => /such as/i.test(line) && !REVERTED.some((slot) => line.startsWith(`- ${slot}:`)),
+      ),
+    ).toEqual([])
+    const guide = monolithContract.guide.toLowerCase()
+    for (const example of [
+      'why we started',
+      'what you get',
+      'what we cover',
+      'about the company name',
+      'same week',
+      'appointment',
+      'frequently asked questions',
+      'still have questions',
+      'contact us',
+    ]) {
+      expect(guide).not.toContain(example)
+    }
   })
 
   it('rejects a footer link with an unknown target', () => {
