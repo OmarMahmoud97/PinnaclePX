@@ -80,7 +80,7 @@ export function EmberNav({ brand, nav }: Props) {
       <header
         className={`fixed top-0 z-20 ${pad} w-full transition-all duration-300 ${scrolled ? 'bg-surface/70 backdrop-blur-md' : 'bg-transparent'}`}
       >
-        <div className="mx-auto flex max-w-7xl items-center justify-between gap-6 py-4 font-medium">
+        <div className="@container mx-auto flex max-w-7xl items-center justify-between gap-6 py-4 font-medium">
           <a href="#top" aria-label={`${brand.name} home`}>
             <EmberLogo brand={brand} />
           </a>
