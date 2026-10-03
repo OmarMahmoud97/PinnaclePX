@@ -10,7 +10,8 @@ type Props = {
 
 // The source's Avatar: a 40px circle holding a picture, or the initials on the muted surface
 // when there is none. The team cards pass a larger size and their own placement, absolute
-// against the card, so the position is the caller's and not set here.
+// against the card, so the position is the caller's and not set here. The same name is read
+// beside every circle, so screen readers skip the initials (decision 15).
 export function Avatar({
   image,
   name,
@@ -26,6 +27,7 @@ export function Avatar({
     <span className={`flex shrink-0 overflow-hidden rounded-full ${className}`}>
       {image === null ? (
         <span
+          aria-hidden="true"
           className={`flex h-full w-full items-center justify-center rounded-full bg-surface-muted font-semibold ${textClass}`}
         >
           {initials}

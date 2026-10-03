@@ -6,15 +6,18 @@
 
 /*
  * The source's hero glow (its `.shadow`): a rotated, blurred slab in the primary colour that
- * slides back and forth behind the cards, forever. Absolutely positioned against the template's
- * root, which is isolated so a negative z-index sits above the root's own background. The
- * source's values at each width are kept; under reduced motion the slab rests at its midpoint.
+ * slides back and forth behind the cards, forever. The source placed it against the page, so
+ * below lg, where the cards are hidden, it sat behind the headline, and at rest it took the
+ * dark headline phrases to 2.56:1. Here it is placed against the cards' box (hero-cards.tsx),
+ * where the source's desktop values put it at 1440, so it shows only with the cards and moves
+ * with them. The template's root is isolated, so a negative z-index still sits above the root's
+ * own background. Under reduced motion the slab rests at its midpoint.
  */
 .monolith-glow {
   position: absolute;
   z-index: -1;
-  top: 200px;
-  right: 310px;
+  top: 16px;
+  right: 288px;
   width: 260px;
   height: 400px;
   rotate: 35deg;
@@ -26,11 +29,11 @@
 
 @keyframes monolith-glow-slide {
   from {
-    right: 460px;
+    right: 438px;
     background: color-mix(in srgb, var(--brand-deeper) 20%, transparent);
   }
   to {
-    right: 160px;
+    right: 138px;
     background: color-mix(in srgb, var(--brand-deeper) 80%, transparent);
   }
 }
@@ -41,64 +44,63 @@
   }
 }
 
-@media (max-width: 1024px) {
-  .monolith-glow {
-    top: 70px;
-  }
-
-  @keyframes monolith-glow-slide {
-    from {
-      right: 460px;
-      background: color-mix(in srgb, var(--brand-deeper) 20%, transparent);
-    }
-    to {
-      right: 160px;
-      background: color-mix(in srgb, var(--brand-deeper) 50%, transparent);
-    }
-  }
-}
-
-@media (max-width: 768px) {
-  .monolith-glow {
-    top: 70px;
-    width: 100px;
-    height: 350px;
-    filter: blur(60px);
-  }
-
-  @keyframes monolith-glow-slide {
-    from {
-      right: 280px;
-      background: color-mix(in srgb, var(--brand-deeper) 20%, transparent);
-    }
-    to {
-      right: 100px;
-      background: color-mix(in srgb, var(--brand-deeper) 30%, transparent);
-    }
-  }
-}
-
 /*
  * The headline's two lit phrases. The source sets the first in a pink gradient (a light tint to
  * the full colour) and the second in a cyan one (a light tint through the colour to a shade).
- * Here the two colours are the glow tokens, tinted and shaded the same way, so a brand's set
- * chooses them.
+ * Here the two colours are the glow tokens, tinted with on-surface and shaded with surface the
+ * same way, so a brand's set chooses them. A glow is decoration, though, and on a light page it
+ * read at 1.35 to 1.9:1 (CRS-2). So a light page sets both phrases from brand-deeper to its
+ * hover, brand-deepest, colours the engine keeps at AA on every surface. That gradient is a layer
+ * over the glow's, opaque on a light page and transparent on a dark one, picked by the surface's
+ * own lightness, so no class has to say which page it is.
  */
-.monolith-lit-a {
-  background-image: linear-gradient(
-    to right,
-    color-mix(in srgb, var(--glow) 60%, white),
-    var(--glow)
+.monolith {
+  /* The surface itself where it is dark, and nothing where it is light. */
+  --monolith-dark-only: oklch(from var(--surface) l c h / clamp(0, (0.5 - l) * 1000, 1));
+  /*
+   * A colour where the page is light, and nothing where it is dark: 1% of it mixed into the line
+   * above keeps its hue and lightness, with an alpha near 0 on a light page and 1 on a dark one,
+   * and the alpha is then turned round.
+   */
+  --monolith-lit-from: oklch(
+    from color-mix(in oklab, var(--brand-deeper) 1%, var(--monolith-dark-only)) l c h /
+      clamp(0, (0.5 - alpha) * 1000, 1)
+  );
+  --monolith-lit-to: oklch(
+    from color-mix(in oklab, var(--brand-deepest) 1%, var(--monolith-dark-only)) l c h /
+      clamp(0, (0.5 - alpha) * 1000, 1)
   );
 }
 
+/*
+ * Where relative colours are not supported, both schemes take the checked gradient. The guard
+ * tests the forms the two layers use, channel keywords in calc() and clamp() and a color-mix()
+ * origin, not a plain relative colour: a browser that had the one without the others would
+ * find the layers' colours invalid and paint no gradient at all on words that are transparent.
+ */
+.monolith-lit-a,
 .monolith-lit-b {
-  background-image: linear-gradient(
-    to right,
-    color-mix(in srgb, var(--glow-secondary) 60%, white),
-    var(--glow-secondary),
-    color-mix(in srgb, var(--glow-secondary) 85%, black)
-  );
+  background-image: linear-gradient(to right, var(--brand-deeper), var(--brand-deepest));
+}
+
+@supports (color: oklch(from red l c h / clamp(0, (0.5 - l) * 1000, 1))) and
+  (color: oklch(from color-mix(in oklab, red 1%, blue) l c h / clamp(0, (0.5 - alpha) * 1000, 1))) {
+  .monolith-lit-a {
+    background-image:
+      linear-gradient(to right, var(--monolith-lit-from), var(--monolith-lit-to)),
+      linear-gradient(to right, color-mix(in srgb, var(--glow) 60%, var(--on-surface)), var(--glow));
+  }
+
+  .monolith-lit-b {
+    background-image:
+      linear-gradient(to right, var(--monolith-lit-from), var(--monolith-lit-to)),
+      linear-gradient(
+        to right,
+        color-mix(in srgb, var(--glow-secondary) 60%, var(--on-surface)),
+        var(--glow-secondary),
+        color-mix(in srgb, var(--glow-secondary) 85%, var(--surface))
+      );
+  }
 }
 
 /*
@@ -138,4 +140,12 @@
 
 .monolith details > div > div {
   overflow: hidden;
+}
+
+/*
+ * A section the phone menu hands focus to (nav-menu.tsx) is not a control, so no ring is drawn
+ * round the whole of it; the next Tab goes on to its first control, which shows its own.
+ */
+.monolith section[tabindex='-1']:focus {
+  outline: none;
 }

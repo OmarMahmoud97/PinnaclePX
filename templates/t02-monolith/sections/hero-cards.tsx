@@ -15,23 +15,29 @@ import {
   cardTitleLg,
 } from '../styles'
 import { Avatar } from './avatar'
-import { LightBulbIcon } from './icons'
 
 type Props = { brand: MonolithContent['brand']; cards: MonolithContent['hero']['cards'] }
 
 // The source's HeroCards: four cards placed absolutely in a 700 by 500 box, hidden below lg. A
 // testimonial at the top left, a team member at the top right, a price plan at the lower left
 // and a service at the lower right; here the quote and the profile carry the brand's own words
-// and pictures, and the plan's price shows only when there is one.
+// and pictures, and the plan's price shows only when there is one. The glow slides behind the
+// cards inside their box (monolith.css), so it lights them wherever they show and never sits
+// behind the words. The visitor's name may wrap anywhere rather than run out of its card. The
+// service card's tinted square holds the plan's own Check, where the source drew a light bulb
+// (decision 1, t02-L2). The cards' titles were headings in the source, four of them before the
+// page's first section heading; they are text here with the same look.
 export function HeroCards({ brand, cards }: Props) {
   const { quote, profile, plan, service } = cards
   return (
-    <div className="relative hidden h-[500px] w-[700px] flex-row flex-wrap gap-8 lg:flex">
+    <div className="relative hidden h-[500px] w-[700px] flex-row flex-wrap gap-8 lg:flex lg:max-[1440px]:mt-10">
+      <div aria-hidden="true" className="monolith-glow" />
+
       <div className={`${card} absolute -top-[15px] w-[340px] drop-shadow-xl`}>
         <div className={`${cardHeader} flex-row items-center gap-4 pb-2`}>
           <Avatar image={quote.image} name={brand.name} />
-          <div className="flex flex-col">
-            <h3 className={cardTitleLg}>{brand.name}</h3>
+          <div className="flex min-w-0 flex-col">
+            <p className={`${cardTitleLg} wrap-anywhere`}>{brand.name}</p>
             <p className={cardDescription}>{quote.role}</p>
           </div>
         </div>
@@ -48,7 +54,7 @@ export function HeroCards({ brand, cards }: Props) {
             className="absolute -top-12 aspect-square h-24 w-24 grayscale-[0%]"
             textClass="text-3xl"
           />
-          <h3 className={`${cardTitle} text-center`}>{brand.name}</h3>
+          <p className={`${cardTitle} text-center wrap-anywhere`}>{brand.name}</p>
           <p className={`${cardDescriptionBrand} font-normal`}>{profile.role}</p>
         </div>
         <div className={`${cardContent} pb-2 text-center`}>
@@ -59,10 +65,10 @@ export function HeroCards({ brand, cards }: Props) {
 
       <div className={`${card} absolute top-[150px] left-[50px] w-72 drop-shadow-xl`}>
         <div className={cardHeader}>
-          <h3 className={`${cardTitle} flex items-center justify-between`}>
+          <p className={`${cardTitle} flex items-center justify-between`}>
             {plan.title}
             <span className={badge.secondaryBrand}>{plan.badge}</span>
-          </h3>
+          </p>
           {plan.price !== null && (
             <div>
               <span className="text-3xl font-bold">{plan.price.amount}</span>
@@ -93,11 +99,11 @@ export function HeroCards({ brand, cards }: Props) {
 
       <div className={`${card} absolute -right-[10px] bottom-[35px] w-[350px] drop-shadow-xl`}>
         <div className={`${cardHeaderTight} items-start justify-start gap-4 md:flex-row`}>
-          <div className="mt-1 rounded-2xl bg-brand-deeper/20 p-1">
-            <LightBulbIcon />
+          <div className="mt-1 rounded-2xl bg-brand-deeper/20 p-4">
+            <Check className="h-8 w-8 text-brand-deeper" />
           </div>
           <div>
-            <h3 className={cardTitle}>{service.title}</h3>
+            <p className={cardTitle}>{service.title}</p>
             <p className={`${cardDescriptionBase} mt-2`}>{service.body}</p>
           </div>
         </div>
