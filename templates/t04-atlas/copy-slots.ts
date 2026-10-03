@@ -194,8 +194,10 @@ const ATLAS_COUNTS = {
 } as const satisfies Record<string, CopySlot>
 
 // Every text-on-background pair the template paints. The gradient buttons run from brand to
-// brand-deeper under on-brand; the outline buttons, eyebrows and links set brand-deeper as
-// text, and brand carries the underlined word.
+// brand-deeper under on-brand; the outline buttons, eyebrows and lit phrases run from
+// brand-deeper to brand-deepest as text, and links and the underlined word set brand-deeper.
+// brand is no longer text; its pair stays, so the colours a page derives do not move (the two
+// brand-deepest pairs move none either, over 228 brand colours in both schemes).
 export const ATLAS_CONTRAST_PAIRS: readonly ContrastPair[] = [
   { text: 'on-surface', background: 'surface' },
   { text: 'on-surface-muted', background: 'surface' },
@@ -204,6 +206,8 @@ export const ATLAS_CONTRAST_PAIRS: readonly ContrastPair[] = [
   { text: 'on-surface', background: 'accent' },
   { text: 'brand-deeper', background: 'surface' },
   { text: 'brand-deeper', background: 'surface-muted' },
+  { text: 'brand-deepest', background: 'surface' },
+  { text: 'brand-deepest', background: 'surface-muted' },
   { text: 'brand', background: 'surface' },
   { text: 'on-brand', background: 'brand' },
   { text: 'on-brand', background: 'brand-deeper' },

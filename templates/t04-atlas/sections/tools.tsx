@@ -2,13 +2,15 @@ import Image from 'next/image'
 import type { AtlasContent } from '../copy-slots'
 import { button, paragraph } from '../styles'
 import { Emphasis } from './emphasis'
+import { Fitted } from './fitted'
 
 type Props = Pick<AtlasContent, 'tools'>
 
 // The source's Advanced trading tools: a rounded band on the faint haze with a shadow, the
 // words at the left as a heading with a lit phrase over three titled points and two buttons,
 // and the picture at the right (above the words on phones). The words slide in from the left
-// and the picture from the right.
+// and the picture from the right. Its address is #approach, a name that fits any business; the
+// copy still calls the band `tools` (contract.ts maps the one to the other).
 export function AtlasTools({ tools }: Props) {
   const picture =
     tools.image === null ? null : (
@@ -25,7 +27,7 @@ export function AtlasTools({ tools }: Props) {
     )
   return (
     <section
-      id="tools"
+      id="approach"
       className="atlas-band relative my-20 max-w-full overflow-hidden rounded-2xl py-16 shadow sm:mx-4"
     >
       <div className="relative mx-auto grid max-w-(--breakpoint-xl) grid-cols-12 gap-x-6 px-4 sm:px-2">
@@ -34,12 +36,14 @@ export function AtlasTools({ tools }: Props) {
           data-fade="right"
           className="col-span-12 mt-8 px-4 sm:px-6 lg:col-span-6 [&>*+*]:mt-8 sm:[&>*+*]:mt-6"
         >
-          <h2 className="text-4xl font-semibold">
-            <Emphasis heading={tools.heading} />
+          <h2 className="@container text-4xl font-semibold">
+            <Fitted text={tools.heading.text}>
+              <Emphasis heading={tools.heading} />
+            </Fitted>
           </h2>
           {tools.items.map((item) => (
             <div key={item.title} className="[&>*+*]:mt-2">
-              <h4 className="text-lg font-medium">{item.title}</h4>
+              <h3 className="text-lg font-medium">{item.title}</h3>
               <p className={`${paragraph} text-sm xl:text-base`}>{item.body}</p>
             </div>
           ))}

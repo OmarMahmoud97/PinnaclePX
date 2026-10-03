@@ -2,6 +2,7 @@ import Image from 'next/image'
 import type { AtlasContent } from '../copy-slots'
 import { button, paragraph, section } from '../styles'
 import { Emphasis } from './emphasis'
+import { Fitted } from './fitted'
 import { Mdi } from './mdi'
 
 type Props = Pick<AtlasContent, 'offer'>
@@ -28,8 +29,10 @@ export function AtlasOffer({ offer }: Props) {
           </div>
         </div>
         <div className="col-span-12 mt-20 px-4 sm:px-6 lg:col-span-5 [&>*+*]:mt-6">
-          <h2 className="text-4xl font-semibold">
-            <Emphasis heading={offer.heading} />
+          <h2 className="@container text-4xl font-semibold">
+            <Fitted text={offer.heading.text}>
+              <Emphasis heading={offer.heading} />
+            </Fitted>
           </h2>
           <p className={paragraph}>{offer.body}</p>
           <ul className="[&>*+*]:mt-4 sm:[&>*+*]:mt-2">

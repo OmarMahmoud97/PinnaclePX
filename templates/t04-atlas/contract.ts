@@ -16,21 +16,29 @@ import { meta } from './meta'
 // Atlas's side of the pipeline contract: the copy the copy stage writes, the fallback when it
 // cannot, and how copy and assets become the content object. Links are never written: the nav
 // follows the page's sections in order, and every other link points at one of the page's own
-// anchors. The optional parts (the market tables, the exchange rows, the partner logos, the
+// anchors, but for the closing cell's button, which opens a mail to the page's email when there
+// is one. The optional parts (the market tables, the exchange rows, the partner logos, the
 // newsletter and the steps' pictures) are not in the copy: the brief holds no such facts, so
 // they stay null and the template draws their stand-ins.
 
+// The copy names its targets; the page's addresses are neutral where the source's were not, so
+// the copy's `tools` is the band at #approach.
 const TARGETS = ['start', 'offer', 'tools', 'why', 'how-it-works', 'faq', 'top'] as const
 const HREF: Readonly<Record<(typeof TARGETS)[number], string>> = {
   start: '#start',
   offer: '#offer',
-  tools: '#tools',
+  tools: '#approach',
   why: '#why',
   'how-it-works': '#how-it-works',
   faq: '#faq',
   top: '#top',
 }
-const NAV_HREFS = ['#start', '#offer', '#tools', '#why', '#faq'] as const
+const NAV_HREFS = ['#start', '#offer', '#approach', '#why', '#faq'] as const
+// Every ask leads to the closing cell at the foot of the page: the note, its line and its
+// button (footer.tsx). That button opens a mail to the page's email, with its own label as the
+// subject; a visitor's page always has an email, and with none, as in validation, the button is
+// a link to its own cell.
+const ASK = '#contact'
 
 const emphasised = z.object({ text: z.string(), emphasis: z.string() })
 const titled = z.object({ title: z.string(), body: z.string() })
@@ -196,6 +204,7 @@ function triple<T>(items: readonly T[]): Three<T> {
 export function assembleAtlas(copy: AtlasCopy, assets: TemplateAssets): AtlasContent {
   const { hero, glance, pitch, offer, tools, footer } = copy
   const image = (slot: string) => assets.images[slot] ?? null
+  const email = assets.email
   const [s1, s2, s3] = triple(copy.steps.items)
   return {
     brand: { ...copy.brand, logo: assets.logo },
@@ -209,13 +218,13 @@ export function assembleAtlas(copy: AtlasCopy, assets: TemplateAssets): AtlasCon
         items: copy.nav.menu.items.map((item) => ({ label: item.label, href: HREF[item.target] })),
       },
       secondary: { label: copy.nav.secondary, href: HREF['how-it-works'] },
-      cta: { label: copy.nav.cta, href: HREF.start },
+      cta: { label: copy.nav.cta, href: ASK },
     },
     hero: {
       eyebrow: hero.eyebrow,
       headline: hero.headline,
       subhead: hero.subhead,
-      primary: { label: hero.primary, href: HREF.start },
+      primary: { label: hero.primary, href: ASK },
       secondary: { label: hero.secondary, href: HREF['how-it-works'] },
       image: image('hero'),
     },
@@ -227,7 +236,7 @@ export function assembleAtlas(copy: AtlasCopy, assets: TemplateAssets): AtlasCon
       exchange: null,
       label: pitch.label,
       statement: pitch.statement,
-      action: { label: pitch.action, href: HREF.start },
+      action: { label: pitch.action, href: ASK },
       image: image('pitch'),
     },
     partners: null,
@@ -235,13 +244,13 @@ export function assembleAtlas(copy: AtlasCopy, assets: TemplateAssets): AtlasCon
       heading: offer.heading,
       body: offer.body,
       points: triple(offer.points),
-      action: { label: offer.action, href: HREF.start },
+      action: { label: offer.action, href: ASK },
       image: image('offer'),
     },
     tools: {
       heading: tools.heading,
       items: triple(tools.items),
-      primary: { label: tools.primary, href: HREF.start },
+      primary: { label: tools.primary, href: ASK },
       secondary: { label: tools.secondary, href: HREF['how-it-works'] },
       image: image('tools'),
     },
@@ -261,7 +270,10 @@ export function assembleAtlas(copy: AtlasCopy, assets: TemplateAssets): AtlasCon
       ),
       newsletter: null,
       note: footer.note,
-      action: { label: footer.action, href: HREF.start },
+      action: {
+        label: footer.action,
+        href: email === null ? ASK : `mailto:${email}?subject=${encodeURIComponent(footer.action)}`,
+      },
     },
   }
 }

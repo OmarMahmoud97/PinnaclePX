@@ -129,13 +129,43 @@ describe('assembleAtlas', () => {
     expect(content.nav.links.map((link) => link.href)).toEqual([
       '#start',
       '#offer',
-      '#tools',
+      '#approach',
       '#why',
       '#faq',
     ])
     expect(content.nav.menu.items.map((item) => item.href)).toEqual(['#how-it-works', '#top'])
     expect(content.glance.more.href).toBe('#why')
-    expect(content.pitch.action.href).toBe('#start')
+    expect(content.pitch.action.href).toBe('#contact')
+    expect(content.footer.columns[0]?.[2]?.href).toBe('#approach')
     expect(content.footer.columns[1]?.[2]?.href).toBe('#top')
+  })
+
+  // The asks: the header's filled button, the hero's main button, the pitch's wide button, the
+  // offer's outline button, the band's first button and the closing cell's button.
+  const asks = (content: ReturnType<typeof assembleAtlas>) => [
+    content.nav.cta.href,
+    content.hero.primary.href,
+    content.pitch.action.href,
+    content.offer.action.href,
+    content.tools.primary.href,
+  ]
+
+  it('leads every ask to the closing cell, whose button mails the page email under its label', () => {
+    const assets: TemplateAssets = {
+      logo: { kind: 'wordmark' },
+      images: {},
+      email: 'owner@example.com',
+    }
+    const content = assembleAtlas(copy, assets)
+    expect(asks(content)).toEqual(Array.from({ length: 5 }, () => '#contact'))
+    expect(content.footer.action.href).toBe(
+      `mailto:owner@example.com?subject=${encodeURIComponent(copy.footer.action)}`,
+    )
+  })
+
+  it('leads the closing cell button to its own cell when no email is known', () => {
+    const content = assembleAtlas(copy, { logo: { kind: 'wordmark' }, images: {}, email: null })
+    expect(asks(content)).toEqual(Array.from({ length: 5 }, () => '#contact'))
+    expect(content.footer.action.href).toBe('#contact')
   })
 })

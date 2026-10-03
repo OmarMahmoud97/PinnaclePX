@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import type { AtlasContent } from '../copy-slots'
+import { Fitted } from './fitted'
 
 type Props = Pick<AtlasContent, 'steps'>
 
@@ -32,8 +33,11 @@ export function AtlasSteps({ steps }: Props) {
       className="atlas-band relative my-24 max-w-full overflow-hidden shadow sm:mx-4 sm:rounded-2xl xl:mx-10"
     >
       <div className="flex w-full flex-col items-center py-16">
-        <h2 data-fade="flip" className="text-center text-3xl font-semibold sm:text-4xl">
-          {steps.heading}
+        <h2
+          data-fade="flip"
+          className="@container w-full text-center text-3xl font-semibold sm:text-4xl"
+        >
+          <Fitted text={steps.heading}>{steps.heading}</Fitted>
         </h2>
         <div
           data-fade="up"

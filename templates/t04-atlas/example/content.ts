@@ -48,7 +48,7 @@ export const KESTREL_ATLAS: AtlasContent = {
     links: [
       { label: 'Cryptocurrency', href: '#start' },
       { label: 'Exchanges', href: '#offer' },
-      { label: 'Watchlist', href: '#tools' },
+      { label: 'Watchlist', href: '#approach' },
       { label: 'NFT', href: '#why' },
       { label: 'Portfolio', href: '#faq' },
     ],
@@ -57,7 +57,7 @@ export const KESTREL_ATLAS: AtlasContent = {
       items: [
         { label: 'Exchange', href: '#start' },
         { label: 'Wallet', href: '#offer' },
-        { label: 'Explorer', href: '#tools' },
+        { label: 'Explorer', href: '#approach' },
         { label: 'Charts', href: '#why' },
       ],
     },
@@ -321,21 +321,21 @@ export const KESTREL_ATLAS: AtlasContent = {
       [
         { label: 'Cryptocurrency', href: '#start' },
         { label: 'Exchanges', href: '#offer' },
-        { label: 'Watchlist', href: '#tools' },
+        { label: 'Watchlist', href: '#approach' },
         { label: 'Portfolio', href: '#why' },
         { label: 'NFT', href: '#faq' },
       ],
       [
         { label: 'Products', href: '#start' },
         { label: 'About Us', href: '#why' },
-        { label: 'Careers', href: '#tools' },
+        { label: 'Careers', href: '#approach' },
         { label: 'Blog', href: '#faq' },
         { label: 'Security', href: '#why' },
       ],
       [
         { label: 'Help Center', href: '#faq' },
         { label: 'Contact Us', href: '#start' },
-        { label: 'System Status', href: '#tools' },
+        { label: 'System Status', href: '#approach' },
         { label: 'Area of Avaibility', href: '#why' },
         { label: 'Privacy Policy', href: '#top' },
       ],

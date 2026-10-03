@@ -7,7 +7,9 @@
 // accent, neutral-800 -> on-surface, gray-700 and 666666 -> on-surface-muted, DDDDDD and
 // gray-200 -> border, 468ef9 (the gradient's start) -> brand, 0c66ee (its end, and every border
 // and link) -> brand-deeper, the header gradient's cyan -> glow and its first blue ->
-// glow-secondary.
+// glow-secondary. Words are set only in colours the contrast engine checks (decision 15): the
+// text gradients run from brand-deeper to brand-deepest (atlas.css), and the underlined word is
+// brand-deeper, where brand fell to 4.2:1 on the bands' haze in the dark scheme.
 
 // The source's BaseSection: a twelve-column grid at the xl breakpoint's width.
 export const section =
@@ -29,7 +31,7 @@ export const button = {
   gradient: `${BUTTON} bg-linear-to-r from-brand to-brand-deeper text-on-brand`,
   outline: `${BUTTON} ${gradientText} border border-brand-deeper bg-inherit`,
   outlineBrand: `${BUTTON} ${gradientText} border border-brand bg-inherit`,
-  quiet: `${BUTTON} bg-inherit text-brand underline hover:shadow-none`,
+  quiet: `${BUTTON} bg-inherit text-brand-deeper underline hover:shadow-none`,
 } as const
 
 // The source's NavLink, in the header and the footer.

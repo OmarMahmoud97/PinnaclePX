@@ -3,6 +3,7 @@ import type { CSSProperties } from 'react'
 import type { AtlasContent } from '../copy-slots'
 import { button, eyebrow, paragraph, section } from '../styles'
 import { Emphasis } from './emphasis'
+import { Fitted } from './fitted'
 import { Mdi } from './mdi'
 
 type Props = Pick<AtlasContent, 'hero'>
@@ -24,6 +25,7 @@ const DOTS = [
 // capitalised headline with a lit phrase, a paragraph shown from sm up and two round buttons;
 // the picture at the right from sm up; the ornaments over both. The eyebrow and headline slide
 // in from the left, the paragraph from above and the buttons from below, at the source's delays.
+// The headline is smaller where its longest word would not fit its width (fit.ts).
 export function AtlasHero({ hero }: Props) {
   return (
     <section id="hero" className="w-full pb-24">
@@ -34,9 +36,11 @@ export function AtlasHero({ hero }: Props) {
           </span>
           <h1
             data-rise
-            className="text-[2.5rem] leading-tight font-bold capitalize sm:pr-8 sm:text-5xl xl:pr-10 xl:text-6xl"
+            className="@container text-[2.5rem] leading-tight font-bold capitalize sm:pr-8 sm:text-5xl xl:pr-10 xl:text-6xl"
           >
-            <Emphasis heading={hero.headline} />
+            <Fitted text={hero.headline.text}>
+              <Emphasis heading={hero.headline} />
+            </Fitted>
           </h1>
           <p data-rise="down" style={delay(300)} className={`${paragraph} hidden sm:block`}>
             {hero.subhead}

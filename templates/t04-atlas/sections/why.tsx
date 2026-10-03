@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import type { AtlasContent } from '../copy-slots'
+import { Fitted } from './fitted'
 import { Mdi } from './mdi'
 
 type Props = Pick<AtlasContent, 'why'>
@@ -29,7 +30,9 @@ export function AtlasWhy({ why }: Props) {
           data-fade="left"
           className="col-span-12 mt-8 lg:col-span-5 xl:px-8 [&>*+*]:mt-8 sm:[&>*+*]:mt-6"
         >
-          <h2 className="text-4xl font-semibold">{why.heading}</h2>
+          <h2 className="@container text-4xl font-semibold">
+            <Fitted text={why.heading}>{why.heading}</Fitted>
+          </h2>
           <ul className="[&>*+*]:mt-8 sm:[&>*+*]:mt-4">
             {why.items.map((item) => (
               <li key={item.title} className="[&>*+*]:mt-2">
