@@ -26,33 +26,43 @@ const work = pages.flatMap((page) =>
 // One load a page and look for the phones, and one for the windows, resized through the widths.
 const groups = [options.sizes.filter((s) => s.phone), options.sizes.filter((s) => !s.phone)]
 const browser = await launch()
-const results = []
 let done = 0
-await inPool(work, jobs, async ({ page, look }) => {
-  for (const sizes of groups.filter((g) => g.length > 0)) {
-    const context = await contextFor(browser, sizes[0])
-    const tab = await context.newPage()
-    try {
-      await open(tab, urlOf(options.base, page, { look }))
-      await tab.evaluate(installHelpers)
-      for (const size of sizes) {
-        await resize(tab, size)
-        const findings = await tab.evaluate(measureTextFit, { company: page.answers.company })
-        results.push({
-          templateId: page.templateId,
-          page: page.label,
-          look,
-          size: size.size,
-          findings,
-        })
+const results = (
+  await inPool(
+    work,
+    jobs,
+    async ({ page, look }) => {
+      const rows = []
+      for (const sizes of groups.filter((g) => g.length > 0)) {
+        const context = await contextFor(browser, sizes[0])
+        try {
+          const tab = await context.newPage()
+          await open(tab, urlOf(options.base, page, { look }))
+          await tab.evaluate(installHelpers)
+          for (const size of sizes) {
+            await resize(tab, size)
+            const findings = await tab.evaluate(measureTextFit, {
+              names: [page.copy?.brand?.name, page.answers.company],
+            })
+            rows.push({
+              templateId: page.templateId,
+              page: page.label,
+              look,
+              size: size.size,
+              findings,
+            })
+          }
+        } finally {
+          await context.close().catch(() => undefined)
+        }
       }
-    } finally {
-      await context.close()
-    }
-  }
-  done += 1
-  if (done % 20 === 0) process.stderr.write(`${String(done)}/${String(work.length)}\n`)
-})
+      done += 1
+      if (done % 20 === 0) process.stderr.write(`${String(done)}/${String(work.length)}\n`)
+      return rows
+    },
+    ({ page, look }) => `${page.label} in ${look}`,
+  )
+).flat()
 await browser.close()
 
 // The summary: by template, then by width in the standard's order, the pages that fail in any

@@ -1,14 +1,22 @@
 // The text-fit measure, run inside the page at its current width (installHelpers first): the
-// text-fit check (scripts/checks/text-fit.mjs) and the CI spec (e2e/template-text-fit.spec.ts)
-// share it. A text fails when an ancestor that hides its overflow clips it, when it runs past
-// the screen, or when a word is broken across two lines; a header control fails when it wraps
-// inside its link or button, overlaps another, or leaves the screen. The visitor's own wordmark
-// may wrap, and a name with nowhere to break may break.
+// text-fit check (scripts/checks/text-fit.mjs) and the CI spec
+// (e2e/reduced-motion-template-fit.spec.ts) share it. A text fails when an ancestor that hides
+// its overflow clips it, when it runs past the screen, or when a word is broken across two
+// lines; a header control fails when it wraps inside its link or button, overlaps another, or
+// leaves the screen. The visitor's own wordmark may wrap, and a name with nowhere to break may
+// break.
+//
+// names: the business's names as the page may set them, the copy's brand name first (what a
+// wordmark shows: the model may shorten a long company name, and a synthetic answer fills the
+// slot with other words) and then the company name the visitor typed.
 
-export function measureTextFit({ company }) {
+export function measureTextFit({ names }) {
   const C = window.__checks
   const width = document.documentElement.clientWidth
-  const unbroken = company.length > 0 && !/\s/.test(company)
+  const given = names.filter((name) => typeof name === 'string' && name.trim() !== '')
+  const unbroken = given.filter((name) => !/\s/.test(name.trim()))
+  // Text compared without its spaces or case: a wordmark may set its name in spans, or capitals.
+  const bare = (text) => (text ?? '').replace(/\s+/g, '').toLowerCase()
   const findings = []
   const add = (kind, el, extra) =>
     findings.push({ kind, section: C.sectionOf(el), el: C.describe(el), ...extra })
@@ -69,7 +77,7 @@ export function measureTextFit({ company }) {
       range.setEnd(node, m.index + m[0].length)
       const tops = [...range.getClientRects()].filter((r) => r.width > 0.5).map((r) => r.top)
       // A name with nowhere to break may break anywhere (plan 7.7): its own break is not counted.
-      if (unbroken && company.includes(m[0])) continue
+      if (unbroken.some((name) => name.includes(m[0]))) continue
       if (tops.length > 1 && Math.max(...tops) - Math.min(...tops) > size * 0.5) {
         add('broken-word', el, { word: m[0] })
       }
@@ -81,10 +89,13 @@ export function measureTextFit({ company }) {
     const controls = [...header.querySelectorAll('a, button')].filter(
       (c) => C.shown(c) && !C.decorative(c) && !C.srOnly(c),
     )
-    const name = company.toLowerCase().slice(0, 16)
+    // The wordmark: the control that shows one of the names whole, else the one holding the logo
+    // image, else the header's link home (to the top of the page or the site's root).
+    const shows = (c, name) => bare(c.textContent).includes(bare(name))
     const wordmark =
-      controls.find((c) => name !== '' && (c.textContent ?? '').toLowerCase().includes(name)) ??
+      given.map((name) => controls.find((c) => shows(c, name))).find(Boolean) ??
       controls.find((c) => c.querySelector('img') !== null) ??
+      controls.find((c) => ['#top', '#', '/'].includes(c.getAttribute('href') ?? '')) ??
       null
     for (const c of controls) {
       const r = c.getBoundingClientRect()

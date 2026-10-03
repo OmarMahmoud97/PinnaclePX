@@ -12,7 +12,10 @@ import { measureTextFit, type TextFitFinding } from '../scripts/checks/lib/text-
 // check runs over every look and width). Kept fast: per template, the three longest stored
 // answers and every synthetic one. Nothing here sends a brief.
 
-type Corpus = Readonly<{ answers: { company: string; imagery: { style: string } }; copy: unknown }>
+type Corpus = Readonly<{
+  answers: { company: string; imagery: { style: string } }
+  copy: { brand?: { name?: unknown } }
+}>
 
 const DIR = join(process.cwd(), 'tests', 'fixtures', 'template-copy')
 const WIDTHS = [
@@ -163,6 +166,7 @@ for (const templateId of templates) {
         const stored = JSON.parse(
           readFileSync(join(DIR, templateId, `${name}.json`), 'utf8'),
         ) as Corpus
+        const brand = stored.copy.brand?.name
         // The phone's page and the window's, each checked as served before anything is measured,
         // so a broken server fails here and never counts as a case's expected failure.
         const pages = []
@@ -194,7 +198,7 @@ for (const templateId of templates) {
             await page.waitForTimeout(150)
             await page.evaluate(settle)
             const findings: TextFitFinding[] = await page.evaluate(measureTextFit, {
-              company: stored.answers.company,
+              names: [typeof brand === 'string' ? brand : null, stored.answers.company],
             })
             for (const f of findings) {
               found.push(

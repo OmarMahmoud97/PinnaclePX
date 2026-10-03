@@ -13,4 +13,7 @@ export type TextFitFinding = Readonly<{
   with?: string
 }>
 
-export declare function measureTextFit(args: { company: string }): TextFitFinding[]
+// names: the copy's brand name, then the company name; either may be missing.
+export declare function measureTextFit(args: {
+  names: readonly (string | null | undefined)[]
+}): TextFitFinding[]
