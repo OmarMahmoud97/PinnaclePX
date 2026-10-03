@@ -105,6 +105,21 @@
   }
 }
 
+/* The wordmark's name (logo.tsx), fitted to 97% of the box that holds it: the footer's width
+ * (footer.tsx, the @container), and in the header the bar (nav.tsx, the @container), less the
+ * 40px menu button and the 24px gap beside it below md, where the bar holds the name and the
+ * button alone. So a name with no space neither pushes the button off a phone's screen nor runs
+ * past the footer's edge. */
+.ember-fit-name {
+  font-size: min(1em, 97cqi / var(--ember-word, 1));
+}
+
+@media (width < 48rem) {
+  header .ember-fit-name {
+    font-size: min(1em, (100cqi - 4rem) * 0.97 / var(--ember-word, 1));
+  }
+}
+
 @keyframes ember-fade-up {
   from {
     opacity: 0;
