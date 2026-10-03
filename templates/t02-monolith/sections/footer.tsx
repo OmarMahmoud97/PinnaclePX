@@ -27,7 +27,8 @@ const LINK_SIZE = 16
 // the column; a hyphenated word may break after its hyphen, as a link such as "End-of-tenancy"
 // did in the source. On a phone the columns stand two to a row while every word fits a 320px
 // phone's column at the links' size, and one to a row below sm when one does not, so no word
-// there is set smaller than the links.
+// there is set smaller than the links. A fitted size sets no line height, so the headings take
+// text-lg's own from the theme, as the source's did (a written calc() is folded to 1.55556).
 export function MonolithFooter({ brand, footer, credits }: Props) {
   const headings = footer.groups.map((group) => group.heading)
   const labels = footer.groups.flatMap((group) => group.links.map((link) => link.label))
@@ -50,7 +51,7 @@ export function MonolithFooter({ brand, footer, credits }: Props) {
         {footer.groups.map((group) => (
           <div key={group.heading} className="@container flex flex-col gap-2">
             <h3
-              className="text-[length:min(1.125rem,97cqi/var(--monolith-word,1))] leading-[1.56] font-bold"
+              className="text-[length:min(1.125rem,97cqi/var(--monolith-word,1))] leading-(--text-lg--line-height) font-bold"
               style={headingWord}
             >
               {group.heading}
