@@ -97,7 +97,7 @@ const PURPOSE: Readonly<Record<ModelSlot, string>> = {
   'brand.name': 'the company name as given, set in lower case in the bar as the source set its own',
   'brand.legalName': 'the legal name for the footer, the company name if unknown',
   'nav.links[]':
-    'two to six short menu labels, in order: home, their work, what they offer, about, questions, contact',
+    'two to six short menu labels, in order: home, a word or two naming the items under the marquee, what they offer, about, questions, contact; no two the same',
   'hero.headline[]':
     'two or three short lines of the headline, a few words each; the last is set in the serif italic',
   'hero.subhead': 'one or two sentences under the headline saying what they do and for whom',
@@ -122,7 +122,7 @@ const PURPOSE: Readonly<Record<ModelSlot, string>> = {
     'the heading of the footer column that lists what they offer, such as Services',
   'footer.navigation.heading': 'the heading of the footer column of links, such as Navigation',
   'footer.navigation.links[].label':
-    'two to six link labels for that column; each link has a target of top, projects, services, services-menu, about, faq or contact',
+    'two to six link labels for that column, each the same as the menu label for the block it leads to; each link has a target of top, projects, services, services-menu, about, faq or contact',
   'footer.bottomLinks[].label':
     'up to three short labels for the small links at the foot, with the same targets',
   'footer.credit': 'a closing line at the foot, or empty',
