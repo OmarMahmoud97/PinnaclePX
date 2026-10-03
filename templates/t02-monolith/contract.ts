@@ -229,6 +229,12 @@ export function assembleMonolith(copy: MonolithCopy, assets: TemplateAssets): Mo
   const { hero, about, features, services, cta, faq } = copy
   const image = (slot: string) => assets.images[slot] ?? null
   const [f1, f2, f3] = three(features.items)
+  // Every ask leads to the closing band, whose own button opens a mail to the page's email with
+  // its label as the subject (decision 15). A visitor's page always has an email; with none, as
+  // in validation, the button leads to the top.
+  const { email } = assets
+  const mail =
+    email === null ? HREF.top : `mailto:${email}?subject=${encodeURIComponent(cta.primary)}`
   return {
     brand: { ...copy.brand, logo: assets.logo },
     nav: {
@@ -283,7 +289,7 @@ export function assembleMonolith(copy: MonolithCopy, assets: TemplateAssets): Mo
     cta: {
       heading: cta.heading,
       body: cta.body,
-      primary: { label: cta.primary, href: HREF.cta },
+      primary: { label: cta.primary, href: mail },
       secondary: { label: cta.secondary, href: HREF.features },
     },
     testimonials: null,

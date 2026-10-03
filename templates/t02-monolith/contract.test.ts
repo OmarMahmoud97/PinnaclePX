@@ -146,4 +146,28 @@ describe('assembleMonolith', () => {
     expect(content.cta.secondary.href).toBe('#features')
     expect(content.footer.groups[1]?.links[1]?.href).toBe('#top')
   })
+
+  it('leads every ask to the closing band, whose button mails the page email under its label', () => {
+    const content = assembleMonolith(copy, {
+      logo: { kind: 'wordmark' },
+      images: {},
+      email: 'owner@example.com',
+    })
+    const asks = [
+      content.nav.cta.href,
+      content.hero.primary.href,
+      content.hero.cards.plan.action.href,
+      content.faq.link.href,
+      content.footer.groups[1]?.links[0]?.href,
+    ]
+    expect(asks).toEqual(Array.from({ length: 5 }, () => '#contact'))
+    expect(content.cta.primary.href).toBe(
+      `mailto:owner@example.com?subject=${encodeURIComponent(copy.cta.primary)}`,
+    )
+  })
+
+  it('leads the closing band button to the top when no email is known', () => {
+    const content = assembleMonolith(copy, { logo: { kind: 'wordmark' }, images: {}, email: null })
+    expect(content.cta.primary.href).toBe('#top')
+  })
 })

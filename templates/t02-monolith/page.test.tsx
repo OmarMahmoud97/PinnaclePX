@@ -64,4 +64,11 @@ describe('the Monolith page', () => {
     expect(initials).toHaveLength(2)
     for (const attributes of initials) expect(attributes).toContain('aria-hidden="true"')
   })
+
+  it('opens a mail from the closing band alone, under its button label', () => {
+    const contact = html.slice(html.indexOf('id="contact"'), html.indexOf('id="faq"'))
+    const mail = `mailto:owner@example.com?subject=${encodeURIComponent('Get in touch')}`
+    expect(texts(html, /href="(mailto:[^"]+)"/g)).toEqual([mail])
+    expect(contact).toContain(`href="${mail}"`)
+  })
 })
