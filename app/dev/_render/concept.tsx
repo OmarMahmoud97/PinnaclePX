@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation'
 import { typeStyle } from '@/app/preview/_components/fonts'
+import { StudioBar } from '@/app/preview/_components/studio-bar'
 import { paletteFor } from '@/lib/brief/palettes'
 import { STYLE_IDS, type VisualStyle } from '@/lib/brief/styles'
 import type { SubmissionAnswers } from '@/lib/brief/submission'
@@ -25,6 +26,9 @@ import { STAND_IN_FILLS, type StandInFill, standInSrc } from './stand-in'
 //                                  l034 for CIE lightness 0.34 (default: the wordmark)
 //   ?email=<address>               the page's email, which a visitor's page always has
 //                                  (default: none)
+//   ?bar=1                         the studio bar above the page, as the preview page draws it
+//                                  (app/preview/[slug]/[templateId]/page.tsx), so the header
+//                                  checks run on the geometry a visitor gets (decision 22)
 //   ?probe=<path>,<path>           the copy's text at each path (nav.cta, hero.cards.plan.action)
 //                                  replaced by a marker, Probe 01, Probe 02 in the order given,
 //                                  so a check can find the link a copy slot labels (the asks
@@ -36,6 +40,7 @@ export type DevView = Readonly<{
   pictures: StandInFill | null
   logo: StandInFill | null
   email: string | null
+  bar: boolean
   probe: readonly string[]
 }>
 
@@ -54,12 +59,14 @@ export function viewOf(search: Search, answers: SubmissionAnswers): DevView | nu
   const pictures = one(search.pictures)
   const logo = one(search.logo)
   const email = one(search.email)
+  const bar = one(search.bar)
   const probe = (one(search.probe) ?? '').split(',').filter((path) => path !== '')
   if (!(STYLE_IDS as readonly string[]).includes(look)) return null
   if (scheme !== 'light' && scheme !== 'dark') return null
   if (pictures !== null && !isFill(pictures)) return null
   if (logo !== null && !isFill(logo)) return null
   if (email !== null && !/^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(email)) return null
+  if (bar !== null && bar !== '1') return null
   if (!probe.every((path) => PATH.test(path))) return null
   return {
     look: look as VisualStyle,
@@ -67,6 +74,7 @@ export function viewOf(search: Search, answers: SubmissionAnswers): DevView | nu
     pictures: isFill(pictures) ? pictures : null,
     logo: isFill(logo) ? logo : null,
     email,
+    bar: bar === '1',
     probe,
   }
 }
@@ -146,9 +154,18 @@ export function DevConcept({
     images,
     email: view.email,
   }
-  return (
+  const page = (
     <div style={{ ...tokenStyle(tokens), ...typeStyle(view.look) }}>
       {renderConcept(templateId, shown, assets)}
+    </div>
+  )
+  if (!view.bar) return page
+  // As the preview page sets a design under the bar: the bar first in a column, then the page.
+  // The column's data attribute is only how the studio-bar check finds the bar.
+  return (
+    <div className="flex min-h-dvh flex-col" data-dev-studio="">
+      <StudioBar slug="dev" index={0} count={chosen.length} company={answers.company} />
+      {page}
     </div>
   )
 }

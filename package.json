@@ -35,6 +35,7 @@
     "check:gradient-text": "node scripts/checks/gradient-text.mjs",
     "check:behaviour": "node scripts/checks/behaviour.mjs",
     "check:menus": "node scripts/checks/menus.mjs",
+    "check:studio-bar": "node scripts/checks/studio-bar.mjs",
     "check:layout-shift": "node scripts/checks/layout-shift.mjs",
     "check:a11y-names": "node scripts/checks/a11y-names.mjs",
     "check:leftovers": "node scripts/checks/leftovers.mjs"
