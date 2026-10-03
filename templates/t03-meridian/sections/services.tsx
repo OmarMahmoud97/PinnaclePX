@@ -1,4 +1,5 @@
 import type { MeridianContent } from '../copy-slots'
+import { fitWord } from '../fit'
 import {
   badge,
   card,
@@ -21,7 +22,11 @@ export function MeridianServices({ services }: Props) {
     <section id="services" className={`${container} py-24 sm:py-32`}>
       <h2 className={`${eyebrow} text-center`}>{services.eyebrow}</h2>
 
-      <h2 className={`${sectionTitle} text-center`}>{services.heading}</h2>
+      <h2 className={`@container ${sectionTitle} text-center`}>
+        <span className="meridian-fit" style={fitWord(services.heading)}>
+          {services.heading}
+        </span>
+      </h2>
       <h3 className={`${sectionLead} text-center`}>{services.lead}</h3>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"></div>
 

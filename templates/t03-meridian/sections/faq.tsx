@@ -1,5 +1,6 @@
 import { Plus } from 'lucide-react'
 import type { MeridianContent } from '../copy-slots'
+import { fitWord } from '../fit'
 import { container, eyebrow } from '../styles'
 
 type Props = Pick<MeridianContent, 'faq'>
@@ -14,7 +15,11 @@ export function MeridianFaq({ faq }: Props) {
       <div className="mb-8 text-center">
         <h2 className={`${eyebrow} text-center`}>{faq.eyebrow}</h2>
 
-        <h2 className="text-center text-3xl font-bold md:text-4xl">{faq.heading}</h2>
+        <h2 className="@container text-center text-3xl font-bold md:text-4xl">
+          <span className="meridian-fit" style={fitWord(faq.heading)}>
+            {faq.heading}
+          </span>
+        </h2>
       </div>
 
       <div>

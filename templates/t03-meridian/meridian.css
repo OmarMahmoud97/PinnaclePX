@@ -55,6 +55,40 @@
 }
 
 /*
+ * A heading sized by its longest word (fit.ts, fitWord), as Atlas's and Monolith's are: its
+ * words are set at the smaller of the heading's own size and the size at which that word fills
+ * 97% of the room, so the word always fits its line whole, in any look's faces, and shorter
+ * words keep the source's sizes. The room is the nearest @container's width: the heading's own,
+ * or, where a heading is only as wide as its words, its block's, less what lies between.
+ */
+.meridian-fit {
+  display: block;
+  font-size: min(1em, var(--meridian-room, 100cqi) * 0.97 / var(--meridian-word, 1));
+}
+
+/* The headline: at most its 48rem box, less the lit phrase's padding. */
+.meridian-fit-headline {
+  --meridian-room: calc(min(100cqi, 48rem) - 1rem);
+}
+
+/* The benefits' heading: from lg, one of two columns 6rem apart. */
+@media (width >= 64rem) {
+  .meridian-fit-column {
+    --meridian-room: calc((100cqi - 6rem) / 2);
+  }
+}
+
+/* The ask: inside its card's 1.5rem padding, less the lit phrase's. */
+.meridian-fit-ask {
+  --meridian-room: calc(100cqi - 3.5rem);
+}
+
+/* The footer's name: beside its mark and the mark's margin. */
+.meridian-fit-name {
+  --meridian-room: calc(100cqi - 2.75rem);
+}
+
+/*
  * The sponsors' marquee, as the source's @devnomic/marquee draws it: two copies of the row
  * slide left forever, the edges fade, and it pauses under the pointer. Under reduced motion
  * the first copy stands still and the second is hidden.

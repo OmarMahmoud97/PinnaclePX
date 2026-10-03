@@ -94,4 +94,47 @@ describe('the Meridian page', () => {
     )
     expect(span.some((name) => name.includes('glow'))).toBe(false)
   })
+
+  it('lets a line break beside the lit phrase, whose spaces its padding stands in for', () => {
+    const ask = page('owner@example.com', (copy) => ({
+      ...copy,
+      community: {
+        ...copy.community,
+        heading: { text: 'Fancy getting something sorted?', emphasis: 'sorted?' },
+      },
+    }))
+    expect(ask).toContain('Fancy getting something<wbr/><span class="meridian-lit')
+  })
+
+  it('sizes the headline and each section heading by its longest word', () => {
+    const fitted = [...html.matchAll(/class="meridian-fit[^"]*" style="--meridian-word:([\d.]+)"/g)]
+    // The headline, the ask, five section headings and four benefit titles.
+    expect(fitted).toHaveLength(11)
+  })
+})
+
+describe('the Meridian footer', () => {
+  const columns = (heading: string) => {
+    const html = page(null, (copy) => ({
+      ...copy,
+      footer: {
+        groups: copy.footer.groups.map((group, index) =>
+          index === 0 ? { ...group, heading } : group,
+        ),
+      },
+    }))
+    const footer = html.slice(html.indexOf('<footer'))
+    return /<div class="(grid [^"]*)"/.exec(footer)?.[1]?.split(' ') ?? []
+  }
+
+  it('stands its columns two to a row on a phone while every word fits', () => {
+    expect(columns('Explore')).toContain('grid-cols-2')
+  })
+
+  it('stands them one to a row below sm when a word would not fit a 320px phone’s column', () => {
+    const classes = columns('ACCOUNTANCY')
+    expect(classes).toContain('grid-cols-1')
+    expect(classes).toContain('sm:grid-cols-2')
+    expect(classes).not.toContain('grid-cols-2')
+  })
 })
