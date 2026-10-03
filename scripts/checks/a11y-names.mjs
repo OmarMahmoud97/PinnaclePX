@@ -1,7 +1,7 @@
 // Accessible names and the heading outline (decision 15's accessibility list; the check
 // standard in docs/template-fit-decisions.md, Part 3), read from Chromium's accessibility tree,
-// as a screen reader gets the page, at 390 and 1440. Every page must meet the rules below, the
-// expected list every template shares; EXPECT adds what decision 15 asks of one template.
+// as a screen reader gets the page, at 390 and 1440. Every page must meet the rules below, which
+// every template shares, and its template's own expected list:
 //
 //   outline   one h1, and no heading before it; no heading skips a level on the way down;
 //             no heading without a name; no two headings in a row in one section at one level
@@ -12,11 +12,16 @@
 //             five words); no drawing is named as an icon ("Free Icons", "Menu Icon")
 //   initials  letters in a small circle standing for a person are hidden from screen readers
 //   letters   a heading set letter by letter is read as its words, not as letters
+//   expected  each block the template's outline lists (its outline in
+//             tests/fixtures/template-copy/<template>/_expected.json, by address) is drawn and
+//             opens with a heading of its level, and what EXPECT asks of one template's controls
 //
 // Started from review/verify-templates/a11y-check.cjs, which read a few names from the DOM.
 //
 //   node scripts/checks/a11y-names.mjs --base http://localhost:3120 [options in lib/args.mjs]
 //     (one page a template unless --limit says more)
+import { existsSync, readFileSync } from 'node:fs'
+import { join } from 'node:path'
 import { parseArgs } from './lib/args.mjs'
 import { contextFor, inPool, launch, open } from './lib/browser.mjs'
 import { installHelpers } from './lib/in-page.mjs'
@@ -29,10 +34,42 @@ const options = parseArgs(process.argv.slice(2), {
   widths: '390x844,1440x900',
 })
 
-// What decision 15 asks of one template beyond the shared rules: the phone menu's button named
-// with its visible label and the word menu (Vector, "Home menu").
+// What decision 15 asks of one template's controls beyond the shared rules: the phone menu's
+// button named with its visible label and the word menu (Vector, "Home menu").
 const EXPECT = {
   't08-vector': { menuButtonNamed: /\bmenu\b/i },
+}
+
+// Each template's expected outline: the blocks it draws, by address, and the heading level each
+// opens with. It sits beside the template's corpus, where its own pull request renames an
+// address it renames.
+const outlineOf = (templateId) => {
+  const file = join(
+    process.cwd(),
+    'tests',
+    'fixtures',
+    'template-copy',
+    templateId,
+    '_expected.json',
+  )
+  return existsSync(file) ? JSON.parse(readFileSync(file, 'utf8')).outline : []
+}
+
+// In the page: for each expected block, whether it is drawn and the level of the first heading
+// in it, from its tag or its aria-level.
+function openers(expected) {
+  return expected.map(([selector, level]) => {
+    const block = document.querySelector(selector)
+    if (block === null) return { selector, level, found: null }
+    const heading = [...block.querySelectorAll('h1, h2, h3, h4, h5, h6, [role="heading"]')].find(
+      (h) => h.getClientRects().length > 0 && h.closest('[aria-hidden="true"]') === null,
+    )
+    const found =
+      heading === undefined
+        ? 0
+        : Number(heading.getAttribute('aria-level') ?? heading.tagName.slice(1)) || 0
+    return { selector, level, found }
+  })
 }
 
 const squash = (text) => (text ?? '').replace(/\s+/g, ' ').trim()
@@ -97,7 +134,6 @@ function domFacts() {
 
 async function check(browser, page, viewport) {
   const context = await contextFor(browser, viewport)
-  const tab = await context.newPage()
   const findings = []
   const add = (kind, detail) =>
     findings.push({
@@ -108,6 +144,7 @@ async function check(browser, page, viewport) {
       detail,
     })
   try {
+    const tab = await context.newPage()
     await open(tab, urlOf(options.base, page, {}))
     await tab.evaluate(installHelpers)
     const facts = await tab.evaluate(domFacts)
@@ -203,6 +240,16 @@ async function check(browser, page, viewport) {
       if (!expect.menuButtonNamed.test(named))
         add('expected', `the menu button is named "${named}", not "<label> menu"`)
     }
+    for (const block of await tab.evaluate(openers, outlineOf(page.templateId))) {
+      if (block.found === null) add('expected', `no ${block.selector}`)
+      else if (block.found === 0) add('expected', `${block.selector} opens with no heading`)
+      else if (block.found !== block.level) {
+        add(
+          'expected',
+          `${block.selector} opens with h${String(block.found)}, not h${String(block.level)}`,
+        )
+      }
+    }
     return {
       templateId: page.templateId,
       page: page.label,
@@ -211,7 +258,7 @@ async function check(browser, page, viewport) {
       findings,
     }
   } finally {
-    await context.close()
+    await context.close().catch(() => undefined)
   }
 }
 
@@ -220,7 +267,12 @@ const pages =
   options.limit === null ? [...new Map(all.map((p) => [p.templateId, p])).values()] : all
 const browser = await launch()
 const work = pages.flatMap((page) => options.sizes.map((viewport) => ({ page, viewport })))
-const results = await inPool(work, 3, ({ page, viewport }) => check(browser, page, viewport))
+const results = await inPool(
+  work,
+  3,
+  ({ page, viewport }) => check(browser, page, viewport),
+  ({ page, viewport }) => `${page.label} at ${viewport.size}`,
+)
 await browser.close()
 const lines = [
   `Accessible names and heading outline: ${String(pages.length)} pages (${options.source}), sizes ${options.sizes.map((s) => s.size).join(', ')}.`,
