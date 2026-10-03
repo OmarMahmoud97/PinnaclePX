@@ -20,13 +20,15 @@ import { meta } from './meta'
 // own anchors. The optional sections (testimonials, team, pricing, newsletter) and the plan's
 // price are not in the copy: the brief holds no such facts, so they stay null.
 
+// The copy names the closing band "cta" as the source did; its address is #contact, so the
+// address bar reads as a visitor would say it (decision 1, t02-L9). The copy model's name stays.
 const TARGETS = ['features', 'about', 'how-it-works', 'services', 'cta', 'faq', 'top'] as const
 const HREF: Readonly<Record<(typeof TARGETS)[number], string>> = {
   features: '#features',
   about: '#about',
   'how-it-works': '#how-it-works',
   services: '#services',
-  cta: '#cta',
+  cta: '#contact',
   faq: '#faq',
   top: '#top',
 }
@@ -227,6 +229,12 @@ export function assembleMonolith(copy: MonolithCopy, assets: TemplateAssets): Mo
   const { hero, about, features, services, cta, faq } = copy
   const image = (slot: string) => assets.images[slot] ?? null
   const [f1, f2, f3] = three(features.items)
+  // Every ask leads to the closing band, whose own button opens a mail to the page's email with
+  // its label as the subject (decision 15). A visitor's page always has an email; with none, as
+  // in validation, the button leads to the top.
+  const { email } = assets
+  const mail =
+    email === null ? HREF.top : `mailto:${email}?subject=${encodeURIComponent(cta.primary)}`
   return {
     brand: { ...copy.brand, logo: assets.logo },
     nav: {
@@ -281,7 +289,7 @@ export function assembleMonolith(copy: MonolithCopy, assets: TemplateAssets): Mo
     cta: {
       heading: cta.heading,
       body: cta.body,
-      primary: { label: cta.primary, href: HREF.cta },
+      primary: { label: cta.primary, href: mail },
       secondary: { label: cta.secondary, href: HREF.features },
     },
     testimonials: null,
@@ -410,7 +418,7 @@ export function monolithFallbackCopy(brief: BrandBrief): MonolithCopy {
     },
     steps: {
       heading: plain('steps.heading.text', 'How it works, step by step.'),
-      lead: 'Four steps from first contact to getting started, so you always know what happens next.',
+      lead: 'Three steps from first contact to getting started, so you always know what happens next.',
       items: stepTitles.map((title, index) => ({
         title,
         body: prose('steps.items[].body', steps[index]?.body ?? ''),

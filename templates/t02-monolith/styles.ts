@@ -19,6 +19,10 @@ export const cardHeader = 'flex flex-col p-6 [&>*+*]:mt-1.5'
 // The source's service cards override the header's spacing to space-y-1.
 export const cardHeaderTight = 'flex flex-col p-6 [&>*+*]:mt-1'
 export const cardTitle = 'text-2xl leading-none font-semibold tracking-tight'
+// The title at text-2xl, but never larger than lets its longest word (fit.ts) fit the card's
+// padded width, the card being the @container: the steps, three to a row from md.
+export const cardTitleFit =
+  'text-[length:min(1.5rem,(100cqi_-_3rem)*0.97/var(--monolith-word,1))] leading-none font-semibold tracking-tight'
 // The title at text-lg. The source's class merger drops leading-none with a new size, so the
 // line height is text-lg's own.
 export const cardTitleLg = 'text-lg font-semibold tracking-tight'
@@ -31,9 +35,21 @@ export const cardDescriptionBrand = 'text-sm text-brand-deeper'
 export const cardContent = 'p-6 pt-0'
 export const cardFooter = 'flex items-center p-6 pt-0'
 
-// Every heading sets one phrase in the brand gradient, top to bottom.
+// The sections' headings, bold at text-3xl and text-4xl from md as the source set them (Features
+// from lg), but never larger than lets their longest word fit the width of their @container
+// parent: the smaller of the size and 97% of that width over the word's width in ems, which
+// fit.ts sets as --monolith-word. So a long word never runs past the screen or breaks.
+export const heading =
+  'text-[length:min(1.875rem,97cqi/var(--monolith-word,1))] leading-[1.2] font-bold md:text-[length:min(2.25rem,97cqi/var(--monolith-word,1))] md:leading-[1.11]'
+export const headingLg =
+  'text-[length:min(1.875rem,97cqi/var(--monolith-word,1))] leading-[1.2] font-bold lg:text-[length:min(2.25rem,97cqi/var(--monolith-word,1))] lg:leading-[1.11]'
+
+// Every heading sets one phrase in the brand gradient, top to bottom. The source ran from the
+// colour at 60% to the colour, and that faded top read at 2.51:1 on a light page; here it runs
+// from brand-deeper to its hover, brand-deepest, both colours the engine keeps at AA on every
+// surface, lighter at the top on a light page as the source's was.
 export const gradientText =
-  'bg-linear-to-b from-brand-deeper/60 to-brand-deeper bg-clip-text text-transparent'
+  'bg-linear-to-b from-brand-deeper to-brand-deepest bg-clip-text text-transparent'
 
 // The badge is text-xs in shadcn; every badge in the source overrides it to text-sm, and two set
 // the text in the brand colour, so those are the variants here. Tailwind 4 orders conflicting

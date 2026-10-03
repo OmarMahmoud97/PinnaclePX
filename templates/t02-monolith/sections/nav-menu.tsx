@@ -6,20 +6,40 @@ import type { MonolithContent, MonolithLink } from '../copy-slots'
 import { button } from '../styles'
 import { MonolithLogo } from './logo'
 
-type Props = { brand: MonolithContent['brand']; links: readonly MonolithLink[]; cta: MonolithLink }
+type Props = {
+  brand: MonolithContent['brand']
+  links: readonly MonolithLink[]
+  cta: MonolithLink
+  // The class that hides the toggle from the width where the bar shows its links (nav.tsx).
+  hide: string
+}
 
 const PANEL_ID = 'monolith-menu'
 
 // The source's phone menu, the template's one piece of JavaScript: a sheet that slides in from
 // the left over a dark overlay, with the brand name at its head, the links stacked in the
-// centre, the bordered button under them and a close mark at the top right. Escape closes and
-// returns focus, a tap on the overlay closes, and choosing a link closes.
-export function NavMenu({ brand, links, cta }: Props) {
+// centre, the bordered button under them and a close mark at the top right. The button under
+// the links is at least the source's 110px and grows with its label rather than spill.
+//
+// Escape, the close mark or a tap on the overlay close the sheet and hand focus back to the menu
+// button. Choosing a link closes it and puts focus on the link's section instead, so a keyboard
+// user's next Tab goes on from there rather than from the top of the page (decision 15, as
+// refined on 2 October 2026). The overlay takes no Tab stop, so the first Tab after opening
+// reaches the first link.
+export function NavMenu({ brand, links, cta, hide }: Props) {
   const [open, setOpen] = useState(false)
   const buttonRef = useRef<HTMLButtonElement>(null)
   const close = () => {
     setOpen(false)
     buttonRef.current?.focus()
+  }
+  // The link still scrolls to its section; focus moves there without a second scroll.
+  const follow = (href: string) => {
+    setOpen(false)
+    const target = href.startsWith('#') ? document.getElementById(href.slice(1)) : null
+    if (target === null) return
+    target.setAttribute('tabindex', '-1')
+    target.focus({ preventScroll: true })
   }
 
   useEffect(() => {
@@ -34,7 +54,7 @@ export function NavMenu({ brand, links, cta }: Props) {
   }, [open])
 
   return (
-    <span className="flex md:hidden">
+    <span className={`flex shrink-0 ${hide}`}>
       <button
         ref={buttonRef}
         type="button"
@@ -45,14 +65,15 @@ export function NavMenu({ brand, links, cta }: Props) {
         aria-controls={PANEL_ID}
         className="px-2"
       >
-        <Menu className="flex h-5 w-5 md:hidden" />
-        <span className="sr-only">Menu Icon</span>
+        <Menu className="flex h-5 w-5" />
+        <span className="sr-only">Menu</span>
       </button>
 
       <div id={PANEL_ID} hidden={!open}>
         <button
           type="button"
           aria-label="Close menu"
+          tabIndex={-1}
           onClick={close}
           className="fixed inset-0 z-50 cursor-default bg-scrim/80 transition-opacity duration-(--motion-enter) starting:opacity-0"
         />
@@ -64,14 +85,23 @@ export function NavMenu({ brand, links, cta }: Props) {
           </div>
           <nav aria-label="Mobile" className="mt-4 flex flex-col items-center justify-center gap-2">
             {links.map((link) => (
-              <a key={link.href} href={link.href} onClick={close} className={button.ghost}>
+              <a
+                key={link.href}
+                href={link.href}
+                onClick={() => {
+                  follow(link.href)
+                }}
+                className={button.ghost}
+              >
                 {link.label}
               </a>
             ))}
             <a
               href={cta.href}
-              onClick={close}
-              className={`w-[110px] border border-border ${button.secondary}`}
+              onClick={() => {
+                follow(cta.href)
+              }}
+              className={`min-w-[110px] border border-border ${button.secondary}`}
             >
               {cta.label}
             </a>

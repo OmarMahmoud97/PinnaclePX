@@ -24,7 +24,7 @@ function picture(file: StaticImage, alt: string): MonolithImage {
   return { src: file.src, alt, width: file.width, height: file.height, credit: null }
 }
 
-const CTA = { label: 'Get Started', href: '#cta' } as const
+const CTA = { label: 'Get Started', href: '#contact' } as const
 const SOCIALS = [
   { network: 'linkedin', href: '#' },
   { network: 'facebook', href: '#' },
@@ -40,7 +40,7 @@ export const KESTREL_MONOLITH: MonolithContent = {
       { label: 'Pricing', href: '#pricing' },
       { label: 'FAQ', href: '#faq' },
     ],
-    cta: { label: 'Github', href: '#cta' },
+    cta: { label: 'Github', href: '#contact' },
   },
   hero: {
     headline: {
@@ -68,7 +68,7 @@ export const KESTREL_MONOLITH: MonolithContent = {
         badge: 'Most popular',
         price: { amount: '$0', period: '/month' },
         body: 'Lorem ipsum dolor sit, amet ipsum consectetur adipisicing elit.',
-        action: { label: 'Start Free Trial', href: '#cta' },
+        action: { label: 'Start Free Trial', href: '#contact' },
         points: ['4 Team member', '4 GB Storage', 'Upto 6 pages'],
       },
       service: {
@@ -167,7 +167,7 @@ export const KESTREL_MONOLITH: MonolithContent = {
   cta: {
     heading: { text: 'All Your Ideas & Concepts In One Interface', emphasis: 'Ideas & Concepts' },
     body: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Eaque, beatae. Ipsa tempore ipsum iste quibusdam illum ducimus eos. Quasi, sed!',
-    primary: { label: 'Request a Demo', href: '#cta' },
+    primary: { label: 'Request a Demo', href: '#contact' },
     secondary: { label: 'View all features', href: '#features' },
   },
   testimonials: {
@@ -261,7 +261,7 @@ export const KESTREL_MONOLITH: MonolithContent = {
         price: '$0',
         period: '/month',
         body: 'Lorem ipsum dolor sit, amet ipsum consectetur adipisicing elit.',
-        button: { label: 'Get Started', href: '#cta' },
+        button: { label: 'Get Started', href: '#contact' },
         benefits: [
           '1 Team member',
           '2 GB Storage',
@@ -276,7 +276,7 @@ export const KESTREL_MONOLITH: MonolithContent = {
         price: '$5',
         period: '/month',
         body: 'Lorem ipsum dolor sit, amet ipsum consectetur adipisicing elit.',
-        button: { label: 'Start Free Trial', href: '#cta' },
+        button: { label: 'Start Free Trial', href: '#contact' },
         benefits: [
           '4 Team member',
           '4 GB Storage',
@@ -291,7 +291,7 @@ export const KESTREL_MONOLITH: MonolithContent = {
         price: '$40',
         period: '/month',
         body: 'Lorem ipsum dolor sit, amet ipsum consectetur adipisicing elit.',
-        button: { label: 'Contact US', href: '#cta' },
+        button: { label: 'Contact US', href: '#contact' },
         benefits: [
           '10 Team member',
           '8 GB Storage',
@@ -337,7 +337,7 @@ export const KESTREL_MONOLITH: MonolithContent = {
       },
     ],
     prompt: 'Still have questions?',
-    link: { label: 'Contact us', href: '#cta' },
+    link: { label: 'Contact us', href: '#contact' },
   },
   footer: {
     groups: [

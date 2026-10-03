@@ -1,6 +1,7 @@
 import { ChevronDown } from 'lucide-react'
 import type { MonolithContent } from '../copy-slots'
-import { container } from '../styles'
+import { fitWord } from '../fit'
+import { container, heading } from '../styles'
 import { Emphasis } from './emphasis'
 
 type Props = Pick<MonolithContent, 'faq'>
@@ -8,11 +9,11 @@ type Props = Pick<MonolithContent, 'faq'>
 // The source's FAQ: a heading with its lit word, an accordion of questions with a chevron that
 // turns and an answer that slides open, one at a time, and a line beneath inviting a question.
 // Native disclosure elements in place of Radix, so no script is needed and the answers are in
-// the page for search.
+// the page for search. The source set that last line as a heading; it is text here.
 export function MonolithFaq({ faq }: Props) {
   return (
-    <section id="faq" className={`${container} py-24 sm:py-32`}>
-      <h2 className="mb-4 text-3xl font-bold md:text-4xl">
+    <section id="faq" className={`${container} @container py-24 sm:py-32`}>
+      <h2 className={`mb-4 ${heading}`} style={fitWord([faq.heading.text])}>
         <Emphasis heading={faq.heading} />
       </h2>
 
@@ -32,7 +33,7 @@ export function MonolithFaq({ faq }: Props) {
         ))}
       </div>
 
-      <h3 className="mt-4 font-medium">
+      <p className="mt-4 font-medium">
         {faq.prompt}{' '}
         <a
           href={faq.link.href}
@@ -40,7 +41,7 @@ export function MonolithFaq({ faq }: Props) {
         >
           {faq.link.label}
         </a>
-      </h3>
+      </p>
     </section>
   )
 }

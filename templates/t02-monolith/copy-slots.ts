@@ -239,7 +239,9 @@ const MONOLITH_COUNTS = {
 } as const satisfies Record<string, CopySlot>
 
 // Every text-on-background pair the template paints. Cards sit on the accent surface; the
-// headings' gradient runs to brand-deeper, which also carries text.
+// headings' gradients run from brand-deeper to its hover, brand-deepest, which needs no pair of
+// its own: it is at 4.74:1 or more on surface, surface-muted and accent for every brand colour,
+// light and dark (a sweep of 1,440 colours through deriveTokens).
 export const MONOLITH_CONTRAST_PAIRS: readonly ContrastPair[] = [
   { text: 'on-surface', background: 'surface' },
   { text: 'on-surface-muted', background: 'surface' },
