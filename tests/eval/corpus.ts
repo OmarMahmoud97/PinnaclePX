@@ -21,6 +21,20 @@ export const corpusFileSchema = z.object({
 
 export type CorpusFile = z.infer<typeof corpusFileSchema>
 
+// What the checks expect of a template on main (tests/fixtures/template-copy/<templateId>/
+// _expected.json), which the template's own pull request edits as it fixes it: the CI text-fit
+// guard's cases expected to fail and those skipped, with why, and the accessible-names check's
+// outline, each block by its address (alternatives after a comma) and the level it opens with.
+export const expectedFileSchema = z.object({
+  note: z.string(),
+  fixedBy: z.string().min(1),
+  textFit: z.object({
+    failing: z.array(z.string()),
+    unsettled: z.record(z.string(), z.string().min(1)),
+  }),
+  outline: z.array(z.tuple([z.string().min(1), z.number().int().min(1).max(6)])),
+})
+
 // The long real words found in stored headlines and briefs, longest first (the check standard).
 const LONG_WORDS = [
   'STRAIGHTFORWARD',

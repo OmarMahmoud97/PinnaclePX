@@ -1,7 +1,14 @@
 import { mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { contractFor, READY_TEMPLATES } from '@/templates/registry'
-import { baseOf, type CorpusFile, corpusFileSchema, NAMES, syntheticFrom } from './corpus'
+import {
+  baseOf,
+  type CorpusFile,
+  corpusFileSchema,
+  expectedFileSchema,
+  NAMES,
+  syntheticFrom,
+} from './corpus'
 import type { FixtureRecord } from './types'
 
 // The committed copy corpus (tests/fixtures/template-copy): every answer renders in its
@@ -29,7 +36,7 @@ function readFolder(templateId: string): Record<string, CorpusFile> {
   const folder = join(DIR, templateId)
   return Object.fromEntries(
     readdirSync(folder)
-      .filter((name) => name.endsWith('.json'))
+      .filter((name) => name.endsWith('.json') && !name.startsWith('_'))
       .map((name) => [
         name.replace(/\.json$/, ''),
         corpusFileSchema.parse(JSON.parse(readFileSync(join(folder, name), 'utf8'))),
@@ -105,6 +112,18 @@ describe('the template copy corpus', () => {
           true,
         )
       }
+    }
+  })
+
+  it('expects of each template only pages its corpus holds, each once', () => {
+    for (const { id } of READY_TEMPLATES) {
+      const expected = expectedFileSchema.parse(
+        JSON.parse(readFileSync(join(DIR, id, '_expected.json'), 'utf8')),
+      )
+      const names = Object.keys(readFolder(id))
+      const listed = [...expected.textFit.failing, ...Object.keys(expected.textFit.unsettled)]
+      for (const name of listed) expect(names, `${id}/_expected.json: ${name}`).toContain(name)
+      expect(new Set(listed).size, `${id}/_expected.json lists a case twice`).toBe(listed.length)
     }
   })
 

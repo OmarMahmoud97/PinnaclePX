@@ -1,0 +1,29 @@
+{
+  "note": "What the checks expect of this template on main, measured on 3 October 2026. textFit is the CI text-fit guard’s (e2e/reduced-motion-template-fit.spec.ts): a case in failing is expected to fail, and one in unsettled is skipped, with why. outline is the accessible-names check’s (scripts/checks/a11y-names.mjs): each block, by its address (a renamed address after a comma), and the heading level it opens with. The template’s own pull request edits this file and no other outside its folder: a case its fix makes pass leaves failing (Playwright reports it until it does), and an address it renames is renamed here.",
+  "fixedBy": "Summit’s Phase 2 pull request, fix/summit-template-fit",
+  "textFit": {
+    "failing": [
+      "l6-longest",
+      "l7-longest",
+      "synthetic-long-words",
+      "synthetic-longest",
+      "synthetic-name-16",
+      "synthetic-name-40",
+      "synthetic-name-60",
+      "synthetic-name-80"
+    ],
+    "unsettled": {
+      "l6-architects": "passes on Windows but fails with its text 0.03em wider, and CI's Linux Chromium sets text about 4% wider"
+    }
+  },
+  "outline": [
+    ["#home", 1],
+    ["#why-choose-us", 2],
+    ["#our-services", 2],
+    ["#booking-process, #steps", 2],
+    ["#facilities, #photos", 2],
+    ["#faq", 2],
+    ["#book-appointment, #contact", 2],
+    ["#cta", 2]
+  ]
+}

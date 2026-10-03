@@ -381,14 +381,20 @@ export async function loadFonts() {
   await document.fonts.ready
 }
 
-// The page at rest: every running animation or transition that ends has ended (a marquee never
-// does, so it is not waited for), at most three seconds, then two frames. On a fresh server a
-// page can still be moving when it reports itself loaded, and a measure taken mid-move is wrong.
+// The page at rest: every running animation or transition that ends in time has ended, at most
+// three seconds, then two frames. On a fresh server a page can still be moving when it reports
+// itself loaded, and a measure taken mid-move is wrong. Two kinds never end, so they are not
+// waited for: one that repeats for ever (a marquee), and one driven by scrolling rather than by
+// the clock (a scroll or view timeline, such as Monolith's monolith-appear), which moves only
+// when the page does.
 export async function settle() {
   const ending = document.getAnimations().filter((animation) => {
-    const timing = animation.effect?.getTiming?.()
+    const timing = animation.effect?.getComputedTiming?.()
     return (
-      timing !== undefined && timing.iterations !== Infinity && animation.playState === 'running'
+      animation.playState === 'running' &&
+      animation.timeline === document.timeline &&
+      timing !== undefined &&
+      Number.isFinite(timing.endTime)
     )
   })
   await Promise.race([

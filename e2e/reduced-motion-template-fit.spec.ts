@@ -11,10 +11,19 @@ import { measureTextFit, type TextFitFinding } from '../scripts/checks/lib/text-
 // overlapping or off the screen (scripts/checks/lib/text-fit-measure.mjs, the measure the local
 // check runs over every look and width). Kept fast: per template, the three longest stored
 // answers and every synthetic one. Nothing here sends a brief.
+//
+// What fails on main is listed beside each template's corpus, in its _expected.json, which that
+// template's pull request edits as it fixes the cases (the template pull requests touch no e2e
+// spec): a case in textFit.failing is expected to fail, so the fix that makes it pass turns
+// Playwright red until the case leaves the list; a case in textFit.unsettled is skipped, with why.
 
 type Corpus = Readonly<{
   answers: { company: string; imagery: { style: string } }
   copy: { brand?: { name?: unknown } }
+}>
+type Expected = Readonly<{
+  fixedBy: string
+  textFit: { failing: readonly string[]; unsettled: Readonly<Record<string, string>> }
 }>
 
 const DIR = join(process.cwd(), 'tests', 'fixtures', 'template-copy')
@@ -26,118 +35,11 @@ const WIDTHS = [
   { width: 1440, height: 900, phone: false },
 ] as const
 
-// Each template's Phase 2 pull request, which holds it to text fit (decisions 15 and 19).
-const FIXED_BY: Readonly<Record<string, string>> = {
-  't01-aurora': 'Aurora’s Phase 2 pull request, fix/aurora-template-fit',
-  't02-monolith': 'Monolith’s Phase 2 pull request, fix/monolith-template-fit',
-  't03-meridian': 'Meridian’s Phase 2 pull request, fix/meridian-template-fit',
-  't04-atlas': 'Atlas’s Phase 2 pull request, fix/atlas-template-fit',
-  't05-ember': 'Ember’s Phase 2 pull request, fix/ember-template-fit',
-  't06-harbor': 'Harbor’s Phase 2 pull request, fix/harbor-template-fit',
-  't07-summit': 'Summit’s Phase 2 pull request, fix/summit-template-fit',
-  't08-vector': 'Vector’s Phase 2 pull request, fix/vector-template-fit',
-}
-
-// The cases that fail on main on 2 October 2026 (measured on a dev server of this worktree):
-// each fails as expected until its template's pull request fixes it, when Playwright reports the
-// unexpected pass and that pull request takes the case out of this list.
-const FAILING_TODAY: Readonly<Record<string, readonly string[]>> = {
-  't01-aurora': [
-    'l6-physio-unbroken',
-    'synthetic-long-words',
-    'synthetic-longest',
-    'synthetic-name-40',
-    'synthetic-name-60',
-    'synthetic-name-80',
-  ],
-  't02-monolith': [
-    'l6-a1-gas',
-    'l6-cleaning',
-    'l7-dentist-claims',
-    'synthetic-long-words',
-    'synthetic-longest',
-    'synthetic-name-10',
-    'synthetic-name-16',
-    'synthetic-name-40',
-    'synthetic-name-60',
-    'synthetic-name-80',
-  ],
-  't03-meridian': [
-    'l6-longest',
-    'l7-architects',
-    'l7-longest',
-    'synthetic-long-words',
-    'synthetic-longest',
-    'synthetic-name-16',
-    'synthetic-name-40',
-    'synthetic-name-60',
-    'synthetic-name-80',
-  ],
-  't04-atlas': [
-    'l6-a1-gas',
-    'l7-a1-gas',
-    'l7-awkward',
-    'synthetic-long-words',
-    'synthetic-longest',
-    'synthetic-name-10',
-    'synthetic-name-16',
-    'synthetic-name-40',
-    'synthetic-name-60',
-    'synthetic-name-80',
-  ],
-  't05-ember': ['l7-longest', 'synthetic-long-words', 'synthetic-longest', 'synthetic-name-60'],
-  't06-harbor': [
-    'l6-gardens',
-    'l6-hr',
-    'l6-photographer',
-    'synthetic-long-words',
-    'synthetic-longest',
-    'synthetic-name-10',
-    'synthetic-name-16',
-    'synthetic-name-40',
-    'synthetic-name-60',
-    'synthetic-name-80',
-  ],
-  't07-summit': [
-    'l6-longest',
-    'l7-longest',
-    'synthetic-long-words',
-    'synthetic-longest',
-    'synthetic-name-16',
-    'synthetic-name-40',
-    'synthetic-name-60',
-    'synthetic-name-80',
-  ],
-  't08-vector': [
-    'l6-bakery',
-    'l6-dentist-claims',
-    'l6-physio-longest',
-    'synthetic-long-words',
-    'synthetic-longest',
-    'synthetic-name-10',
-    'synthetic-name-16',
-    'synthetic-name-40',
-    'synthetic-name-60',
-    'synthetic-name-80',
-  ],
-}
-
-// Cases skipped until their template's pull request, rather than left to pass or fail by chance.
-// Meridian's, Ember's and Summit's pass on Windows but fail with their text about 4% wider, as
-// CI's Linux Chromium sets it, each at the edge of a header that pull request fixes. Aurora's
-// fail only through its header ask on phones (t01-D2), whose classes set its display twice
-// (inline-flex, and hidden md:inline-flex): the dev server's style sheets can order those either
-// way from one start to the next, so the ask shows on some starts and not on others.
-const UNSETTLED: Readonly<Record<string, readonly string[]>> = {
-  't01-aurora': ['l6-architects', 'l7-florist', 'synthetic-name-10', 'synthetic-name-16'],
-  't03-meridian': ['synthetic-name-10'],
-  't05-ember': ['synthetic-name-16', 'synthetic-name-40', 'synthetic-name-80'],
-  't07-summit': ['l6-architects'],
-}
+const read = (...path: string[]): unknown => JSON.parse(readFileSync(join(DIR, ...path), 'utf8'))
 
 function casesOf(templateId: string): string[] {
   const names = readdirSync(join(DIR, templateId))
-    .filter((file) => file.endsWith('.json'))
+    .filter((file) => file.endsWith('.json') && !file.startsWith('_'))
     .map((file) => file.replace(/\.json$/, ''))
   const length = (name: string) =>
     readFileSync(join(DIR, templateId, `${name}.json`), 'utf8').length
@@ -148,8 +50,10 @@ function casesOf(templateId: string): string[] {
   return [...stored, ...names.filter((name) => name.startsWith('synthetic-')).sort()]
 }
 
-// Every case opens its own pages, so they share nothing and may run side by side.
-test.describe.configure({ mode: 'parallel' })
+// Every case opens its own pages, so they share nothing and may run side by side. A case waits
+// for its pages to settle at five widths, so it is given more than the default 30 seconds: a
+// case that times out counts as unexpected even where it is expected to fail.
+test.describe.configure({ mode: 'parallel', timeout: 90_000 })
 
 const templates = readdirSync(DIR, { withFileTypes: true })
   .filter((entry) => entry.isDirectory())
@@ -157,15 +61,14 @@ const templates = readdirSync(DIR, { withFileTypes: true })
   .sort()
 
 for (const templateId of templates) {
+  const expected = read(templateId, '_expected.json') as Expected
   test.describe(templateId, () => {
     for (const name of casesOf(templateId)) {
       const key = `${templateId}/${name}`
       test(name, async ({ browser, baseURL }) => {
-        const fixedBy = FIXED_BY[templateId] ?? 'its template’s pull request'
-        test.skip(UNSETTLED[templateId]?.includes(name) === true, `unsettled until ${fixedBy}`)
-        const stored = JSON.parse(
-          readFileSync(join(DIR, templateId, `${name}.json`), 'utf8'),
-        ) as Corpus
+        const unsettled = expected.textFit.unsettled[name]
+        test.skip(unsettled !== undefined, `${unsettled ?? ''}; until ${expected.fixedBy}`)
+        const stored = read(templateId, `${name}.json`) as Corpus
         const brand = stored.copy.brand?.name
         // The phone's page and the window's, each checked as served before anything is measured,
         // so a broken server fails here and never counts as a case's expected failure.
@@ -190,7 +93,10 @@ for (const templateId of templates) {
           await page.evaluate(installHelpers)
           pages.push({ context, page, sizes })
         }
-        test.fail(FAILING_TODAY[templateId]?.includes(name) === true, `fails today: ${fixedBy}`)
+        test.fail(
+          expected.textFit.failing.includes(name),
+          `fails today: ${expected.fixedBy} fixes it`,
+        )
         const found: string[] = []
         for (const { context, page, sizes } of pages) {
           for (const size of sizes) {

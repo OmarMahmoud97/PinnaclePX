@@ -41,14 +41,15 @@ function evalPages(run) {
 }
 
 // Every answer of the committed corpus (tests/fixtures/template-copy), rendered through /dev/copy:
-// the stored model answers of l6 and l7 and the synthetic ones. It holds no pictures.
+// the stored model answers of l6 and l7 and the synthetic ones. It holds no pictures. A file
+// whose name starts with an underscore (_expected.json) is about the pages, not one of them.
 function corpusPages() {
   const dir = join(ROOT, 'tests', 'fixtures', 'template-copy')
   return readdirSync(dir, { withFileTypes: true })
     .filter((entry) => entry.isDirectory())
     .flatMap(({ name: templateId }) =>
       readdirSync(join(dir, templateId))
-        .filter((file) => file.endsWith('.json'))
+        .filter((file) => file.endsWith('.json') && !file.startsWith('_'))
         .map((file) => {
           const stored = JSON.parse(readFileSync(join(dir, templateId, file), 'utf8'))
           const name = file.replace(/\.json$/, '')
