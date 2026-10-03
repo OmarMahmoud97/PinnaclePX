@@ -16,9 +16,11 @@ import { meta } from './meta'
 // it cannot, and how copy and assets become the content object. Links are never written: the
 // menu follows the page's blocks in the source's order, About's button and every menu row
 // lead to the footer, which is the contact block, the footer's big address is the owner's
-// email, and footer links point at one of the page's own anchors. The optional pieces (the
-// bento of social proof, the footer's places and social links) are not in the copy: the brief
-// holds no such facts, so they stay null. The footer's list of services is the page's own.
+// email, the round button under it opens a mail to that address with the button's own words as
+// its subject (or leads to the top when there is no address), and footer links point at one of
+// the page's own anchors. The optional pieces (the bento of social proof, the footer's places
+// and social links) are not in the copy: the brief holds no such facts, so they stay null. The
+// footer's list of services is the page's own.
 
 // The copy names its targets as the copy stage was taught them; the items' block now sits at
 // #featured, an address that claims no past work, and the copy's "projects" leads there.
@@ -170,7 +172,11 @@ export function assembleVector(copy: VectorCopy, assets: TemplateAssets): Vector
     faq,
     footer: {
       email,
-      cta: { label: footer.cta, href: email === null ? HREF.top : `mailto:${email}` },
+      cta: {
+        label: footer.cta,
+        href:
+          email === null ? HREF.top : `mailto:${email}?subject=${encodeURIComponent(footer.cta)}`,
+      },
       tagline: footer.tagline,
       places: null,
       services: { heading: footer.servicesHeading, items: services.items },

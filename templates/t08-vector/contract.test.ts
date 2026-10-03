@@ -115,6 +115,19 @@ describe('assembleVector', () => {
     expect(content.footer.services.items).toEqual(copy.services.items)
   })
 
+  it("gives the closing button's mail the button's words as its subject", () => {
+    const asked = { ...copy, footer: { ...copy.footer, cta: 'Book a visit & a chat' } }
+    const assets: TemplateAssets = {
+      logo: { kind: 'wordmark' },
+      images: {},
+      email: 'owner@example.com',
+    }
+    expect(assembleVector(asked, assets).footer.cta.href).toBe(
+      'mailto:owner@example.com?subject=Book%20a%20visit%20%26%20a%20chat',
+    )
+    expect(assembleVector(asked, { ...assets, email: null }).footer.cta.href).toBe('#top')
+  })
+
   it('places the pictures, sends the footer to the owner and fixes every link', () => {
     const assets: TemplateAssets = {
       logo: KESTREL_VECTOR.brand.logo,
@@ -129,7 +142,9 @@ describe('assembleVector', () => {
     expect(content.projects.items[1]?.image).toBe(KESTREL_VECTOR.projects.items[1]?.image)
     expect(content.projects.items[0]?.image).toBeNull()
     expect(content.footer.email).toBe('owner@example.com')
-    expect(content.footer.cta.href).toBe('mailto:owner@example.com')
+    expect(content.footer.cta.href).toBe(
+      `mailto:owner@example.com?subject=${encodeURIComponent(copy.footer.cta)}`,
+    )
     expect(content.nav.links.map((link) => [link.href, link.section])).toEqual([
       ['#top', 'hero'],
       ['#featured', 'featured'],
