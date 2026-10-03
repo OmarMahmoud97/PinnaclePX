@@ -1,4 +1,4 @@
-import { Building2, ChevronDown, Clock, Mail, Phone } from 'lucide-react'
+import { ChevronDown } from 'lucide-react'
 import type { MeridianContent } from '../copy-slots'
 import {
   button,
@@ -15,14 +15,15 @@ import {
 
 type Props = Pick<MeridianContent, 'contact'>
 
-// The source's four row icons, in its order.
-const ICONS = [Building2, Phone, Mail, Clock] as const
-
-// The source's ContactSection: the words at the left with rows of an icon, a bold label and
+// The source's ContactSection: the words at the left with rows of a mark, a bold label and
 // lines, and at the right a card on the card surface holding the form: first and last name side
 // by side, email, a subject to choose, a message and a button. The source built a mail link from
 // the fields; here the form posts to the owner's email as a mail message when it is known, and
-// otherwise leads to the page's ask.
+// otherwise leads to the page's ask. The source's rows were an address, a phone number, an email
+// and opening hours, each beside its icon; here they are the three steps after a first contact,
+// so a building, a phone and an envelope read as details that are not there. Each step is
+// numbered instead, in the icon's 24px place at the row's own size, the number hidden from
+// screen readers (decision 1).
 export function MeridianContact({ contact }: Props) {
   const { email } = contact.form
   return (
@@ -37,23 +38,22 @@ export function MeridianContact({ contact }: Props) {
           <p className="mb-8 text-on-surface-muted lg:w-5/6">{contact.lead}</p>
 
           <div className="flex flex-col gap-4">
-            {contact.rows.map((row, index) => {
-              const Icon = ICONS[index] ?? Building2
-              return (
-                <div key={row.title}>
-                  <div className={`flex gap-2 ${index === contact.rows.length - 1 ? '' : 'mb-1'}`}>
-                    <Icon aria-hidden="true" />
-                    <div className="font-bold">{row.title}</div>
-                  </div>
-
-                  <div>
-                    {row.lines.map((line) => (
-                      <div key={line}>{line}</div>
-                    ))}
-                  </div>
+            {contact.rows.map((row, index) => (
+              <div key={row.title}>
+                <div className={`flex gap-2 ${index === contact.rows.length - 1 ? '' : 'mb-1'}`}>
+                  <span aria-hidden="true" className="w-6 shrink-0 font-bold text-brand-deeper">
+                    {String(index + 1).padStart(2, '0')}
+                  </span>
+                  <div className="font-bold">{row.title}</div>
                 </div>
-              )
-            })}
+
+                <div>
+                  {row.lines.map((line) => (
+                    <div key={line}>{line}</div>
+                  ))}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
 
@@ -75,23 +75,13 @@ export function MeridianContact({ contact }: Props) {
                   <label htmlFor="meridian-first-name" className={label}>
                     First Name
                   </label>
-                  <input
-                    id="meridian-first-name"
-                    name="firstName"
-                    placeholder="Leopoldo"
-                    className={input}
-                  />
+                  <input id="meridian-first-name" name="firstName" className={input} />
                 </div>
                 <div className="w-full [&>*+*]:mt-2">
                   <label htmlFor="meridian-last-name" className={label}>
                     Last Name
                   </label>
-                  <input
-                    id="meridian-last-name"
-                    name="lastName"
-                    placeholder="Miranda"
-                    className={input}
-                  />
+                  <input id="meridian-last-name" name="lastName" className={input} />
                 </div>
               </div>
 
@@ -100,13 +90,7 @@ export function MeridianContact({ contact }: Props) {
                   <label htmlFor="meridian-email" className={label}>
                     Email
                   </label>
-                  <input
-                    id="meridian-email"
-                    name="email"
-                    type="email"
-                    placeholder="leomirandadev@gmail.com"
-                    className={input}
-                  />
+                  <input id="meridian-email" name="email" type="email" className={input} />
                 </div>
               </div>
 
