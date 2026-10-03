@@ -112,10 +112,12 @@ export function EmberNav({ brand, nav }: Props) {
           </button>
         </div>
       </header>
+      {/* The surface at 75%, where the source's 70% let a link under the pointer fall below 3:1
+          over a white or a black photograph (decision 7). */}
       <div
         id={PANEL_ID}
         inert={!open}
-        className={`fixed inset-0 z-40 flex transform flex-col items-center justify-center bg-surface/70 p-8 backdrop-blur-md transition-transform duration-300 ${open ? 'translate-x-0' : 'translate-x-full'}`}
+        className={`fixed inset-0 z-40 flex transform flex-col items-center justify-center bg-surface/75 p-8 backdrop-blur-md transition-transform duration-300 ${open ? 'translate-x-0' : 'translate-x-full'}`}
       >
         <nav aria-label="Mobile" className="flex flex-col items-center space-y-6 font-medium">
           {nav.links.map((link) => (
