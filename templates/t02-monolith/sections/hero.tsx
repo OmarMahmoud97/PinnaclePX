@@ -14,6 +14,11 @@ type Props = Pick<MonolithContent, 'brand' | 'hero'>
 // start at 1440, where the box fits beside the words; from lg to there the words are centred
 // over the cards. The headline is never larger than lets its longest word fit its column
 // (fit.ts), so a long word is not cut off on a phone.
+//
+// From md the source set each button at a third of the column, 219px from 1440, where a label in
+// capitals near its limit ran into the button's padding. Here a third is each button's least
+// width, and a longer label widens its button, so the buttons look as they did with every label
+// that fits.
 export function MonolithHero({ brand, hero }: Props) {
   return (
     <section
@@ -32,10 +37,13 @@ export function MonolithHero({ brand, hero }: Props) {
         </p>
 
         <div className="[&>*+*]:mt-4 md:[&>*+*]:mt-0 md:[&>*+*]:ml-4">
-          <a href={hero.primary.href} className={`w-full md:w-1/3 ${button.default}`}>
+          <a href={hero.primary.href} className={`w-full md:w-auto md:min-w-1/3 ${button.default}`}>
             {hero.primary.label}
           </a>
-          <a href={hero.secondary.href} className={`w-full md:w-1/3 ${button.outline}`}>
+          <a
+            href={hero.secondary.href}
+            className={`w-full md:w-auto md:min-w-1/3 ${button.outline}`}
+          >
             {hero.secondary.label}
           </a>
         </div>
