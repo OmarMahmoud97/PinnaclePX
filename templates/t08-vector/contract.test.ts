@@ -114,6 +114,18 @@ describe('vectorCopySchema', () => {
     expect(vectorContract.guide).not.toContain('lower case')
   })
 
+  it('has the marquee name what the items are, with no example to copy', () => {
+    const lines = vectorContract.guide.split('\n')
+    expect(lines).toContain(
+      '- projects.marquee.text: 3 to 12 characters, the first of two words naming what the items under it are, run as a giant marquee',
+    )
+    expect(lines).toContain(
+      '- projects.marquee.accent: 3 to 12 characters, the second of those two words, set in the thin serif',
+    )
+    expect(vectorContract.guide).not.toMatch(/such as Selected/)
+    expect(vectorContract.guide).not.toMatch(/such as Work\b/)
+  })
+
   it('rejects a footer link with an unknown target', () => {
     const copy = vectorFallbackCopy(fallbackBrief('Kestrel', 'Job scheduling.'))
     const broken = {
