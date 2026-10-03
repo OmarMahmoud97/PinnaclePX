@@ -6,7 +6,13 @@ import type { MeridianContent, MeridianLink } from '../copy-slots'
 import { button, separator } from '../styles'
 import { MeridianLogo } from './logo'
 
-type Props = { brand: MeridianContent['brand']; links: readonly MeridianLink[]; cta: MeridianLink }
+type Props = {
+  brand: MeridianContent['brand']
+  links: readonly MeridianLink[]
+  cta: MeridianLink
+  // The class that hides the menu from the width where the bar shows its links (nav.tsx).
+  hide: string
+}
 
 const PANEL_ID = 'meridian-menu'
 
@@ -15,7 +21,7 @@ const PANEL_ID = 'meridian-menu'
 // stacked as ghost buttons, and a rule at its foot over the button where the source had its
 // theme toggle. Escape closes and returns focus, a tap on the overlay closes, and choosing a
 // link closes.
-export function NavMenu({ brand, links, cta }: Props) {
+export function NavMenu({ brand, links, cta, hide }: Props) {
   const [open, setOpen] = useState(false)
   const buttonRef = useRef<HTMLButtonElement>(null)
   const close = () => {
@@ -35,7 +41,7 @@ export function NavMenu({ brand, links, cta }: Props) {
   }, [open])
 
   return (
-    <div className="flex items-center lg:hidden">
+    <div className={`flex shrink-0 items-center ${hide}`}>
       <button
         ref={buttonRef}
         type="button"
@@ -45,7 +51,7 @@ export function NavMenu({ brand, links, cta }: Props) {
         aria-expanded={open}
         aria-controls={PANEL_ID}
         aria-label="Menu"
-        className="cursor-pointer lg:hidden"
+        className="cursor-pointer"
       >
         <Menu />
       </button>
@@ -61,7 +67,7 @@ export function NavMenu({ brand, links, cta }: Props) {
           <div>
             <div className="mb-4 ml-4 flex flex-col text-center sm:text-left [&>*+*]:mt-2">
               <p className="flex items-center text-lg font-semibold text-on-surface">
-                <a href="#top" className="flex items-center">
+                <a href="#top" className="flex min-w-0 items-center">
                   <MeridianLogo brand={brand} />
                 </a>
               </p>
