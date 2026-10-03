@@ -4,8 +4,11 @@
 //   autofill   every form field carries its autocomplete token: email, tel and a person's name
 //              their own, any other field a token of some kind (off included)
 //   asks       every ask leads to the template's closing block, and the closing button mails the
-//              page's address with its label as the subject, or leads to the top with no email
-//              (Aurora, Monolith, Atlas and Ember decided; the others reported)
+//              page's address with its label as the subject, or with no email leads to the top
+//              or to its own block (Aurora, Monolith, Atlas and Ember decided; the others
+//              reported). Each ask is found by the copy path that labels it: the page is drawn
+//              with that text replaced by a marker (the dev route's ?probe=), so an ask whose
+//              words match another link's is never mistaken for it
 //   priority   no picture hidden on a phone is loaded with priority there (Summit's closing one)
 //   upright    Ember's grid picture rests upright once the pointer has left it
 //   caption    Summit's photo captions' links can be seen when the keyboard reaches them
@@ -16,7 +19,7 @@
 //
 //   node scripts/checks/behaviour.mjs --base http://localhost:3120 [options in lib/args.mjs]
 import { parseArgs } from './lib/args.mjs'
-import { contextFor, inPool, launch, open } from './lib/browser.mjs'
+import { inPool, launch, open, withTab } from './lib/browser.mjs'
 import { installHelpers } from './lib/in-page.mjs'
 import { pagesOf, urlOf } from './lib/pages.mjs'
 import { outDir, writeReport } from './lib/report.mjs'
@@ -29,10 +32,12 @@ const EMAIL = 'owner@example.com'
 const DESKTOP = { width: 1440, height: 900, phone: false }
 const PHONE = { width: 390, height: 844, phone: true }
 
-// Each template's asks, by the copy that labels them, and its closing block and button, from
-// its contract's link plan. "decided" marks the templates whose asks decision 15 changes; the
-// others are reported as they stand. Monolith's block is #cta until its pull request renames it
-// #contact (decision 1), so either is its closing block.
+// Each template's asks, by the copy path that labels them, and its closing block and button,
+// from its contract's link plan and decision 15. "decided" marks the templates whose asks
+// decision 15 changes; the others are reported as they stand. Monolith's block is #cta until its
+// pull request renames it #contact (decision 1), so either is its closing block. Atlas's is the
+// note at the foot of the page, headed "Get in touch", at a new #contact: its pitch (#start) is
+// its third section, so it cannot close the page, and the pitch's button is one more ask.
 const ASKS = {
   't01-aurora': {
     decided: true,
@@ -54,9 +59,9 @@ const ASKS = {
   },
   't04-atlas': {
     decided: true,
-    closing: ['start'],
-    button: 'pitch.action',
-    asks: ['nav.cta', 'hero.primary', 'offer.action', 'tools.primary', 'footer.action'],
+    closing: ['contact'],
+    button: 'footer.action',
+    asks: ['nav.cta', 'hero.primary', 'pitch.action', 'offer.action', 'tools.primary'],
   },
   't05-ember': {
     decided: true,
@@ -79,9 +84,13 @@ const ASKS = {
   't08-vector': { decided: false, closing: ['contact'], button: 'footer.cta', asks: ['about.cta'] },
 }
 
-const valueAt = (copy, path) =>
-  path.split('.').reduce((v, key) => (v === undefined || v === null ? undefined : v[key]), copy)
-const squash = (text) => text.replace(/\s+/g, ' ').trim().toLowerCase()
+// The marker the dev route puts in place of the nth probed path's text
+// (app/dev/_render/concept.tsx).
+const markerOf = (index) => `Probe ${String(index + 1).padStart(2, '0')}`
+// Whether a link's words are that marker alone, once or more (a label drawn twice, as a button
+// that rolls its label keeps it), with nothing else but marks and arrows.
+const carries = (text, marker) =>
+  text.includes(marker) && !/[\p{L}\p{N}]/u.test(text.split(marker).join(''))
 
 // In the page: every form field's autocomplete, and every link's text and address.
 function readForms() {
@@ -93,11 +102,18 @@ function readForms() {
       hint: `${f.name} ${f.id} ${f.getAttribute('aria-label') ?? ''} ${f.labels?.[0]?.textContent ?? ''}`.toLowerCase(),
       autocomplete: f.getAttribute('autocomplete'),
     }))
-  const links = [...document.querySelectorAll('a[href]')].map((a) => ({
-    text: (a.textContent ?? '').replace(/\s+/g, ' ').trim(),
-    href: a.getAttribute('href'),
-    block: a.closest('section[id], footer[id], div[id]')?.id ?? null,
-  }))
+  // Each link's words, its address, and the ids of the blocks it sits in.
+  const links = [...document.querySelectorAll('a[href]')].map((a) => {
+    const blocks = []
+    for (let n = a.parentElement; n !== null; n = n.parentElement) {
+      if (n.id !== '') blocks.push(n.id)
+    }
+    return {
+      text: (a.textContent ?? '').replace(/\s+/g, ' ').trim(),
+      href: a.getAttribute('href'),
+      blocks,
+    }
+  })
   return { fields, links }
 }
 
@@ -122,51 +138,52 @@ function autofillFindings(fields) {
   })
 }
 
+// The asks of a page drawn with every ask's text and the button's probed (plan.asks, then
+// plan.button, in that order): each ask must lead to the closing block; the button must sit in
+// that block and mail the page's address with its label as the subject, or with no email lead
+// to the top or to its own block.
 function askFindings(page, links, email) {
   const plan = ASKS[page.templateId]
   if (plan === undefined) return []
   const findings = []
-  const labels = plan.asks
-    .map((path) => valueAt(page.copy, path))
-    .filter((v) => typeof v === 'string')
-  const button = valueAt(page.copy, plan.button)
-  for (const label of new Set(labels)) {
-    for (const link of links.filter((l) => squash(l.text) === squash(label))) {
-      if (plan.closing.includes(link.block ?? '')) continue // the closing button, below
-      if (!plan.closing.some((id) => link.href === `#${id}`)) {
-        findings.push({
-          ask: label,
-          href: link.href,
-          problem: `leads to ${link.href}, not #${plan.closing[0]}`,
-        })
+  const targets = plan.closing.map((id) => `#${id}`)
+  const add = (path, link, problem) =>
+    findings.push({ ask: path, href: link?.href ?? null, problem })
+  plan.asks.forEach((path, index) => {
+    const found = links.filter((l) => carries(l.text, markerOf(index)))
+    if (found.length === 0) add(path, null, 'ask not drawn')
+    for (const link of found) {
+      if (!targets.includes(link.href)) {
+        add(path, link, `leads to ${String(link.href)}, not ${targets.join(' or ')}`)
       }
     }
-  }
-  if (typeof button === 'string') {
-    const closing = links.filter(
-      (l) => plan.closing.includes(l.block ?? '') && squash(l.text) === squash(button),
-    )
-    if (closing.length === 0)
-      findings.push({ ask: button, href: null, problem: 'closing button not found' })
-    for (const link of closing) {
-      if (email === null) {
-        if (!['#top', '#'].includes(link.href)) {
-          findings.push({
-            ask: button,
-            href: link.href,
-            problem: 'with no email, the closing button does not lead to the top',
-          })
-        }
-        continue
+  })
+  const marker = markerOf(plan.asks.length)
+  const buttons = links.filter((l) => carries(l.text, marker))
+  if (buttons.length === 0) add(plan.button, null, 'closing button not drawn')
+  for (const link of buttons) {
+    if (!plan.closing.some((id) => link.blocks.includes(id))) {
+      add(plan.button, link, `closing button outside ${targets.join(' or ')}`)
+    }
+    if (email === null) {
+      if (![...targets, '#top', '#'].includes(link.href)) {
+        add(
+          plan.button,
+          link,
+          'with no email, the closing button leads neither to the top nor to its own block',
+        )
       }
-      const mail = /^mailto:([^?]+)\?subject=(.*)$/.exec(link.href ?? '')
-      if (mail === null || mail[1] !== email || decodeURIComponent(mail[2]) !== button) {
-        findings.push({
-          ask: button,
-          href: link.href,
-          problem: 'the closing button is not a mail to the page with its label as the subject',
-        })
-      }
+      continue
+    }
+    // The subject as encodeURIComponent writes the label (decision 15). A mail link reads no
+    // plus sign as a space (RFC 6068), so a label written with plus signs arrives with them.
+    const mail = /^mailto:([^?]+)\?subject=(.*)$/.exec(link.href ?? '')
+    if (mail === null || mail[1] !== email || mail[2] !== encodeURIComponent(marker)) {
+      add(
+        plan.button,
+        link,
+        'the closing button is not a mail to the page with its label as the subject',
+      )
     }
   }
   return findings.map((f) => ({ ...f, decided: plan.decided }))
@@ -256,23 +273,19 @@ async function check(browser, page) {
   const findings = []
   const add = (kind, detail) =>
     findings.push({ templateId: page.templateId, page: page.label, kind, ...detail })
-  // The desktop page with the page's email, then without one.
+  // The desktop page with the page's email, then without one, every ask's text probed.
+  const plan = ASKS[page.templateId]
+  const probe = plan === undefined ? null : [...plan.asks, plan.button].join(',')
   for (const email of [EMAIL, null]) {
-    const context = await contextFor(browser, DESKTOP)
-    const tab = await context.newPage()
-    try {
-      await open(tab, urlOf(options.base, page, { pictures: 'grey', email }))
+    await withTab(browser, DESKTOP, async (tab) => {
+      await open(tab, urlOf(options.base, page, { pictures: 'grey', email, probe }))
       const { fields, links } = await tab.evaluate(readForms)
       if (email !== null) for (const f of autofillFindings(fields)) add('autofill', f)
       for (const f of askFindings(page, links, email)) add('asks', { email: email !== null, ...f })
-    } finally {
-      await context.close()
-    }
+    })
   }
   // At a phone's width: priority pictures it does not show, and Vector's disc.
-  const phone = await contextFor(browser, PHONE)
-  const tab = await phone.newPage()
-  try {
+  await withTab(browser, PHONE, async (tab) => {
     await open(tab, urlOf(options.base, page, { pictures: 'grey' }))
     for (const source of await tab.evaluate(hiddenPriority)) add('priority', { picture: source })
     if (page.templateId === 't08-vector') {
@@ -282,49 +295,43 @@ async function check(browser, page) {
       })
       if (opacity !== 0) add('cursor', { size: '390x844', opacity })
     }
-  } finally {
-    await phone.close()
-  }
+  })
   if (page.templateId === 't08-vector') {
-    const context = await contextFor(browser, DESKTOP)
-    const desk = await context.newPage()
-    try {
+    await withTab(browser, DESKTOP, async (desk) => {
       await open(desk, urlOf(options.base, page, {}))
       const opacity = await desk.evaluate(() => {
         const disc = document.querySelector('.vector-cursor')
         return disc === null ? null : Number(getComputedStyle(disc).opacity)
       })
       if (opacity !== 0) add('cursor', { size: '1440x900', opacity })
-    } finally {
-      await context.close()
-    }
+    })
   }
   if (page.templateId === 't05-ember') {
     // The turn runs only with motion allowed, as a visitor with a pointer gets it.
-    const context = await contextFor(browser, DESKTOP, { reducedMotion: 'no-preference' })
-    const desk = await context.newPage()
-    try {
-      await open(desk, urlOf(options.base, page, { pictures: 'grey' }))
-      const angles = await upright(desk)
-      if (angles.length === 0) add('upright', { problem: 'no turning picture found (.ember-spin)' })
-      for (const angle of angles.filter((a) => a % 360 !== 0)) add('upright', { angle })
-    } finally {
-      await context.close()
-    }
+    await withTab(
+      browser,
+      DESKTOP,
+      async (desk) => {
+        await open(desk, urlOf(options.base, page, { pictures: 'grey' }))
+        const angles = await upright(desk)
+        if (angles.length === 0) {
+          add('upright', { problem: 'no turning picture found (.ember-spin)' })
+        }
+        for (const angle of angles.filter((a) => a % 360 !== 0)) add('upright', { angle })
+      },
+      { reducedMotion: 'no-preference' },
+    )
   }
   if (page.templateId === 't07-summit') {
-    const context = await contextFor(browser, DESKTOP)
-    const desk = await context.newPage()
-    try {
+    await withTab(browser, DESKTOP, async (desk) => {
       await open(desk, urlOf(options.base, page, { pictures: 'grey' }))
       await desk.evaluate(installHelpers)
       const reached = await captions(desk)
-      if (reached.length === 0)
+      if (reached.length === 0) {
         add('caption', { problem: 'no caption link reached by the keyboard' })
+      }
       for (const link of reached.filter((r) => r.opacity < 0.9)) add('caption', link)
-    } finally {
-      await context.close()
-    }
+    })
   }
   return findings
 }
@@ -345,9 +352,13 @@ for (const templateId of [...new Set(pages.map((p) => p.templateId))].sort()) {
     if (of.length === 0) return null
     const examples = [
       ...new Set(
-        of.map((r) => r.problem ?? r.field ?? r.picture ?? `${String(r.angle ?? r.opacity)}`),
+        of.map((r) =>
+          kind === 'asks'
+            ? `${r.ask}${r.email ? '' : ' (no email)'}: ${r.problem}`
+            : (r.problem ?? r.field ?? r.picture ?? `${String(r.angle ?? r.opacity)}`),
+        ),
       ),
-    ].slice(0, 2)
+    ].slice(0, kind === 'asks' ? 4 : 2)
     return `${kind}: ${String(new Set(of.map((r) => r.page)).size)}/${String(total)} pages (${examples.join('; ')})`
   })
   const said = parts.filter((p) => p !== null)
