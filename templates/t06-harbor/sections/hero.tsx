@@ -25,7 +25,7 @@ const LINE =
 //
 // The source dimmed its photograph to 40% under the fade. Over a visitor's pictures that left
 // the quieter words below AA, the scroll hint at the right edge worst of all, so the picture
-// shows at 20%, the pill's faint tint of the accent is a veil of the page colour at 45% behind
+// shows at 20%, the pill's faint tint of the accent is a veil of the page colour at 50% behind
 // its words, and the scroll hint's word sits on a faint chip of the page colour (decision 7's
 // first treatment, a local veil behind the words only), each the least that passes. Each text
 // item here and in the bar then meets AA on every pixel of its box over a pure white and a pure
@@ -54,7 +54,7 @@ export function HarborHero({ hero }: Props) {
         <div
           data-rise
           style={motion(0.2, '20px', 0.6, 'out')}
-          className="mt-12 mb-8 inline-flex items-center gap-2 rounded-full border border-brand-deeper/30 bg-surface/45 px-4 py-2 backdrop-blur-sm"
+          className="mt-12 mb-8 inline-flex items-center gap-2 rounded-full border border-brand-deeper/30 bg-surface/50 px-4 py-2 backdrop-blur-sm"
         >
           <span aria-hidden="true" className="h-1.5 w-1.5 shrink-0 rounded-full bg-brand-deeper" />
           <span className="text-xs font-medium tracking-widest text-brand-deeper uppercase">
