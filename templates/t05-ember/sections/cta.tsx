@@ -1,6 +1,7 @@
 import { ArrowRight } from 'lucide-react'
 import Image from 'next/image'
 import type { EmberContent, EmberImage } from '../copy-slots'
+import { fitWord } from '../fit'
 import { anchored, delay } from '../styles'
 
 type Props = Pick<EmberContent, 'cta'> & { pictures: readonly (EmberImage | null)[] }
@@ -39,10 +40,14 @@ export function EmberCta({ cta, pictures }: Props) {
           ),
         )}
       </div>
-      <div className="relative z-10 mx-auto max-w-2xl text-center">
+      {/* Full width up to its cap, so the heading can be its own @container: as wide as before
+          wherever the heading wraps, and centred as before wherever it does not. */}
+      <div className="relative z-10 mx-auto w-full max-w-2xl text-center">
         <div data-fade>
-          <h2 className="font-display text-3xl font-medium text-balance text-on-brand md:text-[40px]">
-            {cta.heading}
+          <h2 className="@container font-display text-3xl font-medium text-balance text-on-brand md:text-[40px]">
+            <span className="ember-fit" style={fitWord(cta.heading, 'display')}>
+              {cta.heading}
+            </span>
           </h2>
         </div>
         <div data-fade="up-sm" style={delay(0.2)}>

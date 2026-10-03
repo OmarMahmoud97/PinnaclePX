@@ -1,5 +1,6 @@
 import { Plus, X } from 'lucide-react'
 import type { EmberContent } from '../copy-slots'
+import { fitWord } from '../fit'
 import { anchored, delay, eyebrow, heading, pad } from '../styles'
 
 type Props = Pick<EmberContent, 'faq'>
@@ -17,7 +18,11 @@ export function EmberFaq({ faq }: Props) {
             <p className={`${eyebrow} mb-4`}>{faq.eyebrow}</p>
           </div>
           <div data-fade style={delay(0.2)}>
-            <h2 className={`${heading} mx-auto max-w-lg text-balance`}>{faq.heading}</h2>
+            <h2 className={`${heading} @container mx-auto max-w-lg text-balance`}>
+              <span className="ember-fit" style={fitWord(faq.heading, 'body')}>
+                {faq.heading}
+              </span>
+            </h2>
           </div>
         </div>
         <div className="space-y-3">

@@ -83,6 +83,28 @@
   outline: none;
 }
 
+/* A text sized by its longest word (fit.ts): the smaller of its own size (1em, the size of the
+ * heading it sits in) and 97% of the heading's width over the word's width in ems; the heading
+ * is the @container. */
+.ember-fit {
+  display: block;
+  font-size: min(1em, 97cqi / var(--ember-word, 1));
+}
+
+/* A point's title, fitted to the points' row (stats.tsx, the @container): the whole row below
+ * md, where the points stand one under another, and from md a third of it less the two 100px
+ * gaps between the three, so the row always holds them however wide their other words are. */
+.ember-fit-point {
+  display: block;
+  font-size: min(1em, 97cqi / var(--ember-word, 1));
+}
+
+@media (width >= 48rem) {
+  .ember-fit-point {
+    font-size: min(1em, (100cqi - 12.5rem) / 3 * 0.97 / var(--ember-word, 1));
+  }
+}
+
 @keyframes ember-fade-up {
   from {
     opacity: 0;
