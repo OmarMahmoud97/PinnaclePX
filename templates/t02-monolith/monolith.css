@@ -72,13 +72,19 @@
   );
 }
 
-/* Where relative colours are not supported, both schemes take the checked gradient. */
+/*
+ * Where relative colours are not supported, both schemes take the checked gradient. The guard
+ * tests the forms the two layers use, channel keywords in calc() and clamp() and a color-mix()
+ * origin, not a plain relative colour: a browser that had the one without the others would
+ * find the layers' colours invalid and paint no gradient at all on words that are transparent.
+ */
 .monolith-lit-a,
 .monolith-lit-b {
   background-image: linear-gradient(to right, var(--brand-deeper), var(--brand-deepest));
 }
 
-@supports (color: oklch(from red l c h)) {
+@supports (color: oklch(from red l c h / clamp(0, (0.5 - l) * 1000, 1))) and
+  (color: oklch(from color-mix(in oklab, red 1%, blue) l c h / clamp(0, (0.5 - alpha) * 1000, 1))) {
   .monolith-lit-a {
     background-image:
       linear-gradient(to right, var(--monolith-lit-from), var(--monolith-lit-to)),
