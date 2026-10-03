@@ -1,6 +1,7 @@
 import { ArrowRight } from 'lucide-react'
 import Image from 'next/image'
 import type { MeridianContent } from '../copy-slots'
+import { fitWord } from '../fit'
 import { badge, button, container } from '../styles'
 import { Emphasis } from './emphasis'
 
@@ -9,10 +10,12 @@ type Props = Pick<MeridianContent, 'hero'>
 // The source's HeroSection: a badge inside an outline badge, a centred headline with one
 // gradient word, a lead, two buttons, then a wide picture with a pool of the brand colour
 // blurred behind its top edge and a fade to the surface over its foot. The source chose a light
-// or dark screenshot by theme; here the one picture the imagery stage supplied.
+// or dark screenshot by theme; here the one picture the imagery stage supplied. The headline is
+// sized by its longest word against the section (fit.ts), since its box is only as wide as its
+// words.
 export function MeridianHero({ hero }: Props) {
   return (
-    <section className={`${container} w-full`}>
+    <section className={`${container} @container w-full`}>
       <div className="mx-auto grid place-items-center gap-8 py-20 md:py-32 lg:max-w-(--breakpoint-xl)">
         <div className="text-center [&>*+*]:mt-8">
           <div className={badge.outlineLg}>
@@ -24,7 +27,12 @@ export function MeridianHero({ hero }: Props) {
 
           <div className="mx-auto max-w-(--breakpoint-md) text-center text-4xl font-bold md:text-6xl">
             <h1>
-              <Emphasis heading={hero.headline} padding="px-2" />
+              <span
+                className="meridian-fit meridian-fit-headline"
+                style={fitWord(hero.headline.text)}
+              >
+                <Emphasis heading={hero.headline} padding="px-2" />
+              </span>
             </h1>
           </div>
 

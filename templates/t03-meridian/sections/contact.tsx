@@ -1,5 +1,6 @@
 import { ChevronDown } from 'lucide-react'
 import type { MeridianContent } from '../copy-slots'
+import { fitWord } from '../fit'
 import {
   button,
   card,
@@ -33,7 +34,11 @@ export function MeridianContact({ contact }: Props) {
           <div className="mb-4">
             <h2 className={eyebrow}>{contact.eyebrow}</h2>
 
-            <h2 className="text-3xl font-bold md:text-4xl">{contact.heading}</h2>
+            <h2 className="@container text-3xl font-bold md:text-4xl">
+              <span className="meridian-fit" style={fitWord(contact.heading)}>
+                {contact.heading}
+              </span>
+            </h2>
           </div>
           <p className="mb-8 text-on-surface-muted lg:w-5/6">{contact.lead}</p>
 

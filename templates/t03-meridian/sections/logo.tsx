@@ -1,6 +1,7 @@
 import { ChevronsDown } from 'lucide-react'
 import Image from 'next/image'
 import type { MeridianContent } from '../copy-slots'
+import { fitWord } from '../fit'
 
 type Props = { brand: MeridianContent['brand']; size?: 'header' | 'footer' }
 
@@ -21,14 +22,21 @@ export function MeridianLogo({ brand, size = 'header' }: Props) {
       />
     )
   }
-  const anywhere = /\s/.test(name.trim()) ? '' : 'wrap-anywhere'
+  const unbroken = !/\s/.test(name.trim())
   return (
     <>
       <ChevronsDown className="mr-2 h-9 w-9 shrink-0 rounded-lg border border-surface-muted bg-linear-to-tr from-brand-deeper via-brand-deeper/70 to-brand-deeper text-on-brand" />
-      {size === 'footer' ? (
-        <span className={`text-2xl ${anywhere}`}>{name}</span>
+      {size === 'header' ? (
+        <span className={unbroken ? 'wrap-anywhere' : undefined}>{name}</span>
+      ) : unbroken ? (
+        <span className="text-2xl wrap-anywhere">{name}</span>
       ) : (
-        <span className={anywhere === '' ? undefined : anywhere}>{name}</span>
+        // In the footer, a name of words is sized by its longest word against its cell (fit.ts).
+        <span className="text-2xl">
+          <span className="meridian-fit meridian-fit-name" style={fitWord(name)}>
+            {name}
+          </span>
+        </span>
       )}
     </>
   )

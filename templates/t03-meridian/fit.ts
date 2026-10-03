@@ -1,10 +1,13 @@
+import type { CSSProperties } from 'react'
 import type { MeridianContent } from './copy-slots'
 
-// The source showed Meridian's header links from lg whatever their length, so at 1024 "Why us"
-// wrapped onto "Services" on most stored pages (decision 15, docs/template-fit-decisions.md;
-// CRS-4). Here the header shows its links only from a width that holds them on one line. A
-// text's width in ems is added up from the tables below. Nothing is measured in the browser, so
-// nothing moves once the page has drawn.
+// The source set Meridian's headings at fixed sizes and showed its header's links from lg
+// whatever their length, so a long word ran past a narrow phone's edge and, at 1024, "Why us"
+// wrapped onto "Services" (decision 15, docs/template-fit-decisions.md; CRS-4). Here the
+// headings are sized at render by their longest word, the header shows its links only from a
+// width that holds them on one line, and the footer's columns stand one to a row on a phone
+// when a word would not fit two. A text's width in ems is added up from the tables below.
+// Nothing is measured in the browser, so nothing moves once the page has drawn.
 
 // Each character's advance in hundredths of an em in the widest of the faces a visitor's
 // Meridian page can be set in (the looks' body faces, Instrument Sans, Inter and DM Sans, in
@@ -42,6 +45,20 @@ export function textEms(text: string, weight: Weight = 'bold'): number {
 // counts every character 0.05em wider than the table.
 const SPREAD = 0.05
 
+// The width in ems of the longest word in some texts, set bold and widened so. Lines break only
+// at spaces here, though a browser may also break after a hyphen, so a hyphenated word counts
+// whole.
+export function longestWord(texts: readonly string[]): number {
+  const words = texts.flatMap((text) => text.split(/\s+/)).filter((word) => word !== '')
+  return Math.max(1, ...words.map((word) => textEms(word) + word.length * SPREAD))
+}
+
+// The longest word, as the variable a fitted heading divides its room by (meridian.css,
+// .meridian-fit).
+export function fitWord(...texts: string[]): CSSProperties {
+  return { '--meridian-word': longestWord(texts).toFixed(2) } as CSSProperties
+}
+
 // The width of a text at a size in pixels, widened so.
 const pixels = (text: string, size: number, weight: Weight) =>
   (textEms(text, weight) + text.length * SPREAD) * size
@@ -71,4 +88,21 @@ export function headerFrom({ brand, nav }: Pick<MeridianContent, 'brand' | 'nav'
   const button = pixels(nav.cta.label, 14, 'regular') + 24
   const need = mark + menu + links + button
   return BREAKPOINTS.find(([, screen]) => need <= screen * 0.75 - 18)?.[0] ?? null
+}
+
+// On a 320px phone the footer's two columns are 71px wide (footer.tsx: the page's 24px gutters,
+// the panel's border and 40px padding, a 48px gap). A word may run on into the panel's padding,
+// but no further.
+const FOOTER_COLUMN = 71 + 40
+
+// Whether the footer's link columns stand two to a row on a phone: every word of their
+// headings (18px bold) and links (16px) fits a column.
+export function footerPairs(footer: MeridianContent['footer']): boolean {
+  const widest = (text: string, size: number, weight: Weight) =>
+    Math.max(...text.split(/\s+/).map((word) => pixels(word, size, weight)))
+  return footer.groups.every(
+    (group) =>
+      widest(group.heading, 18, 'bold') <= FOOTER_COLUMN &&
+      group.links.every((link) => widest(link.label, 16, 'regular') <= FOOTER_COLUMN),
+  )
 }

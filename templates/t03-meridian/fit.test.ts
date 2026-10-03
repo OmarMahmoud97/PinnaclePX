@@ -1,6 +1,6 @@
 import { fallbackBrief } from '@/lib/copy-slots/brief'
 import { assembleMeridian, meridianFallbackCopy } from './contract'
-import { headerFrom, textEms } from './fit'
+import { fitWord, footerPairs, headerFrom, longestWord, textEms } from './fit'
 
 const content = assembleMeridian(
   meridianFallbackCopy(fallbackBrief('Kestrel', 'Job scheduling for trades.')),
@@ -22,6 +22,35 @@ describe('textEms', () => {
     expect(textEms('W')).toBeCloseTo(1.09)
     expect(textEms('ŋ')).toBeCloseTo(1.09)
     expect(textEms('Wall', 'regular')).toBeLessThan(textEms('Wall', 'bold'))
+  })
+})
+
+describe('longestWord', () => {
+  it('finds the widest word, each character counted 0.05em wider', () => {
+    expect(longestWord(['A big', 'NORTHUMBERLAND'])).toBeCloseTo(
+      textEms('NORTHUMBERLAND') + 14 * 0.05,
+    )
+    expect(longestWord([''])).toBe(1)
+  })
+
+  it('is the variable a fitted heading reads', () => {
+    expect(fitWord('Wall')).toEqual({ '--meridian-word': (textEms('Wall') + 0.2).toFixed(2) })
+  })
+})
+
+describe('footerPairs', () => {
+  const footer = (heading: string, label = 'Questions') => ({
+    groups: [{ heading, links: [{ label, href: '#faq' }] }],
+  })
+
+  it('keeps two columns on a phone while every word fits one', () => {
+    expect(footerPairs(content.footer)).toBe(true)
+    expect(footerPairs(footer('Get in touch'))).toBe(true)
+  })
+
+  it('stands them one to a row when a word would not fit a 320px phone’s column', () => {
+    expect(footerPairs(footer('ACCOUNTANCY'))).toBe(false)
+    expect(footerPairs(footer('Help', 'STRAIGHTFORWARD'))).toBe(false)
   })
 })
 

@@ -1,5 +1,6 @@
 import { Check } from 'lucide-react'
 import type { MeridianContent } from '../copy-slots'
+import { fitWord } from '../fit'
 import {
   cardContent,
   cardHeader,
@@ -22,7 +23,11 @@ export function MeridianFeatures({ features }: Props) {
     <section id="features" className={`${container} py-24 sm:py-32`}>
       <h2 className={`${eyebrow} text-center`}>{features.eyebrow}</h2>
 
-      <h2 className={`${sectionTitle} text-center`}>{features.heading}</h2>
+      <h2 className={`@container ${sectionTitle} text-center`}>
+        <span className="meridian-fit" style={fitWord(features.heading)}>
+          {features.heading}
+        </span>
+      </h2>
 
       <h3 className={`${sectionLead} text-center`}>{features.lead}</h3>
 
