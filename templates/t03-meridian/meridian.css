@@ -5,6 +5,56 @@
  */
 
 /*
+ * The lit phrase in the headline and the ask (styles.ts, gradientText). The source ran it from
+ * the first glow to the brand colour. A glow is decoration and never text (lib/config.ts), and
+ * on every light page the phrase began at 1.7:1 (CRS-2). So a light page keeps the classes'
+ * gradient, from brand-deeper to its hover, brand-deepest, and a dark page takes the source's,
+ * from the glow, which reads there at 6.9:1 and more. A template is not told its scheme, so each
+ * stop is picked by the surface's own lightness: a colour mixed 1% into a surface that is there
+ * only on the other scheme keeps its own hue and lightness, with an alpha near 0 where it should
+ * show and 1 where it should not, and the alpha is then turned round. Two such colours, one
+ * shown and one not, mix to the one shown. Where relative colours are not supported, both
+ * schemes take the classes' gradient.
+ */
+.meridian {
+  --meridian-if-light: oklch(from var(--surface) l c h / clamp(0, (l - 0.5) * 1000, 1));
+  --meridian-if-dark: oklch(from var(--surface) l c h / clamp(0, (0.5 - l) * 1000, 1));
+  --meridian-deeper-on-light: oklch(
+    from color-mix(in oklab, var(--brand-deeper) 1%, var(--meridian-if-dark)) l c h /
+      clamp(0, (0.5 - alpha) * 1000, 1)
+  );
+  --meridian-deepest-on-light: oklch(
+    from color-mix(in oklab, var(--brand-deepest) 1%, var(--meridian-if-dark)) l c h /
+      clamp(0, (0.5 - alpha) * 1000, 1)
+  );
+  --meridian-glow-on-dark: oklch(
+    from color-mix(in oklab, var(--glow) 1%, var(--meridian-if-light)) l c h /
+      clamp(0, (0.5 - alpha) * 1000, 1)
+  );
+  --meridian-deeper-on-dark: oklch(
+    from color-mix(in oklab, var(--brand-deeper) 1%, var(--meridian-if-light)) l c h /
+      clamp(0, (0.5 - alpha) * 1000, 1)
+  );
+}
+
+@supports (color: oklch(from red l c h / clamp(0, (l - 0.5) * 1000, 1))) and
+  (color: oklch(from color-mix(in oklab, red 1%, blue) l c h / clamp(0, (0.5 - alpha) * 1000, 1))) {
+  .meridian-lit {
+    background-image: linear-gradient(
+      to right in oklab,
+      oklch(
+        from color-mix(in oklab, var(--meridian-deeper-on-light), var(--meridian-glow-on-dark)) l c
+          h / 1
+      ),
+      oklch(
+        from color-mix(in oklab, var(--meridian-deepest-on-light), var(--meridian-deeper-on-dark)) l
+          c h / 1
+      )
+    );
+  }
+}
+
+/*
  * The sponsors' marquee, as the source's @devnomic/marquee draws it: two copies of the row
  * slide left forever, the edges fade, and it pauses under the pointer. Under reduced motion
  * the first copy stands still and the second is hidden.
