@@ -17,7 +17,9 @@ const LINK = 'text-surface transition-colors hover:text-surface/60'
 // top a giant address (the owner's email when it is known) over a round button; a rule; the
 // name and a tagline beside columns of places, services, links and social links; and the small
 // links, the legal line (with the photographers' credit the Pexels licence asks for) and a
-// closing line.
+// closing line. The name and the legal line wrap a name with no break in it rather than run
+// it off the screen. The columns' headings sit at the page's second level, beside the blocks'
+// own, where the source's fourth left two levels out.
 export function VectorFooter({ brand, footer, credits }: Props) {
   const { places, social } = footer
   return (
@@ -49,13 +51,13 @@ export function VectorFooter({ brand, footer, credits }: Props) {
       <div className={`${pad} py-16 lg:py-24 ${container}`}>
         <div className="flex flex-col justify-between gap-12 lg:flex-row lg:gap-8">
           <div>
-            <span className="text-4xl font-medium tracking-tight">{brand.name}</span>
+            <span className="text-4xl font-medium tracking-tight wrap-anywhere">{brand.name}</span>
             <p className="mt-4 text-4xl text-surface/60">{footer.tagline}</p>
           </div>
           <div className="flex flex-col gap-16 sm:flex-row lg:gap-24">
             {places !== null && (
               <div>
-                <h4 className={HEADING}>{places.heading}</h4>
+                <h2 className={HEADING}>{places.heading}</h2>
                 {places.entries.map((entry, index) => (
                   <div
                     key={entry.title}
@@ -75,7 +77,7 @@ export function VectorFooter({ brand, footer, credits }: Props) {
               </div>
             )}
             <div>
-              <h4 className={HEADING}>{footer.services.heading}</h4>
+              <h2 className={HEADING}>{footer.services.heading}</h2>
               <ul className="space-y-3">
                 {footer.services.items.map((item) => (
                   <li key={item}>
@@ -85,7 +87,7 @@ export function VectorFooter({ brand, footer, credits }: Props) {
               </ul>
             </div>
             <div>
-              <h4 className={HEADING}>{footer.navigation.heading}</h4>
+              <h2 className={HEADING}>{footer.navigation.heading}</h2>
               <ul className="space-y-3">
                 {footer.navigation.links.map((link) => (
                   <li key={link.label}>
@@ -98,7 +100,7 @@ export function VectorFooter({ brand, footer, credits }: Props) {
             </div>
             {social !== null && (
               <div>
-                <h4 className={HEADING}>{social.heading}</h4>
+                <h2 className={HEADING}>{social.heading}</h2>
                 <ul className="space-y-3">
                   {social.links.map((link) => (
                     <li key={link.label}>
@@ -131,7 +133,7 @@ export function VectorFooter({ brand, footer, credits }: Props) {
               </a>
             ))}
           </div>
-          <p className="text-sm text-surface/60">
+          <p className="text-sm wrap-anywhere text-surface/60">
             &copy; {YEAR} {brand.legalName} - All rights reserved
             {credits.length > 0 && (
               <>

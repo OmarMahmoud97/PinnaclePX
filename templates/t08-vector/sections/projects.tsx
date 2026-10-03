@@ -162,7 +162,8 @@ function Cursor({ visible }: { visible: boolean }) {
 // The source's marquee: the words repeated six times in a row that slides at 80px a second,
 // to the right at rest, faster by the scroll's speed and the other way while the page scrolls
 // up, wrapping on the width of one copy; the scroll's speed is smoothed on a spring
-// (stiffness 400, damping 50) as the source's library smoothed it.
+// (stiffness 400, damping 50) as the source's library smoothed it. A screen reader hears the
+// words once, from the block's heading, and never the six copies.
 function Marquee({ children }: { children: ReactNode }) {
   const row = useRef<HTMLDivElement>(null)
   const first = useRef<HTMLSpanElement>(null)
@@ -210,7 +211,7 @@ function Marquee({ children }: { children: ReactNode }) {
     }
   }, [])
   return (
-    <div className="relative w-full overflow-hidden">
+    <div aria-hidden="true" className="relative w-full overflow-hidden">
       <div ref={row} className="flex whitespace-nowrap">
         {Array.from({ length: 6 }, (_, index) => (
           <span
@@ -230,7 +231,8 @@ const EXIT_MS = 600
 
 // The source's project overlay: the picture full screen, easing in from a tenth larger over
 // 0.6s and out to a twentieth larger, a dark wash, the title at the top left sliding in from
-// 30px left after a beat and out to 20px, a frosted close disc at the top right growing in
+// 30px left after a beat and out to 20px over a shade of its own that holds it clear of any
+// picture, a white one included (vector.css), a frosted close disc at the top right growing in
 // from four fifths and shrinking out, the whole fading over 0.3s each way; Escape closes it,
 // the page behind it stops scrolling while it is open, and the bar returns as it goes.
 function Overlay({ project, onClosed }: { project: Project; onClosed: () => void }) {
@@ -278,6 +280,7 @@ function Overlay({ project, onClosed }: { project: Project; onClosed: () => void
       <div
         className={`absolute top-4 left-4 z-10 transition-[opacity,translate] duration-400 ease-[cubic-bezier(0.22,1,0.36,1)] sm:top-6 sm:left-6 md:top-12 md:left-12 lg:top-16 lg:left-16 starting:-translate-x-7.5 starting:opacity-0 ${closing ? '-translate-x-5 opacity-0' : 'delay-150'}`}
       >
+        <div aria-hidden="true" className="vector-shade" />
         <h2 className="text-[clamp(2rem,8vw,6rem)] leading-[0.95] font-medium tracking-tight text-on-scrim">
           <span className="block">{project.titleUp}</span>
           <span className="block font-display italic">{project.titleDown}</span>
@@ -448,12 +451,13 @@ function Card({
   )
 }
 
-// The source's Projects: the cursor, the overlay, the marquee, then the cards.
+// The source's Projects: the cursor, the overlay, the marquee, then the cards. The marquee's
+// two words are the block's heading for a screen reader, above the cards' titles.
 export function VectorProjects({ projects }: Props) {
   const [hovering, setHovering] = useState(false)
   const [open, setOpen] = useState<Project | null>(null)
   return (
-    <section id="projects" className="projects relative scroll-mt-25 bg-surface py-24">
+    <section id="featured" className="projects relative scroll-mt-25 bg-surface py-24">
       <Cursor visible={hovering && open === null} />
       {open !== null && (
         <Overlay
@@ -464,6 +468,7 @@ export function VectorProjects({ projects }: Props) {
         />
       )}
       <div className="pb-16">
+        <h2 className="sr-only">{`${projects.marquee.text} ${projects.marquee.accent}`}</h2>
         <Marquee>
           {projects.marquee.text}{' '}
           <span className="font-display font-thin">{projects.marquee.accent}</span>{' '}
