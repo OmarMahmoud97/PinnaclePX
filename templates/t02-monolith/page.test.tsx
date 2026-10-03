@@ -1,12 +1,15 @@
 import { renderToStaticMarkup } from 'react-dom/server'
 import { fallbackBrief } from '@/lib/copy-slots/brief'
-import { assembleMonolith, monolithFallbackCopy } from './contract'
+import { assembleMonolith, monolithFallbackCopy, type MonolithCopy } from './contract'
 import { Monolith } from './index'
 
 // The page as a visitor's would render with no pictures: the fallback copy, assembled the way
-// the preview assembles it, drawn to markup.
-function page(email: string | null): string {
-  const copy = monolithFallbackCopy(fallbackBrief('Kestrel', 'Job scheduling for trades.'))
+// the preview assembles it, drawn to markup. The copy may be changed first.
+function page(
+  email: string | null,
+  change: (copy: MonolithCopy) => MonolithCopy = (copy) => copy,
+): string {
+  const copy = change(monolithFallbackCopy(fallbackBrief('Kestrel', 'Job scheduling for trades.')))
   const content = assembleMonolith(copy, { logo: { kind: 'wordmark' }, images: {}, email })
   return renderToStaticMarkup(<Monolith content={content} />)
 }
@@ -70,5 +73,43 @@ describe('the Monolith page', () => {
     const mail = `mailto:owner@example.com?subject=${encodeURIComponent('Get in touch')}`
     expect(texts(html, /href="(mailto:[^"]+)"/g)).toEqual([mail])
     expect(contact).toContain(`href="${mail}"`)
+  })
+})
+
+describe('the Monolith footer', () => {
+  // The classes of the grid that holds the footer's link columns.
+  const columns = (html: string) => {
+    const footer = html.slice(html.indexOf('<footer'), html.indexOf('</footer>'))
+    return /<section class="([^"]*)"/.exec(footer)?.[1]?.split(' ') ?? []
+  }
+  // The fallback copy with one column heading changed.
+  const heading = (text: string) => (copy: MonolithCopy) => ({
+    ...copy,
+    footer: {
+      groups: copy.footer.groups.map((group, index) =>
+        index === 0 ? { ...group, heading: text } : group,
+      ),
+    },
+  })
+
+  it('stands its columns two to a row on a phone while every word fits', () => {
+    expect(columns(page(null))).toContain('grid-cols-2')
+    expect(columns(page(null))).not.toContain('grid-cols-1')
+  })
+
+  it("stands them one to a row below sm when a word would not fit a 320px phone's column", () => {
+    for (const word of ['Northumberland', 'STRAIGHTFORWARD', 'Physiotherapy']) {
+      const classes = columns(page(null, heading(word)))
+      expect(classes).toContain('grid-cols-1')
+      expect(classes).toContain('sm:grid-cols-2')
+      expect(classes).not.toContain('grid-cols-2')
+    }
+  })
+
+  it('sizes the headings by their longest word, which may break after a hyphen', () => {
+    expect(page(null, heading('Northumberland'))).toMatch(
+      /<h3 class="[^"]*97cqi[^"]*" style="--monolith-word:8\.35">Northumberland/,
+    )
+    expect(columns(page(null, heading('End-Of-Tenancy')))).toContain('grid-cols-2')
   })
 })

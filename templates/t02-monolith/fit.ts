@@ -32,13 +32,14 @@ export function textEms(text: string): number {
 }
 
 // The width in ems of the longest word in some texts. Lines break only at spaces here, though a
-// browser may also break after a hyphen, so a hyphenated word counts whole.
-function longestWord(texts: readonly string[]): number {
-  const words = texts.flatMap((text) => text.split(/\s+/))
+// browser may also break after a hyphen, so a hyphenated word counts whole, unless the text may
+// break there too (atHyphens): then each part counts with its hyphen.
+export function longestWord(texts: readonly string[], atHyphens = false): number {
+  const words = texts.flatMap((text) => text.split(atHyphens ? /\s+|(?<=-)/ : /\s+/))
   return Math.max(1, ...words.map(textEms))
 }
 
 // The longest word, as the variable a fitted size divides its cell's width by.
-export function fitWord(texts: readonly string[]): CSSProperties {
-  return { '--monolith-word': longestWord(texts).toFixed(2) } as CSSProperties
+export function fitWord(texts: readonly string[], atHyphens = false): CSSProperties {
+  return { '--monolith-word': longestWord(texts, atHyphens).toFixed(2) } as CSSProperties
 }
