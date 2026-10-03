@@ -70,7 +70,8 @@ function twoLines(name: string): number {
 // container holds them on one line beside the wordmark (BARS), never wrapping, and the toggle
 // serves every screen below that, or every screen when no breakpoint holds them. The wordmark
 // may take two lines, and on a narrow screen it is sized so its longest word fits beside the
-// toggle (logo.tsx); the bar grows rather than cut it.
+// toggle (logo.tsx); the bar grows rather than cut it, keeping a little room above and below a
+// long name so its first line stays on the screen.
 export function HarborNav({ brand, nav }: Props) {
   const [open, setOpen] = useState(false)
   const [closing, setClosing] = useState(false)
@@ -171,7 +172,7 @@ export function HarborNav({ brand, nav }: Props) {
         style={motion(0, '-80px')}
       >
         <div className={`${container} @container`}>
-          <div className="flex min-h-20 items-center justify-between gap-6 xl:gap-8">
+          <div className="flex min-h-20 items-center justify-between gap-6 py-1 xl:gap-8">
             <a
               className="group flex min-w-0 items-center gap-2"
               href="#top"
