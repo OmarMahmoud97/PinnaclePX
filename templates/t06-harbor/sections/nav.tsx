@@ -17,12 +17,13 @@ const EXIT_MS = 250
 
 // Where the bar can show its links and its ask beside the wordmark: the container's room at
 // lg, xl and 2xl (the screen less its padding, at most 1440px less 2 × 96px), the gap between
-// the links and between the bar's three parts there, and the classes that show the links and
-// hide the toggle from there.
+// the links and between the bar's three parts there, and the classes that show the links, hide
+// the toggle and open that gap from there. Below it the wordmark sits beside the toggle with no
+// gap, as in the source, so a name that fitted the source's bar on one line still does.
 const BARS = [
-  { room: 896, gap: 24, show: 'lg:flex', hide: 'lg:hidden' },
-  { room: 1088, gap: 32, show: 'xl:flex', hide: 'xl:hidden' },
-  { room: 1248, gap: 32, show: '2xl:flex', hide: '2xl:hidden' },
+  { room: 896, gap: 24, show: 'lg:flex', hide: 'lg:hidden', space: 'lg:gap-6 xl:gap-8' },
+  { room: 1088, gap: 32, show: 'xl:flex', hide: 'xl:hidden', space: 'xl:gap-8' },
+  { room: 1248, gap: 32, show: '2xl:flex', hide: '2xl:hidden', space: '2xl:gap-8' },
 ] as const
 
 // How wide the bar's parts are on one line, in pixels, estimated from their words as the big
@@ -85,6 +86,7 @@ export function HarborNav({ brand, nav }: Props) {
   const bar = BARS.find((option) => barWidth({ brand, nav }, option.gap) <= option.room)
   const show = bar?.show ?? ''
   const hide = bar?.hide ?? ''
+  const space = bar?.space ?? ''
 
   useEffect(() => {
     const onScroll = () => {
@@ -172,7 +174,7 @@ export function HarborNav({ brand, nav }: Props) {
         style={motion(0, '-80px')}
       >
         <div className={`${container} @container`}>
-          <div className="flex min-h-20 items-center justify-between gap-6 py-1 xl:gap-8">
+          <div className={`flex min-h-20 items-center justify-between py-1 ${space}`}>
             <a
               className="group flex min-w-0 items-center gap-2"
               href="#top"
