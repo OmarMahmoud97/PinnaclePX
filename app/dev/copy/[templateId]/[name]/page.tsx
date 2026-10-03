@@ -9,8 +9,8 @@ import { env } from '@/lib/env'
 // A development-only page of the committed copy corpus (tests/fixtures/template-copy): one stored
 // or synthetic answer for an invented business, rendered as a visitor's page without pictures,
 // as /dev/eval renders a stored run (app/dev/_render/concept.tsx takes the same view in the
-// address). It is how CI holds templates to text fit (e2e/template-text-fit.spec.ts), since
-// stored runs are not committed. Outside development the route does not exist.
+// address). It is how CI holds templates to text fit (e2e/reduced-motion-template-fit.spec.ts),
+// since stored runs are not committed. Outside development the route does not exist.
 type Params = Promise<{ templateId: string; name: string }>
 type Search = Promise<Record<string, string | string[] | undefined>>
 
