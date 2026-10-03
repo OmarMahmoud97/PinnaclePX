@@ -40,10 +40,27 @@ export async function hideText(page, alsoHide = '') {
   }
 }
 
+// Colours at rest for the whole measurement. Hiding the glyphs and putting them back changes
+// every text's colour, and a text with a colour transition (transition-colors) would fade back
+// in over the next screenshots: Meridian's benefit titles were read at 2.11:1 mid-fade and are
+// 15.14:1 at rest. With transitions off, every change is whole at once.
+const AT_REST = '*, *::before, *::after { transition: none !important; }'
+
+// Ready a page for the measures: transitions off from here on, and the hiding rule kept for
+// hideText.
 export async function prepareHiding(page) {
-  await page.evaluate((css) => {
-    window.__hideText = css
-  }, HIDE_TEXT)
+  await page.evaluate(
+    ({ css, rest }) => {
+      window.__hideText = css
+      if (document.getElementById('check-at-rest') === null) {
+        const style = document.createElement('style')
+        style.id = 'check-at-rest'
+        style.textContent = rest
+        document.head.append(style)
+      }
+    },
+    { css: HIDE_TEXT, rest: AT_REST },
+  )
 }
 
 // A region of the page as raw RGB: in page coordinates with fullPage, else in the viewport's.
