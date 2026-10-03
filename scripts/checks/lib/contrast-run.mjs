@@ -24,41 +24,47 @@ export async function runContrast(options, { gradientOnly }) {
     ),
   )
   const browser = await launch()
-  const results = []
-  await inPool(work, jobs, async ({ page, scheme, look }) => {
-    for (const sizes of groups.filter((g) => g.length > 0)) {
-      const context = await contextFor(browser, sizes[0])
-      const tab = await context.newPage()
-      try {
-        await open(tab, urlOf(options.base, page, { look, scheme }))
-        await tab.evaluate(installHelpers)
-        await prepareHiding(tab)
-        for (const size of sizes) {
-          await resize(tab, size)
-          await tab.evaluate(() => window.scrollTo(0, 0))
-          const items = (await tab.evaluate(textItems, { keys: 'all' })).filter(
-            (item) => !gradientOnly || item.gradient,
-          )
-          const query = (keys) => tab.evaluate(textItems, { keys })
-          for (const r of await measureItems(tab, items, query)) {
-            const rest = withoutGeometry(r)
-            results.push({
-              ...rest,
-              worst: r.worst === null ? null : round2(r.worst),
-              share: r.share === null ? null : round2(r.share),
-              templateId: page.templateId,
-              page: page.label,
-              scheme,
-              look,
-              size: size.size,
-            })
+  const measured = await inPool(
+    work,
+    jobs,
+    async ({ page, scheme, look }) => {
+      const rows = []
+      for (const sizes of groups.filter((g) => g.length > 0)) {
+        const context = await contextFor(browser, sizes[0])
+        try {
+          const tab = await context.newPage()
+          await open(tab, urlOf(options.base, page, { look, scheme }))
+          await tab.evaluate(installHelpers)
+          await prepareHiding(tab)
+          for (const size of sizes) {
+            await resize(tab, size)
+            await tab.evaluate(() => window.scrollTo(0, 0))
+            const items = (await tab.evaluate(textItems, { keys: 'all' })).filter(
+              (item) => !gradientOnly || item.gradient,
+            )
+            const query = (keys) => tab.evaluate(textItems, { keys })
+            for (const r of await measureItems(tab, items, query)) {
+              const rest = withoutGeometry(r)
+              rows.push({
+                ...rest,
+                worst: r.worst === null ? null : round2(r.worst),
+                share: r.share === null ? null : round2(r.share),
+                templateId: page.templateId,
+                page: page.label,
+                scheme,
+                look,
+                size: size.size,
+              })
+            }
           }
+        } finally {
+          await context.close().catch(() => undefined)
         }
-      } finally {
-        await context.close()
       }
-    }
-  })
+      return rows
+    },
+    ({ page, scheme, look }) => `${page.label} ${scheme} in ${look}`,
+  )
   await browser.close()
-  return { pages, results, schemes }
+  return { pages, results: measured.flat(), schemes }
 }

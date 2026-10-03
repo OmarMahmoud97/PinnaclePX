@@ -8,7 +8,7 @@
 //   node scripts/checks/layout-shift.mjs --base http://localhost:3120 [options in lib/args.mjs]
 //     (one page a template unless --limit says more; default widths 390, 768 and 1440)
 import { parseArgs } from './lib/args.mjs'
-import { contextFor, inPool, launch } from './lib/browser.mjs'
+import { contextFor, inPool, launch, visit } from './lib/browser.mjs'
 import { pagesOf, urlOf } from './lib/pages.mjs'
 import { outDir, writeReport } from './lib/report.mjs'
 
@@ -21,8 +21,8 @@ const HOLD_MS = 2500
 
 async function measure(browser, page, viewport) {
   const context = await contextFor(browser, viewport)
-  const tab = await context.newPage()
   try {
+    const tab = await context.newPage()
     await tab.addInitScript(() => {
       window.__shift = { total: 0, sources: [] }
       new PerformanceObserver((list) => {
@@ -47,10 +47,8 @@ async function measure(browser, page, viewport) {
     }
     await tab.route('**/_next/image**', hold)
     await tab.route('**/dev/picture/**', hold)
-    await tab.goto(urlOf(options.base, page, { pictures: 'grey' }), {
-      waitUntil: 'domcontentloaded',
-      timeout: 180_000,
-    })
+    // A page that does not answer 200 throws, so an error page is never measured as still.
+    await visit(tab, urlOf(options.base, page, { pictures: 'grey' }), 'domcontentloaded')
     await tab.addStyleTag({ content: 'nextjs-portal { display: none !important; }' })
     await tab.waitForTimeout(HOLD_MS + 2500)
     const shift = await tab.evaluate(() => window.__shift)
@@ -62,7 +60,7 @@ async function measure(browser, page, viewport) {
       sources: [...new Set(shift.sources)].slice(0, 6),
     }
   } finally {
-    await context.close()
+    await context.close().catch(() => undefined)
   }
 }
 
@@ -71,7 +69,12 @@ const pages =
   options.limit === null ? [...new Map(all.map((p) => [p.templateId, p])).values()] : all
 const browser = await launch()
 const work = pages.flatMap((page) => options.sizes.map((viewport) => ({ page, viewport })))
-const results = await inPool(work, 3, ({ page, viewport }) => measure(browser, page, viewport))
+const results = await inPool(
+  work,
+  3,
+  ({ page, viewport }) => measure(browser, page, viewport),
+  ({ page, viewport }) => `${page.label} at ${viewport.size}`,
+)
 await browser.close()
 const lines = [
   `Layout shift with every picture held back ${String(HOLD_MS)} ms: ${String(pages.length)} pages (${options.source}); the target is 0 at 390.`,

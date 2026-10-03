@@ -251,12 +251,12 @@ const results = await inPool(all, 3, async (page) => {
   }
   for (const viewport of options.sizes) {
     const context = await contextFor(browser, viewport)
-    const tab = await context.newPage()
     try {
+      const tab = await context.newPage()
       await open(tab, urlOf(options.base, page, { pictures: 'grey' }))
       for (const f of await tab.evaluate(find, args)) findings.push({ ...f, size: viewport.size })
     } finally {
-      await context.close()
+      await context.close().catch(() => undefined)
     }
   }
   // Vector's name set in lower case where the visitor's is not (t08-L3): the source set its own
