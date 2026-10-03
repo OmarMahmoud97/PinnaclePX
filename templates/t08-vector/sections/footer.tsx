@@ -18,7 +18,8 @@ const LINK = 'text-surface transition-colors hover:text-surface/60'
 // name and a tagline beside columns of places, services, links and social links; and the small
 // links, the legal line (with the photographers' credit the Pexels licence asks for) and a
 // closing line. The name and the legal line wrap a name with no break in it rather than run
-// it off the screen.
+// it off the screen. The columns' headings sit at the page's second level, beside the blocks'
+// own, where the source's fourth left two levels out.
 export function VectorFooter({ brand, footer, credits }: Props) {
   const { places, social } = footer
   return (
@@ -56,7 +57,7 @@ export function VectorFooter({ brand, footer, credits }: Props) {
           <div className="flex flex-col gap-16 sm:flex-row lg:gap-24">
             {places !== null && (
               <div>
-                <h4 className={HEADING}>{places.heading}</h4>
+                <h2 className={HEADING}>{places.heading}</h2>
                 {places.entries.map((entry, index) => (
                   <div
                     key={entry.title}
@@ -76,7 +77,7 @@ export function VectorFooter({ brand, footer, credits }: Props) {
               </div>
             )}
             <div>
-              <h4 className={HEADING}>{footer.services.heading}</h4>
+              <h2 className={HEADING}>{footer.services.heading}</h2>
               <ul className="space-y-3">
                 {footer.services.items.map((item) => (
                   <li key={item}>
@@ -86,7 +87,7 @@ export function VectorFooter({ brand, footer, credits }: Props) {
               </ul>
             </div>
             <div>
-              <h4 className={HEADING}>{footer.navigation.heading}</h4>
+              <h2 className={HEADING}>{footer.navigation.heading}</h2>
               <ul className="space-y-3">
                 {footer.navigation.links.map((link) => (
                   <li key={link.label}>
@@ -99,7 +100,7 @@ export function VectorFooter({ brand, footer, credits }: Props) {
             </div>
             {social !== null && (
               <div>
-                <h4 className={HEADING}>{social.heading}</h4>
+                <h2 className={HEADING}>{social.heading}</h2>
                 <ul className="space-y-3">
                   {social.links.map((link) => (
                     <li key={link.label}>

@@ -1,6 +1,6 @@
 'use client'
 
-import { type CSSProperties, useEffect, useState } from 'react'
+import { type CSSProperties, useEffect, useRef, useState } from 'react'
 import type { VectorContent } from '../copy-slots'
 import { container } from '../styles'
 import { VectorLogo } from './logo'
@@ -15,6 +15,37 @@ const EXIT_MS = 550
 const LOGO_WAIT = { '--dur': '0.6s' } as CSSProperties
 const MENU_WAIT = { '--dur': '0.4s' } as CSSProperties
 
+// Marks a block that holds focus only so the next Tab starts there (vector.css draws it no ring).
+const FOCUS_MARK = 'data-vector-focus'
+
+// A chosen link's block takes focus, as the browser's own jump moves the start of the Tab order
+// there, so a keyboard visitor carries on from the block they chose and never from the menu,
+// which is about to fold away. It waits a frame for the jump, then stands down if focus is
+// already in the block outside the menu, as it is when the site's glide has taken the click
+// (app/_components/smooth-scroll.tsx). A block that takes no focus of its own is made
+// focusable just this once and gives it back on blur.
+function focusBlock(href: string) {
+  requestAnimationFrame(() => {
+    const block = document.getElementById(decodeURIComponent(href.slice(1)))
+    const at = document.activeElement
+    if (block === null) return
+    if (at !== null && block.contains(at) && at.closest(`#${PANEL_ID}`) === null) return
+    if (block.tabIndex < 0 && !block.hasAttribute('tabindex')) {
+      block.setAttribute('tabindex', '-1')
+      block.setAttribute(FOCUS_MARK, '')
+      block.addEventListener(
+        'blur',
+        () => {
+          block.removeAttribute('tabindex')
+          block.removeAttribute(FOCUS_MARK)
+        },
+        { once: true },
+      )
+    }
+    block.focus({ preventScroll: true })
+  })
+}
+
 // The source's Header: two dark glass pills that drop in on load, the name at the left and at
 // the right a menu that names the block the page is at (a scroll spy: the last block whose top
 // is above a third of the way down, and the last link once the page is within a hundred
@@ -22,17 +53,22 @@ const MENU_WAIT = { '--dur': '0.4s' } as CSSProperties
 // tenth of a second after, each sliding in from the left a twentieth after the one before, the
 // current one underlined; the plus turns into a cross. The source animated the pill's height
 // with a motion library; here the list opens on a grid row and the links arrive by
-// starting-style transitions, and closing plays the same out before the list goes. The name
-// swells a little under the pointer and shrinks under the finger. Its pill never reaches under
-// the menu's: it stops half a rem short of it at any width, its sides are 12px below 640px (the
-// source's 16px left fewer names on one line), on phones narrower than 390px its name steps
-// down towards 14px, and a name too long for one line takes a second, then ends in an ellipsis,
-// the whole name staying in the link's label. The whole bar goes while a project is open full
-// screen (vector.css).
+// starting-style transitions, and closing plays the same out before the list goes. The source
+// dimmed the other links to three fifths and lit them under the pointer, which falls below AA
+// on some brands' colours, so every link is the pill's own ink and a pointer underlines the
+// one it is on. The button is named by the label it shows and the word menu, so a voice
+// command that says what it shows reaches it; Escape gives focus back to it, and a chosen link
+// sends focus on to its block (focusBlock). The name swells a little under the pointer and
+// shrinks under the finger. Its pill never reaches under the menu's: it stops half a rem short
+// of it at any width, its sides are 12px below 640px (the source's 16px left fewer names on
+// one line), on phones narrower than 390px its name steps down towards 14px, and a name too
+// long for one line takes a second, then ends in an ellipsis, the whole name staying in the
+// link's label. The whole bar goes while a project is open full screen (vector.css).
 export function VectorHeader({ brand, nav }: Props) {
   const [open, setOpen] = useState(false)
   const [closing, setClosing] = useState(false)
   const [active, setActive] = useState(nav.links[0]?.label ?? '')
+  const toggle = useRef<HTMLButtonElement>(null)
   const shown = open && !closing
 
   useEffect(() => {
@@ -75,10 +111,16 @@ export function VectorHeader({ brand, nav }: Props) {
     }
   }, [closing])
 
+  // Escape folds the menu away and, when focus was in it (or nowhere), hands focus back to the
+  // button, since the links it was on are about to go.
   useEffect(() => {
     if (!open) return
     const onKey = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') setClosing(true)
+      if (event.key !== 'Escape') return
+      setClosing(true)
+      const button = toggle.current
+      const at = document.activeElement
+      if (button?.parentElement?.contains(at) === true || at === document.body) button?.focus()
     }
     document.addEventListener('keydown', onKey)
     return () => {
@@ -108,6 +150,7 @@ export function VectorHeader({ brand, nav }: Props) {
             className="absolute top-0 right-0 w-48 overflow-hidden rounded-xl bg-scrim/70 shadow-lg backdrop-blur-lg sm:w-60 sm:rounded-2xl"
           >
             <button
+              ref={toggle}
               type="button"
               onClick={() => {
                 if (open) setClosing(true)
@@ -118,6 +161,7 @@ export function VectorHeader({ brand, nav }: Props) {
               className="flex h-12 w-full items-center justify-between gap-4 px-4 text-on-scrim sm:h-16 sm:px-5"
             >
               <span className="text-base font-medium sm:text-lg">{active}</span>
+              <span className="sr-only"> menu</span>
               <span
                 aria-hidden="true"
                 className={`relative h-5 w-5 transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] sm:h-6 sm:w-6 ${shown ? 'rotate-45' : ''}`}
@@ -148,8 +192,9 @@ export function VectorHeader({ brand, nav }: Props) {
                             onClick={() => {
                               setClosing(true)
                               setActive(link.label)
+                              focusBlock(link.href)
                             }}
-                            className={`block py-1.5 text-lg font-medium transition-colors hover:text-on-scrim ${active === link.label ? 'text-on-scrim underline underline-offset-4' : 'text-on-scrim/60'}`}
+                            className={`block py-1.5 text-lg font-medium text-on-scrim underline-offset-4 ${active === link.label ? 'underline' : 'hover:underline'}`}
                           >
                             {link.label}
                           </a>
