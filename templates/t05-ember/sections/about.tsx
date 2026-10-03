@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import type { EmberContent } from '../copy-slots'
-import { fitWord } from '../fit'
+import { fitWord } from '../word-fit'
 import { anchored, delay, pad } from '../styles'
 import { Ornament } from './ornament'
 

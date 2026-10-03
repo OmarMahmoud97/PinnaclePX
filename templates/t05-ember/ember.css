@@ -83,9 +83,9 @@
   outline: none;
 }
 
-/* A text sized by its longest word (fit.ts): the smaller of its own size (1em, the size of the
- * heading it sits in) and 97% of the heading's width over the word's width in ems; the heading
- * is the @container. */
+/* A text sized by its longest word (word-fit.ts): the smaller of its own size (1em, the size of
+ * the heading it sits in) and 97% of the heading's width over the word's width in ems; the
+ * heading is the @container. */
 .ember-fit {
   display: block;
   font-size: min(1em, 97cqi / var(--ember-word, 1));
