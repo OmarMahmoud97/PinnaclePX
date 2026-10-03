@@ -1,13 +1,9 @@
 {
   "note": "What the checks expect of this template on main, measured on 3 October 2026. textFit is the CI text-fit guard’s (e2e/reduced-motion-template-fit.spec.ts): a case in failing is expected to fail, and one in unsettled is skipped, with why. outline is the accessible-names check’s (scripts/checks/a11y-names.mjs): each block, by its address (a renamed address after a comma), and the heading level it opens with. The template’s own pull request edits this file and no other outside its folder: a case its fix makes pass leaves failing (Playwright reports it until it does), and an address it renames is renamed here.",
-  "fixedBy": "Ember’s Phase 2 pull request, fix/ember-template-fit",
+  "fixedBy": "the hero’s pull request, fix/hero-legibility (Ember’s Phase 2 pull request fixed its other cases)",
   "textFit": {
-    "failing": ["l7-longest", "synthetic-long-words", "synthetic-longest", "synthetic-name-60"],
-    "unsettled": {
-      "synthetic-name-16": "passes on Windows but fails with its text 0.05em wider, and CI's Linux Chromium sets text about 4% wider",
-      "synthetic-name-40": "passes on Windows but fails with its text 0.03em wider, and CI's Linux Chromium sets text about 4% wider",
-      "synthetic-name-80": "passes on Windows but fails with its text 0.03em wider, and CI's Linux Chromium sets text about 4% wider"
-    }
+    "failing": ["synthetic-long-words"],
+    "unsettled": {}
   },
   "outline": [
     ["#about", 2],
