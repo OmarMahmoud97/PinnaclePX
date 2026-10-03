@@ -189,18 +189,34 @@
   }
 }
 
-/* The hero's veil over its photograph, under words drawn in on-scrim (sections/hero.tsx), so they
- * read on any picture. Below lg the words fill the first screen, so the scrim lies over all of it
- * at 60%, where white text keeps WCAG AA even on a white pixel. From lg the words sit at the left
- * and the scrim lies behind them alone: 60% to the end of the line under the headline (32rem in),
- * 45% at the headline's end (40rem in, enough for large text) and nothing 16rem further, so the
- * right of the picture stays clear; over it a band of 60% as deep as the bar, fading out below,
- * keeps the bar's words readable wherever they sit. The words start at the container's padding,
- * and the container centres past 90rem. */
+/* The hero's veil over its photograph (sections/hero.tsx): the page surface behind the words and
+ * under the bar, so they keep the page's colours and meet WCAG AA over any picture, pure white or
+ * pure black, in both schemes (decision 7, docs/template-fit-decisions.md). Under the bar it is 75%
+ * as deep as the bar's words, fading out below, so its name and links and a logo of either
+ * polarity read there; behind the words it is 65%, where on-surface keeps 4.5:1 on a dark surface
+ * too. Below lg the words fill the screen's width, so the pool behind them reaches from the top of
+ * the hero to just below them and fades out there, leaving the foot of the picture clear; the band
+ * over it adds what takes 65% to 75%. From lg the words sit at the left and the veil lies behind
+ * them alone: 65% to the end of the line under the headline (32rem in), 60% at the headline's end
+ * (40rem in, enough for its large text) and nothing 16rem further, so the right of the picture
+ * stays clear. The words start at the container's padding, and the container centres past 90rem. */
 .summit-veil {
-  --summit-veil: color-mix(in oklab, var(--scrim) 60%, transparent);
+  --summit-bar: color-mix(in oklab, var(--surface) 75%, transparent);
+  --summit-veil: color-mix(in oklab, var(--surface) 65%, transparent);
 
-  background: var(--summit-veil);
+  background: linear-gradient(
+    to bottom,
+    color-mix(in oklab, var(--surface) 29%, transparent) 4rem,
+    transparent 8rem
+  );
+}
+
+.summit-pool {
+  background: linear-gradient(
+    to top,
+    transparent,
+    color-mix(in oklab, var(--surface) 65%, transparent) 6rem
+  );
 }
 
 @media (width >= 64rem) {
@@ -208,11 +224,11 @@
     --summit-words: calc(max(0px, 50% - 45rem) + 4rem);
 
     background:
-      linear-gradient(to bottom, var(--summit-veil) 4rem, transparent 8rem),
+      linear-gradient(to bottom, var(--summit-bar) 4rem, transparent 8rem),
       linear-gradient(
         to right,
         var(--summit-veil) calc(var(--summit-words) + 32rem),
-        color-mix(in oklab, var(--scrim) 45%, transparent) calc(var(--summit-words) + 40rem),
+        color-mix(in oklab, var(--surface) 60%, transparent) calc(var(--summit-words) + 40rem),
         transparent calc(var(--summit-words) + 56rem)
       );
   }
