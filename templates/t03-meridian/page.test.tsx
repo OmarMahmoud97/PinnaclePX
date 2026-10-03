@@ -1,12 +1,15 @@
 import { renderToStaticMarkup } from 'react-dom/server'
 import { fallbackBrief } from '@/lib/copy-slots/brief'
-import { assembleMeridian, meridianFallbackCopy } from './contract'
+import { assembleMeridian, type MeridianCopy, meridianFallbackCopy } from './contract'
 import { Meridian } from './index'
 
 // The page as a visitor's would render with no pictures: the fallback copy, assembled the way
-// the preview assembles it, drawn to markup.
-function page(email: string | null = 'owner@example.com'): string {
-  const copy = meridianFallbackCopy(fallbackBrief('Kestrel', 'Job scheduling for trades.'))
+// the preview assembles it, drawn to markup. The copy may be changed first.
+function page(
+  email: string | null = 'owner@example.com',
+  change: (copy: MeridianCopy) => MeridianCopy = (copy) => copy,
+): string {
+  const copy = change(meridianFallbackCopy(fallbackBrief('Kestrel', 'Job scheduling for trades.')))
   const content = assembleMeridian(copy, { logo: { kind: 'wordmark' }, images: {}, email })
   return renderToStaticMarkup(<Meridian content={content} />)
 }
@@ -75,5 +78,20 @@ describe('the Meridian page', () => {
 
   it('suggests no stranger’s name or address in the form, only a message', () => {
     expect(texts(html, /placeholder="([^"]*)"/g)).toEqual(['Your message...'])
+  })
+
+  it('lights a phrase from checked colours, the glow left to a dark page’s style sheet', () => {
+    const lit = page('owner@example.com', (copy) => ({
+      ...copy,
+      hero: {
+        ...copy.hero,
+        headline: { text: 'Every job in one calendar', emphasis: 'one calendar' },
+      },
+    }))
+    const span = /<span class="([^"]*)">one calendar<\/span>/.exec(lit)?.[1]?.split(' ') ?? []
+    expect(span).toEqual(
+      expect.arrayContaining(['meridian-lit', 'from-brand-deeper', 'to-brand-deepest']),
+    )
+    expect(span.some((name) => name.includes('glow'))).toBe(false)
   })
 })

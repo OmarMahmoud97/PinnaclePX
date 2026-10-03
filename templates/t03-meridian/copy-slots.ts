@@ -198,7 +198,8 @@ const MERIDIAN_COUNTS = {
 } as const satisfies Record<string, CopySlot>
 
 // Every text-on-background pair the template paints. Cards sit on the accent surface; the
-// gradient runs from the first glow to brand-deeper, which also carries text.
+// lit phrase runs from brand-deeper, which also carries text, to brand-deepest on the surface
+// (a dark page lights it from the glow instead, meridian.css).
 export const MERIDIAN_CONTRAST_PAIRS: readonly ContrastPair[] = [
   { text: 'on-surface', background: 'surface' },
   { text: 'on-surface-muted', background: 'surface' },
@@ -207,6 +208,7 @@ export const MERIDIAN_CONTRAST_PAIRS: readonly ContrastPair[] = [
   { text: 'on-surface', background: 'accent' },
   { text: 'on-surface-muted', background: 'accent' },
   { text: 'brand-deeper', background: 'surface' },
+  { text: 'brand-deepest', background: 'surface' },
   { text: 'brand-deeper', background: 'accent' },
   { text: 'on-brand', background: 'brand-deeper' },
 ]

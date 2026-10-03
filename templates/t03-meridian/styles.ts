@@ -35,8 +35,12 @@ export const eyebrow = 'mb-2 text-lg tracking-wider text-brand-deeper'
 export const sectionTitle = 'mb-4 text-3xl font-bold md:text-4xl'
 export const sectionLead = 'mx-auto mb-8 text-xl text-on-surface-muted md:w-1/2'
 
-// The phrase the hero and the ask set in a gradient from the first glow to the brand colour.
-export const gradientText = 'bg-linear-to-r from-glow to-brand-deeper bg-clip-text text-transparent'
+// The phrase the hero and the ask set in a gradient. The source ran it from the first glow to
+// the brand colour; a glow is never text, so these classes run it from brand-deeper to
+// brand-deepest, colours the engine keeps at AA on the surface, and meridian.css (.meridian-lit)
+// gives the glow back to a dark page, where it reads.
+export const gradientText =
+  'meridian-lit bg-linear-to-r from-brand-deeper to-brand-deepest bg-clip-text text-transparent'
 
 const BADGE =
   'inline-flex items-center rounded-full border font-semibold transition-colors focus:ring-2 focus:ring-brand-deepest focus:ring-offset-2 focus:outline-none'
