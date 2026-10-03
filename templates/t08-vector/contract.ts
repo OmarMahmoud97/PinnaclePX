@@ -111,7 +111,7 @@ const PURPOSE: Readonly<Record<ModelSlot, string>> = {
   'projects.items[].titleDown': 'the second part of each title, set in the serif italic',
   'projects.items[].description': 'one sentence about each',
   'services.heading':
-    'one or two short sentences that fill a screen, letter by letter, such as We craft experiences that captivate.',
+    'one or two short sentences that fill a screen, letter by letter, in their words',
   'services.items[]': 'three to six things they offer, a few words each, one menu row each',
   'about.statement': 'one sentence about the company in their words, set large and centred',
   'about.cta.label': 'the round button under it, the same as ctaLabel',
@@ -119,7 +119,7 @@ const PURPOSE: Readonly<Record<ModelSlot, string>> = {
   'faq.items[].question': 'three to six questions a customer would ask, from the brief',
   'faq.items[].answer': 'the answers, in their words, claiming nothing the owner did not say',
   'footer.cta.label': 'the round button under the big address, the same as ctaLabel',
-  'footer.tagline': 'a short line under the name in the footer, such as Built to evolve ideas.',
+  'footer.tagline': 'a short line under the name in the footer, in their words',
   'footer.services.heading':
     'the heading of the footer column that lists what they offer, such as Services',
   'footer.navigation.heading': 'the heading of the footer column of links, such as Navigation',
