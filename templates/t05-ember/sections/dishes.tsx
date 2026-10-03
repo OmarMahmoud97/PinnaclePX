@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import type { EmberContent } from '../copy-slots'
+import { fitWord } from '../fit'
 import { anchored, delay, eyebrow, heading, pad } from '../styles'
 import { EmberDish } from './dish'
 
@@ -18,7 +19,11 @@ export function EmberDishes({ dishes }: Props) {
           <p className={`${eyebrow} mb-3.5`}>{dishes.eyebrow}</p>
         </div>
         <div data-fade>
-          <h2 className={`${heading} mx-auto max-w-lg text-balance`}>{dishes.heading}</h2>
+          <h2 className={`${heading} @container mx-auto max-w-lg text-balance`}>
+            <span className="ember-fit" style={fitWord(dishes.heading, 'body')}>
+              {dishes.heading}
+            </span>
+          </h2>
         </div>
       </div>
       <div className="mx-auto grid max-w-5xl grid-cols-2 gap-12 md:grid-cols-4 md:gap-18">

@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import type { EmberContent } from '../copy-slots'
+import { fitWord } from '../fit'
 import { anchored, delay, eyebrow, heading, pad } from '../styles'
 
 type Props = Pick<EmberContent, 'features'>
@@ -20,7 +21,11 @@ export function EmberFeatures({ features }: Props) {
           <p className={`${eyebrow} mb-3.5`}>{features.eyebrow}</p>
         </div>
         <div data-fade style={delay(0.2)}>
-          <h2 className={`${heading} mx-auto max-w-xl text-balance`}>{features.heading}</h2>
+          <h2 className={`${heading} @container mx-auto max-w-xl text-balance`}>
+            <span className="ember-fit" style={fitWord(features.heading, 'body')}>
+              {features.heading}
+            </span>
+          </h2>
         </div>
       </div>
       <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-14 md:flex-row">

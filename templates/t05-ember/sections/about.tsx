@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import type { EmberContent } from '../copy-slots'
+import { fitWord } from '../fit'
 import { anchored, delay, pad } from '../styles'
 import { Ornament } from './ornament'
 
@@ -37,7 +38,13 @@ export function EmberAbout({ about }: Props) {
             <Ornament side="right" />
           </div>
           <div data-fade>
-            <h2 className="mt-5 text-4xl text-balance md:text-5xl">{about.heading}</h2>
+            {/* Sized by its longest word below md only: from md this column is as wide as its
+                words make it, and a heading sized by the column would narrow it. */}
+            <h2 className="mt-5 text-4xl text-balance max-md:@container md:text-5xl">
+              <span className="ember-fit" style={fitWord(about.heading, 'body')}>
+                {about.heading}
+              </span>
+            </h2>
           </div>
           <div data-fade style={delay(0.2)}>
             <p className="mt-4.5 max-w-sm text-on-surface-muted">{about.body}</p>

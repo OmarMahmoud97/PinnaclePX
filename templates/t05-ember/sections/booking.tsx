@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import type { EmberContent } from '../copy-slots'
+import { fitWord } from '../fit'
 import { anchored, delay, eyebrow, heading, pad } from '../styles'
 import { Stars } from './stars'
 
@@ -19,7 +20,11 @@ export function EmberBooking({ booking }: Props) {
             <p className={`${eyebrow} mb-4`}>{booking.eyebrow}</p>
           </div>
           <div data-fade style={delay(0.2)}>
-            <h2 className={`${heading} mb-16`}>{booking.heading}</h2>
+            <h2 className={`${heading} @container mb-16`}>
+              <span className="ember-fit" style={fitWord(booking.heading, 'body')}>
+                {booking.heading}
+              </span>
+            </h2>
           </div>
           {testimonial !== null && (
             <>
