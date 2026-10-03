@@ -94,7 +94,8 @@ type ModelSlot = Exclude<
 
 // What each slot is for, beside its range, for the copy prompt.
 const PURPOSE: Readonly<Record<ModelSlot, string>> = {
-  'brand.name': 'the company name as given, set in lower case in the bar as the source set its own',
+  'brand.name':
+    'the company name as given, keeping its capitals, shortened only if it is longer than the range',
   'brand.legalName': 'the legal name for the footer, the company name if unknown',
   'nav.links[]':
     'two to six short menu labels, in order: home, a word or two naming the items under the marquee, what they offer, about, questions, contact; no two the same',
