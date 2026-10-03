@@ -25,13 +25,12 @@ export const section = 'py-30'
 export const eyebrow =
   'mb-4 block text-xs font-semibold tracking-[0.25em] text-brand-deeper uppercase'
 
-// The block heading: black capitals in the display face, at the source's text-5xl on a screen
-// wider than about 530px and smaller with the screen below that, and smaller again where its
-// longest word would not fit its column (fit.ts: the heading sets --harbor-word, its column is
-// the @container), so no word is cut off or broken. The line height is text-5xl's own at every
-// size.
+// The block heading: black capitals in the display face, at the source's text-5xl at every
+// width, and smaller only where its longest word would not fit its column (fit.ts: the heading
+// sets --harbor-word, its column is the @container), so no word is cut off or broken. The line
+// height is text-5xl's own at every size.
 export const heading =
-  'font-display text-[length:min(clamp(1.75rem,9vw,3rem),97cqi/var(--harbor-word,1))] leading-none font-black text-on-surface uppercase wrap-break-word'
+  'font-display text-[length:min(3rem,97cqi/var(--harbor-word,1))] leading-none font-black text-on-surface uppercase wrap-break-word'
 
 // The curves the source's entrances ran on: its wrappers' own, which is CSS's `ease`, its
 // motion library's default for a plain tween, which is `ease-out`, and the expo curve of the

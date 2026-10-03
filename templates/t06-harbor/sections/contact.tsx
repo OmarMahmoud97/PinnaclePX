@@ -14,10 +14,10 @@ const LABEL = 'mb-2 block text-xs font-semibold tracking-wider text-on-surface-m
 // questions, each a row under a hairline with a small ringed plus that becomes a filled minus
 // when open, the question turning to the accent and the answer sliding open; the source
 // toggled each by state, these are native disclosure rows (harbor.css). At the right, sliding
-// in from the right, a card with the eyebrow, a heading (which follows the screen below about
-// 440px, and is smaller again where its longest word would not fit the card, fit.ts), a line
-// and the form: name and email side by side from sm, a message, and a round accent button.
-// Both headings fit their own column the same way. The source posted the form to a
+// in from the right, a card with the eyebrow, a heading (at the source's sizes, smaller only
+// where its longest word would not fit the card, fit.ts), a line and the form: name and email
+// side by side from sm, a message, and a round accent button. Both headings fit their own
+// column the same way. The source posted the form to a
 // form service under a placeholder id and showed a toast; here it posts to the owner's email
 // as a mail message when it is known, and otherwise leads to the page's ask. The source's
 // hints named one made-up person on every page; these are plain. The name and email fields
@@ -72,7 +72,7 @@ export function HarborContact({ contact }: Props) {
             <div className="@container rounded-2xl border border-border bg-accent p-8 md:p-10">
               <span className={`${eyebrow} mb-4`}>{form.eyebrow}</span>
               <h3
-                className="mb-2 font-display text-[length:min(clamp(1.25rem,6.75vw,1.875rem),97cqi/var(--harbor-word,1))] leading-tight font-black wrap-break-word text-on-surface uppercase md:text-[length:min(2.25rem,97cqi/var(--harbor-word,1))]"
+                className="mb-2 font-display text-[length:min(1.875rem,97cqi/var(--harbor-word,1))] leading-tight font-black wrap-break-word text-on-surface uppercase md:text-[length:min(2.25rem,97cqi/var(--harbor-word,1))]"
                 style={fitWord(form.heading.lines)}
               >
                 <HeadingLines heading={form.heading} />

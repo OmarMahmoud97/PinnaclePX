@@ -12,9 +12,8 @@ type Props = Pick<HarborContent, 'about'>
 // dark wash over its foot and an accent badge scaling up over its corner; at the right the
 // eyebrow, a three-line heading, two paragraphs, a row of pills and two small quote cards,
 // each rising a little after the one before. Without a picture the card surface holds the
-// place. Below about 530px the heading follows the screen, as the block headings do
-// (styles.ts), and at any width it is smaller where its longest word would not fit its column
-// (fit.ts).
+// place. The heading keeps the source's sizes and, as the block headings do (styles.ts), is
+// smaller only where its longest word would not fit its column (fit.ts).
 export function HarborAbout({ about }: Props) {
   const { image, badge, quotes } = about
   return (
@@ -69,7 +68,7 @@ export function HarborAbout({ about }: Props) {
             </div>
             <div data-fade data-margin="-80px" style={motion(0.2)}>
               <h2
-                className="mb-6 font-display text-[length:min(clamp(1.75rem,9vw,3rem),97cqi/var(--harbor-word,1))] leading-[0.95] font-black tracking-tight wrap-break-word text-on-surface uppercase md:text-[length:min(3.75rem,97cqi/var(--harbor-word,1))]"
+                className="mb-6 font-display text-[length:min(3rem,97cqi/var(--harbor-word,1))] leading-[0.95] font-black tracking-tight wrap-break-word text-on-surface uppercase md:text-[length:min(3.75rem,97cqi/var(--harbor-word,1))]"
                 style={fitWord(about.heading.lines)}
               >
                 <HeadingLines heading={about.heading} />
