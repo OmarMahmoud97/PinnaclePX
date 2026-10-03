@@ -97,6 +97,41 @@ describe('monolithCopySchema', () => {
     for (const slot of optional) expect(monolithContract.guide).not.toContain(`- ${slot}:`)
   })
 
+  // The model copied the old examples onto every page (paid pass 1; decisions 1 and 12), so the
+  // guide says what each slot is for and gives no words to copy.
+  it('has a guide that gives the model no example words to copy', () => {
+    const lines = monolithContract.guide.split('\n')
+    for (const line of [
+      '- hero.cards.quote.role: 4 to 30 characters, a short line under the company name on that card, two or three of their own words for their main work',
+      '- hero.cards.plan.title: 3 to 18 characters, the title of the card listing what is included',
+      '- hero.cards.plan.badge: 4 to 16 characters, a short badge on that card, one thing the owner said, in a word or two',
+      '- sponsors.heading: 6 to 40 characters, a short heading over a row of labels, in their words',
+      '- about.heading.text: 10 to 40 characters, the About heading, naming the company',
+      '- about.highlights[].value: 1 to 16 characters, exactly four short phrases set large, a few words each with no numbers',
+      '- about.highlights[].label: 3 to 24 characters, exactly four labels under those phrases',
+      '- faq.heading.text: 10 to 50 characters, the heading over the questions',
+      '- faq.prompt: 10 to 60 characters, a line under the questions',
+      '- faq.link.label: 4 to 22 characters, the link after that line, the same as ctaLabel',
+    ]) {
+      expect(lines).toContain(line)
+    }
+    expect(monolithContract.guide).not.toMatch(/such as/i)
+    const guide = monolithContract.guide.toLowerCase()
+    for (const example of [
+      'why we started',
+      'what you get',
+      'what we cover',
+      'about the company name',
+      'same week',
+      'appointment',
+      'frequently asked questions',
+      'still have questions',
+      'contact us',
+    ]) {
+      expect(guide).not.toContain(example)
+    }
+  })
+
   it('rejects a footer link with an unknown target', () => {
     const copy = monolithFallbackCopy(fallbackBrief('Kestrel', 'Job scheduling.'))
     const broken = {
