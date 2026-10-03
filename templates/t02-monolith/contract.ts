@@ -151,7 +151,8 @@ const PURPOSE: Readonly<Record<ModelSlot, string>> = {
   'hero.cards.profile.body':
     'one sentence on the profile card that lowers the risk of getting in touch',
   'hero.cards.plan.title': 'the title of the card listing what is included',
-  'hero.cards.plan.badge': 'a short badge on that card, one thing the owner said, in a word or two',
+  // Its measured wording: without the example, the badge ran past 16 characters (paid pass 1).
+  'hero.cards.plan.badge': 'a short badge on that card, such as Included',
   'hero.cards.plan.body': 'one sentence under that title',
   'hero.cards.plan.action.label': 'the button on that card, the same as ctaLabel',
   'hero.cards.plan.points[]': 'exactly three short things included, each a few words',
