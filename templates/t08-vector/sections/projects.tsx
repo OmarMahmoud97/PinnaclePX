@@ -453,7 +453,7 @@ export function VectorProjects({ projects }: Props) {
   const [hovering, setHovering] = useState(false)
   const [open, setOpen] = useState<Project | null>(null)
   return (
-    <section id="projects" className="projects relative scroll-mt-25 bg-surface py-24">
+    <section id="featured" className="projects relative scroll-mt-25 bg-surface py-24">
       <Cursor visible={hovering && open === null} />
       {open !== null && (
         <Overlay

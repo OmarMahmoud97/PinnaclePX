@@ -109,7 +109,7 @@ export function VectorProof({ proof }: Props) {
             </div>
             <div className="mt-auto flex items-center justify-between pt-8">
               <span className="text-xl font-semibold text-on-surface">{quote.company}</span>
-              <ArrowLink href="#projects" />
+              <ArrowLink href="#featured" />
             </div>
           </div>
           {stats.map((stat, index) => (
@@ -125,7 +125,7 @@ export function VectorProof({ proof }: Props) {
               </div>
               <div className="mt-auto flex items-center justify-between pt-4">
                 <span className="text-sm font-medium text-on-surface">{stat.company}</span>
-                <ArrowLink href="#projects" />
+                <ArrowLink href="#featured" />
               </div>
             </div>
           ))}
@@ -159,7 +159,7 @@ export function VectorProof({ proof }: Props) {
             </p>
             <div className="mt-auto flex items-center justify-between pt-6">
               <span className="text-xl font-semibold text-on-surface">{story.company}</span>
-              <ArrowLink href="#projects" />
+              <ArrowLink href="#featured" />
             </div>
           </div>
         </div>
