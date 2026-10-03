@@ -11,15 +11,18 @@ type Props = Pick<SummitContent, 'hero'>
 // The words' colours, the rating line under the portraits included: on the plain page the
 // source's greys; over a photograph, on the veil of the page surface behind them (summit.css),
 // on-surface, since the muted grey would need more of the veil than the 80 percent decision 7
-// allows to meet WCAG AA over any picture. The headline keeps its shade, which holds there as
-// large text.
+// allows to meet WCAG AA over any picture. The headline's lighter shade holds there only as large
+// text, and a long word can size it below that on a phone (fit.ts), where on the dark scheme it
+// falls to 4.4:1, so over a photograph it is on-surface too.
 const PLAIN = {
   ring: 'text-on-surface-muted',
+  headline: 'text-on-surface/85',
   line: 'text-on-surface-muted',
   proof: 'text-on-surface-muted',
 } as const
 const PICTURED = {
   ring: 'text-on-surface',
+  headline: 'text-on-surface',
   line: 'text-on-surface',
   proof: 'text-on-surface',
 } as const
@@ -70,7 +73,7 @@ export function SummitHero({ hero }: Props) {
         <h1
           data-rise
           data-spring="soft"
-          className="mt-6 max-w-160 text-left font-display text-[length:min(3rem,min(97cqi,40rem)/var(--summit-word,1))] leading-tight font-medium tracking-tight text-on-surface/85 md:text-[length:min(3.75rem,min(97cqi,40rem)/var(--summit-word,1))]"
+          className={`mt-6 max-w-160 text-left font-display text-[length:min(3rem,min(97cqi,40rem)/var(--summit-word,1))] leading-tight font-medium tracking-tight md:text-[length:min(3.75rem,min(97cqi,40rem)/var(--summit-word,1))] ${ink.headline}`}
           style={fitWord(hero.headline)}
         >
           {hero.headline}

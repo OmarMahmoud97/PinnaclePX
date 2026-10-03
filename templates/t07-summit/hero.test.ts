@@ -6,8 +6,9 @@ import { SummitHero } from './sections/hero'
 import { SummitNav } from './sections/nav'
 
 // Over a photograph the hero's words sit on a veil of the page surface, so none is drawn in the
-// muted grey, which no veil within decision 7's cap holds at WCAG AA over any picture, and none in
-// on-scrim, which would sit light on a light veil (docs/template-fit-decisions.md). The hero here
+// muted grey, which no veil within decision 7's cap holds at WCAG AA over any picture, nor in a
+// faded shade, which a long word can set as small text, and none in on-scrim, which would sit
+// light on a light veil (docs/template-fit-decisions.md). The hero here
 // draws every part it can: the example's words, and portraits with a rating line under them, with
 // plain paths for its pictures (a test loads no image files). Its two buttons carry their own
 // fills, so they keep their own colours. Over the picture the bar's links keep their grey too, and
@@ -36,6 +37,7 @@ describe("Summit's hero", () => {
     expect(html).toContain('summit-pool')
     expect(html).toContain('4.9/5 from 200 reviews')
     expect(html).not.toContain('on-surface-muted')
+    expect(html).not.toContain('text-on-surface/')
     expect(html).not.toContain('on-scrim')
   })
 
@@ -44,6 +46,7 @@ describe("Summit's hero", () => {
     expect(html).not.toContain('summit-veil')
     expect(html).not.toContain('summit-pool')
     expect(html).toContain('text-on-surface-muted')
+    expect(html).toContain('text-on-surface/85')
   })
 
   it("underlines the bar's links under the pointer on a page with a photograph, never fades them", () => {
