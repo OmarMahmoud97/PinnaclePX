@@ -18,14 +18,24 @@ const LINE =
 
 // The menu wherever the bar does not show its links: the template's one piece of JavaScript. A
 // button that opens a panel under the header, holding the links, and the bar's button too below
-// md, where the bar does not show it. Escape closes and returns focus, a tap outside closes, and
-// choosing a link closes.
+// md, where the bar does not show it.
+//
+// Escape closes the panel and hands focus back to the menu button, and so does a press outside
+// it on nothing that takes focus. Choosing a link closes it and puts focus on the link's section
+// instead, so a keyboard user's next Tab goes on from there rather than from the top of the page
+// (decision 15, as refined on 2 October 2026). The panel follows the button, so the first Tab
+// after opening reaches the first link.
 export function NavMenu({ links, cta, hide }: Props) {
   const [open, setOpen] = useState(false)
   const rootRef = useRef<HTMLDivElement>(null)
   const buttonRef = useRef<HTMLButtonElement>(null)
-  const close = () => {
+  // The link still scrolls to its section; focus moves there without a second scroll.
+  const follow = (href: string) => {
     setOpen(false)
+    const target = href.startsWith('#') ? document.getElementById(href.slice(1)) : null
+    if (target === null) return
+    target.setAttribute('tabindex', '-1')
+    target.focus({ preventScroll: true })
   }
 
   useEffect(() => {
@@ -36,7 +46,14 @@ export function NavMenu({ links, cta, hide }: Props) {
       buttonRef.current?.focus()
     }
     const onPointer = (event: PointerEvent) => {
-      if (rootRef.current?.contains(event.target as Node) !== true) setOpen(false)
+      if (rootRef.current?.contains(event.target as Node) === true) return
+      setOpen(false)
+      // Once the press has moved focus where it goes: a link or a field pressed keeps it, and a
+      // press on nothing that takes focus hands it back to the menu button.
+      setTimeout(() => {
+        const active = document.activeElement
+        if (active === null || active === document.body) buttonRef.current?.focus()
+      }, 0)
     }
     document.addEventListener('keydown', onKey)
     document.addEventListener('pointerdown', onPointer)
@@ -76,7 +93,9 @@ export function NavMenu({ links, cta, hide }: Props) {
             <li key={link.href}>
               <a
                 href={link.href}
-                onClick={close}
+                onClick={() => {
+                  follow(link.href)
+                }}
                 className="block rounded-lg px-3 py-3 text-sm font-medium transition-colors duration-(--motion-tap) hover:bg-on-surface/6"
               >
                 {link.label}
@@ -84,7 +103,13 @@ export function NavMenu({ links, cta, hide }: Props) {
             </li>
           ))}
           <li className="pt-2 md:hidden">
-            <a href={cta.href} onClick={close} className={`${button.primary} w-full`}>
+            <a
+              href={cta.href}
+              onClick={() => {
+                follow(cta.href)
+              }}
+              className={`${button.primary} w-full`}
+            >
               {cta.label}
             </a>
           </li>
