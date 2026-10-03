@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import type { CSSProperties } from 'react'
 import type { EmberContent } from '../copy-slots'
+import { fitWord } from '../fit'
 import { delay, headerVeil, pill, veil } from '../styles'
 import { Stars } from './stars'
 
@@ -33,7 +34,9 @@ const INK = {
 // each solid where its words are and fading out beyond them. So every word, the header's included,
 // keeps a page colour and meets WCAG AA over any picture, a logo of either polarity stays visible,
 // and most of the photograph stays clear (decision 7, docs/template-fit-decisions.md). Without a
-// photograph the hero is the page surface and the words keep the source's colours.
+// photograph the hero is the page surface and the words keep the source's colours. The headline
+// is sized by its longest word (fit.ts), so a long word fits the screen whole rather than being
+// cut off at the hero's edge, which holds the veils in.
 export function EmberHero({ hero }: Props) {
   const { background } = hero
   const style: CSSProperties | undefined =
@@ -41,7 +44,7 @@ export function EmberHero({ hero }: Props) {
   const ink = background === null ? INK.surface : INK.picture
   return (
     <section
-      className="relative isolate flex min-h-screen flex-col items-center justify-center overflow-hidden bg-cover bg-center bg-no-repeat px-4 pt-20"
+      className="@container relative isolate flex min-h-screen flex-col items-center justify-center overflow-hidden bg-cover bg-center bg-no-repeat px-4 pt-20"
       style={style}
     >
       {background !== null && (
@@ -61,7 +64,10 @@ export function EmberHero({ hero }: Props) {
           <p className={`${ink.eyebrow} uppercase`}>{hero.eyebrow}</p>
         </div>
         <div data-rise>
-          <h1 className="mt-5 max-w-3xl text-center font-display text-5xl font-medium text-balance md:text-6xl">
+          <h1
+            className="mt-5 max-w-3xl text-center font-display text-[length:min(3rem,97cqi/var(--ember-word,1))] leading-none font-medium text-balance md:text-[length:min(3.75rem,97cqi/var(--ember-word,1))]"
+            style={fitWord(hero.headline)}
+          >
             {hero.headline}
           </h1>
         </div>
