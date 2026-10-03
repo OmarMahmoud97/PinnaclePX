@@ -58,15 +58,24 @@ async function ready(tab, url) {
   await prepareHiding(tab)
 }
 
-// The phone menu's toggle at the top of the page: a header button that says it is shut.
+// The phone menu's toggle at the top of the page: a header button that says it is shut. It is
+// held by a mark, not by its shut state: once open it no longer matches [aria-expanded="false"],
+// and a menu that Escape leaves open (Atlas's on main) must still be found to shut it.
 async function openMenu(tab) {
   const toggle = tab.locator(
     'header button[aria-expanded="false"], nav button[aria-expanded="false"]',
   )
   const count = await toggle.count()
   for (let i = 0; i < count; i += 1) {
-    const button = toggle.nth(i)
-    if (!(await button.isVisible())) continue
+    const candidate = toggle.nth(i)
+    if (!(await candidate.isVisible())) continue
+    await candidate.evaluate((el) => {
+      for (const old of document.querySelectorAll('[data-check-menu-toggle]')) {
+        old.removeAttribute('data-check-menu-toggle')
+      }
+      el.setAttribute('data-check-menu-toggle', '')
+    })
+    const button = tab.locator('[data-check-menu-toggle]')
     const id = await button.getAttribute('aria-controls')
     await button.click()
     await tab.waitForTimeout(500)
@@ -130,10 +139,16 @@ async function worst(browser, page, scheme) {
               })
             }
             if (menu !== null) {
+              // Shut it for the next width: Escape, else its button, else the page afresh.
               await tab.keyboard.press('Escape')
               await tab.waitForTimeout(300)
-              if ((await menu.button.getAttribute('aria-expanded')) === 'true')
-                await menu.button.click()
+              const expanded = () =>
+                menu.button.getAttribute('aria-expanded', { timeout: 2000 }).catch(() => null)
+              if ((await expanded()) === 'true') {
+                await menu.button.click({ timeout: 2000 }).catch(() => undefined)
+                await tab.waitForTimeout(300)
+              }
+              if ((await expanded()) !== 'false') await ready(tab, tab.url())
             }
           }
           keys.set(size.size, known)
