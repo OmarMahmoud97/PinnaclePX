@@ -84,8 +84,8 @@ async function worst(browser, page, scheme) {
     const keys = new Map()
     for (const pictures of ['white', 'black', 'none']) {
       const context = await contextFor(browser, sizes[0])
-      const tab = await context.newPage()
       try {
+        const tab = await context.newPage()
         await ready(
           tab,
           urlOf(options.base, page, {
@@ -139,7 +139,7 @@ async function worst(browser, page, scheme) {
           keys.set(size.size, known)
         }
       } finally {
-        await context.close()
+        await context.close().catch(() => undefined)
       }
     }
   }
@@ -210,8 +210,8 @@ async function overPicks(browser, page, picks, label) {
   const view = { look: page.answers.imagery.style, pictures: 'grey' }
   for (const sizes of groups) {
     const context = await contextFor(browser, sizes[0])
-    const tab = await context.newPage()
     try {
+      const tab = await context.newPage()
       await servePicks(tab, picks, page.thumbnails)
       await ready(tab, urlOf(options.base, page, view))
       for (const size of sizes) {
@@ -236,18 +236,24 @@ async function overPicks(browser, page, picks, label) {
         }
       }
     } finally {
-      await context.close()
+      await context.close().catch(() => undefined)
     }
   }
   return results
 }
 
-// The grey of a stand-in mark, as app/dev/_render/stand-in.ts draws it (CIE lightness to sRGB).
-function channelOf(lightness) {
-  const l = lightness * 100
-  const y = l > 8 ? ((l + 16) / 116) ** 3 : l / 903.3
-  const c = y <= 0.0031308 ? 12.92 * y : 1.055 * y ** (1 / 2.4) - 0.055
-  return Math.round(Math.min(1, Math.max(0, c)) * 255)
+// The grey of a stand-in mark, read from a pixel of the picture the development route serves
+// for it (app/dev/_render/stand-in.ts), so the measure and the page never disagree on it.
+const greys = new Map()
+async function greyOf(fill) {
+  if (!greys.has(fill)) {
+    const response = await fetch(`${options.base}/dev/picture/${fill}/1x1-probe.png`)
+    if (!response.ok) throw new Error(`/dev/picture/${fill}: ${String(response.status)}`)
+    const png = Buffer.from(await response.arrayBuffer())
+    const { data } = await sharp(png).removeAlpha().raw().toBuffer({ resolveWithObject: true })
+    greys.set(fill, data[0])
+  }
+  return greys.get(fill)
 }
 // Decision 23's marks and the scheme each gets: dark artwork on the light scheme, light on the
 // dark; dark artwork on the dark look waits for the plate (the preview chrome's pull request),
@@ -270,12 +276,12 @@ const MARKS = [
 async function logos(browser, page) {
   const results = []
   for (const mark of MARKS) {
-    const grey = channelOf(mark.l)
+    const grey = await greyOf(mark.fill)
     for (const sizes of groups) {
       for (const pictures of ['white', 'black', 'none']) {
         const context = await contextFor(browser, sizes[0])
-        const tab = await context.newPage()
         try {
+          const tab = await context.newPage()
           const view = {
             look: page.answers.imagery.style,
             scheme: mark.scheme,
@@ -320,7 +326,7 @@ async function logos(browser, page) {
             }
           }
         } finally {
-          await context.close()
+          await context.close().catch(() => undefined)
         }
       }
     }
@@ -334,7 +340,14 @@ let results = []
 const lines = []
 if (mode === 'worst') {
   const work = pages.flatMap((page) => schemes.map((scheme) => ({ page, scheme })))
-  results = (await inPool(work, jobs, ({ page, scheme }) => worst(browser, page, scheme))).flat()
+  results = (
+    await inPool(
+      work,
+      jobs,
+      ({ page, scheme }) => worst(browser, page, scheme),
+      ({ page, scheme }) => `${page.label} ${scheme}`,
+    )
+  ).flat()
   const fails = results.filter((r) => r.worst !== null && r.worst < r.level)
   lines.push(
     `Words over a picture, worst case: ${String(pages.length)} pages (${options.source}), schemes ${schemes.join(',')}, ${String(options.sizes.length)} sizes; ${String(results.length)} item measurements, ${String(fails.length)} below their level.`,
@@ -388,7 +401,12 @@ if (mode === 'worst') {
             }))
           })
   results = (
-    await inPool(work, jobs, ({ page, picks, label }) => overPicks(browser, page, picks, label))
+    await inPool(
+      work,
+      jobs,
+      ({ page, picks, label }) => overPicks(browser, page, picks, label),
+      ({ page, label }) => `${page.label} ${label}`,
+    )
   ).flat()
   const pairs = new Set(results.map((r) => `${r.page} ${r.templateId} ${r.label}`))
   const failingPairs = new Set(
@@ -411,7 +429,14 @@ if (mode === 'worst') {
   }
 } else if (mode === 'logos') {
   const firsts = [...new Map(pages.map((p) => [p.templateId, p])).values()]
-  results = (await inPool(firsts, jobs, (page) => logos(browser, page))).flat()
+  results = (
+    await inPool(
+      firsts,
+      jobs,
+      (page) => logos(browser, page),
+      (page) => page.label,
+    )
+  ).flat()
   lines.push(
     `Stand-in logos (decision 23): ${String(firsts.length)} templates, one page each; pass at 3:1 over every pixel of the mark's box.`,
   )
