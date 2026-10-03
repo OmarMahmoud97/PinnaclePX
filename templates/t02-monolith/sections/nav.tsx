@@ -53,17 +53,21 @@ function twoLines(name: string): number {
 // onto three lines and cut at the top, and long labels ran past the screen. Here the links and
 // the button show from the first of md, lg, xl and 2xl whose row holds them on one line beside
 // the wordmark (BARS), and the toggle serves every screen below that, or every screen when none
-// does. The wordmark may wrap, and the bar grows rather than cut it.
+// does. The wordmark may wrap, and the bar grows rather than cut it. Below md, where only the
+// toggle stands beside it, an image logo keeps 4px from it, so a mark eight times as wide as it
+// is tall keeps its full size on a 320px phone, as in the source; a wider one is drawn smaller
+// at its own shape (logo.tsx).
 export function MonolithNav({ brand, nav }: Props) {
   const width = barWidth({ brand, nav })
   const bar = BARS.find((option) => width <= option.room)
   const show = bar?.show ?? ''
   const hide = bar?.hide ?? ''
+  const gap = brand.logo.kind === 'image' ? 'gap-1 md:gap-6' : 'gap-6'
   return (
     <header className="sticky top-0 z-40 w-full border-b border-border bg-surface">
       <div className="relative z-10 mx-auto flex flex-1 items-center justify-center">
         <div
-          className={`${container} flex min-h-14 w-screen items-center justify-between gap-6 px-4`}
+          className={`${container} flex min-h-14 w-screen items-center justify-between ${gap} px-4`}
         >
           <div className="flex min-w-0 font-bold">
             <a href="#top" className="ml-2 flex min-w-0 text-xl font-bold">

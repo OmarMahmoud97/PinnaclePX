@@ -1,16 +1,18 @@
 import { renderToStaticMarkup } from 'react-dom/server'
+import type { TemplateLogo } from '@/lib/copy-slots/assets'
 import { fallbackBrief } from '@/lib/copy-slots/brief'
 import { assembleMonolith, monolithFallbackCopy, type MonolithCopy } from './contract'
 import { Monolith } from './index'
 
 // The page as a visitor's would render with no pictures: the fallback copy, assembled the way
-// the preview assembles it, drawn to markup. The copy may be changed first.
+// the preview assembles it, drawn to markup. The copy may be changed first, and the logo given.
 function page(
   email: string | null,
   change: (copy: MonolithCopy) => MonolithCopy = (copy) => copy,
+  logo: TemplateLogo = { kind: 'wordmark' },
 ): string {
   const copy = change(monolithFallbackCopy(fallbackBrief('Kestrel', 'Job scheduling for trades.')))
-  const content = assembleMonolith(copy, { logo: { kind: 'wordmark' }, images: {}, email })
+  const content = assembleMonolith(copy, { logo, images: {}, email })
   return renderToStaticMarkup(<Monolith content={content} />)
 }
 
@@ -111,5 +113,23 @@ describe('the Monolith footer', () => {
       /<h3 class="[^"]*97cqi[^"]*" style="--monolith-word:8\.35">Northumberland/,
     )
     expect(columns(page(null, heading('End-Of-Tenancy')))).toContain('grid-cols-2')
+  })
+})
+
+describe('an image logo', () => {
+  const logo: TemplateLogo = {
+    kind: 'image',
+    src: 'https://example.public.blob.vercel-storage.com/logo.png',
+    alt: 'Kestrel',
+    width: 800,
+    height: 100,
+  }
+
+  it('is drawn at its own shape wherever it is narrowed', () => {
+    const marks = [
+      ...page(null, undefined, logo).matchAll(/<img alt="Kestrel"[^>]*class="([^"]*)"/g),
+    ]
+    expect(marks.length).toBeGreaterThan(0)
+    for (const mark of marks) expect(mark[1]).toContain('object-contain')
   })
 })
