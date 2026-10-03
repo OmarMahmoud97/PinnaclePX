@@ -4,16 +4,23 @@ import { useEffect, useRef, useState } from 'react'
 import type { AuroraLink } from '../copy-slots'
 import { button } from '../styles'
 
-type Props = { links: readonly AuroraLink[]; cta: AuroraLink }
+type Props = {
+  links: readonly AuroraLink[]
+  cta: AuroraLink
+  // The class that hides the menu's button from the width where the bar shows its links (nav.tsx).
+  hide: string
+}
 
 const PANEL_ID = 'aurora-menu'
 
 const LINE =
   'absolute h-0.5 w-4 bg-on-surface transition-transform duration-(--motion-enter) ease-standard'
 
-// The phone menu: the template's one piece of JavaScript. A button that opens a panel under the
-// header; Escape closes and returns focus, a tap outside closes, and choosing a link closes.
-export function NavMenu({ links, cta }: Props) {
+// The menu wherever the bar does not show its links: the template's one piece of JavaScript. A
+// button that opens a panel under the header, holding the links, and the bar's button too below
+// md, where the bar does not show it. Escape closes and returns focus, a tap outside closes, and
+// choosing a link closes.
+export function NavMenu({ links, cta, hide }: Props) {
   const [open, setOpen] = useState(false)
   const rootRef = useRef<HTMLDivElement>(null)
   const buttonRef = useRef<HTMLButtonElement>(null)
@@ -40,7 +47,7 @@ export function NavMenu({ links, cta }: Props) {
   }, [open])
 
   return (
-    <div ref={rootRef} className="md:hidden">
+    <div ref={rootRef} className={hide}>
       <button
         ref={buttonRef}
         type="button"
@@ -62,7 +69,7 @@ export function NavMenu({ links, cta }: Props) {
         id={PANEL_ID}
         aria-label="Mobile"
         hidden={!open}
-        className="absolute inset-x-0 top-16 border-b border-border bg-surface px-6 py-4 transition-[opacity,translate] duration-(--motion-enter) ease-enter starting:-translate-y-2 starting:opacity-0"
+        className="absolute inset-x-0 top-full border-b border-border bg-surface px-6 py-4 transition-[opacity,translate] duration-(--motion-enter) ease-enter md:px-10 starting:-translate-y-2 starting:opacity-0"
       >
         <ul className="flex flex-col gap-1">
           {links.map((link) => (
@@ -76,7 +83,7 @@ export function NavMenu({ links, cta }: Props) {
               </a>
             </li>
           ))}
-          <li className="pt-2">
+          <li className="pt-2 md:hidden">
             <a href={cta.href} onClick={close} className={`${button.primary} w-full`}>
               {cta.label}
             </a>
