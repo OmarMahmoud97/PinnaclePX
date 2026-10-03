@@ -13,11 +13,12 @@ type Props = Pick<HarborContent, 'metrics'>
 // stands. The cells rise in turn as they arrive. The source's two columns, three from md, cut
 // a phrase off on a phone and a tablet; here a cell has the row to itself on a phone, two
 // share it from md (a lone last cell taking the whole row, so no empty slot shows the hairline
-// fill) and three once the container is at its full width, and the padding grows with the
-// room. The figures share one size, the source's text-5xl, smaller with the screen below about
-// 530px, and smaller again where the longest of them would not fit its cell (fit.ts), so no
-// word is cut off or broken. Its anchor is #highlights, as a visitor's band holds phrases
-// rather than figures.
+// fill) and three from lg, as the source's sat on a laptop, and the padding grows with the
+// room. The figures share one size across the band: the source's text-5xl, or smaller where
+// the longest of them would not fit one column (fit.ts), so no word is cut off or broken. The
+// grid is the @container and the size is worked out from one column's width at each
+// breakpoint, so a lone cell that spans the row keeps its neighbours' size. Its anchor is
+// #highlights, as a visitor's band holds phrases rather than figures.
 export function HarborMetrics({ metrics }: Props) {
   return (
     <section
@@ -44,7 +45,7 @@ export function HarborMetrics({ metrics }: Props) {
           </div>
         </div>
         <div
-          className="grid grid-cols-1 gap-px overflow-hidden rounded-2xl border border-border bg-border md:grid-cols-2 min-[90rem]:grid-cols-3"
+          className="@container grid grid-cols-1 gap-px overflow-hidden rounded-2xl border border-border bg-border md:grid-cols-2 lg:grid-cols-3"
           style={fitWord(
             metrics.items.map((item) => item.value),
             false,
@@ -56,11 +57,11 @@ export function HarborMetrics({ metrics }: Props) {
               data-fade
               data-margin="-40px"
               style={motion(0.1 * index, '20px', 0.5, 'out')}
-              className="group @container bg-surface p-8 transition-colors duration-300 hover:bg-accent md:last:odd:col-span-2 lg:p-12 min-[90rem]:last:odd:col-span-1"
+              className="group bg-surface p-8 transition-colors duration-300 hover:bg-accent md:last:odd:col-span-2 lg:p-12 lg:last:odd:col-span-1"
             >
               <HarborCount
                 value={item.value}
-                className="mb-2 block origin-left text-[length:min(clamp(1.75rem,9vw,3rem),97cqi/var(--harbor-word,1))] leading-none font-black wrap-break-word text-brand-deeper transition-transform duration-300 group-hover:scale-105"
+                className="mb-2 block origin-left text-[length:min(3rem,(100cqi_-_4rem)*0.97/var(--harbor-word,1))] leading-none font-black wrap-break-word text-brand-deeper transition-transform duration-300 group-hover:scale-105 md:text-[length:min(3rem,((100cqi_-_1px)/2_-_4rem)*0.97/var(--harbor-word,1))] lg:text-[length:min(3rem,((100cqi_-_2px)/3_-_6rem)*0.97/var(--harbor-word,1))]"
               />
               <p className="mb-1 font-display text-base font-bold tracking-wide text-on-surface uppercase">
                 {item.label}
