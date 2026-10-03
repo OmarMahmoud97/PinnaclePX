@@ -52,6 +52,15 @@ function twoLines(name: string): number {
   return narrowest
 }
 
+// The overlay's links share one size: the source's text-3xl, or what lets the longest word of
+// any label, tracked as the links are (0.1em a letter), fit the screen less the page's padding,
+// so a long one-word label stays on the screen in any look's faces.
+function menuWord(nav: Props['nav']): CSSProperties {
+  const words = nav.links.flatMap((link) => link.label.split(/\s+/))
+  const ems = Math.max(1, ...words.map((word) => textEms(word) + 0.1 * word.length))
+  return { '--harbor-word': ems.toFixed(2) } as CSSProperties
+}
+
 // The source's Navbar: a fixed bar with the logo at the left, the links in the middle and the
 // round accent button at the right from md, and below md a toggle that opens a full-screen
 // overlay of the links stacked in the centre with the button under them. The source dropped
@@ -221,7 +230,8 @@ export function HarborNav({ brand, nav }: Props) {
       {open && (
         <div
           id={PANEL_ID}
-          className={`fixed inset-0 z-40 flex flex-col items-center justify-center gap-8 bg-surface transition-[opacity,translate] duration-[250ms] starting:-translate-y-5 starting:opacity-0 ${hide} ${closing ? '-translate-y-5 opacity-0' : ''}`}
+          className={`@container fixed inset-0 z-40 flex flex-col items-center justify-center gap-8 bg-surface transition-[opacity,translate] duration-[250ms] starting:-translate-y-5 starting:opacity-0 ${hide} ${closing ? '-translate-y-5 opacity-0' : ''}`}
+          style={menuWord(nav)}
         >
           <button
             type="button"
@@ -241,7 +251,7 @@ export function HarborNav({ brand, nav }: Props) {
               <a
                 href={link.href}
                 onClick={follow}
-                className="font-display text-3xl font-black tracking-widest text-on-surface uppercase transition-colors hover:text-brand-deeper"
+                className="font-display text-[length:min(1.875rem,(100cqi_-_4rem)*0.97/var(--harbor-word,1))] leading-[1.2] font-black tracking-widest text-on-surface uppercase transition-colors hover:text-brand-deeper"
               >
                 {link.label}
               </a>
