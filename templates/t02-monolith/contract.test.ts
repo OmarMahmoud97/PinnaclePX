@@ -63,6 +63,14 @@ describe('monolithFallbackCopy', () => {
       'You hear from us',
     ])
     expect(copy.hero.cards.profile.role).toBe('In our own words')
+    expect(copy.hero.cards.quote.role).toBe('Why we do this')
+  })
+
+  it('labels the quote "What we do" when the brief fell back too, since it is the visitor\'s own words', () => {
+    const copy = monolithFallbackCopy(
+      fallbackBrief('Kestrel', 'Job scheduling for trades businesses.'),
+    )
+    expect(copy.hero.cards.quote.role).toBe('What we do')
   })
 
   it('never colours a word it did not choose', () => {

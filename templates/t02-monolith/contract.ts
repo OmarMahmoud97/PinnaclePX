@@ -352,6 +352,8 @@ export function monolithFallbackCopy(brief: BrandBrief): MonolithCopy {
   const name = brief.company
   const positioning = brief.positioning
   const statement = brief.statement === '' ? positioning : brief.statement
+  // A fallback brief has no audience, and its statement is the visitor's own words on what they do.
+  const quoteRole = brief.audience === '' ? 'What we do' : 'Why we do this'
   const cta = label('cta.primary.label', brief.ctaLabel, 'Get in touch')
   const props = brief.valueProps
   const steps = brief.steps
@@ -380,7 +382,7 @@ export function monolithFallbackCopy(brief: BrandBrief): MonolithCopy {
       primary: cta,
       secondary: 'See how it works',
       cards: {
-        quote: { text: prose('hero.cards.quote.text', statement), role: 'Why we do this' },
+        quote: { text: prose('hero.cards.quote.text', statement), role: quoteRole },
         profile: {
           role: label('hero.cards.profile.role', brief.audience, 'In our own words'),
           body: 'Ask us anything. There is no obligation.',
