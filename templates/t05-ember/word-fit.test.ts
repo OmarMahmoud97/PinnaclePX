@@ -1,7 +1,7 @@
-import { fitWord, longestWord, textEms } from './fit'
+import { fitWord, longestWord, textEms } from './word-fit'
 
-// The tables Ember's long words are sized by (fit.ts): a word's width in ems, never less than the
-// widest of the looks' faces sets it.
+// The tables Ember's long words are sized by (word-fit.ts): a word's width in ems, never less
+// than the widest of the looks' faces sets it.
 describe('the Ember fit', () => {
   it('adds up a word from its characters, the widest for any it does not list', () => {
     expect(textEms('Mm', 'body')).toBeCloseTo(0.91 + 0.93)

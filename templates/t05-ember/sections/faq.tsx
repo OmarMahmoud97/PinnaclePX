@@ -1,6 +1,6 @@
 import { Plus, X } from 'lucide-react'
 import type { EmberContent } from '../copy-slots'
-import { fitWord } from '../fit'
+import { fitWord } from '../word-fit'
 import { anchored, delay, eyebrow, heading, pad } from '../styles'
 
 type Props = Pick<EmberContent, 'faq'>

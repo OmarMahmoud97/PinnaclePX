@@ -1,5 +1,5 @@
 import type { EmberContent } from '../copy-slots'
-import { fitWord } from '../fit'
+import { fitWord } from '../word-fit'
 import { delay, pad } from '../styles'
 
 type Props = Pick<EmberContent, 'stats'>

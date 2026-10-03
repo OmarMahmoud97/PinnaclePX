@@ -1,7 +1,7 @@
 import { ArrowRight } from 'lucide-react'
 import Image from 'next/image'
 import type { EmberContent, EmberImage } from '../copy-slots'
-import { fitWord } from '../fit'
+import { fitWord } from '../word-fit'
 import { anchored, delay } from '../styles'
 
 type Props = Pick<EmberContent, 'cta'> & { pictures: readonly (EmberImage | null)[] }
