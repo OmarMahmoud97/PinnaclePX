@@ -227,7 +227,7 @@ export function auroraFallbackCopy(brief: BrandBrief): AuroraCopy {
       secondary: 'See how it works',
       reassurance: 'Ask us anything. There is no obligation.',
       frame: {
-        title: 'Overview',
+        title: 'What we do',
         rows: plainTitles.map((plain, index) =>
           fitToSlot(props[index]?.title ?? plain, AURORA_SLOTS['hero.frame.rows[]'], ['in detail']),
         ),

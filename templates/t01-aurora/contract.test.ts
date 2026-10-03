@@ -53,6 +53,11 @@ describe('auroraFallbackCopy', () => {
     expect(copy.features.items[2]?.title).toBe('Get paid')
   })
 
+  it("heads the hero's panel with what the business does, not a software word", () => {
+    const copy = auroraFallbackCopy(fallbackBrief('Kestrel', 'Job scheduling for trades.'))
+    expect(copy.hero.frame.title).toBe('What we do')
+  })
+
   it("uses the visitor's words in the prose slots", () => {
     const copy = auroraFallbackCopy(
       fallbackBrief('Ashgrove Physio', 'Physiotherapy clinic in Sheffield. Sports injuries.'),
