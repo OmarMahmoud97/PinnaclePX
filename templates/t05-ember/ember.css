@@ -77,6 +77,12 @@
   }
 }
 
+/* A block that took focus from a link chosen in the phone menu (nav.tsx) is not a control, and a
+ * ring around the whole block would only frame the screen, so it draws none. */
+.ember [tabindex='-1']:focus {
+  outline: none;
+}
+
 @keyframes ember-fade-up {
   from {
     opacity: 0;
