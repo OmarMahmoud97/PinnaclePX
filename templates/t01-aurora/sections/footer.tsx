@@ -10,8 +10,9 @@ type Props = Pick<AuroraContent, 'brand' | 'footer'> & { credits: readonly Credi
 // Read once at load, outside render, so the line never differs between two renders.
 const YEAR = new Date().getFullYear()
 
-// The brand block and up to two link groups, then the legal line and the photographers' credit
-// with the Pexels link the licence asks for.
+// The brand block and up to two link groups, then the legal line, whose name breaks inside a word
+// only when the word alone is wider than a phone, and the photographers' credit with the Pexels
+// link the licence asks for.
 export function AuroraFooter({ brand, footer, credits }: Props) {
   return (
     <footer className="border-t border-border">
@@ -44,7 +45,7 @@ export function AuroraFooter({ brand, footer, credits }: Props) {
       <div
         className={`${container} flex flex-col gap-2 border-t border-border py-6 text-small text-on-surface-muted md:flex-row md:items-center md:justify-between`}
       >
-        <p>
+        <p className="wrap-anywhere">
           © {YEAR} {brand.legalName}
         </p>
         {credits.length > 0 && (
