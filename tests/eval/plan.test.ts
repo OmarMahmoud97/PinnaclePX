@@ -1,5 +1,14 @@
 import type { SubmissionAnswers } from '@/lib/brief/submission'
-import { copyTargets, maxUsdOf, namedTemplates, reusedFor, runLimited, spendStop } from './plan'
+import {
+  copyRunOf,
+  copyTargets,
+  maxUsdOf,
+  namedTemplates,
+  reusedFor,
+  runLimited,
+  spendStop,
+  splitByRecord,
+} from './plan'
 import { summarise } from './summary'
 
 // The eval's two limits, proved without a call (decision 10, docs/template-fit-decisions.md):
@@ -136,6 +145,20 @@ describe('the summary of a limited run', () => {
     )
     expect(summarise('old', []).markdown).toContain('Spend stop: none recorded')
   })
+
+  it('names the fixtures set aside for want of a record to build on', () => {
+    const { markdown } = summarise('pass-1', [], {
+      templates: ['t02-monolith', 't08-vector'],
+      maxUsd: 0.65,
+      spent: 0.5,
+      concurrency: 2,
+      notStarted: [],
+      noRecord: ['app-pharmacy', 'no-trade'],
+    })
+    expect(markdown).toContain(
+      'Not run, with no record in the reused run to build on: app-pharmacy, no-trade.',
+    )
+  })
 })
 
 describe('reusing a stored run', () => {
@@ -167,5 +190,38 @@ describe('reusing a stored run', () => {
   it('takes nothing for another business', () => {
     const other = { ...pottery(3), company: 'Weir Lane Ceramics' }
     expect(reusedFor({ id: 'own-photos-3', answers: other }, stored)).toBeNull()
+  })
+
+  it('sets aside, before any call, the fixtures the reused run cannot carry', () => {
+    // Pass 1 on l6: a new fixture has no record there, a photograph variant has its sibling's.
+    const fixture = (id: string, answers: SubmissionAnswers) => ({
+      id,
+      templates: ['t02-monolith'],
+      fixture: { id, answers },
+    })
+    const pharmacy = { ...pottery(0), company: 'Benchrota' }
+    const targets = [
+      fixture('joinery', stored[0]?.answers ?? pottery(0)),
+      fixture('app-pharmacy', pharmacy),
+      fixture('own-photos-6', pottery(6)),
+    ]
+    const { kept, dropped } = splitByRecord(targets, stored)
+    expect(kept.map((t) => t.id)).toEqual(['joinery', 'own-photos-6'])
+    expect(dropped.map((t) => t.id)).toEqual(['app-pharmacy'])
+  })
+
+  it('gives a photograph variant the copy run of the first of its business', () => {
+    const runs = copyRunOf([
+      { id: 'joinery', answers: { ...pottery(0), company: 'Hollin Lane Joinery' } },
+      { id: 'own-photos-1', answers: pottery(1) },
+      { id: 'own-photos-3', answers: pottery(3) },
+      { id: 'own-photos-6', answers: pottery(6) },
+    ])
+    expect(Object.fromEntries(runs)).toEqual({
+      joinery: 'joinery',
+      'own-photos-1': 'own-photos-1',
+      'own-photos-3': 'own-photos-1',
+      'own-photos-6': 'own-photos-1',
+    })
   })
 })

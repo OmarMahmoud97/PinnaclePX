@@ -53,6 +53,9 @@ export type RunFacts = Readonly<{
   spent: number
   concurrency: number
   notStarted: readonly string[]
+  // Fixtures set aside before the first call: the run skipped the brief stage and the reused run
+  // held no record of theirs to build on (plan.ts, splitByRecord).
+  noRecord?: readonly string[]
 }>
 
 export type PoolRecord = {

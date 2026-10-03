@@ -199,10 +199,16 @@ function violationsOf(attempt: CopyAttempt): readonly JudgedViolation[] {
 // submission would; the spend here is what this run itself paid.
 function runLine(facts: RunFacts | null): string {
   if (facts === null) return 'Spend stop: none recorded (the run has no _run.json).'
-  const written =
+  const noRecord = facts.noRecord ?? []
+  const written = `${
     facts.templates === null
       ? ''
       : `Copy written for EVAL_TEMPLATES only: ${facts.templates.join(', ')}. `
+  }${
+    noRecord.length === 0
+      ? ''
+      : `Not run, with no record in the reused run to build on: ${noRecord.join(', ')}. `
+  }`
   if (facts.maxUsd === null) {
     return `${written}Spend stop: none (EVAL_MAX_USD unset). This run spent ${usd(facts.spent)}.`
   }

@@ -13,7 +13,12 @@
 //                             other photographs, and its templates (decision 11)
 //   EVAL_TEMPLATES=a,b        write copy only for these templates, on the fixtures they were
 //                             chosen for; the briefs and pictures come from EVAL_REUSE_RUN, which
-//                             it needs, so a pass on one template's guide pays for its copy alone
+//                             it needs, so a pass on one template's guide pays for its copy alone.
+//                             A run that skips the brief stage (this one, or EVAL_STAGES without
+//                             brief) leaves out, before any call, every fixture with no record in
+//                             EVAL_REUSE_RUN to build on, and says which: paid passes 1 to 3 run
+//                             on l6-all-fixes, so they write copy for the twenty fixtures l6
+//                             holds, never decision 11's four, which wait for pass 4
 //   EVAL_MAX_USD=1.78         the spend stop: no new fixture starts once the calls this run has
 //                             made reach this priced cost. Fixtures already started run to their
 //                             end, so a run can pass the cap by up to EVAL_CONCURRENCY fixtures
@@ -44,12 +49,14 @@ import { contractFor, READY_TEMPLATES, TEMPLATES } from '@/templates/registry'
 import { copyAttemptOf, notebook, usageOf } from './notes'
 import {
   type Choice,
+  copyRunOf,
   copyTargets,
   maxUsdOf,
   namedTemplates,
   reusedFor,
   runLimited,
   spendStop,
+  splitByRecord,
 } from './plan'
 import { costOf, summarise } from './summary'
 import type { FixtureRecord, PoolRecord, RunFacts } from './types'
@@ -101,6 +108,9 @@ if (env.templates !== null && env.reuse === null) {
 if (env.templates !== null && env.stages.join() !== 'copy') {
   throw new Error('EVAL_TEMPLATES writes copy only; leave EVAL_STAGES unset or set it to copy')
 }
+if (!env.stages.includes('brief') && env.reuse === null && env.summarise === null) {
+  throw new Error('EVAL_STAGES leaves out brief, so it builds on EVAL_REUSE_RUN; set it')
+}
 
 function loadFixtures(): Fixture[] {
   const parsed = fixturesFileSchema.parse(JSON.parse(readFileSync(FIXTURES_FILE, 'utf8')))
@@ -126,10 +136,17 @@ function templatesFor(fixture: Fixture): { templates: string[]; seed: string } {
   return { templates, seed }
 }
 
-function coverage(fixtures: readonly Fixture[]): Record<string, number> {
+// How many fixtures' pages each template gets. As the runs are designed (shared), a variant of
+// an earlier fixture's business carries that fixture's templates, since it reuses its copy run
+// (decision 11's own photographs: one copy run, the others re-run only the rank stage); with
+// each fixture's own pick instead (own), as a run that wrote copy for every variant would.
+function coverage(fixtures: readonly Fixture[], how: 'shared' | 'own'): Record<string, number> {
   const counts: Record<string, number> = Object.fromEntries(READY_TEMPLATES.map((t) => [t.id, 0]))
+  const runOf = copyRunOf(fixtures)
+  const byId = new Map(fixtures.map((f) => [f.id, f]))
   for (const fixture of fixtures) {
-    for (const id of templatesFor(fixture).templates) counts[id] = (counts[id] ?? 0) + 1
+    const carried = how === 'own' ? fixture : (byId.get(runOf.get(fixture.id) ?? '') ?? fixture)
+    for (const id of templatesFor(carried).templates) counts[id] = (counts[id] ?? 0) + 1
   }
   return counts
 }
@@ -400,11 +417,6 @@ async function rankStage(
   return { pools: settled, assignment, empty, repeated, ms: Date.now() - begun }
 }
 
-function readRecord(run: string, id: string): FixtureRecord | null {
-  const file = join(RESULTS, run, `${id}.json`)
-  return existsSync(file) ? (JSON.parse(readFileSync(file, 'utf8')) as FixtureRecord) : null
-}
-
 // Every fixture record of a run, read once.
 const runRecords = new Map<string, FixtureRecord[]>()
 function recordsOf(run: string): FixtureRecord[] {
@@ -469,26 +481,32 @@ async function runFixture(fixture: Fixture, write: readonly string[]): Promise<F
   }
 }
 
+type Target = Choice & { fixture: Fixture }
+
 // The fixtures to run and the templates each writes copy for, by EVAL_FIXTURES and
-// EVAL_TEMPLATES.
-function targetsOf(fixtures: readonly Fixture[]): (Choice & { fixture: Fixture })[] {
+// EVAL_TEMPLATES. A run that skips the brief stage builds on EVAL_REUSE_RUN's records, so each
+// fixture with none there to build on (its own or a variant's) is set aside here, before any
+// call (plan.ts, splitByRecord), and both lists are said.
+function targetsOf(fixtures: readonly Fixture[]): { kept: Target[]; dropped: Target[] } {
   const byId = new Map(fixtures.map((f) => [f.id, f]))
-  return copyTargets(
+  const all = copyTargets(
     fixtures.map((f) => ({ id: f.id, templates: templatesFor(f).templates })),
     env.templates,
   ).flatMap((target) => {
     const fixture = byId.get(target.id)
     return fixture === undefined ? [] : [{ ...target, fixture }]
   })
+  if (env.stages.includes('brief') || env.reuse === null) return { kept: all, dropped: [] }
+  return splitByRecord(all, recordsOf(env.reuse))
 }
 
 // What the reused run paid for the same answers: a fair guess at what writing them again costs.
-function estimateOf(targets: readonly Choice[]): { usd: number; unknown: string[] } | null {
+function estimateOf(targets: readonly Target[]): { usd: number; unknown: string[] } | null {
   if (env.reuse === null) return null
   let usd = 0
   const unknown: string[] = []
   for (const target of targets) {
-    const reused = readRecord(env.reuse, target.id)
+    const reused = reusedFor(target.fixture, recordsOf(env.reuse))
     for (const id of target.templates) {
       const attempts = reused?.copy[id]?.attempts
       if (attempts === undefined) unknown.push(`${target.id}/${id}`)
@@ -523,9 +541,10 @@ test('the fixtures are valid and every ready template is chosen by at least five
     expect(fixture.answers.company.length, `${fixture.id} company`).toBeLessThanOrEqual(80)
     briefSchema.parse(fallbackBrief(fixture.answers.company, fixture.answers.description))
   }
-  const mix = coverage(fixtures)
+  const mix = coverage(fixtures, 'shared')
   const styles = fixtures.map((f) => f.answers.imagery.style)
-  const targets = targetsOf(fixtures)
+  const { kept: targets, dropped } = targetsOf(fixtures)
+  const runOf = copyRunOf(fixtures)
   console.log(
     JSON.stringify(
       {
@@ -535,7 +554,14 @@ test('the fixtures are valid and every ready template is chosen by at least five
           ['warm', 'minimal', 'bold', 'dark'].map((s) => [s, styles.filter((x) => x === s).length]),
         ),
         templates: Object.fromEntries(fixtures.map((f) => [f.id, templatesFor(f).templates])),
+        // Each template's fixtures as the runs are designed: a photograph variant carries the
+        // templates of the fixture whose copy run it reuses (sharesCopyWith); and with every
+        // fixture's own pick, as a run writing copy for each variant would have it.
         coverage: mix,
+        coverageOwnPicks: coverage(fixtures, 'own'),
+        sharesCopyWith: Object.fromEntries(
+          fixtures.flatMap((f) => (runOf.get(f.id) === f.id ? [] : [[f.id, runOf.get(f.id)]])),
+        ),
         // What a run with these switches would do: the copy it would write, by fixture, and
         // what the reused run paid for the same answers; and the spend stop.
         run: {
@@ -544,6 +570,8 @@ test('the fixtures are valid and every ready template is chosen by at least five
           copy: Object.fromEntries(targets.map((t) => [t.id, t.templates])),
           answers: targets.reduce((n, t) => n + t.templates.length, 0),
           notRun: fixtures.filter((f) => !targets.some((t) => t.id === f.id)).map((f) => f.id),
+          // Of those, the fixtures set aside for want of a record in the reused run.
+          noRecord: dropped.map((t) => t.id),
           estimate: env.templates === null ? null : estimateOf(targets),
           // A fixture with no record of its own in the reused run, and the variant it reuses.
           reuses:
@@ -563,12 +591,12 @@ test('the fixtures are valid and every ready template is chosen by at least five
       1,
     ),
   )
-  // Named templates write copy on the reused run's briefs and pictures, so each fixture they
-  // write must be in it.
-  if (env.templates !== null && env.reuse !== null) {
-    const reuse = env.reuse
+  // A run that skips the brief stage builds on the reused run, so each fixture it keeps must
+  // have a record there; the rest were set aside above.
+  if (!env.stages.includes('brief') && env.reuse !== null) {
+    const records = recordsOf(env.reuse)
     for (const target of targets) {
-      expect(readRecord(reuse, target.id), `${reuse} has no ${target.id}.json`).not.toBeNull()
+      expect(reusedFor(target.fixture, records), `${env.reuse} lacks ${target.id}`).not.toBeNull()
     }
   }
   if (env.fixtures === null) {
@@ -581,14 +609,19 @@ test('the fixtures are valid and every ready template is chosen by at least five
 test.skipIf(env.plan || env.summarise !== null)(
   'run the model stages over the fixtures',
   async () => {
-    const targets = targetsOf(loadFixtures())
+    // Every fixture is checked against the reused run before the first call, so a fixture with
+    // nothing to build on is set aside here and never stops a paid run part-way.
+    const { kept: targets, dropped } = targetsOf(loadFixtures())
     const dir = join(RESULTS, env.run)
     mkdirSync(dir, { recursive: true })
     console.log(
       `run ${env.run}: ${String(targets.length)} fixtures, stages ${env.stages.join('+')}` +
         (env.reuse === null ? '' : `, the rest from ${env.reuse}`) +
         (env.templates === null ? '' : `, copy for ${env.templates.join(', ')} only`) +
-        (env.maxUsd === null ? '' : `, stopping at $${env.maxUsd.toFixed(2)}`),
+        (env.maxUsd === null ? '' : `, stopping at $${env.maxUsd.toFixed(2)}`) +
+        (dropped.length === 0
+          ? ''
+          : `; not run, no record in ${env.reuse ?? ''}: ${dropped.map((t) => t.id).join(', ')}`),
     )
     const { notStarted } = await runLimited(
       targets,
@@ -609,6 +642,7 @@ test.skipIf(env.plan || env.summarise !== null)(
       spent: stop.spent(),
       concurrency: env.concurrency,
       notStarted: notStarted.map((target) => target.id),
+      noRecord: dropped.map((target) => target.id),
     }
     writeFileSync(join(dir, '_run.json'), JSON.stringify(facts, null, 2))
     writeSummary(env.run)

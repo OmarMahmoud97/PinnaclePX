@@ -96,17 +96,51 @@ export async function runLimited<T, R>(
   return { results, notStarted }
 }
 
+type Answered = Readonly<{ id: string; answers: SubmissionAnswers }>
+
+// A business as its answers make it, the photographs left out: decision 11's own-photograph
+// variants are one business.
+const businessOf = (answers: SubmissionAnswers) =>
+  JSON.stringify({ ...answers, imagery: { ...answers.imagery, photos: [] } })
+
 // The record a fixture reuses from EVAL_REUSE_RUN: its own, else a variant's, one written for
 // the same business with other photographs (every answer the same but the photographs).
 // Decision 11's own-photograph variants share one copy run this way: one is written in full,
 // and the others re-run only the rank stage on its brief, templates and copy.
-export function reusedFor<T extends Readonly<{ id: string; answers: SubmissionAnswers }>>(
-  fixture: Readonly<{ id: string; answers: SubmissionAnswers }>,
-  records: readonly T[],
-): T | null {
+export function reusedFor<T extends Answered>(fixture: Answered, records: readonly T[]): T | null {
   const own = records.find((record) => record.id === fixture.id)
   if (own !== undefined) return own
-  const business = (answers: SubmissionAnswers) =>
-    JSON.stringify({ ...answers, imagery: { ...answers.imagery, photos: [] } })
-  return records.find((record) => business(record.answers) === business(fixture.answers)) ?? null
+  return (
+    records.find((record) => businessOf(record.answers) === businessOf(fixture.answers)) ?? null
+  )
+}
+
+// The fixture whose copy run each fixture's pages carry, by id: its own, or, for a variant of a
+// business an earlier fixture holds, that first fixture's, whose templates and copy it reuses.
+export function copyRunOf(fixtures: readonly Answered[]): ReadonlyMap<string, string> {
+  const first = new Map<string, string>()
+  const out = new Map<string, string>()
+  for (const fixture of fixtures) {
+    const key = businessOf(fixture.answers)
+    if (!first.has(key)) first.set(key, fixture.id)
+    out.set(fixture.id, first.get(key) ?? fixture.id)
+  }
+  return out
+}
+
+// A run that skips the brief stage writes on a reused run's records, so a fixture with no record
+// there (its own or a variant's) cannot run: it is set aside before any call, never found
+// part-way through a paid run (the new fixtures have no l6 record, so a named-template pass on
+// l6 runs on the fixtures l6 holds). Keeps the order of the list.
+export function splitByRecord<T extends Readonly<{ fixture: Answered }>>(
+  targets: readonly T[],
+  records: readonly Answered[],
+): { kept: T[]; dropped: T[] } {
+  const kept: T[] = []
+  const dropped: T[] = []
+  for (const target of targets) {
+    if (reusedFor(target.fixture, records) === null) dropped.push(target)
+    else kept.push(target)
+  }
+  return { kept, dropped }
 }
