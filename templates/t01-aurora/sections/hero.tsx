@@ -8,8 +8,8 @@ type Props = Pick<AuroraContent, 'brand' | 'hero' | 'features'>
 // Centred words over a horizon of light, and a drawn panel rising out of it. The headline is the
 // LCP element, so it rises first and with no delay. From lg the panel is clipped at the section's
 // edge, which reads as the panel coming up from below. Below lg, where its picture sits under its
-// lines, a clip would hide most of the picture (a phone saw 7% to 31% of it), so the panel shows
-// whole and meets the section's edge with no foot, running on below it.
+// lines, a clip would hide most of the picture (a phone saw 11% to 31% of it, a tablet 6% to
+// 15%), so the panel shows whole and meets the section's edge with no foot, running on below it.
 export function AuroraHero({ brand, hero, features }: Props) {
   return (
     <section className="relative isolate overflow-hidden pt-16 md:pt-24">
