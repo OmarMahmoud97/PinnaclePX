@@ -1,14 +1,13 @@
 import * as z from 'zod'
 import { type SubmissionAnswers, submissionAnswersSchema } from '@/lib/brief/submission'
-import { fallbackBrief } from '@/lib/copy-slots/brief'
 import type { TemplateContract } from '@/lib/copy-slots/contract'
 
 // The committed copy corpus (tests/fixtures/template-copy/<templateId>/<name>.json): stored model
 // answers for invented test businesses, and synthetic answers at the limits of the check
 // standard (decisions 9 and 19, docs/template-fit-decisions.md). The development route
-// app/dev/copy renders one as a visitor's page, the text-fit spec (e2e/template-text-fit.spec.ts)
-// and the checks (scripts/checks) measure them, and corpus.test.ts holds the files to this shape
-// and writes them.
+// app/dev/copy renders one as a visitor's page, the text-fit spec
+// (e2e/reduced-motion-template-fit.spec.ts) and the checks (scripts/checks) measure them, and
+// corpus.test.ts holds the files to this shape and writes them.
 
 export const corpusFileSchema = z.object({
   // Where the answer came from: a stored eval run and fixture, or how it was made.
@@ -35,7 +34,7 @@ const LONG_WORDS = [
 
 // Business names of 10, 16, 40, 60 and 80 characters. The 60 has no break opportunity and the
 // 80 is the longest the form takes (lib/preview/example.ts, EDGE_COMPANIES). Each reaches a page
-// through the brand slots, cut to their limits as the pipeline cuts it (syntheticFrom).
+// through the brand slots, cut to each slot's limit at a word (syntheticFrom).
 export const NAMES = {
   'name-10': 'Hollin Oak',
   'name-16': 'Bramble and Bean',
@@ -119,6 +118,16 @@ function longWords(max: number, start: number): string | null {
   return words.join(' ')
 }
 
+// A name cut to a slot's limit: the whole words that fit, or, with nowhere to break, the first
+// characters. The limit is the slot's own (maxOf), never a fallback's cut: the model shortens a
+// long name in its own words, and the template's fallback copy (lib/copy-slots/fit.ts) is not
+// what these answers stand for.
+function cutName(name: string, max: number | null): string {
+  if (max === null || name.length <= max) return name
+  const space = name.slice(0, max + 1).lastIndexOf(' ')
+  return space > 0 ? name.slice(0, space).trimEnd() : name.slice(0, max)
+}
+
 // The synthetic answers of one template, from the base it is given: its longest stored answer.
 export function syntheticFrom(
   contract: TemplateContract,
@@ -156,17 +165,15 @@ export function syntheticFrom(
     },
   }
   // A name reaches the page only through the copy's brand slots, which hold at most their
-  // limits: the model shortens a long name to fit, and the fallback cuts it (lib/copy-slots/fit).
-  // So each name variant carries the brand the template's own fallback makes of that name.
+  // limits, so each name variant carries the name cut to each brand slot's limit.
+  const nameMax = maxOf(contract, base.copy, ['brand', 'name'])
+  const legalMax = maxOf(contract, base.copy, ['brand', 'legalName'])
   for (const [name, company] of Object.entries(NAMES)) {
     const copy = structuredClone(base.copy) as Record<string, unknown>
-    const made = contract.fallbackCopy(fallbackBrief(company, base.answers.description)) as {
-      brand?: Record<string, unknown>
-    }
     const brand = copy.brand as Record<string, unknown> | undefined
-    if (made.brand !== undefined && brand !== undefined) {
-      brand.name = made.brand.name
-      if (typeof brand.legalName === 'string') brand.legalName = made.brand.legalName
+    if (brand !== undefined) {
+      if (typeof brand.name === 'string') brand.name = cutName(company, nameMax)
+      if (typeof brand.legalName === 'string') brand.legalName = cutName(company, legalMax)
     }
     const answers: SubmissionAnswers = { ...base.answers, company }
     out[`synthetic-${name}`] = {
