@@ -17,7 +17,8 @@ const YEAR = new Date().getFullYear()
 // print. The email field offered news by email and the small print named privacy and terms
 // pages; no visitor's sentence offers news and a taster has neither page, so neither is drawn,
 // though the copy still carries their words. The columns' headings are h3, one level under the
-// page's block headings, where the source's h4 skipped one. The source's own maker's credit is
+// page's block headings, where the source's h4 skipped one. A legal name with nowhere to break
+// breaks inside the screen's width rather than run past it. The source's own maker's credit is
 // not here; the photographers' credit the Pexels licence asks for is.
 export function HarborFooter({ brand, footer, credits }: Props) {
   return (
@@ -67,7 +68,7 @@ export function HarborFooter({ brand, footer, credits }: Props) {
           </div>
         </div>
         <div className="flex flex-col items-center justify-between gap-6 border-t border-border pt-8 md:flex-row">
-          <p className="text-xs text-on-surface-muted">
+          <p className="max-w-full text-xs wrap-break-word text-on-surface-muted">
             &copy; {YEAR} {brand.legalName}. All rights reserved.
             {footer.note === '' ? '' : ` ${footer.note}`}
           </p>
