@@ -2,6 +2,7 @@ import { ArrowRight } from 'lucide-react'
 import Image from 'next/image'
 import type { CSSProperties } from 'react'
 import type { SummitContent } from '../copy-slots'
+import { fitWord } from '../fit'
 import { arrow, delay, pad } from '../styles'
 import { Stars } from './stars'
 
@@ -31,7 +32,8 @@ const PICTURED = {
 // surface lies behind the words and under the bar (summit.css), which the source's soft pale
 // picture did not need.
 // The portraits keep their size on the narrowest phones, where the row would squeeze them
-// until the last ran under the rating line.
+// until the last ran under the rating line. The headline is sized by its longest word (fit.ts),
+// so a long word fits a phone's screen whole rather than running past it.
 export function SummitHero({ hero }: Props) {
   const background: CSSProperties | undefined =
     hero.background === null ? undefined : { backgroundImage: `url(${hero.background.src})` }
@@ -46,7 +48,7 @@ export function SummitHero({ hero }: Props) {
       {hero.background !== null && (
         <div aria-hidden="true" className="summit-veil pointer-events-none absolute inset-0" />
       )}
-      <div className={`relative mt-32 flex w-full max-w-360 flex-col ${pad}`}>
+      <div className={`@container relative mt-32 flex w-full max-w-360 flex-col ${pad}`}>
         {hero.background !== null && (
           <div
             aria-hidden="true"
@@ -68,7 +70,8 @@ export function SummitHero({ hero }: Props) {
         <h1
           data-rise
           data-spring="soft"
-          className="mt-6 max-w-160 text-left font-display text-5xl leading-tight font-medium tracking-tight text-on-surface/85 md:text-6xl"
+          className="mt-6 max-w-160 text-left font-display text-[length:min(3rem,min(97cqi,40rem)/var(--summit-word,1))] leading-tight font-medium tracking-tight text-on-surface/85 md:text-[length:min(3.75rem,min(97cqi,40rem)/var(--summit-word,1))]"
+          style={fitWord(hero.headline)}
         >
           {hero.headline}
         </h1>
