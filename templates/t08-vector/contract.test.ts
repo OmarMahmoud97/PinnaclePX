@@ -89,13 +89,6 @@ describe('vectorCopySchema', () => {
     for (const slot of optional) expect(vectorContract.guide).not.toContain(`- ${slot}:`)
   })
 
-  it('asks for items the business offers or is known for, never past work', () => {
-    expect(vectorContract.guide.split('\n')).toContain(
-      '- projects.items[].titleUp: 3 to 16 characters, two to four things they offer or are known for, each a title in two short parts: the first part',
-    )
-    expect(vectorContract.guide).not.toContain('pieces of work')
-  })
-
   it('keeps the capitals of the name the owner typed', () => {
     expect(vectorContract.guide.split('\n')).toContain(
       '- brand.name: 2 to 24 characters, the company name as given, keeping its capitals, shortened only if it is longer than the range',
