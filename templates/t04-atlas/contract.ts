@@ -134,10 +134,10 @@ const PURPOSE: Readonly<Record<ModelSlot, string>> = {
     'two to five menu labels, in order: get started, what is included, how they work, why them, questions',
   'nav.menu.label': 'the label of the menu that drops down, such as More',
   'nav.menu.items[].label':
-    'two to four entries in that menu; each has a target of start, offer, tools, why, how-it-works, faq or top',
+    'two to four entries in that menu, one to three words each; each has a target of start, offer, tools, why, how-it-works, faq or top, where offer is what is included and tools is what they bring to the work',
   'nav.secondary.label': 'the outline header button, which leads to how it works',
   'nav.cta.label': 'the filled header button, the same as ctaLabel if it fits',
-  'hero.eyebrow': 'a few words over the headline, set in capitals, such as the company name',
+  'hero.eyebrow': 'two or three words over the headline, set in capitals, on what they do',
   'hero.headline.text': 'the headline, a plain promise in their words',
   'hero.headline.emphasis':
     'two or three words copied exactly from the headline, set in the brand colours; empty for none',
@@ -170,12 +170,12 @@ const PURPOSE: Readonly<Record<ModelSlot, string>> = {
   'steps.heading': 'the heading of the how it works band',
   'steps.items[].title': 'exactly three short step titles, in order',
   'steps.items[].body': 'exactly three step bodies',
-  'faq.eyebrow': 'a small word over the FAQ heading, such as Support',
+  'faq.eyebrow': 'a small word over the FAQ heading, such as Questions',
   'faq.heading': 'the FAQ heading, such as Frequently asked questions',
   'faq.items[].question': 'three to five questions a customer would ask, from the brief',
   'faq.items[].answer': 'the answers, in their words, claiming nothing the owner did not say',
   'footer.columns[][].label':
-    'two or three footer columns of two to five links; each link has a target of start, offer, tools, why, how-it-works, faq or top',
+    'two or three footer columns of two to five links, one to three words each; each link has a target of start, offer, tools, why, how-it-works, faq or top, where offer is what is included and tools is what they bring to the work',
   'footer.note.title': 'the title of the last footer column, such as Get in touch',
   'footer.note.body': 'one line under it',
   'footer.action.label': 'the button under that line, the same as ctaLabel',
