@@ -337,7 +337,43 @@ export function textItems({ keys = null, scope = 'page', menuId = null }) {
         r.left >= -0.5 &&
         r.right <= width + 0.5,
     )
+    // A fixed or sticky element that paints over any part of a line (a glass header bar the page
+    // scrolls under) hides it from here too, however clear its fill: a pixel read here would be
+    // the bar's. The middle and the four corners of each line are tried; what is on top there
+    // counts when it, or a box above it up to the fixed or sticky one, paints at that point (a
+    // fill, a backdrop filter or a background image), so a header's empty dropdown frame that
+    // hangs clear below it does not.
+    const paintsAt = (n, x, y) => {
+      const box = n.getBoundingClientRect()
+      if (x < box.left || x > box.right || y < box.top || y > box.bottom) return false
+      const s = getComputedStyle(n)
+      return (
+        C.paint(s.backgroundColor)[3] > 0 ||
+        s.backdropFilter !== 'none' ||
+        s.backgroundImage !== 'none'
+      )
+    }
+    const pinned = rects.some((r) =>
+      [
+        [(r.left + r.right) / 2, (r.top + r.bottom) / 2],
+        [r.left + 1, r.top + 1],
+        [r.right - 1, r.top + 1],
+        [r.left + 1, r.bottom - 1],
+        [r.right - 1, r.bottom - 1],
+      ].some(([x, y]) => {
+        const hit = document.elementFromPoint(x, y)
+        if (hit === null || el.contains(hit) || hit.contains(el)) return false
+        let paints = false
+        for (let n = hit; n !== null && !n.contains(el); n = n.parentElement) {
+          paints ||= paintsAt(n, x, y)
+          const { position } = getComputedStyle(n)
+          if (position === 'fixed' || position === 'sticky') return paints
+        }
+        return false
+      }),
+    )
     const covered = rects.some((r) => {
+      if (pinned) return true
       const hit = document.elementFromPoint((r.left + r.right) / 2, (r.top + r.bottom) / 2)
       if (hit === null || el.contains(hit) || hit.contains(el)) return false
       // From what is on top up to the box both share: anything opaque there hides the text.
@@ -357,6 +393,7 @@ export function textItems({ keys = null, scope = 'page', menuId = null }) {
       tokens: C.tokensOf(el),
       inView,
       covered,
+      pinned,
       inHeader,
       gradient,
       colours: stops.length > 0 ? stops : [C.paint(cs.color)],
