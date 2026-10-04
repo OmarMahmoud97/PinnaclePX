@@ -2,20 +2,8 @@
   "note": "What the checks expect of this template on main, measured on 3 October 2026. textFit is the CI text-fit guard’s (e2e/reduced-motion-template-fit.spec.ts): a case in failing is expected to fail, and one in unsettled is skipped, with why. outline is the accessible-names check’s (scripts/checks/a11y-names.mjs): each block, by its address (a renamed address after a comma), and the heading level it opens with. The template’s own pull request edits this file and no other outside its folder: a case its fix makes pass leaves failing (Playwright reports it until it does), and an address it renames is renamed here.",
   "fixedBy": "Meridian’s Phase 2 pull request, fix/meridian-template-fit",
   "textFit": {
-    "failing": [
-      "l6-longest",
-      "l7-architects",
-      "l7-longest",
-      "synthetic-long-words",
-      "synthetic-longest",
-      "synthetic-name-16",
-      "synthetic-name-40",
-      "synthetic-name-60",
-      "synthetic-name-80"
-    ],
-    "unsettled": {
-      "synthetic-name-10": "passes on Windows but fails with its text 0.05em wider, and CI's Linux Chromium sets text about 4% wider"
-    }
+    "failing": [],
+    "unsettled": {}
   },
   "outline": [
     ["#sponsors", 2],
