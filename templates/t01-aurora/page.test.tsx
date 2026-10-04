@@ -62,4 +62,18 @@ describe('the Aurora page', () => {
     expect(closing).toContain('href="#top"')
     expect(closing).not.toContain('mailto:')
   })
+
+  // Decision 15: no word is cut off or runs past the screen. The headline and the closing
+  // heading, both at the display size, are sized by their longest word, each heading the
+  // container its words fit.
+  it('sizes the headline and the closing heading by their longest word', () => {
+    const fitted = [
+      ...html.matchAll(
+        /<h([12])[^>]*class="@container[^"]*"[^>]*><span class="aurora-fit" style="--aurora-word:([\d.]+)">/g,
+      ),
+    ]
+    expect(fitted.map((match) => match[1])).toEqual(['1', '2'])
+    for (const match of fitted) expect(Number(match[2])).toBeGreaterThan(1)
+    expect(between(html, 'id="start"', '</section>')).toContain('aurora-fit')
+  })
 })
