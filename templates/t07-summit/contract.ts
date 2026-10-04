@@ -118,14 +118,16 @@ const FIXED: readonly [
 
 // Every count and slot outside its limits. Fixed counts first: a list of the wrong length
 // cannot be assembled, so its violations are reported alone and the rest waits for the next
-// attempt.
+// attempt. Four reasons, as a stored design holds, still assemble, so their count is reported
+// with the rest.
 function summitCopyViolations(copy: SummitCopy): readonly SlotViolation[] {
   const counts = FIXED.flatMap(([path, size, pick]) => {
     const length = pick(copy).length
     return length === size ? [] : [{ slot: path, length, min: size, max: size }]
   })
-  if (counts.length > 0) return counts
-  return summitViolations(assembleSummit(copy, NO_ASSETS))
+  const stored = (v: SlotViolation) => v.slot === 'why.cards' && v.length === 4
+  if (!counts.every(stored)) return counts
+  return [...counts, ...summitViolations(assembleSummit(copy, NO_ASSETS))]
 }
 
 type Slot = keyof typeof SUMMIT_SLOTS
