@@ -30,7 +30,7 @@ export function AuroraHero({ brand, hero, features }: Props) {
         <p
           data-rise
           style={enter(1)}
-          className="mx-auto mt-6 max-w-2xl text-lead text-pretty text-on-surface-muted"
+          className="mx-auto mt-6 max-w-2xl text-lead text-pretty text-on-surface"
         >
           {hero.subhead}
         </p>
@@ -46,7 +46,7 @@ export function AuroraHero({ brand, hero, features }: Props) {
             {hero.secondary.label}
           </a>
         </div>
-        <p data-rise style={enter(3)} className="mt-5 text-small text-on-surface-muted">
+        <p data-rise style={enter(3)} className="mt-5 text-small text-on-surface">
           {hero.reassurance}
         </p>
       </div>
