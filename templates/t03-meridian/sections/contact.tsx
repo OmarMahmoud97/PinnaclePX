@@ -1,24 +1,14 @@
 import { ChevronDown } from 'lucide-react'
 import type { MeridianContent } from '../copy-slots'
 import { fitWord } from '../fit'
-import {
-  button,
-  card,
-  cardContent,
-  cardFooter,
-  cardHeader,
-  container,
-  eyebrow,
-  input,
-  label,
-  textarea,
-} from '../styles'
+import { button, card, container, eyebrow, input, label, textarea } from '../styles'
 
 type Props = Pick<MeridianContent, 'contact'>
 
 // The source's ContactSection: the words at the left with rows of a mark, a bold label and
 // lines, and at the right a card on the card surface holding the form: first and last name side
-// by side, email, a subject to choose, a message and a button. The source built a mail link from
+// by side, email, a subject to choose, a message and a button, the name and email fields
+// carrying their autofill tokens (decision 15). The source built a mail link from
 // the fields; here the form posts to the owner's email as a mail message when it is known, and
 // otherwise leads to the page's ask. The source's rows were an address, a phone number, an email
 // and opening hours, each beside its icon; here they are the three steps after a first contact,
@@ -32,7 +22,7 @@ export function MeridianContact({ contact }: Props) {
       <section className="grid grid-cols-1 gap-8 md:grid-cols-2">
         <div>
           <div className="mb-4">
-            <h2 className={eyebrow}>{contact.eyebrow}</h2>
+            <p className={eyebrow}>{contact.eyebrow}</p>
 
             <h2 className="@container text-3xl font-bold md:text-4xl">
               <span className="meridian-fit" style={fitWord(contact.heading)}>
@@ -63,8 +53,9 @@ export function MeridianContact({ contact }: Props) {
         </div>
 
         <div className={`${card} bg-accent`}>
-          <div className={`${cardHeader} text-2xl text-brand-deeper`}> </div>
-          <div className={cardContent}>
+          {/* The source's card kept an empty header and footer, whose padding set the form 3rem
+              in from the card's top and bottom edges; the padding alone does that here. */}
+          <div className="px-6 py-12">
             <form
               className="grid w-full gap-4"
               action={
@@ -80,13 +71,23 @@ export function MeridianContact({ contact }: Props) {
                   <label htmlFor="meridian-first-name" className={label}>
                     First Name
                   </label>
-                  <input id="meridian-first-name" name="firstName" className={input} />
+                  <input
+                    id="meridian-first-name"
+                    name="firstName"
+                    autoComplete="given-name"
+                    className={input}
+                  />
                 </div>
                 <div className="w-full [&>*+*]:mt-2">
                   <label htmlFor="meridian-last-name" className={label}>
                     Last Name
                   </label>
-                  <input id="meridian-last-name" name="lastName" className={input} />
+                  <input
+                    id="meridian-last-name"
+                    name="lastName"
+                    autoComplete="family-name"
+                    className={input}
+                  />
                 </div>
               </div>
 
@@ -95,7 +96,13 @@ export function MeridianContact({ contact }: Props) {
                   <label htmlFor="meridian-email" className={label}>
                     Email
                   </label>
-                  <input id="meridian-email" name="email" type="email" className={input} />
+                  <input
+                    id="meridian-email"
+                    name="email"
+                    type="email"
+                    autoComplete="email"
+                    className={input}
+                  />
                 </div>
               </div>
 
@@ -108,6 +115,7 @@ export function MeridianContact({ contact }: Props) {
                     <select
                       id="meridian-subject"
                       name="subject"
+                      autoComplete="off"
                       defaultValue={contact.form.subjects[0]}
                       className={`${input} appearance-none pr-8 [&>span]:line-clamp-1`}
                     >
@@ -133,6 +141,7 @@ export function MeridianContact({ contact }: Props) {
                   <textarea
                     id="meridian-message"
                     name="message"
+                    autoComplete="off"
                     rows={5}
                     placeholder="Your message..."
                     className={`${textarea} resize-none`}
@@ -145,8 +154,6 @@ export function MeridianContact({ contact }: Props) {
               </button>
             </form>
           </div>
-
-          <div className={cardFooter}></div>
         </div>
       </section>
     </section>

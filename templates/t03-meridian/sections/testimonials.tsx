@@ -21,7 +21,7 @@ export function MeridianTestimonials({ testimonials }: Props) {
   return (
     <section id="testimonials" className={`${container} py-24 sm:py-32`}>
       <div className="mb-8 text-center">
-        <h2 className={`${eyebrow} text-center`}>{testimonials.eyebrow}</h2>
+        <p className={`${eyebrow} text-center`}>{testimonials.eyebrow}</p>
 
         <h2 className={`${sectionTitle} text-center`}>{testimonials.heading}</h2>
       </div>

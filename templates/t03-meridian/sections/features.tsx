@@ -21,7 +21,7 @@ type Props = Pick<MeridianContent, 'features'>
 export function MeridianFeatures({ features }: Props) {
   return (
     <section id="features" className={`${container} py-24 sm:py-32`}>
-      <h2 className={`${eyebrow} text-center`}>{features.eyebrow}</h2>
+      <p className={`${eyebrow} text-center`}>{features.eyebrow}</p>
 
       <h2 className={`@container ${sectionTitle} text-center`}>
         <span className="meridian-fit" style={fitWord(features.heading)}>
@@ -29,7 +29,7 @@ export function MeridianFeatures({ features }: Props) {
         </span>
       </h2>
 
-      <h3 className={`${sectionLead} text-center`}>{features.lead}</h3>
+      <p className={`${sectionLead} text-center`}>{features.lead}</p>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {features.items.map((item) => (

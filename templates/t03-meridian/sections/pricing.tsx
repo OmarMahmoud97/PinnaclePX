@@ -21,13 +21,13 @@ type Props = { pricing: NonNullable<MeridianContent['pricing']> }
 export function MeridianPricing({ pricing }: Props) {
   return (
     <section id="pricing" className={`${container} py-24 sm:py-32`}>
-      <h2 className={`${eyebrow} text-center`}>{pricing.eyebrow}</h2>
+      <p className={`${eyebrow} text-center`}>{pricing.eyebrow}</p>
 
       <h2 className={`${sectionTitle} text-center`}>{pricing.heading}</h2>
 
-      <h3 className="mx-auto pb-14 text-center text-xl text-on-surface-muted md:w-1/2">
+      <p className="mx-auto pb-14 text-center text-xl text-on-surface-muted md:w-1/2">
         {pricing.lead}
-      </h3>
+      </p>
 
       <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 lg:gap-4">
         {pricing.plans.map((plan) => (

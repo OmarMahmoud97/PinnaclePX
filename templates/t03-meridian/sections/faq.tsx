@@ -13,7 +13,7 @@ export function MeridianFaq({ faq }: Props) {
   return (
     <section id="faq" className={`${container} py-24 sm:py-32 md:w-[700px]`}>
       <div className="mb-8 text-center">
-        <h2 className={`${eyebrow} text-center`}>{faq.eyebrow}</h2>
+        <p className={`${eyebrow} text-center`}>{faq.eyebrow}</p>
 
         <h2 className="@container text-center text-3xl font-bold md:text-4xl">
           <span className="meridian-fit" style={fitWord(faq.heading)}>

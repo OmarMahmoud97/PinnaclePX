@@ -20,7 +20,7 @@ export function MeridianTeam({ team }: Props) {
   return (
     <section id="team" className={`${container} py-24 sm:py-32 lg:w-[75%]`}>
       <div className="mb-8 text-center">
-        <h2 className={`${eyebrow} text-center`}>{team.eyebrow}</h2>
+        <p className={`${eyebrow} text-center`}>{team.eyebrow}</p>
 
         <h2 className="text-center text-3xl font-bold md:text-4xl">{team.heading}</h2>
       </div>

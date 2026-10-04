@@ -16,7 +16,7 @@ export function MeridianBenefits({ benefits }: Props) {
     <section id="benefits" className={`${container} @container py-24 sm:py-32`}>
       <div className="grid place-items-center lg:grid-cols-2 lg:gap-24">
         <div>
-          <h2 className="mb-2 text-lg tracking-wider text-brand-deeper">{benefits.eyebrow}</h2>
+          <p className="mb-2 text-lg tracking-wider text-brand-deeper">{benefits.eyebrow}</p>
 
           <h2 className="mb-4 text-3xl font-bold md:text-4xl">
             <span className="meridian-fit meridian-fit-column" style={fitWord(benefits.heading)}>

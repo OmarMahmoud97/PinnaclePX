@@ -138,3 +138,72 @@ describe('the Meridian footer', () => {
     expect(classes).not.toContain('grid-cols-2')
   })
 })
+
+describe('the Meridian page’s structure', () => {
+  const html = page()
+  const headings = [...html.matchAll(/<h([1-6])[^>]*>([\s\S]*?)<\/h\1>/g)].map((m) => ({
+    level: Number(m[1]),
+    text: (m[2] ?? '').replace(/<[^>]+>/g, '').trim(),
+  }))
+
+  it('opens with the headline, then a section heading, and skips no level', () => {
+    expect(headings.slice(0, 2).map((h) => h.level)).toEqual([1, 2])
+    headings.forEach((heading, index) => {
+      expect(heading.level).toBeLessThanOrEqual((headings[index - 1]?.level ?? 0) + 1)
+    })
+  })
+
+  it('sets no eyebrow, lead or legal line as a heading', () => {
+    const tags = [...html.matchAll(/<(h[1-6]|p) class="([^"]*)"/g)]
+    const eyebrows = tags.filter((m) => m[2]?.includes('tracking-wider text-brand-deeper'))
+    const leads = tags.filter((m) => m[2]?.includes('text-xl text-on-surface-muted md:w-1/2'))
+    expect(eyebrows).toHaveLength(5)
+    expect(leads).toHaveLength(2)
+    for (const m of [...eyebrows, ...leads]) expect(m[1]).toBe('p')
+    expect(headings.some((h) => h.text.includes('©'))).toBe(false)
+  })
+
+  it('gives the name and email fields their autofill tokens, and the others off', () => {
+    const tokens: Record<string, string | undefined> = {}
+    for (const m of html.matchAll(/<(?:input|select|textarea)[^>]*name="([^"]+)"[^>]*>/g)) {
+      tokens[m[1] ?? ''] = /autoComplete="([^"]*)"/i.exec(m[0])?.[1]
+    }
+    expect(tokens).toEqual({
+      firstName: 'given-name',
+      lastName: 'family-name',
+      email: 'email',
+      subject: 'off',
+      message: 'off',
+    })
+  })
+
+  it('draws no empty card header or footer, nor an empty grid', () => {
+    for (const [id, next] of [
+      ['services', 'community'],
+      ['contact', 'faq'],
+    ] as const) {
+      const block = html.slice(html.indexOf(`id="${id}"`), html.indexOf(`id="${next}"`))
+      expect(block).not.toMatch(/<div class="[^"]*"> ?<\/div>/)
+    }
+  })
+
+  it('draws the picture at its own shape in a wrapper as wide as the page', () => {
+    const copy = meridianFallbackCopy(fallbackBrief('Kestrel', 'Job scheduling for trades.'))
+    const picture = {
+      src: 'https://example.public.blob.vercel-storage.com/hero.jpg',
+      alt: '',
+      width: 1600,
+      height: 900,
+      credit: null,
+    }
+    const content = assembleMeridian(copy, {
+      logo: { kind: 'wordmark' },
+      images: { hero: picture },
+      email: null,
+    })
+    const drawn = renderToStaticMarkup(<Meridian content={content} />)
+    const hero = drawn.slice(drawn.indexOf('<main'), drawn.indexOf('id="sponsors"'))
+    expect(hero).toMatch(/<div class="group relative mt-14 w-full md:w-auto"><div[^>]*><\/div><img/)
+    expect(hero).toMatch(/<img[^>]*width="1600" height="900"/)
+  })
+})

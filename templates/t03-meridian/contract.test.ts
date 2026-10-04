@@ -63,6 +63,12 @@ describe('meridianFallbackCopy', () => {
     expect(copy.contact.rows[0]?.title).toBe('Import')
   })
 
+  it('heads the services with neutral words that fit any business', () => {
+    const copy = meridianFallbackCopy(fallbackBrief('Kestrel', 'Job scheduling.'))
+    expect(copy.services.heading).toBe('What we do and why')
+    expect(copy.services.items.map((item) => item.title)).toEqual(['What we do', 'Why we do it'])
+  })
+
   it('never colours a word it did not choose', () => {
     const copy = meridianFallbackCopy(fallbackBrief('Kestrel', 'Job scheduling.'))
     expect(copy.hero.headline.emphasis).toBe('')
