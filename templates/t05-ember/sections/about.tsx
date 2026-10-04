@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import type { EmberContent } from '../copy-slots'
+import { fitWord } from '../word-fit'
 import { anchored, delay, pad } from '../styles'
 import { Ornament } from './ornament'
 
@@ -8,15 +9,17 @@ type Props = Pick<EmberContent, 'about'>
 // The source's About: the picture at the left, rounded, and at the right the eyebrow between
 // two laurel marks, the heading, the paragraph and a small coloured card naming the place with
 // a thumbnail and a link to a map. The picture and the eyebrow scale up as they arrive; the
-// rest rises. Without a picture a block of the quieter surface holds its place.
+// rest rises. Without a picture a block of the quieter surface holds its place as the picture
+// would: as wide, in the source's 550 by 432 shape, and as tall as the row where the row is
+// taller. From md an empty block once had no width and showed nothing (decision 15).
 export function EmberAbout({ about }: Props) {
   const { image, location } = about
   return (
     <section id="about" className={`${pad} ${anchored} mt-44`}>
       <div className="mx-auto flex max-w-7xl flex-col gap-14 md:flex-row md:gap-18">
-        <div data-fade="scale">
+        <div data-fade="scale" className="min-w-0">
           {image === null ? (
-            <div className="aspect-[550/432] w-full max-w-137 rounded-3xl bg-surface-muted" />
+            <div className="aspect-[550/432] w-137 max-w-full rounded-3xl bg-surface-muted md:min-h-full" />
           ) : (
             <Image
               src={image.src}
@@ -35,7 +38,13 @@ export function EmberAbout({ about }: Props) {
             <Ornament side="right" />
           </div>
           <div data-fade>
-            <h2 className="mt-5 text-4xl text-balance md:text-5xl">{about.heading}</h2>
+            {/* Sized by its longest word below md only: from md this column is as wide as its
+                words make it, and a heading sized by the column would narrow it. */}
+            <h2 className="mt-5 text-4xl text-balance max-md:@container md:text-5xl">
+              <span className="ember-fit" style={fitWord(about.heading, 'body')}>
+                {about.heading}
+              </span>
+            </h2>
           </div>
           <div data-fade style={delay(0.2)}>
             <p className="mt-4.5 max-w-sm text-on-surface-muted">{about.body}</p>

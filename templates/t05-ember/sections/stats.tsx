@@ -1,4 +1,5 @@
 import type { EmberContent } from '../copy-slots'
+import { fitWord } from '../word-fit'
 import { delay, pad } from '../styles'
 
 type Props = Pick<EmberContent, 'stats'>
@@ -8,7 +9,7 @@ type Props = Pick<EmberContent, 'stats'>
 export function EmberStats({ stats }: Props) {
   return (
     <section id="stats" className={`${pad} mt-32`}>
-      <div className="mx-auto flex max-w-7xl flex-col items-center justify-center gap-12 md:flex-row md:gap-25">
+      <div className="@container mx-auto flex max-w-7xl flex-col items-center justify-center gap-12 md:flex-row md:gap-25">
         {stats.map((item, index) => (
           <div
             key={item.title}
@@ -17,7 +18,11 @@ export function EmberStats({ stats }: Props) {
             className="flex flex-col items-center text-center"
           >
             <span className="text-6xl">{String(index + 1).padStart(2, '0')}</span>
-            <h3 className="mt-5.5 text-2xl">{item.title}</h3>
+            <h3 className="mt-5.5 text-2xl">
+              <span className="ember-fit-point" style={fitWord(item.title, 'body')}>
+                {item.title}
+              </span>
+            </h3>
             <p className="mt-3.5 max-w-72 font-light text-on-surface-muted">{item.body}</p>
           </div>
         ))}

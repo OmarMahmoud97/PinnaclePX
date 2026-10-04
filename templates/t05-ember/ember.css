@@ -8,7 +8,7 @@
  * below, 20px above, 50px to the right, or scaled to four fifths), on one spring, after a wait
  * down each list. The hero's parts are on screen at load and play on a timer; every block
  * below is marked shown by an observer (reveal.tsx) the first time it comes into view and plays
- * its entrance from here. A dish turns half a turn on a second spring each time the pointer
+ * its entrance from here. A dish turns a full turn on a second spring each time the pointer
  * reaches it (dish.tsx). All of it is off under reduced motion. The header's glass is the
  * source's own scroll listener (nav.tsx).
  */
@@ -21,7 +21,7 @@
   --ember-spring: cubic-bezier(0.16, 0.52, 0.08, 1);
 
   /* The dish's spring (stiffness 80, damping 15): under critical damping, 0.98s to rest,
-   * overshooting by a degree and a half on the way. */
+   * overshooting by under one percent on the way, about three degrees of a full turn. */
   --ember-turn: 0.98s;
   --ember-spin: cubic-bezier(0.32, 0.56, 0.02, 1.08);
 }
@@ -74,6 +74,49 @@
       1.0016 95%,
       1
     );
+  }
+}
+
+/* A block that took focus from a link chosen in the phone menu (nav.tsx) is not a control, and a
+ * ring around the whole block would only frame the screen, so it draws none. */
+.ember [tabindex='-1']:focus {
+  outline: none;
+}
+
+/* A text sized by its longest word (word-fit.ts): the smaller of its own size (1em, the size of
+ * the heading it sits in) and 97% of the heading's width over the word's width in ems; the
+ * heading is the @container. */
+.ember-fit {
+  display: block;
+  font-size: min(1em, 97cqi / var(--ember-word, 1));
+}
+
+/* A point's title, fitted to the points' row (stats.tsx, the @container): the whole row below
+ * md, where the points stand one under another, and from md a third of it less the two 100px
+ * gaps between the three, so the row always holds them however wide their other words are. */
+.ember-fit-point {
+  display: block;
+  font-size: min(1em, 97cqi / var(--ember-word, 1));
+}
+
+@media (width >= 48rem) {
+  .ember-fit-point {
+    font-size: min(1em, (100cqi - 12.5rem) / 3 * 0.97 / var(--ember-word, 1));
+  }
+}
+
+/* The wordmark's name (logo.tsx), fitted to 97% of the box that holds it: the footer's width
+ * (footer.tsx, the @container), and in the header the bar (nav.tsx, the @container), less the
+ * 40px menu button and the 24px gap beside it below md, where the bar holds the name and the
+ * button alone. So a name with no space neither pushes the button off a phone's screen nor runs
+ * past the footer's edge. */
+.ember-fit-name {
+  font-size: min(1em, 97cqi / var(--ember-word, 1));
+}
+
+@media (width < 48rem) {
+  header .ember-fit-name {
+    font-size: min(1em, (100cqi - 4rem) * 0.97 / var(--ember-word, 1));
   }
 }
 
@@ -153,10 +196,11 @@
     }
   }
 
-  /* A dish's picture: half a turn for every time the pointer has reached its cell, on the
-   * spring, and it stays turned. */
+  /* A dish's picture: a full turn for every time the pointer has reached its cell, on the
+   * spring, so it always comes to rest upright (the source's half turn left it upside down after
+   * every other visit). */
   .ember-spin {
-    rotate: calc(var(--turns, 0) * 180deg);
+    rotate: calc(var(--turns, 0) * 360deg);
     transition: rotate var(--ember-turn) var(--ember-spin);
   }
 }

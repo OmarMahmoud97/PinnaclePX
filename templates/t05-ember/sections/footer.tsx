@@ -23,7 +23,7 @@ export function EmberFooter({ brand, footer, credits }: Props) {
   const hasContact = contact.email !== null || contact.phone !== null
   return (
     <footer className={`${pad} relative mt-44 overflow-hidden`}>
-      <div className="mx-auto max-w-7xl">
+      <div className="@container mx-auto max-w-7xl">
         <div className="flex flex-wrap justify-between gap-6 pb-8">
           <div className="flex flex-col items-start text-left">
             <div data-fade>
@@ -82,8 +82,9 @@ export function EmberFooter({ brand, footer, credits }: Props) {
             <LinkColumn key={group.heading} group={group} />
           ))}
         </div>
-        <div className="flex items-center justify-between border-t border-border py-4.5 text-on-surface/55">
-          <p>
+        <div className="flex items-center justify-between border-t border-border py-4.5 text-on-surface-muted">
+          {/* A legal name with no space breaks where it must, rather than run past the edge. */}
+          <p className="wrap-anywhere">
             &copy; {YEAR} {brand.legalName}. All rights reserved.
           </p>
           {credits.length > 0 && (

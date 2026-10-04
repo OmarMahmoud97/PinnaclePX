@@ -2,6 +2,7 @@ import { Quote } from 'lucide-react'
 import Image from 'next/image'
 import { Fragment } from 'react'
 import type { HarborContent } from '../copy-slots'
+import { fitWord } from '../fit'
 import { container, eyebrow, motion, section } from '../styles'
 import { HeadingLines } from './lines'
 
@@ -11,7 +12,8 @@ type Props = Pick<HarborContent, 'about'>
 // dark wash over its foot and an accent badge scaling up over its corner; at the right the
 // eyebrow, a three-line heading, two paragraphs, a row of pills and two small quote cards,
 // each rising a little after the one before. Without a picture the card surface holds the
-// place.
+// place. The heading keeps the source's sizes and, as the block headings do (styles.ts), is
+// smaller only where its longest word would not fit its column (fit.ts).
 export function HarborAbout({ about }: Props) {
   const { image, badge, quotes } = about
   return (
@@ -60,12 +62,15 @@ export function HarborAbout({ about }: Props) {
               )}
             </div>
           </div>
-          <div className="lg:col-span-7 lg:pl-8">
+          <div className="@container lg:col-span-7 lg:pl-8">
             <div data-fade data-margin="-80px" style={motion(0.1)}>
               <span className={`${eyebrow} mb-4`}>{about.eyebrow}</span>
             </div>
             <div data-fade data-margin="-80px" style={motion(0.2)}>
-              <h2 className="mb-6 font-display text-5xl leading-[0.95] font-black tracking-tight text-on-surface uppercase md:text-6xl">
+              <h2
+                className="mb-6 font-display text-[length:min(3rem,97cqi/var(--harbor-word,1))] leading-[0.95] font-black tracking-tight wrap-break-word text-on-surface uppercase md:text-[length:min(3.75rem,97cqi/var(--harbor-word,1))]"
+                style={fitWord(about.heading.lines)}
+              >
                 <HeadingLines heading={about.heading} />
               </h2>
             </div>
@@ -73,7 +78,7 @@ export function HarborAbout({ about }: Props) {
               {about.paragraphs.map((paragraph, index) => (
                 <p
                   key={paragraph}
-                  className={`max-w-lg text-base leading-relaxed text-on-surface/60 ${index === about.paragraphs.length - 1 ? 'mb-10' : 'mb-4'}`}
+                  className={`max-w-lg text-base leading-relaxed text-on-surface-muted ${index === about.paragraphs.length - 1 ? 'mb-10' : 'mb-4'}`}
                 >
                   {paragraph}
                 </p>

@@ -1,4 +1,5 @@
 import type { HarborContent } from '../copy-slots'
+import { fitWord } from '../fit'
 import { container, eyebrow, heading, motion, section } from '../styles'
 import { HarborCount } from './count'
 import { HeadingLines } from './lines'
@@ -6,14 +7,22 @@ import { HeadingLines } from './lines'
 type Props = Pick<HarborContent, 'metrics'>
 
 // The source's Stats: a quieter band between hairlines with one word set huge and almost
-// invisible behind it, the eyebrow and heading centred, then a hairline grid of cells, two
-// columns and three from md, each a large figure in the accent over a label and a line. A
-// figure counts up from zero once in view, as the source's did (count.tsx); a phrase, which is
-// what a visitor's page carries, stands. The cells rise in turn as they arrive.
+// invisible behind it, the eyebrow and heading centred, then a hairline grid of cells, each a
+// large figure in the accent over a label and a line. A figure counts up from zero once in
+// view, as the source's did (count.tsx); a phrase, which is what a visitor's page carries,
+// stands. The cells rise in turn as they arrive. The source's two columns, three from md, cut
+// a phrase off on a phone and a tablet; here a cell has the row to itself on a phone, two
+// share it from md (a lone last cell taking the whole row, so no empty slot shows the hairline
+// fill) and three from lg, as the source's sat on a laptop, and the padding grows with the
+// room. The figures share one size across the band: the source's text-5xl, or smaller where
+// the longest of them would not fit one column (fit.ts), so no word is cut off or broken. The
+// grid is the @container and the size is worked out from one column's width at each
+// breakpoint, so a lone cell that spans the row keeps its neighbours' size. Its anchor is
+// #highlights, as a visitor's band holds phrases rather than figures.
 export function HarborMetrics({ metrics }: Props) {
   return (
     <section
-      id="metrics"
+      id="highlights"
       className={`${section} relative overflow-hidden border-y border-border bg-surface-muted`}
     >
       <div
@@ -25,33 +34,39 @@ export function HarborMetrics({ metrics }: Props) {
         </span>
       </div>
       <div className={`${container} relative z-10`}>
-        <div className="mb-16 text-center">
+        <div className="@container mb-16 text-center">
           <div data-fade data-margin="-80px">
             <span className={`${eyebrow} mb-4`}>{metrics.eyebrow}</span>
           </div>
           <div data-fade data-margin="-80px" style={motion(0.1)}>
-            <h2 className={heading}>
+            <h2 className={heading} style={fitWord(metrics.heading.lines)}>
               <HeadingLines heading={metrics.heading} />
             </h2>
           </div>
         </div>
-        <div className="grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-border bg-border md:grid-cols-3">
+        <div
+          className="@container grid grid-cols-1 gap-px overflow-hidden rounded-2xl border border-border bg-border md:grid-cols-2 lg:grid-cols-3"
+          style={fitWord(
+            metrics.items.map((item) => item.value),
+            false,
+          )}
+        >
           {metrics.items.map((item, index) => (
             <div
               key={item.label}
               data-fade
               data-margin="-40px"
               style={motion(0.1 * index, '20px', 0.5, 'out')}
-              className="group bg-surface p-8 transition-colors duration-300 hover:bg-accent md:p-12"
+              className="group bg-surface p-8 transition-colors duration-300 hover:bg-accent md:last:odd:col-span-2 lg:p-12 lg:last:odd:col-span-1"
             >
               <HarborCount
                 value={item.value}
-                className="mb-2 block origin-left text-5xl leading-none font-black text-brand-deeper transition-transform duration-300 group-hover:scale-105"
+                className="mb-2 block origin-left text-[length:min(3rem,(100cqi_-_4rem)*0.97/var(--harbor-word,1))] leading-none font-black wrap-break-word text-brand-deeper transition-transform duration-300 group-hover:scale-105 md:text-[length:min(3rem,((100cqi_-_1px)/2_-_4rem)*0.97/var(--harbor-word,1))] lg:text-[length:min(3rem,((100cqi_-_2px)/3_-_6rem)*0.97/var(--harbor-word,1))]"
               />
               <p className="mb-1 font-display text-base font-bold tracking-wide text-on-surface uppercase">
                 {item.label}
               </p>
-              <p className="text-xs text-on-surface/40">{item.description}</p>
+              <p className="text-xs text-on-surface-muted">{item.description}</p>
             </div>
           ))}
         </div>

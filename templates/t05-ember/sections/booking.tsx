@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import type { EmberContent } from '../copy-slots'
+import { fitWord } from '../word-fit'
 import { anchored, delay, eyebrow, heading, pad } from '../styles'
 import { Stars } from './stars'
 
@@ -12,14 +13,18 @@ type Props = Pick<EmberContent, 'booking'>
 export function EmberBooking({ booking }: Props) {
   const { testimonial } = booking
   return (
-    <section id="booking-process" className={`${pad} ${anchored} mt-44`}>
+    <section id="steps" className={`${pad} ${anchored} mt-44`}>
       <div className="mx-auto grid max-w-7xl gap-16 md:grid-cols-2 md:gap-25">
         <div className="flex flex-col text-center md:text-left">
           <div data-fade style={delay(0.2)}>
             <p className={`${eyebrow} mb-4`}>{booking.eyebrow}</p>
           </div>
           <div data-fade style={delay(0.2)}>
-            <h2 className={`${heading} mb-16`}>{booking.heading}</h2>
+            <h2 className={`${heading} @container mb-16`}>
+              <span className="ember-fit" style={fitWord(booking.heading, 'body')}>
+                {booking.heading}
+              </span>
+            </h2>
           </div>
           {testimonial !== null && (
             <>

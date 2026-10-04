@@ -5,9 +5,10 @@ import type { CSSProperties } from 'react'
 //
 // Token map from the source's fixed palette: its white page and cards are surface, its slate-50
 // hover and rings surface-muted, its black on-surface, its zinc-600 body grey on-surface-muted,
-// its zinc-800, 700, 500 and 400 the same black at 85, 75, 55 and 37 percent, its slate-200 rule
-// border, its slate-300 ring on-surface at 20 percent, its orange-500 brand-deeper and its
-// orange-600 brand-deepest, and white on orange on-brand.
+// its zinc-800 and 700 the same black at 85 and 75 percent, its zinc-500 and 400 on-surface-muted
+// (the black at 55 and 37 percent fell below WCAG AA on a light page), its slate-200 rule border,
+// its slate-300 ring on-surface at 20 percent, its orange-500 brand-deeper and its orange-600
+// brand-deepest, and white on orange on-brand.
 
 // The source's `px-auto` utility, from its own stylesheet: 1.5rem of horizontal padding, 3rem
 // from md, 6rem from lg and 10rem from xl.
@@ -38,8 +39,9 @@ export const headerVeil = 'bg-surface/75 blur-[30px]'
 export const eyebrow = 'font-medium text-brand-deeper uppercase'
 export const heading = 'text-4xl md:text-5xl'
 
-// The footer's links: the body grey, a shade lighter under the pointer.
-export const footerLink = 'text-on-surface-muted hover:text-on-surface/55'
+// The footer's links: the body grey, and the full ink under the pointer, where the source's
+// lighter grey fell below WCAG AA on a light page.
+export const footerLink = 'text-on-surface-muted hover:text-on-surface'
 
 // The wait before an animated part arrives, in seconds, as the source's delays ran (ember.css).
 export function delay(seconds: number): CSSProperties {
