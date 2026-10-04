@@ -82,6 +82,8 @@ function menuWord(nav: Props['nav']): CSSProperties {
 // may take two lines, and on a narrow screen it is sized so its longest word fits beside the
 // toggle (logo.tsx); the bar grows rather than cut it, keeping a little room above and below a
 // long name so its first line stays on the screen.
+// Both start below the studio's bar while any of it shows (--chrome-top, decision 22); the
+// transition eases the glass, never the bar's place, so the bar keeps pace with the studio's.
 export function HarborNav({ brand, nav }: Props) {
   const [open, setOpen] = useState(false)
   const [closing, setClosing] = useState(false)
@@ -179,7 +181,7 @@ export function HarborNav({ brand, nav }: Props) {
     <>
       <nav
         aria-label="Main"
-        className={`harbor-bar fixed top-0 right-0 left-0 z-50 transition-all duration-500 ${scrolled ? 'bg-surface/90 backdrop-blur-xl' : 'bg-transparent'} ${open ? 'pointer-events-none' : ''}`}
+        className={`harbor-bar fixed top-(--chrome-top,0px) right-0 left-0 z-50 transition-[background-color,backdrop-filter] duration-500 ${scrolled ? 'bg-surface/90 backdrop-blur-xl' : 'bg-transparent'} ${open ? 'pointer-events-none' : ''}`}
         style={motion(0, '-80px')}
       >
         <div className={`${container} @container`}>
@@ -230,7 +232,7 @@ export function HarborNav({ brand, nav }: Props) {
       {open && (
         <div
           id={PANEL_ID}
-          className={`@container fixed inset-0 z-40 flex flex-col items-center justify-center gap-8 bg-surface transition-[opacity,translate] duration-[250ms] starting:-translate-y-5 starting:opacity-0 ${hide} ${closing ? '-translate-y-5 opacity-0' : ''}`}
+          className={`@container fixed inset-x-0 top-(--chrome-top,0px) bottom-0 z-40 flex flex-col items-center justify-center gap-8 bg-surface transition-[opacity,translate] duration-[250ms] starting:-translate-y-5 starting:opacity-0 ${hide} ${closing ? '-translate-y-5 opacity-0' : ''}`}
           style={menuWord(nav)}
         >
           <button

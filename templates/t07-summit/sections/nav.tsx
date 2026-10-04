@@ -34,6 +34,8 @@ const GLASS_AT = 10
 // page with a photograph the links are underlined under the pointer rather than faded, since the
 // lighter grey falls below WCAG AA over the picture, on the veil and on the glass.
 export function SummitNav({ brand, nav, pictured }: Props) {
+  // Both start below the studio's bar while any of it shows (--chrome-top, decision 22); the
+  // transition eases the glass, never the bar's place, so the bar keeps pace with the studio's.
   const [open, setOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [narrow, setNarrow] = useState(false)
@@ -93,7 +95,7 @@ export function SummitNav({ brand, nav, pictured }: Props) {
 
   return (
     <nav
-      className={`fixed top-0 right-0 left-0 z-50 flex w-full flex-col items-center transition-all duration-300 ${scrolled && !open ? 'bg-surface/70 backdrop-blur-md' : 'bg-transparent'}`}
+      className={`fixed top-(--chrome-top,0px) right-0 left-0 z-50 flex w-full flex-col items-center transition-[background-color,backdrop-filter] duration-300 ${scrolled && !open ? 'bg-surface/70 backdrop-blur-md' : 'bg-transparent'}`}
       aria-label="Main"
     >
       <div
@@ -133,7 +135,7 @@ export function SummitNav({ brand, nav, pictured }: Props) {
         <div
           id={PANEL_ID}
           inert={narrow && !open}
-          className={`${open ? 'max-md:w-full' : 'max-md:w-0'} flex items-center gap-10 text-sm max-md:fixed max-md:top-0 max-md:left-0 max-md:z-50 max-md:h-screen max-md:flex-col max-md:justify-center max-md:overflow-hidden max-md:bg-surface/75 max-md:backdrop-blur max-md:transition-all max-md:duration-300 md:gap-5 lg:gap-10`}
+          className={`${open ? 'max-md:w-full' : 'max-md:w-0'} flex items-center gap-10 text-sm max-md:fixed max-md:top-(--chrome-top,0px) max-md:bottom-0 max-md:left-0 max-md:z-50 max-md:flex-col max-md:justify-center max-md:overflow-hidden max-md:bg-surface/75 max-md:backdrop-blur max-md:transition-all max-md:duration-300 md:gap-5 lg:gap-10`}
         >
           {nav.links.map((link) => (
             <a

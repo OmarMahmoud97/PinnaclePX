@@ -234,7 +234,8 @@ const EXIT_MS = 600
 // 30px left after a beat and out to 20px over a shade of its own that holds it clear of any
 // picture, a white one included (vector.css), a frosted close disc at the top right growing in
 // from four fifths and shrinking out, the whole fading over 0.3s each way; Escape closes it,
-// the page behind it stops scrolling while it is open, and the bar returns as it goes.
+// the page behind it stops scrolling while it is open, and the bar returns as it goes. It starts
+// below the studio's bar while any of it shows (--chrome-top, decision 22).
 function Overlay({ project, onClosed }: { project: Project; onClosed: () => void }) {
   const [closing, setClosing] = useState(false)
   useEffect(() => {
@@ -261,7 +262,7 @@ function Overlay({ project, onClosed }: { project: Project; onClosed: () => void
       role="dialog"
       aria-modal="true"
       aria-label={`${project.titleUp} ${project.titleDown}`}
-      className={`fixed inset-0 z-100 transition-opacity duration-300 starting:opacity-0 ${closing ? 'opacity-0' : ''}`}
+      className={`fixed inset-x-0 top-(--chrome-top,0px) bottom-0 z-100 transition-opacity duration-300 starting:opacity-0 ${closing ? 'opacity-0' : ''}`}
     >
       <div
         className={`absolute inset-0 transition-transform duration-600 ease-[cubic-bezier(0.22,1,0.36,1)] starting:scale-110 ${closing ? 'scale-105' : ''}`}

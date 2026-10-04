@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { ConceptPending } from '@/app/preview/_components/concept-pending'
 import { typeStyle } from '@/app/preview/_components/fonts'
-import { StudioBar } from '@/app/preview/_components/studio-bar'
+import { StudioBar, UNDER_STUDIO_BAR } from '@/app/preview/_components/studio-bar'
 import type { TemplateAssets } from '@/lib/copy-slots/assets'
 import { AppError } from '@/lib/errors'
 import { readSubmissionWithLead } from '@/lib/db/submissions'
@@ -53,7 +53,7 @@ export default async function ConceptPage({ params }: { params: Params }) {
     status.status === 'ready' || status.status === 'partial' ? status.concepts[index] : undefined
 
   return (
-    <div className="flex min-h-dvh flex-col">
+    <div className="flex min-h-dvh flex-col" style={UNDER_STUDIO_BAR}>
       <StudioBar slug={row.slug} index={index} count={row.conceptCount} company={answers.company} />
       {concept?.ready !== true || templateId === null ? (
         <ConceptPending slug={row.slug} initial={status} index={index} />

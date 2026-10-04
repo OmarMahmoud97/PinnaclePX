@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation'
 import { typeStyle } from '@/app/preview/_components/fonts'
-import { StudioBar } from '@/app/preview/_components/studio-bar'
+import { StudioBar, UNDER_STUDIO_BAR } from '@/app/preview/_components/studio-bar'
 import { paletteFor } from '@/lib/brief/palettes'
 import { STYLE_IDS, type VisualStyle } from '@/lib/brief/styles'
 import type { SubmissionAnswers } from '@/lib/brief/submission'
@@ -163,7 +163,7 @@ export function DevConcept({
   // As the preview page sets a design under the bar: the bar first in a column, then the page.
   // The column's data attribute is only how the studio-bar check finds the bar.
   return (
-    <div className="flex min-h-dvh flex-col" data-dev-studio="">
+    <div className="flex min-h-dvh flex-col" style={UNDER_STUDIO_BAR} data-dev-studio="">
       <StudioBar slug="dev" index={0} count={chosen.length} company={answers.company} />
       {page}
     </div>

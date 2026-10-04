@@ -23,6 +23,8 @@ const GLASS_AT = 10
 // on a sheet that has gone; a link chosen in it hands focus to the block the link leads to, so
 // the next Tab carries on from there rather than from the top of the page (decision 15, as
 // refined on 2 October 2026, docs/template-fit-decisions.md).
+// Both start below the studio's bar while any of it shows (--chrome-top, decision 22); the
+// transition eases the glass, never the bar's place, so the bar keeps pace with the studio's.
 export function EmberNav({ brand, nav }: Props) {
   const [open, setOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
@@ -78,7 +80,7 @@ export function EmberNav({ brand, nav }: Props) {
   return (
     <>
       <header
-        className={`fixed top-0 z-20 ${pad} w-full transition-all duration-300 ${scrolled ? 'bg-surface/70 backdrop-blur-md' : 'bg-transparent'}`}
+        className={`fixed top-(--chrome-top,0px) z-20 ${pad} w-full transition-[background-color,backdrop-filter] duration-300 ${scrolled ? 'bg-surface/70 backdrop-blur-md' : 'bg-transparent'}`}
       >
         <div className="@container mx-auto flex max-w-7xl items-center justify-between gap-6 py-4 font-medium">
           <a href="#top" aria-label={`${brand.name} home`}>
@@ -119,7 +121,7 @@ export function EmberNav({ brand, nav }: Props) {
       <div
         id={PANEL_ID}
         inert={!open}
-        className={`fixed inset-0 z-40 flex transform flex-col items-center justify-center bg-surface/75 p-8 backdrop-blur-md transition-transform duration-300 ${open ? 'translate-x-0' : 'translate-x-full'}`}
+        className={`fixed inset-x-0 top-(--chrome-top,0px) bottom-0 z-40 flex transform flex-col items-center justify-center bg-surface/75 p-8 backdrop-blur-md transition-transform duration-300 ${open ? 'translate-x-0' : 'translate-x-full'}`}
       >
         <nav aria-label="Mobile" className="flex flex-col items-center space-y-6 font-medium">
           {nav.links.map((link) => (

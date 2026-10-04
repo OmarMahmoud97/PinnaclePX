@@ -63,7 +63,8 @@ function focusBlock(href: string) {
 // of it at any width, its sides are 12px below 640px (the source's 16px left fewer names on
 // one line), on phones narrower than 390px its name steps down towards 14px, and a name too
 // long for one line takes a second, then ends in an ellipsis, the whole name staying in the
-// link's label. The whole bar goes while a project is open full screen (vector.css).
+// link's label. The whole bar goes while a project is open full screen (vector.css). It starts
+// below the studio's bar while any of it shows (--chrome-top, decision 22).
 export function VectorHeader({ brand, nav }: Props) {
   const [open, setOpen] = useState(false)
   const [closing, setClosing] = useState(false)
@@ -131,7 +132,7 @@ export function VectorHeader({ brand, nav }: Props) {
   return (
     <header
       data-rise="drop"
-      className="vector-bar fixed top-0 right-0 left-0 z-50 px-4 py-6 sm:px-12 sm:py-12 lg:px-24"
+      className="vector-bar fixed top-(--chrome-top,0px) right-0 left-0 z-50 px-4 py-6 sm:px-12 sm:py-12 lg:px-24"
     >
       <div className={`${container} flex items-center justify-between gap-4`}>
         <a
