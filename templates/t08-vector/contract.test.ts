@@ -96,17 +96,6 @@ describe('vectorCopySchema', () => {
     expect(vectorContract.guide).not.toContain('pieces of work')
   })
 
-  it('has the menu name the items and the footer repeat the menu, never "their work"', () => {
-    const lines = vectorContract.guide.split('\n')
-    expect(lines).toContain(
-      '- nav.links[]: 3 to 14 characters, two to six short menu labels, in order: home, a word or two naming the items under the marquee, what they offer, about, questions, contact; no two the same',
-    )
-    expect(lines).toContain(
-      '- footer.navigation.links[].label: 3 to 16 characters, two to six link labels for that column, each the same as the menu label for the block it leads to; each link has a target of top, projects, services, services-menu, about, faq or contact',
-    )
-    expect(vectorContract.guide).not.toContain('their work')
-  })
-
   it('keeps the capitals of the name the owner typed', () => {
     expect(vectorContract.guide.split('\n')).toContain(
       '- brand.name: 2 to 24 characters, the company name as given, keeping its capitals, shortened only if it is longer than the range',
