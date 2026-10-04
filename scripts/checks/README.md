@@ -59,7 +59,7 @@ Beside each template's corpus, `_expected.json` holds what the checks expect of 
 
 ## In CI
 
-`e2e/reduced-motion-template-fit.spec.ts` runs the text-fit measure (`lib/text-fit-measure.mjs`) over each template's corpus at 320, 390, 768, 1024 and 1440, in each answer's own look: the three longest stored answers and every synthetic one, 90 seconds a case. The cases that fail on main are each template's `textFit.failing` (`_expected.json`), expected failures that template's pull request turns into passes. Its `textFit.unsettled` cases are skipped, with why: those that pass only narrowly (they fail with text 0.03em or 0.05em wider, and CI's Linux Chromium sets text about 4% wider), and Aurora's that fail only through its header ask (whose two display classes the dev server's style sheets order either way from one start to the next, t01-D2).
+`e2e/reduced-motion-template-fit.spec.ts` runs the text-fit measure (`lib/text-fit-measure.mjs`) over each template's corpus at 320, 390, 768, 1024 and 1440, in each answer's own look: the three longest stored answers and every synthetic one, 90 seconds a case. Each page's display and body faces are loaded first, by the face's own name; a face that does not load fails the case with its name, never a measure in a fallback face. The cases that fail on main are each template's `textFit.failing` (`_expected.json`), expected failures that template's pull request turns into passes. Its `textFit.unsettled` cases are skipped, with why: those that pass only narrowly (they fail with text 0.03em or 0.05em wider, and CI's Linux Chromium sets text about 4% wider), and Aurora's that fail only through its header ask (whose two display classes the dev server's style sheets order either way from one start to the next, t01-D2).
 
 ## Frozen detectors and their blind spots
 
@@ -105,3 +105,9 @@ Each change below was made before any template pull request merged. What each fo
 - **A crash costs one page, not a run**, and a page settles without waiting on an animation driven by scrolling.
 - **The over-picture check finds an open phone menu's button by a mark**, so a menu that Escape leaves open (Atlas's on main) is shut and measured, not lost to a timeout.
 - **Each template's expected outline** was added to the accessible-names check, and the mixed stand-in logos moved inside the mixed band.
+
+### Changed on 4 October 2026
+
+Blind spots the template checks of 3 and 4 October found. What each found before and after it, on main's corpus, template by template, is in the pull request's description.
+
+- **Fonts load by the face's own name, and a face that does not load fails by name.** `loadFonts` asked for next/font's whole family list, which goes on to a fallback drawn from a local font (Arial or Times New Roman). Linux lacks those, so on CI's runner every load failed with "NetworkError: A network error occurred." and all 69 cases of the CI text-fit guard failed before measuring anything. It now asks for the face the list names first (as `app/start/_components/draft/load-faces.ts` does), at 400 and 700, and throws naming each face and weight that did not load or that no `@font-face` answers for, and when no element sets the look's faces, so nothing is measured in a face the page does not use.
