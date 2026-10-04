@@ -1,6 +1,7 @@
 import { CircleCheck } from 'lucide-react'
 import Image from 'next/image'
 import type { SummitContent } from '../copy-slots'
+import { fitWord } from '../fit'
 import { anchored, delay, eyebrow, pad, title } from '../styles'
 
 type Props = Pick<SummitContent, 'why'>
@@ -34,11 +35,16 @@ export function SummitWhy({ why }: Props) {
   }
   return (
     <section id="why-choose-us" className={`${pad} ${anchored} mt-40`}>
-      <div className="mx-auto flex max-w-7xl flex-col items-center">
+      <div className="@container mx-auto flex max-w-7xl flex-col items-center">
         <p data-fade style={delay(0.2)} className={eyebrow}>
           {why.eyebrow}
         </p>
-        <h2 data-fade data-spring="soft" className={`${title} mt-6 max-w-xl text-center text-5xl`}>
+        <h2
+          data-fade
+          data-spring="soft"
+          className={`${title} mt-6 max-w-xl text-center text-[length:min(3rem,min(97cqi,36rem)/var(--summit-word,1))]`}
+          style={fitWord(why.heading)}
+        >
           {why.heading}
         </h2>
         <div

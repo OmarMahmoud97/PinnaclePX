@@ -1,4 +1,5 @@
 import type { SummitContent } from '../copy-slots'
+import { fitWord } from '../fit'
 import { anchored, delay, eyebrow, gap, pad, title } from '../styles'
 
 type Props = Pick<SummitContent, 'steps'>
@@ -12,7 +13,7 @@ export function SummitSteps({ steps }: Props) {
   return (
     <section
       id="steps"
-      className={`mx-auto flex w-full max-w-7xl flex-col justify-between gap-12 lg:flex-row ${pad} ${anchored} ${gap}`}
+      className={`@container mx-auto flex w-full max-w-7xl flex-col justify-between gap-12 lg:flex-row ${pad} ${anchored} ${gap}`}
     >
       <div className="flex shrink-0 flex-col items-center lg:items-start">
         <p data-fade style={delay(0.2)} className={eyebrow}>
@@ -21,7 +22,8 @@ export function SummitSteps({ steps }: Props) {
         <h2
           data-fade
           data-spring="soft"
-          className={`${title} mt-6 max-w-lg text-center text-4xl md:text-5xl lg:text-left`}
+          className={`${title} mt-6 max-w-lg text-center text-[length:min(2.25rem,min(97cqi,32rem)/var(--summit-word,1))] md:text-[length:min(3rem,min(97cqi,32rem)/var(--summit-word,1))] lg:text-left`}
+          style={fitWord(steps.heading)}
         >
           {steps.heading}
         </h2>

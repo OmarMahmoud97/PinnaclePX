@@ -1,6 +1,7 @@
 import { ArrowRight } from 'lucide-react'
 import Image from 'next/image'
 import type { SummitContent } from '../copy-slots'
+import { fitWord } from '../fit'
 import { anchored, delay, gap, pad, title } from '../styles'
 
 type Props = Pick<SummitContent, 'cta'>
@@ -16,13 +17,14 @@ export function SummitCta({ cta }: Props) {
     <section id="cta" className={`${pad} ${anchored} ${gap}`}>
       <div
         data-fade="brighten"
-        className="mx-auto flex w-full max-w-270 flex-col items-center justify-between gap-8 overflow-hidden rounded-2xl bg-surface-muted p-8 md:p-12 lg:flex-row lg:p-16"
+        className="@container mx-auto flex w-full max-w-270 flex-col items-center justify-between gap-8 overflow-hidden rounded-2xl bg-surface-muted p-8 md:p-12 lg:flex-row lg:p-16"
       >
         <div className="flex flex-col items-center lg:items-start">
           <h2
             data-fade
             data-spring="soft"
-            className={`${title} max-w-md text-center text-4xl md:text-5xl lg:text-left`}
+            className={`${title} max-w-md text-center text-[length:min(2.25rem,min(97cqi,28rem)/var(--summit-word,1))] md:text-[length:min(3rem,min(97cqi,28rem)/var(--summit-word,1))] lg:text-left`}
+            style={fitWord(cta.heading)}
           >
             {cta.heading}
           </h2>

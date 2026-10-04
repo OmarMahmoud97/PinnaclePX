@@ -1,6 +1,7 @@
 import { CircleCheck } from 'lucide-react'
 import Image from 'next/image'
 import type { SummitContent } from '../copy-slots'
+import { fitWord } from '../fit'
 import { anchored, delay, eyebrow, gap, pad, title } from '../styles'
 
 type Props = Pick<SummitContent, 'services'>
@@ -14,11 +15,16 @@ type Props = Pick<SummitContent, 'services'>
 export function SummitServices({ services }: Props) {
   return (
     <section id="our-services" className={`${pad} ${anchored} ${gap}`}>
-      <div className="mx-auto flex max-w-6xl flex-col items-center">
+      <div className="@container mx-auto flex max-w-6xl flex-col items-center">
         <p data-fade style={delay(0.2)} className={eyebrow}>
           {services.eyebrow}
         </p>
-        <h2 data-fade data-spring="soft" className={`${title} mt-6 max-w-xl text-center text-5xl`}>
+        <h2
+          data-fade
+          data-spring="soft"
+          className={`${title} mt-6 max-w-xl text-center text-[length:min(3rem,min(97cqi,36rem)/var(--summit-word,1))]`}
+          style={fitWord(services.heading)}
+        >
           {services.heading}
         </h2>
         <div
@@ -32,11 +38,14 @@ export function SummitServices({ services }: Props) {
               className={`sticky top-24 flex flex-col items-stretch justify-between gap-8 rounded-3xl p-4 pl-8 md:flex-row md:gap-12 lg:gap-16 ${index % 2 === 0 ? 'bg-surface-muted' : 'bg-accent'}`}
               style={{ top: index === 0 ? undefined : 40 * index + 96 }}
             >
-              <div className="flex grow flex-col justify-center">
+              <div className="@container flex grow flex-col justify-center">
                 <span className="w-fit rounded-lg bg-surface px-3.5 py-1 text-on-surface/85">
                   {item.tag}
                 </span>
-                <h3 className="mt-6 max-w-104 font-display text-3xl leading-tight font-medium tracking-tight text-on-surface/85 md:text-[40px]">
+                <h3
+                  className="mt-6 max-w-104 font-display text-[length:min(1.875rem,min(97cqi,26rem)/var(--summit-word,1))] leading-tight font-medium tracking-tight text-on-surface/85 md:text-[length:min(2.5rem,min(97cqi,26rem)/var(--summit-word,1))]"
+                  style={fitWord(item.title)}
+                >
                   {item.title}
                 </h3>
                 <p className="mt-3 max-w-94 text-sm text-on-surface-muted">{item.body}</p>

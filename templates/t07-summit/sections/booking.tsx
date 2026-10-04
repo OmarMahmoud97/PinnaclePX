@@ -1,5 +1,6 @@
 import { ArrowRight, ChevronDown } from 'lucide-react'
 import type { SummitContent } from '../copy-slots'
+import { fitWord } from '../fit'
 import { anchored, delay, eyebrow, field, gap, label, pad, title } from '../styles'
 
 type Props = Pick<SummitContent, 'booking'>
@@ -25,14 +26,15 @@ export function SummitBooking({ booking }: Props) {
   return (
     <section id="contact" className={`${pad} ${anchored} ${gap}`}>
       <div className="mx-auto flex w-full max-w-275 flex-col items-start justify-between gap-16 lg:flex-row">
-        <div className="flex flex-col items-start lg:w-1/2">
+        <div className="@container flex w-full flex-col items-start lg:w-1/2">
           <span data-fade style={delay(0.2)} className={eyebrow}>
             {booking.eyebrow}
           </span>
           <h2
             data-fade
             data-spring="soft"
-            className={`${title} mt-6 max-w-md text-left text-4xl md:text-5xl`}
+            className={`${title} mt-6 max-w-md text-left text-[length:min(2.25rem,min(97cqi,28rem)/var(--summit-word,1))] md:text-[length:min(3rem,min(97cqi,28rem)/var(--summit-word,1))]`}
+            style={fitWord(booking.heading)}
           >
             {booking.heading}
           </h2>

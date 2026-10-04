@@ -1,6 +1,7 @@
 import { ArrowRight } from 'lucide-react'
 import Image from 'next/image'
 import type { SummitContent } from '../copy-slots'
+import { fitWord } from '../fit'
 import { anchored, delay, eyebrow, gap, pad, title } from '../styles'
 
 type Props = Pick<SummitContent, 'facilities'>
@@ -17,14 +18,15 @@ type Props = Pick<SummitContent, 'facilities'>
 export function SummitFacilities({ facilities }: Props) {
   return (
     <section id="photos" className={`${pad} ${anchored} ${gap}`}>
-      <div className="mx-auto flex max-w-6xl flex-col items-center">
+      <div className="@container mx-auto flex max-w-6xl flex-col items-center">
         <p data-fade style={delay(0.2)} className={`${eyebrow} font-medium`}>
           {facilities.eyebrow}
         </p>
         <h2
           data-fade
           data-spring="soft"
-          className={`${title} mt-6 max-w-2xl text-center text-4xl md:text-5xl`}
+          className={`${title} mt-6 max-w-2xl text-center text-[length:min(2.25rem,min(97cqi,42rem)/var(--summit-word,1))] md:text-[length:min(3rem,min(97cqi,42rem)/var(--summit-word,1))]`}
+          style={fitWord(facilities.heading)}
         >
           {facilities.heading}
         </h2>
