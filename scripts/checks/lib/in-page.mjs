@@ -365,20 +365,33 @@ export function logoBoxes() {
 // The look's two faces, loaded before anything is measured. They load on demand (fonts.ts sets
 // no preload), so the document can report its fonts ready before either has started; a text
 // measured in the fallback face can fit where the look's own face does not.
+// Only the face next/font's family list names first is asked for, as the draft's faces are
+// (app/start/_components/draft/load-faces.ts): the list goes on to a fallback drawn from a local
+// font (Arial or Times New Roman), which Linux lacks, CI's runner among them, and a load that
+// names it fails there with a NetworkError although the face itself arrived. A face that does
+// not load, or that no @font-face answers for, fails the page by name, so nothing is measured in
+// a face the page does not use.
 export async function loadFonts() {
   const root = [...document.querySelectorAll('[style]')].find(
     (el) => el.style.getPropertyValue('--template-font-display') !== '',
   )
-  if (root !== undefined) {
-    for (const name of ['--template-font-display', '--template-font-body']) {
-      const family = root.style.getPropertyValue(name)
-      if (family === '') continue
-      await Promise.all(
-        ['400', '700'].map((weight) => document.fonts.load(`${weight} 24px ${family}`)),
-      )
+  if (root === undefined) throw new Error('no element sets --template-font-display')
+  const failed = []
+  for (const name of ['--template-font-display', '--template-font-body']) {
+    const family = root.style.getPropertyValue(name).trim()
+    if (family === '') continue
+    const face = family.split(',')[0].trim()
+    for (const weight of ['400', '700']) {
+      try {
+        const loaded = await document.fonts.load(`${weight} 24px ${face}`)
+        if (loaded.length === 0) failed.push(`${face} ${weight} (no @font-face for it)`)
+      } catch (error) {
+        failed.push(`${face} ${weight} (${String(error)})`)
+      }
     }
   }
   await document.fonts.ready
+  if (failed.length > 0) throw new Error(`fonts that did not load: ${failed.join('; ')}`)
 }
 
 // The page at rest: every running animation or transition that ends in time has ended, at most
