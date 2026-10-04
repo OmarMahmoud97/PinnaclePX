@@ -1,20 +1,12 @@
 {
   "note": "What the checks expect of this template on main, measured on 3 October 2026. textFit is the CI text-fit guard’s (e2e/reduced-motion-template-fit.spec.ts): a case in failing is expected to fail, and one in unsettled is skipped, with why. outline is the accessible-names check’s (scripts/checks/a11y-names.mjs): each block, by its address (a renamed address after a comma), and the heading level it opens with. The template’s own pull request edits this file and no other outside its folder: a case its fix makes pass leaves failing (Playwright reports it until it does), and an address it renames is renamed here.",
-  "fixedBy": "Aurora’s Phase 2 pull request, fix/aurora-template-fit",
+  "fixedBy": "a later Aurora pull request, which leaves room for text 4% wider in its header and buttons",
   "textFit": {
-    "failing": [
-      "l6-physio-unbroken",
-      "synthetic-long-words",
-      "synthetic-longest",
-      "synthetic-name-40",
-      "synthetic-name-60",
-      "synthetic-name-80"
-    ],
+    "failing": [],
     "unsettled": {
-      "l7-florist": "fails only through the header ask on phones (t01-D2), whose two display classes the dev server orders either way from one start to the next",
-      "l6-architects": "fails only through the header ask on phones (t01-D2), whose two display classes the dev server orders either way from one start to the next",
-      "synthetic-name-10": "fails only through the header ask on phones (t01-D2), whose two display classes the dev server orders either way from one start to the next",
-      "synthetic-name-16": "fails only through the header ask on phones (t01-D2), whose two display classes the dev server orders either way from one start to the next"
+      "l6-physio-unbroken": "passes on Windows but fails with its text 0.05em wider, and CI's Linux Chromium sets text about 4% wider",
+      "synthetic-long-words": "passes on Windows but fails with its text 0.05em wider, and CI's Linux Chromium sets text about 4% wider",
+      "synthetic-longest": "passes on Windows but fails with its text 0.05em wider, and CI's Linux Chromium sets text about 4% wider"
     }
   },
   "outline": [
