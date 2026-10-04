@@ -114,6 +114,23 @@ describe('summitCopySchema', () => {
     expect(summitContract.guide).not.toContain('four reasons')
   })
 
+  // The fourth menu entry opens the photographs but read "FAQs" or "Reviews" on 5 of 10 pages,
+  // and two footers said "Book now" for businesses that take no bookings (paid pass 3, t07-L3,
+  // L4, L8 and L9), so the guide names what each leads to, with each short slot's size in words.
+  it('has a guide that says what the menu, the badge and the footer links lead to', () => {
+    const lines = summitContract.guide.split('\n')
+    for (const line of [
+      '- hero.badge.text: 8 to 40 characters, a short line beside it, two to six words on where they work or who they serve',
+      '- nav.links[].label: 3 to 12 characters, two to four menu labels of one or two words, in order: home, about, what they offer, a name for the four photographs',
+      '- footer.columns[].links[].label: 3 to 20 characters, two to five link labels of one to three words per column; each link has a target of top, home, why-choose-us, our-services, booking-process, facilities, faq, book-appointment or cta, where booking-process is the steps, facilities the four photographs, book-appointment the form and cta the closing ask',
+    ]) {
+      expect(lines).toContain(line)
+    }
+    for (const phrase of ['what they have', 'Open every day of the week']) {
+      expect(summitContract.guide).not.toContain(phrase)
+    }
+  })
+
   it('has a guide that names every slot the copy stage writes, and none it does not', () => {
     const lines = summitContract.guide.split('\n')
     expect(lines).toContain(
