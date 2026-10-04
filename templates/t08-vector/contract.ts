@@ -106,7 +106,7 @@ const PURPOSE: Readonly<Record<ModelSlot, string>> = {
   'projects.marquee.text': 'the first word of the giant marquee, such as Selected',
   'projects.marquee.accent': 'its second word, set in the thin serif, such as Work',
   'projects.items[].titleUp':
-    'two to four things they offer or are known for, each a title in two short parts: the first part',
+    'two to four pieces of work, each a title in two short parts: the first part',
   'projects.items[].titleDown': 'the second part of each title, set in the serif italic',
   'projects.items[].description': 'one sentence about each',
   'services.heading':
