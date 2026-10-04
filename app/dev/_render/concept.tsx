@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation'
 import { typeStyle } from '@/app/preview/_components/fonts'
+import { logoPlate } from '@/app/preview/_components/logo-plate'
 import { StudioBar, UNDER_STUDIO_BAR } from '@/app/preview/_components/studio-bar'
 import { paletteFor } from '@/lib/brief/palettes'
 import { STYLE_IDS, type VisualStyle } from '@/lib/brief/styles'
@@ -11,7 +12,7 @@ import { schemeFor } from '@/lib/tokens/scheme'
 import type { ContrastPair, Scheme } from '@/lib/tokens/types'
 import { contractFor } from '@/templates/registry'
 import { renderConcept } from '@/templates/render'
-import { STAND_IN_FILLS, type StandInFill, standInSrc } from './stand-in'
+import { polarityOf, STAND_IN_FILLS, type StandInFill, standInSrc } from './stand-in'
 
 // What the development routes render: one template's copy as a visitor's page, through
 // renderConcept as the preview page renders it, with the tokens the pipeline would derive and
@@ -23,7 +24,10 @@ import { STAND_IN_FILLS, type StandInFill, standInSrc } from './stand-in'
 //   ?pictures=<fill>               every image slot holds a stand-in picture of that fill: white,
 //                                  black, grey (default: none, as the eval renders)
 //   ?logo=<fill>                   a stand-in image logo, a uniform mark of that fill, such as
-//                                  l034 for CIE lightness 0.34 (default: the wordmark)
+//                                  l034 for CIE lightness 0.34 (default: the wordmark), passed
+//                                  with the polarity the logo stage reads from it and, where the
+//                                  scheme is its own shade, the plate the preview page would give
+//                                  it (decision 23)
 //   ?email=<address>               the page's email, which a visitor's page always has
 //                                  (default: none)
 //   ?bar=1                         the studio bar above the page, as the preview page draws it
@@ -150,6 +154,8 @@ export function DevConcept({
             src: standInSrc(view.logo, LOGO, 'logo'),
             alt: answers.company,
             ...LOGO,
+            polarity: polarityOf(view.logo),
+            plate: logoPlate(polarityOf(view.logo), view.scheme, hex),
           },
     images,
     email: view.email,

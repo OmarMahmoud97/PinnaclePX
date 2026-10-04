@@ -11,7 +11,7 @@ type Props = { brand: SummitContent['brand'] }
 export function SummitLogo({ brand }: Props) {
   const { logo, name } = brand
   if (logo.kind === 'image') {
-    return (
+    const mark = (
       <Image
         src={logo.src}
         alt={logo.alt}
@@ -19,6 +19,18 @@ export function SummitLogo({ brand }: Props) {
         height={logo.height}
         className="h-[35px] w-auto max-w-full object-contain object-left"
       />
+    )
+    // On a page of its own shade it sits on the plate the page gives it (decision 23), which
+    // reaches past the mark so the bar keeps its height. It reaches down, never up: the footer
+    // starts at the logo's top and hides what lies above it.
+    if (logo.plate === undefined) return mark
+    return (
+      <span
+        className="-mx-2 -mb-2 inline-flex rounded-md px-2 py-1"
+        style={{ backgroundColor: logo.plate }}
+      >
+        {mark}
+      </span>
     )
   }
   return (

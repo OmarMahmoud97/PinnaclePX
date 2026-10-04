@@ -1,5 +1,6 @@
 // The pictures a template receives alongside its copy. The pipeline produces them (the logo
 // stage and the imagery stage), templates consume them, and both sides agree on this shape.
+import type { LogoPolarity } from '@/lib/logo/types'
 
 type ImageCredit = Readonly<{ photographer: string; url: string }>
 
@@ -14,10 +15,22 @@ export type SlotImage = Readonly<{
 }>
 
 // The wordmark is the brand's name set in the display face; an image logo is the visitor's own,
-// normalised to a raster by the logo stage.
+// normalised to a raster by the logo stage, with the artwork's polarity as the stage read it.
+// When the artwork is the page's own shade, as dark artwork is on the dark look, the page gives
+// it a plate: the colour of the other scheme's surface, which the template draws behind the
+// logo (decision 23, app/preview/_components/logo-plate.ts). An example page's own logo, which
+// suits its page, carries neither.
 export type TemplateLogo =
   | Readonly<{ kind: 'wordmark' }>
-  | Readonly<{ kind: 'image'; src: string; alt: string; width: number; height: number }>
+  | Readonly<{
+      kind: 'image'
+      src: string
+      alt: string
+      width: number
+      height: number
+      polarity?: LogoPolarity
+      plate?: string | undefined
+    }>
 
 // Everything a template needs besides copy: the logo, one image per named slot, and the owner's
 // email for a template whose contact or newsletter form opens a mail message. A slot the

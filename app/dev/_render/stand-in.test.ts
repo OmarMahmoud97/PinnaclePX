@@ -1,5 +1,5 @@
 import { readPolarity } from '@/lib/logo/polarity'
-import { channelOf, type StandInFill } from './stand-in'
+import { channelOf, polarityOf, type StandInFill } from './stand-in'
 
 // The stand-in logos are decision 23's marks: each must be the artwork its name says when the
 // logo stage reads it (lib/logo/polarity.ts), or a check of "mixed" artwork measures dark or
@@ -32,6 +32,13 @@ describe('the stand-in marks', () => {
   it.each(EXPECTED)('%s is read as %s', (fill, polarity) => {
     expect(readPolarity(markOf(channelOf(fill)))?.polarity).toBe(polarity)
   })
+
+  it.each(EXPECTED)(
+    '%s is passed to the template as %s, as the stage reads it',
+    (fill, polarity) => {
+      expect(polarityOf(fill)).toBe(polarity)
+    },
+  )
 
   it('stays within a step of the lightness it is named for', () => {
     expect(channelOf('l035')).toBe(83)

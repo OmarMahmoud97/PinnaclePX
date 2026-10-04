@@ -11,7 +11,7 @@ type Props = { brand: MonolithContent['brand'] }
 export function MonolithLogo({ brand }: Props) {
   const { logo, name } = brand
   if (logo.kind === 'image') {
-    return (
+    const mark = (
       <Image
         src={logo.src}
         alt={logo.alt}
@@ -19,6 +19,17 @@ export function MonolithLogo({ brand }: Props) {
         height={logo.height}
         className="h-7 w-auto object-contain"
       />
+    )
+    // On a page of its own shade it sits on the plate the page gives it (decision 23), which
+    // reaches past the mark so the row keeps its height, and narrows with it.
+    if (logo.plate === undefined) return mark
+    return (
+      <span
+        className="-mx-2 -my-1 flex min-w-0 rounded-md px-2 py-1"
+        style={{ backgroundColor: logo.plate }}
+      >
+        {mark}
+      </span>
     )
   }
   return <span className="min-w-0 wrap-anywhere">{name}</span>

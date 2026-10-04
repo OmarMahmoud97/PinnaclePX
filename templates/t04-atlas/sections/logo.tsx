@@ -10,14 +10,26 @@ export function AtlasLogo({ brand, where }: Props) {
   const { logo, name } = brand
   const size = where === 'header' ? 'w-24 xl:w-28' : 'w-24'
   if (logo.kind === 'image') {
-    return (
+    const plated = logo.plate !== undefined
+    const mark = (
       <Image
         src={logo.src}
         alt={logo.alt}
         width={logo.width}
         height={logo.height}
-        className={`${size} h-auto ${where === 'footer' ? '-mt-2' : ''}`}
+        className={`${size} h-auto ${where === 'footer' && !plated ? '-mt-2' : ''}`}
       />
+    )
+    // On a page of its own shade it sits on the plate the page gives it (decision 23), which
+    // reaches past the mark so the row keeps its height, and takes the footer's lift from it.
+    if (!plated) return mark
+    return (
+      <span
+        className={`-mx-2 inline-flex rounded-md px-2 py-1 ${where === 'footer' ? '-mt-3 -mb-1' : '-my-1'}`}
+        style={{ backgroundColor: logo.plate }}
+      >
+        {mark}
+      </span>
     )
   }
   return (
