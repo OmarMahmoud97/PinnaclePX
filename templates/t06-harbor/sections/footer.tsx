@@ -1,4 +1,3 @@
-import { ArrowUpRight } from 'lucide-react'
 import { Fragment } from 'react'
 import type { HarborContent, HarborImage } from '../copy-slots'
 import { container } from '../styles'
@@ -15,11 +14,13 @@ const YEAR = new Date().getFullYear()
 // The source's Footer: the name set huge and almost invisible along its foot, then the logo, a
 // paragraph and a joined email field and arrow button at the left, three columns of links at
 // the right, and under a hairline the legal line, the ringed social marks and a line of small
-// print. The source's email field did nothing; here it posts to the owner's email as a mail
-// message when it is known, and otherwise leads to the page's ask. The source's own maker's
-// credit is not here; the photographers' credit the Pexels licence asks for is.
+// print. The email field offered news by email and the small print named privacy and terms
+// pages; no visitor's sentence offers news and a taster has neither page, so neither is drawn,
+// though the copy still carries their words. The columns' headings are h3, one level under the
+// page's block headings, where the source's h4 skipped one. A legal name with nowhere to break
+// breaks inside the screen's width rather than run past it. The source's own maker's credit is
+// not here; the photographers' credit the Pexels licence asks for is.
 export function HarborFooter({ brand, footer, credits }: Props) {
-  const { newsletter } = footer
   return (
     <footer className="relative overflow-hidden border-t border-border bg-surface pt-20 pb-10">
       <div
@@ -34,57 +35,27 @@ export function HarborFooter({ brand, footer, credits }: Props) {
         <div className="mb-20 grid grid-cols-1 gap-16 lg:grid-cols-12">
           <div className="lg:col-span-4">
             <a
-              className="mb-6 flex items-center gap-2"
+              className="@container mb-6 flex items-center gap-2"
               href="#top"
               aria-label={`${brand.name} home`}
             >
               <HarborLogo brand={brand} />
             </a>
-            <p className="mb-8 max-w-xs text-sm leading-relaxed text-on-surface/60">
+            <p className="max-w-xs text-sm leading-relaxed text-on-surface-muted">
               {footer.description}
             </p>
-            <div>
-              <p className="mb-3 text-xs font-semibold tracking-widest text-on-surface uppercase">
-                {newsletter.label}
-              </p>
-              <form
-                className="flex"
-                action={
-                  newsletter.email === null
-                    ? '#cta'
-                    : `mailto:${newsletter.email}?subject=${encodeURIComponent(newsletter.label)}`
-                }
-                method={newsletter.email === null ? 'get' : 'post'}
-                encType={newsletter.email === null ? undefined : 'text/plain'}
-              >
-                <input
-                  type="email"
-                  name="email"
-                  aria-label={newsletter.label}
-                  placeholder={newsletter.placeholder}
-                  className="flex-1 rounded-l-full border border-r-0 border-on-surface/10 bg-accent px-5 py-3 text-sm text-on-surface placeholder:text-on-surface/40 focus:border-brand-deeper/30 focus:outline-none"
-                />
-                <button
-                  type="submit"
-                  aria-label={newsletter.label}
-                  className="rounded-r-full bg-brand-deeper px-5 py-3 text-sm font-bold text-on-brand transition-colors hover:bg-brand-deepest"
-                >
-                  <ArrowUpRight size={16} aria-hidden="true" />
-                </button>
-              </form>
-            </div>
           </div>
           <div className="grid grid-cols-1 gap-10 sm:grid-cols-3 lg:col-span-8">
             {footer.columns.map((column) => (
               <div key={column.heading}>
-                <h4 className="mb-5 font-display text-xs font-black tracking-widest text-on-surface uppercase">
+                <h3 className="mb-5 font-display text-xs font-black tracking-widest text-on-surface uppercase">
                   {column.heading}
-                </h4>
+                </h3>
                 <ul className="space-y-3">
                   {column.links.map((link) => (
                     <li key={link.label}>
                       <a
-                        className="text-sm text-on-surface/60 transition-colors duration-200 hover:text-on-surface"
+                        className="text-sm text-on-surface-muted transition-colors duration-200 hover:text-on-surface"
                         href={link.href}
                       >
                         {link.label}
@@ -97,7 +68,7 @@ export function HarborFooter({ brand, footer, credits }: Props) {
           </div>
         </div>
         <div className="flex flex-col items-center justify-between gap-6 border-t border-border pt-8 md:flex-row">
-          <p className="text-xs text-on-surface/40">
+          <p className="max-w-full text-xs wrap-break-word text-on-surface-muted">
             &copy; {YEAR} {brand.legalName}. All rights reserved.
             {footer.note === '' ? '' : ` ${footer.note}`}
           </p>
@@ -116,7 +87,7 @@ export function HarborFooter({ brand, footer, credits }: Props) {
             </div>
           )}
           {credits.length > 0 && (
-            <p className="text-xs text-on-surface/40">
+            <p className="text-xs text-on-surface-muted">
               Photos by{' '}
               {credits.map((credit, index) => (
                 <Fragment key={credit.url}>
@@ -132,7 +103,6 @@ export function HarborFooter({ brand, footer, credits }: Props) {
               </a>
             </p>
           )}
-          <p className="text-xs text-on-surface/40">{footer.smallPrint}</p>
         </div>
       </div>
     </footer>

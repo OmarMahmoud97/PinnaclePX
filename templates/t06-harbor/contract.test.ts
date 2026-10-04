@@ -155,4 +155,10 @@ describe('assembleHarbor', () => {
     expect(content.cta.secondary.href).toBe('#about')
     expect(content.footer.columns[1]?.links[1]?.href).toBe('#top')
   })
+
+  it('sends the metrics target the copy model names to the band of phrases at #highlights', () => {
+    expect(copy.footer.columns[0]?.links[2]?.target).toBe('metrics')
+    const content = assembleHarbor(copy, { logo: { kind: 'wordmark' }, images: {}, email: null })
+    expect(content.footer.columns[0]?.links[2]?.href).toBe('#highlights')
+  })
 })
