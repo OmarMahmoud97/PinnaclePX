@@ -15,6 +15,11 @@ type Props = Pick<SummitContent, 'facilities'>
 // Without a photograph the cell is the quieter surface. The caption also comes up while its
 // link has keyboard focus, which the source's left unseen, and the cell clips rather than
 // hides its overflow, so focusing the link cannot scroll the photograph out of its frame.
+// The source's caption was a 30 percent wash, under which its white words fell to about 2:1
+// over a bright photograph or an empty cell; here the wash deepens from 60 percent at its top
+// to 70 at its foot, enough for WCAG AA over any picture, a pure white one included, and over
+// the empty cell (decision 7, docs/template-fit-decisions.md). Under reduced motion the caption
+// shows at once where it stands, rather than sliding up.
 export function SummitFacilities({ facilities }: Props) {
   return (
     <section id="photos" className={`${pad} ${anchored} ${gap}`}>
@@ -45,7 +50,7 @@ export function SummitFacilities({ facilities }: Props) {
                   className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                 />
               )}
-              <div className="pointer-events-auto absolute right-0 bottom-0 left-0 w-full bg-scrim/30 p-6 opacity-100 backdrop-blur transition-all duration-300 md:pointer-events-none md:-bottom-full md:p-8 md:opacity-0 md:group-hover:pointer-events-auto md:group-hover:bottom-0 md:group-hover:opacity-100 md:focus-within:pointer-events-auto md:focus-within:bottom-0 md:focus-within:opacity-100">
+              <div className="pointer-events-auto absolute right-0 bottom-0 left-0 w-full bg-linear-to-t from-scrim/70 to-scrim/60 p-6 opacity-100 backdrop-blur motion-safe:transition-all motion-safe:duration-300 md:pointer-events-none md:-bottom-full md:p-8 md:opacity-0 md:group-hover:pointer-events-auto md:group-hover:bottom-0 md:group-hover:opacity-100 md:focus-within:pointer-events-auto md:focus-within:bottom-0 md:focus-within:opacity-100">
                 <h3 className="text-xl font-medium text-on-scrim">{item.title}</h3>
                 <p className="mt-2 max-w-84 text-sm text-on-scrim">{item.body}</p>
                 <a
