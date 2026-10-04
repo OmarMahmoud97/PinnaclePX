@@ -456,7 +456,9 @@ export function summitFallbackCopy(brief: BrandBrief): SummitCopy {
       },
     },
     cta: {
-      heading: prose('cta.heading', `Ready to talk to ${name}?`),
+      // The closing question names the business when the whole name fits; a cut name would leave
+      // "Ready to talk to" dangling, so a name too long for it gets a question that names no one.
+      heading: label('cta.heading', `Ready to talk to ${name}?`, 'Ready when you are?'),
       body: prose('cta.body', positioning),
       button: cta,
     },
