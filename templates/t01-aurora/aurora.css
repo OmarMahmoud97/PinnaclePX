@@ -100,6 +100,16 @@
   }
 }
 
+/*
+ * A heading's words at the heading's own size, or smaller where its longest word (--aurora-word,
+ * its width in ems, fit.ts) would not fit 97% of the heading's width; the heading is the
+ * container. 1em is the heading's own size at that width.
+ */
+.aurora-fit {
+  display: block;
+  font-size: min(1em, 97cqi / var(--aurora-word, 1));
+}
+
 /* Colour, not motion, so it runs under reduced motion too. Without support the header is glass
  * from the start, which its own classes paint. */
 @supports (animation-timeline: scroll()) {

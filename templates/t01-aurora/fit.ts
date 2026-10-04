@@ -1,6 +1,10 @@
+import type { CSSProperties } from 'react'
+
 // Aurora showed its header links from md whatever their length, so at 768 they wrapped inside
-// their pills beside a long name. Here the links show only from a width whose row holds them on
-// one line beside the name and the button (sections/nav.tsx; decision 15,
+// their pills beside a long name, and set its headline and closing heading at one size, so a
+// long word ("Straightforward") ran past a phone's edge and was cut off. Here the links show only
+// from a width whose row holds them on one line beside the name and the button (sections/nav.tsx),
+// and those two headings are sized by their longest word (aurora.css, .aurora-fit; decision 15,
 // docs/template-fit-decisions.md). A text's width in ems is added up from the tables below.
 // Nothing is measured in the browser, so nothing moves once the page has drawn.
 
@@ -41,3 +45,14 @@ function tableOf(hundredths: readonly number[]): (text: string) => number {
 // A text's width in ems in the widest display face, and in the widest body face.
 export const displayEms = tableOf(DISPLAY)
 export const bodyEms = tableOf(BODY)
+
+// The width in ems of a heading's longest word in the display faces. Lines break only at spaces
+// here, though a browser may also break after a hyphen, so a hyphenated word counts whole.
+export function longestWord(text: string): number {
+  return Math.max(1, ...text.split(/\s+/).map(displayEms))
+}
+
+// The longest word, as the variable a fitted heading divides its width by.
+export function fitWord(text: string): CSSProperties {
+  return { '--aurora-word': longestWord(text).toFixed(2) } as CSSProperties
+}
