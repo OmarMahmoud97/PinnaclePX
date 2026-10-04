@@ -46,9 +46,10 @@ export const menuButton =
 
 // A text field of the appointment form, and the label over it. The field's hint takes the
 // lists' hint colour, on-surface-muted, where the browser would draw it at half the field's
-// grey, below WCAG AA.
+// grey, below WCAG AA. What a visitor types is in on-surface, a step darker than the source's
+// grey, so a filled field stands apart from a hint.
 export const field =
-  'w-full rounded-sm border border-on-surface/11 bg-transparent px-3 py-3 text-sm text-on-surface/75 transition placeholder:text-on-surface-muted focus:border-on-surface/37 focus:outline-none'
+  'w-full rounded-sm border border-on-surface/11 bg-transparent px-3 py-3 text-sm text-on-surface transition placeholder:text-on-surface-muted focus:border-on-surface/37 focus:outline-none'
 export const label = 'mb-2 block text-sm text-on-surface/75 uppercase'
 
 // The wait before an animated part arrives, in seconds, as the source's delays ran

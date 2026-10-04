@@ -19,7 +19,8 @@ const CHEVRON = 'pointer-events-none absolute right-3.5 text-on-surface/37'
 // and otherwise leads to the closing band. Where no people are listed the fourth field takes a
 // typed name. The fields are named for what they hold on any page, person and service, where
 // the source's were a hospital's doctor and department, and the visitor's own name, email and
-// phone are offered to the browser's autofill.
+// phone are offered to the browser's autofill; the person to see, the service and the date are
+// marked as nothing it should fill.
 export function SummitBooking({ booking }: Props) {
   const { form } = booking
   const { sendTo } = form
@@ -101,6 +102,7 @@ export function SummitBooking({ booking }: Props) {
                     id="summit-person"
                     name="person"
                     type="text"
+                    autoComplete="off"
                     placeholder={form.doctor.placeholder}
                     className={field}
                   />
@@ -109,6 +111,7 @@ export function SummitBooking({ booking }: Props) {
                     <select
                       id="summit-person"
                       name="person"
+                      autoComplete="off"
                       defaultValue=""
                       className={`${SELECT} rounded-sm`}
                     >
@@ -133,6 +136,7 @@ export function SummitBooking({ booking }: Props) {
                   <select
                     id="summit-service"
                     name="service"
+                    autoComplete="off"
                     defaultValue=""
                     className={`${SELECT} rounded-md`}
                   >
@@ -156,6 +160,7 @@ export function SummitBooking({ booking }: Props) {
                   id="summit-date"
                   name="date"
                   type="date"
+                  autoComplete="off"
                   className="w-full cursor-pointer rounded-md border border-on-surface/11 bg-transparent px-3 py-3 text-xs text-on-surface-muted transition focus:border-on-surface/37 focus:outline-none"
                 />
               </div>
