@@ -92,6 +92,41 @@ describe('harborCopySchema', () => {
     for (const slot of optional) expect(harborContract.guide).not.toContain(`- ${slot}:`)
   })
 
+  it('has a guide whose six reworded lines read as the pass wrote them', () => {
+    const lines = harborContract.guide.split('\n')
+    expect(lines).toContain(
+      '- metrics.eyebrow: 4 to 30 characters, a short line over the grid of short phrases, such as What matters',
+    )
+    expect(lines).toContain(
+      '- hero.badge: 8 to 40 characters, a short line in a pill over the headline saying who it is for, in a few words',
+    )
+    expect(lines).toContain(
+      '- hero.stats[].value: 1 to 12 characters, exactly three phrases set large, one or two short words each, with no numbers',
+    )
+    expect(lines).toContain(
+      '- hero.stats[].label: 6 to 30 characters, exactly three labels under those phrases, a few words each',
+    )
+    expect(lines).toContain(
+      '- metrics.watermark: 4 to 12 characters, one short word set huge behind the grid, a word the owner wrote',
+    )
+    expect(lines).toContain(
+      '- metrics.items[].value: 1 to 12 characters, three to six phrases set large, one or two short words each, with no numbers, such as Same week',
+    )
+  })
+
+  it('has a guide that names no trade, opening hours or figures from the source site', () => {
+    const sourceWords = [
+      /\btrain/i,
+      /\bgym/i,
+      /\bfitness\b/i,
+      /open late/i,
+      /weekday/i,
+      /\bproof\b/i,
+      /\bfigures\b/i,
+    ]
+    for (const word of sourceWords) expect(harborContract.guide).not.toMatch(word)
+  })
+
   it('rejects a footer link with an unknown target', () => {
     const copy = harborFallbackCopy(fallbackBrief('Kestrel', 'Job scheduling.'))
     const broken = {
