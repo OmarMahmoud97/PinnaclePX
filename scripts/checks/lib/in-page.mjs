@@ -27,6 +27,43 @@ export function installHelpers() {
         list !== '' &&
         list.split(',').every((layer) => layer.trim() === 'text'),
     )
+  // A gradient text's colours as a visitor sees them, from its computed background-image: each
+  // layer's stops, the top layer listed first. A layer whose stops are all opaque hides the
+  // layers under it, and one whose stops are all clear shows them (Monolith's lit words lay an
+  // opaque layer over the glow's on a light page and a clear one on a dark page); a part-clear
+  // layer's stops are each laid over every colour under them.
+  const gradientColours = (image) => {
+    const layers = []
+    let depth = 0
+    let start = 0
+    for (let i = 0; i < image.length; i += 1) {
+      if (image[i] === '(') depth += 1
+      else if (image[i] === ')') depth -= 1
+      else if (image[i] === ',' && depth === 0) {
+        layers.push(image.slice(start, i))
+        start = i + 1
+      }
+    }
+    layers.push(image.slice(start))
+    let seen = []
+    for (const layer of layers.reverse()) {
+      const stops = (
+        layer.match(/(?:rgba?|hsla?|hwb|lab|lch|oklab|oklch|color)\([^()]*\)/g) ?? []
+      ).map(paint)
+      if (stops.length === 0 || stops.every((s) => s[3] <= 0.001)) continue
+      if (seen.length === 0 || stops.every((s) => s[3] >= 0.999)) {
+        seen = stops
+        continue
+      }
+      seen = stops.flatMap((s) =>
+        seen.map((v) => {
+          const a = s[3] + v[3] * (1 - s[3])
+          return [0, 1, 2].map((i) => (s[i] * s[3] + v[i] * v[3] * (1 - s[3])) / a).concat(a)
+        }),
+      )
+    }
+    return seen
+  }
   const opacityOf = (el) => {
     let opacity = 1
     for (let n = el; n !== null && n.nodeType === 1; n = n.parentElement) {
@@ -213,6 +250,7 @@ export function installHelpers() {
   window.__checks = {
     paint,
     clipsToText,
+    gradientColours,
     opacityOf,
     shown,
     decorative,
@@ -310,8 +348,7 @@ export function textItems({ keys = null, scope = 'page', menuId = null }) {
       return false
     })
     const gradient = C.clipsToText(cs)
-    const stops =
-      cs.backgroundImage.match(/(?:rgba?|hsla?|hwb|lab|lch|oklab|oklch|color)\([^()]*\)/g) ?? []
+    const stops = gradient ? C.gradientColours(cs.backgroundImage) : []
     items.push({
       key,
       text: text.slice(0, 60),
@@ -322,7 +359,7 @@ export function textItems({ keys = null, scope = 'page', menuId = null }) {
       covered,
       inHeader,
       gradient,
-      colours: gradient && stops.length > 0 ? stops.map(C.paint) : [C.paint(cs.color)],
+      colours: stops.length > 0 ? stops : [C.paint(cs.color)],
       opacity: C.opacityOf(el),
       size: parseFloat(cs.fontSize),
       weight: Number(cs.fontWeight),
