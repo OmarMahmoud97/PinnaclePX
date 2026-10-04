@@ -91,10 +91,10 @@ describe('atlasCopySchema', () => {
     for (const slot of optional) expect(atlasContract.guide).not.toContain(`- ${slot}:`)
   })
 
-  // Paid pass 3: the line over the headline says what they do, not the company name again, and
-  // the lines that list the link targets say what offer and tools hold, so labels stop naming
-  // them; each short slot states its size in words.
-  it('asks for what they do over the headline and says what each link target holds', () => {
+  // Paid pass 3: the line over the headline says what they do, not the company name again, in a
+  // size given in words. The lines that list the link targets went back to their measured
+  // wording after the run (rule 4: labels still named tools or offer in 2 of 5 answers).
+  it('asks for what they do over the headline, and keeps the measured link target lines', () => {
     const lines = atlasContract.guide.split('\n')
     expect(lines).toContain(
       '- hero.eyebrow: 4 to 24 characters, two or three words over the headline, set in capitals, on what they do',
@@ -103,10 +103,10 @@ describe('atlasCopySchema', () => {
       '- faq.eyebrow: 3 to 16 characters, a small word over the FAQ heading, such as Questions',
     )
     expect(lines).toContain(
-      '- nav.menu.items[].label: 3 to 18 characters, two to four entries in that menu, one to three words each; each has a target of start, offer, tools, why, how-it-works, faq or top, where offer is what is included and tools is what they bring to the work',
+      '- nav.menu.items[].label: 3 to 18 characters, two to four entries in that menu; each has a target of start, offer, tools, why, how-it-works, faq or top',
     )
     expect(lines).toContain(
-      '- footer.columns[][].label: 3 to 24 characters, two or three footer columns of two to five links, one to three words each; each link has a target of start, offer, tools, why, how-it-works, faq or top, where offer is what is included and tools is what they bring to the work',
+      '- footer.columns[][].label: 3 to 24 characters, two or three footer columns of two to five links; each link has a target of start, offer, tools, why, how-it-works, faq or top',
     )
     expect(atlasContract.guide).not.toContain('such as the company name')
     expect(atlasContract.guide).not.toContain('such as Support')
