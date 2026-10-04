@@ -6,11 +6,11 @@
     "unsettled": {}
   },
   "outline": [
-    ["#sponsors", 2],
+    ["#sponsors, #labels", 2],
     ["#benefits", 2],
     ["#features", 2],
     ["#services", 2],
-    ["#community", 2],
+    ["#community, #ask", 2],
     ["#contact", 2],
     ["#faq", 2]
   ]

@@ -6,7 +6,8 @@ type Props = Pick<MeridianContent, 'sponsors'>
 // quarters of the width, fading at both edges and pausing under the pointer (meridian.css). The
 // row is rendered twice so it can slide without a gap. The source set a sponsor's icon beside
 // each name, taken here by position; a crown or a vegan leaf read as a claim about a visitor's
-// work, and numerals would restart with the row, so the labels stand alone (decision 1).
+// work, and numerals would restart with the row, so the labels stand alone (decision 1). Its
+// address is #labels, since the row names no sponsor (t03-L10).
 export function MeridianSponsors({ sponsors }: Props) {
   const row = (hidden: boolean) => (
     <div className="meridian-marquee-inner" aria-hidden={hidden || undefined}>
@@ -18,7 +19,7 @@ export function MeridianSponsors({ sponsors }: Props) {
     </div>
   )
   return (
-    <section id="sponsors" className="mx-auto max-w-[75%] pb-24 sm:pb-32">
+    <section id="labels" className="mx-auto max-w-[75%] pb-24 sm:pb-32">
       <h2 className="mb-6 text-center text-lg md:text-xl">{sponsors.heading}</h2>
 
       <div className="mx-auto">

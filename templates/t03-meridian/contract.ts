@@ -20,12 +20,15 @@ import { meta } from './meta'
 // own anchors. The optional sections (testimonials, team, pricing) are not in the copy: the
 // brief holds no such facts, so they stay null.
 
+// The copy names the large centred ask "community" as the source did; its address is #ask, so
+// the address bar reads as a visitor would say it (decision 1, t03-L9). The copy model's name
+// stays.
 const TARGETS = ['benefits', 'features', 'services', 'community', 'contact', 'faq', 'top'] as const
 const HREF: Readonly<Record<(typeof TARGETS)[number], string>> = {
   benefits: '#benefits',
   features: '#features',
   services: '#services',
-  community: '#community',
+  community: '#ask',
   contact: '#contact',
   faq: '#faq',
   top: '#top',
