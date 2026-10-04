@@ -99,6 +99,19 @@ describe('summitCopySchema', () => {
     ])
   })
 
+  it('reports a stored four’s slot violations beside its count, and any other wrong count alone', () => {
+    const copy = summitFallbackCopy(fallbackBrief('Kestrel', 'Job scheduling.'))
+    const long = { ...copy.why.cards[0], title: 'T'.repeat(60) }
+    const four = { ...copy.why, cards: [long, ...copy.why.cards.slice(1), FOURTH] }
+    const found = summitContract.copyViolations({ ...copy, why: four as typeof copy.why })
+    expect(found).toContainEqual({ slot: 'why.cards', length: 4, min: 3, max: 3 })
+    expect(found.length).toBeGreaterThan(1)
+    const five = { ...copy.why, cards: [...copy.why.cards, FOURTH, FOURTH] }
+    expect(summitContract.copyViolations({ ...copy, why: five })).toEqual([
+      { slot: 'why.cards', length: 5, min: 3, max: 3 },
+    ])
+  })
+
   // The brief holds three value propositions, and a fourth reason was made up on every page
   // (paid pass 3, t07-S1), so the guide asks for three; the photographs stay a fixed four.
   it('has a guide that asks for three reasons and four photographs', () => {
