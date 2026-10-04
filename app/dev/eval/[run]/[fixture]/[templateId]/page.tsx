@@ -3,25 +3,21 @@ import { join } from 'node:path'
 import { notFound } from 'next/navigation'
 import * as z from 'zod'
 import { DevConcept, viewOf } from '@/app/dev/_render/concept'
-import { submissionAnswersSchema } from '@/lib/brief/submission'
+import { evalPageOf, evalRecordSchema } from '@/app/dev/_render/eval-record'
 import { env } from '@/lib/env'
 
 // A development-only look at what an eval run wrote (tests/eval/pipeline.eval.ts): one
 // template's copy from one fixture, rendered through renderConcept exactly as the preview page
 // renders a row, with the tokens the pipeline would derive, the fonts of the chosen look, a
-// wordmark logo and no pictures. The address can ask for another look, scheme, stand-in
-// pictures, a stand-in logo or an email (app/dev/_render/concept.tsx), which is how the checks
-// in scripts/checks measure every state. Outside development the route does not exist.
+// wordmark logo and no pictures. A template written outside the fixture's pick (EVAL_PAIRS) is
+// set with the trio its record stores (app/dev/_render/eval-record.ts). The address can ask for
+// another look, scheme, stand-in pictures, a stand-in logo or an email
+// (app/dev/_render/concept.tsx), which is how the checks in scripts/checks measure every state.
+// Outside development the route does not exist.
 type Params = Promise<{ run: string; fixture: string; templateId: string }>
 type Search = Promise<Record<string, string | string[] | undefined>>
 
 const segment = z.string().regex(/^[a-z0-9-]+$/)
-
-const recordSchema = z.object({
-  answers: submissionAnswersSchema,
-  templates: z.array(z.string()),
-  copy: z.record(z.string(), z.object({ final: z.unknown(), fallback: z.boolean() })),
-})
 
 export default async function EvalConceptPage({
   params,
@@ -35,9 +31,10 @@ export default async function EvalConceptPage({
   if (![run, fixture, templateId].every((part) => segment.safeParse(part).success)) notFound()
   const file = join(process.cwd(), 'test-results', 'eval', run, `${fixture}.json`)
   if (!existsSync(file)) notFound()
-  const record = recordSchema.parse(JSON.parse(readFileSync(file, 'utf8')))
-  const written = record.copy[templateId]
-  if (written === undefined || !record.templates.includes(templateId)) notFound()
+  const record = evalRecordSchema.parse(JSON.parse(readFileSync(file, 'utf8')))
+  const shown = evalPageOf(record, templateId)
+  if (shown === null) notFound()
+  const { written, chosen } = shown
   const view = viewOf(await searchParams, record.answers)
   if (view === null) notFound()
 
@@ -59,7 +56,7 @@ export default async function EvalConceptPage({
         templateId={templateId}
         copy={written.final}
         answers={record.answers}
-        chosen={record.templates}
+        chosen={chosen}
         view={view}
       />
     </>

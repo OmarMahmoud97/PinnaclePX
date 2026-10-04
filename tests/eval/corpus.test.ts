@@ -1,5 +1,6 @@
 import { mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
+import { evalPageOf } from '@/app/dev/_render/eval-record'
 import { contractFor, READY_TEMPLATES } from '@/templates/registry'
 import {
   baseOf,
@@ -57,11 +58,13 @@ function writeCorpus(): void {
       if (!name.endsWith('.json') || name === 'summary.json' || name.startsWith('_')) continue
       const record = JSON.parse(readFileSync(join(dir, name), 'utf8')) as FixtureRecord
       for (const [templateId, written] of Object.entries(record.copy)) {
-        if (written.fallback) continue
+        // A template written outside the pick (EVAL_PAIRS) keeps the trio its record stores.
+        const page = evalPageOf(record, templateId)
+        if (written.fallback || page === null) continue
         write(templateId, `${short}-${record.id}`, {
           source: `${run}/${record.id}`,
           answers: record.answers,
-          chosen: [...record.templates],
+          chosen: [...page.chosen],
           ctaLabel: record.brief.brief.ctaLabel,
           copy: written.final,
         })
