@@ -10,7 +10,7 @@
   "outline": [
     ["#hero", 1],
     ["#start", 2],
-    ["#offer", 2],
+    ["#offer, #included", 2],
     ["#tools, #approach", 2],
     ["#why", 2],
     ["#how-it-works", 2],

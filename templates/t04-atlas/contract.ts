@@ -22,18 +22,18 @@ import { meta } from './meta'
 // they stay null and the template draws their stand-ins.
 
 // The copy names its targets; the page's addresses are neutral where the source's were not, so
-// the copy's `tools` is the band at #approach.
+// the copy's `tools` is the band at #approach and its `offer` the band at #included.
 const TARGETS = ['start', 'offer', 'tools', 'why', 'how-it-works', 'faq', 'top'] as const
 const HREF: Readonly<Record<(typeof TARGETS)[number], string>> = {
   start: '#start',
-  offer: '#offer',
+  offer: '#included',
   tools: '#approach',
   why: '#why',
   'how-it-works': '#how-it-works',
   faq: '#faq',
   top: '#top',
 }
-const NAV_HREFS = ['#start', '#offer', '#approach', '#why', '#faq'] as const
+const NAV_HREFS = ['#start', '#included', '#approach', '#why', '#faq'] as const
 // Every ask leads to the closing cell at the foot of the page: the note, its line and its
 // button (footer.tsx). That button opens a mail to the page's email, with its own label as the
 // subject; a visitor's page always has an email, and with none, as in validation, the button is

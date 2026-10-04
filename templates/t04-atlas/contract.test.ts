@@ -149,7 +149,7 @@ describe('assembleAtlas', () => {
     expect(content.pitch.image).toBeNull()
     expect(content.nav.links.map((link) => link.href)).toEqual([
       '#start',
-      '#offer',
+      '#included',
       '#approach',
       '#why',
       '#faq',
@@ -157,6 +157,7 @@ describe('assembleAtlas', () => {
     expect(content.nav.menu.items.map((item) => item.href)).toEqual(['#how-it-works', '#top'])
     expect(content.glance.more.href).toBe('#why')
     expect(content.pitch.action.href).toBe('#contact')
+    expect(content.footer.columns[0]?.[1]?.href).toBe('#included')
     expect(content.footer.columns[0]?.[2]?.href).toBe('#approach')
     expect(content.footer.columns[1]?.[2]?.href).toBe('#top')
   })
