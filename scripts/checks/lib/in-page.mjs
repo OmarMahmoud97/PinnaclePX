@@ -17,6 +17,16 @@ export function installHelpers() {
     const d = context.getImageData(0, 0, 1, 1).data
     return [d[0], d[1], d[2], d[3] / 255]
   }
+  // Whether an element's background is its glyphs (background-clip: text). The computed value is
+  // a list, one entry a background layer ("text, text" for two gradients), and the glyphs are
+  // the background only when every layer is clipped to them.
+  const clipsToText = (cs) =>
+    [cs.backgroundClip, cs.webkitBackgroundClip].some(
+      (list) =>
+        typeof list === 'string' &&
+        list !== '' &&
+        list.split(',').every((layer) => layer.trim() === 'text'),
+    )
   const opacityOf = (el) => {
     let opacity = 1
     for (let n = el; n !== null && n.nodeType === 1; n = n.parentElement) {
@@ -202,6 +212,7 @@ export function installHelpers() {
   }
   window.__checks = {
     paint,
+    clipsToText,
     opacityOf,
     shown,
     decorative,
@@ -298,7 +309,7 @@ export function textItems({ keys = null, scope = 'page', menuId = null }) {
       }
       return false
     })
-    const gradient = cs.backgroundClip === 'text' || cs.webkitBackgroundClip === 'text'
+    const gradient = C.clipsToText(cs)
     const stops =
       cs.backgroundImage.match(/(?:rgba?|hsla?|hwb|lab|lch|oklab|oklch|color)\([^()]*\)/g) ?? []
     items.push({
