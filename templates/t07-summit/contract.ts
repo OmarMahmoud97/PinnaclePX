@@ -146,10 +146,11 @@ const PURPOSE: Readonly<Record<ModelSlot, string>> = {
   'brand.name': 'the company name as given',
   'brand.legalName': 'the legal name for the footer, the company name if unknown',
   'nav.links[].label':
-    'two to four short menu labels, in order: home, about, what they offer, what they have',
+    'two to four menu labels of one or two words, in order: home, about, what they offer, a name for the four photographs',
   'nav.cta.label': 'the header button, the same as ctaLabel',
   'hero.badge.tag': 'one word in a small ring at the start of the pill over the headline',
-  'hero.badge.text': 'a short line beside it, such as Open every day of the week',
+  'hero.badge.text':
+    'a short line beside it, two to six words on where they work or who they serve',
   'hero.headline': 'the headline, a plain promise in their words',
   'hero.subhead': 'one or two sentences under the headline saying what they do and for whom',
   'hero.primary.label': 'the main button, the same as ctaLabel',
@@ -201,7 +202,7 @@ const PURPOSE: Readonly<Record<ModelSlot, string>> = {
   'footer.description': 'one sentence about the company for the footer',
   'footer.columns[].heading': 'one to three footer column headings',
   'footer.columns[].links[].label':
-    'two to five link labels per column; each link has a target of top, home, why-choose-us, our-services, booking-process, facilities, faq, book-appointment or cta',
+    'two to five link labels of one to three words per column; each link has a target of top, home, why-choose-us, our-services, booking-process, facilities, faq, book-appointment or cta, where booking-process is the steps, facilities the four photographs, book-appointment the form and cta the closing ask',
   'footer.contact.heading': 'the heading of the footer column with the email, such as Get in touch',
   'footer.smallLinks[].label':
     'up to four short labels for the small links after the legal line, with the same targets; none is fine',
