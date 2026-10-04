@@ -39,6 +39,12 @@ const MODEL_BRIEF: BrandBrief = {
   imageQueries: { hero: ['calendar on a wall'], detail: ['van interior'] },
 }
 
+// A fourth reason, as every design stored before paid pass 3 holds one (decision 12).
+const FOURTH = {
+  title: 'We like helping',
+  body: 'We just like helping people sort things out around their house and garden.',
+}
+
 describe('summitFallbackCopy', () => {
   it.each(CORPUS)('fits every slot for "%s"', (company, description) => {
     const copy = summitFallbackCopy(fallbackBrief(company, description))
@@ -54,7 +60,6 @@ describe('summitFallbackCopy', () => {
       'What we do',
       'Who it is for',
       'Get paid',
-      'What happens next',
     ])
     expect(copy.services.items.map((item) => item.title)).toEqual([
       'What we do for you',
@@ -85,13 +90,28 @@ describe('summitFallbackCopy', () => {
 })
 
 describe('summitCopySchema', () => {
-  it('accepts three reasons, which the violations then report as a count', () => {
+  it('accepts four reasons, which the violations then report as a count', () => {
     const copy = summitFallbackCopy(fallbackBrief('Kestrel', 'Job scheduling.'))
-    const broken = { ...copy, why: { ...copy.why, cards: copy.why.cards.slice(0, 3) } }
+    const broken = { ...copy, why: { ...copy.why, cards: [...copy.why.cards, FOURTH] } }
     expect(summitCopySchema.safeParse(broken).success).toBe(true)
     expect(summitContract.copyViolations(broken)).toEqual([
-      { slot: 'why.cards', length: 3, min: 4, max: 4 },
+      { slot: 'why.cards', length: 4, min: 3, max: 3 },
     ])
+  })
+
+  // The brief holds three value propositions, and a fourth reason was made up on every page
+  // (paid pass 3, t07-S1), so the guide asks for three; the photographs stay a fixed four.
+  it('has a guide that asks for three reasons and four photographs', () => {
+    const lines = summitContract.guide.split('\n')
+    for (const line of [
+      '- why.eyebrow: 4 to 30 characters, a short line over the three reasons, such as Why choose us',
+      '- why.cards[].title: 6 to 30 characters, exactly three short reasons to choose them, in order',
+      '- why.cards[].body: 50 to 130 characters, exactly three sentences, one under each',
+      '- facilities.items[].title: 6 to 36 characters, exactly four short titles, one per photograph, different from the three reasons',
+    ]) {
+      expect(lines).toContain(line)
+    }
+    expect(summitContract.guide).not.toContain('four reasons')
   })
 
   it('has a guide that names every slot the copy stage writes, and none it does not', () => {
@@ -124,6 +144,7 @@ describe('summitCopySchema', () => {
 
 describe('assembleSummit', () => {
   const copy = summitFallbackCopy(fallbackBrief('Kestrel', 'Job scheduling for trades.'))
+  const NONE: TemplateAssets = { logo: { kind: 'wordmark' }, images: {}, email: null }
 
   it('gives a wordmark, no pictures and no optional pieces when there are no assets', () => {
     const content = assembleSummit(copy, { logo: { kind: 'wordmark' }, images: {}, email: null })
@@ -183,5 +204,22 @@ describe('assembleSummit', () => {
     expect(content.footer.columns[0]?.links[2]?.href).toBe('#steps')
     expect(content.footer.columns[1]?.links[0]?.href).toBe('#contact')
     expect(content.footer.columns[1]?.links[1]?.href).toBe('#top')
+  })
+
+  // Designs stored before paid pass 3 hold four reasons and new ones three, so both are drawn
+  // as stored (decision 12: a copy object in the old shape still renders).
+  it('keeps a stored design’s four reasons and a new design’s three', () => {
+    const stored = { ...copy, why: { ...copy.why, cards: [...copy.why.cards, FOURTH] } }
+    expect(summitCopySchema.safeParse(stored).success).toBe(true)
+    expect(assembleSummit(stored, NONE).why.cards).toEqual(stored.why.cards)
+    expect(assembleSummit(stored, NONE).why.cards).toHaveLength(4)
+    expect(assembleSummit(copy, NONE).why.cards).toEqual(copy.why.cards)
+    expect(assembleSummit(copy, NONE).why.cards).toHaveLength(3)
+  })
+
+  it('throws for two reasons or five, as it did for any count but four', () => {
+    for (const cards of [copy.why.cards.slice(0, 2), [...copy.why.cards, FOURTH, FOURTH]]) {
+      expect(() => assembleSummit({ ...copy, why: { ...copy.why, cards } }, NONE)).toThrow()
+    }
   })
 })

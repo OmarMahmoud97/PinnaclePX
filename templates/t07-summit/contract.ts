@@ -7,6 +7,7 @@ import type { CopySlot, SlotViolation } from '@/lib/copy-slots/validate'
 import {
   type Four,
   SUMMIT_CONTRAST_PAIRS,
+  type Three,
   SUMMIT_SLOTS,
   type SummitContent,
   summitViolations,
@@ -111,7 +112,7 @@ const FIXED: readonly [
   size: number,
   pick: (copy: SummitCopy) => readonly unknown[],
 ][] = [
-  ['why.cards', 4, (copy) => copy.why.cards],
+  ['why.cards', 3, (copy) => copy.why.cards],
   ['facilities.items', 4, (copy) => copy.facilities.items],
 ]
 
@@ -153,10 +154,10 @@ const PURPOSE: Readonly<Record<ModelSlot, string>> = {
   'hero.subhead': 'one or two sentences under the headline saying what they do and for whom',
   'hero.primary.label': 'the main button, the same as ctaLabel',
   'hero.secondary.label': 'a quieter button that leads to what they offer, such as See what we do',
-  'why.eyebrow': 'a short line over the four reasons, such as Why choose us',
+  'why.eyebrow': 'a short line over the three reasons, such as Why choose us',
   'why.heading': 'the heading over them, such as Why people choose the company',
-  'why.cards[].title': 'exactly four short reasons to choose them, in order',
-  'why.cards[].body': 'exactly four sentences, one under each',
+  'why.cards[].title': 'exactly three short reasons to choose them, in order',
+  'why.cards[].body': 'exactly three sentences, one under each',
   'services.eyebrow': 'a short line over what they offer, such as What we do',
   'services.heading': 'the heading over what they offer',
   'services.items[].tag': 'three to six short names of what they offer, one card each',
@@ -171,7 +172,7 @@ const PURPOSE: Readonly<Record<ModelSlot, string>> = {
   'facilities.eyebrow': 'a short line over the four photographs, such as What you get',
   'facilities.heading': 'the heading over them',
   'facilities.items[].title':
-    'exactly four short titles, one per photograph, different from the four reasons',
+    'exactly four short titles, one per photograph, different from the three reasons',
   'facilities.items[].body': 'exactly four sentences, one under each',
   'facilities.link.label': 'the link on each photograph, such as Find out more',
   'faq.eyebrow': 'a short line over the questions, such as FAQs',
@@ -232,6 +233,16 @@ function four<T>(items: readonly T[]): Four<T> {
   return [a, b, c, d]
 }
 
+// Four when four are stored, else three; any other count throws, as four does.
+function threeOrFour<T>(items: readonly T[]): Three<T> | Four<T> {
+  if (items.length === 4) return four(items)
+  const [a, b, c] = items
+  if (a === undefined || b === undefined || c === undefined || items.length !== 3) {
+    throw new Error(`Expected three or four items, got ${String(items.length)}`)
+  }
+  return [a, b, c]
+}
+
 export function assembleSummit(copy: SummitCopy, assets: TemplateAssets): SummitContent {
   const { hero, why, services, facilities, booking, cta, footer } = copy
   const image = (slot: string) => assets.images[slot] ?? null
@@ -258,7 +269,7 @@ export function assembleSummit(copy: SummitCopy, assets: TemplateAssets): Summit
     why: {
       eyebrow: why.eyebrow,
       heading: why.heading,
-      cards: four(why.cards),
+      cards: threeOrFour(why.cards),
       image: image('why'),
     },
     services: {
@@ -357,7 +368,7 @@ export function summitFallbackCopy(brief: BrandBrief): SummitCopy {
   const cta = label('cta.button.label', brief.ctaLabel, 'Get in touch')
   const props = brief.valueProps
   const steps = brief.steps
-  const titles = PLAIN_TITLES.map((fallback, index) =>
+  const titles = PLAIN_TITLES.slice(0, 3).map((fallback, index) =>
     label('why.cards[].title', props[index]?.title ?? fallback, fallback),
   )
   const stepTitles = PLAIN_STEPS.map((fallback, index) =>
