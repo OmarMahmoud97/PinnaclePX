@@ -102,6 +102,32 @@ describe('meridianCopySchema', () => {
     for (const slot of optional) expect(meridianContract.guide).not.toContain(`- ${slot}:`)
   })
 
+  // The model copied the old examples onto every page (paid pass 3; decisions 1 and 12), so the
+  // guide says what each slot is for, with its size in words, and gives no words to copy.
+  it('has a guide that gives the model no example words to copy', () => {
+    const lines = meridianContract.guide.split('\n')
+    for (const line of [
+      '- nav.menu.label: 3 to 16 characters, the label of the menu that opens onto three entries, one or two words',
+      '- hero.badge.label: 2 to 10 characters, one word on the small badge above the headline',
+      '- hero.badge.text: 10 to 44 characters, a few words after that badge, a plain line about what they do',
+      '- sponsors.heading: 6 to 40 characters, a heading of two to four words over a sliding row of labels',
+      '- benefits.eyebrow: 3 to 18 characters, one or two words over the benefits heading',
+      '- features.eyebrow: 3 to 18 characters, one or two words over the features heading',
+      '- services.eyebrow: 3 to 18 characters, one or two words over the services heading',
+      '- contact.eyebrow: 3 to 18 characters, one or two words over the contact heading',
+      '- contact.form.button: 4 to 22 characters, the form button that sends the message, two or three words',
+      '- faq.eyebrow: 3 to 18 characters, one or two words over the FAQ heading',
+      '- faq.heading: 10 to 40 characters, the heading over the questions, three to six words',
+    ]) {
+      expect(lines).toContain(line)
+    }
+    expect(lines.filter((line) => /such as/i.test(line))).toEqual([])
+    const guide = meridianContract.guide.toLowerCase()
+    for (const example of ['what we do', 'what we cover', 'send message', 'common questions']) {
+      expect(guide).not.toContain(example)
+    }
+  })
+
   it('rejects a footer link with an unknown target', () => {
     const copy = meridianFallbackCopy(fallbackBrief('Kestrel', 'Job scheduling.'))
     const broken = {
