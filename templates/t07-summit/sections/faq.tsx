@@ -3,6 +3,7 @@
 import { Plus, X } from 'lucide-react'
 import { useState } from 'react'
 import type { SummitContent } from '../copy-slots'
+import { fitWord } from '../fit'
 import { anchored, delay, eyebrow, gap, pad, title } from '../styles'
 
 type Props = Pick<SummitContent, 'faq'>
@@ -17,15 +18,15 @@ export function SummitFaq({ faq }: Props) {
   const [open, setOpen] = useState(-1)
   return (
     <section id="faq" className={`flex items-center justify-center ${pad} ${anchored} ${gap}`}>
-      <div className="w-full max-w-3xl">
+      <div className="@container w-full max-w-3xl">
         <div className="mb-14 text-center">
           <span data-fade style={delay(0.2)} className={eyebrow}>
             {faq.eyebrow}
           </span>
           <h2
             data-fade
-            style={delay(0.2)}
-            className={`${title} mt-6 max-w-2xl text-center text-4xl md:text-5xl`}
+            style={{ ...delay(0.2), ...fitWord(faq.heading) }}
+            className={`${title} mt-6 max-w-2xl text-center text-[length:min(2.25rem,min(97cqi,42rem)/var(--summit-word,1))] md:text-[length:min(3rem,min(97cqi,42rem)/var(--summit-word,1))]`}
           >
             {faq.heading}
           </h2>

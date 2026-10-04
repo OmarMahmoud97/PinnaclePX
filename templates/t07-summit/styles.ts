@@ -29,7 +29,11 @@ export const anchored = 'scroll-mt-30'
 
 // The small grey line over a block's heading, and the face of the heading under it, in the
 // display family as the source set every big heading (its stylesheet gave each h1 Urbanist);
-// each heading names its own size, width and alignment, since the source varies them.
+// each heading names its own size, width and alignment, since the source varies them. A block's
+// heading, and a service's title, take the smaller of the source's size and the line's width over
+// the longest word in ems (fit.ts, set as --summit-word): the line is 97 percent of the box
+// marked @container around it, and at most the heading's own max-width. So a long word, such as
+// Northumberland, fits a phone's screen whole, and shorter words keep the source's size.
 export const eyebrow = 'text-on-surface/75'
 export const title = 'font-display font-medium leading-tight tracking-tight text-on-surface/85'
 
