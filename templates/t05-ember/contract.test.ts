@@ -94,6 +94,31 @@ describe('emberCopySchema', () => {
     for (const slot of optional) expect(emberContract.guide).not.toContain(`- ${slot}:`)
   })
 
+  // The guide's examples were a restaurant's, and the model copied them onto a cleaner's and an
+  // HR firm's pages; the card on the photograph now leads to the closing ask, not to premises
+  // (paid pass 3, t05-L5 to L8; decisions 1, 12 and 15).
+  it('has a guide that gives no restaurant words and points the card at getting in touch', () => {
+    const lines = emberContract.guide.split('\n')
+    for (const line of [
+      '- hero.eyebrow: 8 to 40 characters, a short line over the headline, set in capitals, two to five words on what they do',
+      '- nav.links[].label: 3 to 12 characters, two to four menu labels of one or two words, in order: about, what they offer, how to reach them, questions',
+      '- timing.title: 4 to 30 characters, the title of the card on the photograph, such as Ready when you are',
+      '- about.eyebrow: 6 to 30 characters, a short line over the About heading, such as Who we are',
+      '- dishes.eyebrow: 6 to 36 characters, a short line over the grid of what they offer, such as What we offer',
+    ]) {
+      expect(lines).toContain(line)
+    }
+    const guide = emberContract.guide.toLowerCase()
+    for (const example of [
+      'where flavour meets care',
+      'where to find',
+      'made with care',
+      'what we make',
+    ]) {
+      expect(guide).not.toContain(example)
+    }
+  })
+
   it('rejects a footer link with an unknown target', () => {
     const copy = emberFallbackCopy(fallbackBrief('Kestrel', 'Job scheduling.'))
     const broken = {
