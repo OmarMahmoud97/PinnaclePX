@@ -84,7 +84,7 @@ const FIXED: readonly [
   pick: (copy: MeridianCopy) => readonly unknown[],
 ][] = [
   ['nav.menu.items', 3, (copy) => copy.nav.menu.items],
-  ['benefits.items', 4, (copy) => copy.benefits.items],
+  ['benefits.items', 3, (copy) => copy.benefits.items],
   ['contact.rows', 3, (copy) => copy.contact.rows],
 ]
 
@@ -127,8 +127,8 @@ const PURPOSE: Readonly<Record<ModelSlot, string>> = {
   'benefits.eyebrow': 'one or two words over the benefits heading',
   'benefits.heading': 'the benefits heading',
   'benefits.lead': 'two or three sentences under it',
-  'benefits.items[].title': 'exactly four benefit titles, what the customer gets',
-  'benefits.items[].body': 'exactly four benefit bodies',
+  'benefits.items[].title': 'exactly three benefit titles, what the customer gets',
+  'benefits.items[].body': 'exactly three benefit bodies',
   'features.eyebrow': 'one or two words over the features heading',
   'features.heading': 'the heading of the section about what they do',
   'features.lead': 'one or two sentences under it',
@@ -190,6 +190,11 @@ function four<T>(items: readonly T[]): Four<T> {
   return [a, b, c, d]
 }
 
+// Stored designs hold four benefits and new ones three; any other count throws, as before.
+function threeOrFour<T>(items: readonly T[]): Three<T> | Four<T> {
+  return items.length === 4 ? four(items) : three(items)
+}
+
 export function assembleMeridian(copy: MeridianCopy, assets: TemplateAssets): MeridianContent {
   const { hero, community, contact } = copy
   const heroImage = assets.images.hero ?? null
@@ -212,7 +217,7 @@ export function assembleMeridian(copy: MeridianCopy, assets: TemplateAssets): Me
       image: heroImage,
     },
     sponsors: copy.sponsors,
-    benefits: { ...copy.benefits, items: four(copy.benefits.items) },
+    benefits: { ...copy.benefits, items: threeOrFour(copy.benefits.items) },
     features: copy.features,
     services: {
       ...copy.services,
@@ -319,7 +324,7 @@ export function meridianFallbackCopy(brief: BrandBrief): MeridianCopy {
       eyebrow: 'Why us',
       heading: 'What you get from working with us',
       lead: prose('benefits.lead', `${positioning} ${statement}`),
-      items: PLAIN_TITLES.map((plain, index) => ({
+      items: PLAIN_TITLES.slice(0, 3).map((plain, index) => ({
         title: label('benefits.items[].title', props[index]?.title ?? plain, plain),
         body: prose('benefits.items[].body', props[index]?.body ?? steps[1]?.body ?? positioning),
       })),

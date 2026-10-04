@@ -9,8 +9,10 @@ type Props = Pick<MeridianContent, 'benefits'>
 // turns to the page surface under the pointer. The source also set an icon at the top left,
 // taken by position; a chart or a wallet read as a claim about a visitor's benefit, so the
 // title leads and the number stays at the right as the decoration it is, hidden from screen
-// readers (decision 1). The heading and the titles are sized by their longest word (fit.ts), the
-// heading against the section, since its column is only as wide as its words.
+// readers (decision 1). A new design holds three benefits, one for each thing the owner said, and
+// a stored one four: from lg an odd last card spans both columns, so three are two over one wide
+// card and four the source's two-by-two. The heading and the titles are sized by their longest
+// word (fit.ts), the heading against the section, since its column is only as wide as its words.
 export function MeridianBenefits({ benefits }: Props) {
   return (
     <section id="benefits" className={`${container} @container py-24 sm:py-32`}>
@@ -30,7 +32,7 @@ export function MeridianBenefits({ benefits }: Props) {
           {benefits.items.map((item, index) => (
             <div
               key={item.title}
-              className={`${card} group/number bg-accent transition-all delay-75 hover:bg-surface`}
+              className={`${card} group/number bg-accent transition-all delay-75 hover:bg-surface lg:odd:last:col-span-2`}
             >
               <div className={cardHeader}>
                 <div className="flex justify-end">
