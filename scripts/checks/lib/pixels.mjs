@@ -131,8 +131,10 @@ function unionOf(rects) {
 // Each item judged over the pixels under it, read where a visitor sees it. query(keys) asks the
 // page for those items as it stands (in-page.mjs, textItems). With walk, the page is scrolled a
 // screen at a time from the top, and each item is judged at the first stop where it lies whole
-// on the screen with nothing opaque over it; without, it is judged where the page stands (the
-// header scrolled, a menu open). An item never seen so is returned with unseen: true.
+// on the screen with nothing opaque, fixed or sticky over it (an item seen only under a fixed or
+// sticky element is tried once more in the middle of the screen); without, it is judged where
+// the page stands (the header scrolled, a menu open). An item never seen so is returned with
+// unseen: true.
 export async function measureItems(tab, items, query, { walk = true } = {}) {
   const judged = []
   if (items.length === 0) return judged
@@ -147,14 +149,12 @@ export async function measureItems(tab, items, query, { walk = true } = {}) {
         return ys
       })
     : [null]
-  for (const y of stops) {
-    if (pending.size === 0) break
-    if (y !== null) {
-      await tab.evaluate((top) => window.scrollTo(0, top), y)
-      await tab.waitForTimeout(120)
-    }
-    const here = (await query([...pending.keys()])).filter((i) => i.inView && !i.covered)
-    if (here.length === 0) continue
+  // Items seen whole at a stop but under a fixed or sticky element there (in-page.mjs, pinned).
+  const pinned = new Map()
+  const judgeHere = async (found) => {
+    for (const i of found) if (i.inView && i.pinned) pinned.set(i.key, i)
+    const here = found.filter((i) => i.inView && !i.covered)
+    if (here.length === 0) return
     const scroll = await tab.evaluate(() => ({ x: window.scrollX, y: window.scrollY }))
     const restore = await hideText(tab)
     try {
@@ -186,6 +186,30 @@ export async function measureItems(tab, items, query, { walk = true } = {}) {
       }
     } finally {
       await restore()
+    }
+  }
+  for (const y of stops) {
+    if (pending.size === 0) break
+    if (y !== null) {
+      await tab.evaluate((top) => window.scrollTo(0, top), y)
+      await tab.waitForTimeout(120)
+    }
+    await judgeHere(await query([...pending.keys()]))
+  }
+  // An item the walk saw only under a fixed or sticky element (at 320x568, a button just below
+  // one stop's fold lies under the glass header bar at the next) is measured again, scrolled to
+  // the middle of the screen, and judged there if nothing lies over it.
+  if (walk) {
+    for (const [key, item] of pinned) {
+      if (!pending.has(key)) continue
+      const box = unionOf(item.rects)
+      await tab.evaluate(
+        ([top, bottom]) =>
+          window.scrollTo(0, Math.max(0, (top + bottom) / 2 - window.innerHeight / 2)),
+        [box.top, box.bottom],
+      )
+      await tab.waitForTimeout(120)
+      await judgeHere(await query([key]))
     }
   }
   if (walk) await tab.evaluate(() => window.scrollTo(0, 0))
