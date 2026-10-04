@@ -103,9 +103,8 @@ const PURPOSE: Readonly<Record<ModelSlot, string>> = {
     'two or three short lines of the headline, a few words each; the last is set in the serif italic',
   'hero.subhead': 'one or two sentences under the headline saying what they do and for whom',
   'hero.scrollHint': 'the word at the foot of the first screen, such as Scroll',
-  'projects.marquee.text':
-    'the first of two words naming what the items under it are, run as a giant marquee',
-  'projects.marquee.accent': 'the second of those two words, set in the thin serif',
+  'projects.marquee.text': 'the first word of the giant marquee, such as Selected',
+  'projects.marquee.accent': 'its second word, set in the thin serif, such as Work',
   'projects.items[].titleUp':
     'two to four things they offer or are known for, each a title in two short parts: the first part',
   'projects.items[].titleDown': 'the second part of each title, set in the serif italic',
