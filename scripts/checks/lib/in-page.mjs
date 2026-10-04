@@ -129,12 +129,21 @@ export function installHelpers() {
         if (text.length < 2) continue
         byText.set(text, [...(byText.get(text) ?? []), n])
       }
+      // A row of repeated words: a copy not drawn, or two copies side by side in one row (each
+      // over half the shorter one's height level with the other). The same words at another
+      // height, as a footer's watermark repeats its wordmark, make no marquee.
       found = [...byText.values()].some((copies) => {
         if (copies.length < 2) return false
-        const lefts = copies.map((n) =>
-          n.getClientRects().length === 0 ? null : Math.round(n.getBoundingClientRect().left),
+        if (copies.some((n) => n.getClientRects().length === 0)) return true
+        const boxes = copies.map((n) => n.getBoundingClientRect())
+        return boxes.some((a, i) =>
+          boxes.slice(i + 1).some((b) => {
+            const level = Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top)
+            return (
+              Math.round(a.left) !== Math.round(b.left) && level > Math.min(a.height, b.height) / 2
+            )
+          }),
         )
-        return lefts.includes(null) || new Set(lefts).size > 1
       })
     }
     marquees.set(box, found)
