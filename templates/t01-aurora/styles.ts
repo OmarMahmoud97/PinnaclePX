@@ -6,9 +6,9 @@ import type { CSSProperties } from 'react'
 export const container = 'mx-auto w-full max-w-6xl px-6 md:px-10'
 
 export const sectionTitle = 'font-display text-title font-semibold tracking-tight text-balance'
-export const sectionLead = 'mt-4 max-w-2xl text-lead text-pretty text-on-surface-muted'
+export const sectionLead = 'mt-4 max-w-2xl text-lead text-pretty text-on-surface'
 export const itemTitle = 'font-display text-heading font-semibold'
-export const itemBody = 'mt-2 text-body text-pretty text-on-surface-muted'
+export const itemBody = 'mt-2 text-body text-pretty text-on-surface'
 
 const BUTTON =
   'inline-flex h-12 cursor-pointer items-center justify-center gap-2 rounded-full px-6 text-base font-medium whitespace-nowrap transition-[color,background-color,border-color,transform] duration-(--motion-tap) ease-standard outline-none focus-visible:ring-2 focus-visible:ring-brand-deeper focus-visible:ring-offset-2 focus-visible:ring-offset-surface motion-safe:active:scale-[0.98]'
