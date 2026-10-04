@@ -29,8 +29,10 @@ const GLASS_AT = 10
 // the hero behind it; it is the only thing in the bar below md, so it still sits at the right.
 // Escape and the close button hand focus back to the toggle; a link hands it to the block it
 // leads to, so the next Tab goes on from there. The source left focus on a link the closed sheet
-// hides. On a page with a photograph the links are underlined under the pointer rather than
-// faded, since the lighter grey falls below WCAG AA over the picture, on the veil and on the glass.
+// hides. From md to lg the links sit closer than the source's, and neither a link nor the ask
+// ever wraps: the name gives way instead, wrapping, so the row fits at 768 with any labels. On a
+// page with a photograph the links are underlined under the pointer rather than faded, since the
+// lighter grey falls below WCAG AA over the picture, on the veil and on the glass.
 export function SummitNav({ brand, nav, pictured }: Props) {
   const [open, setOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
@@ -94,8 +96,10 @@ export function SummitNav({ brand, nav, pictured }: Props) {
       className={`fixed top-0 right-0 left-0 z-50 flex w-full flex-col items-center transition-all duration-300 ${scrolled && !open ? 'bg-surface/70 backdrop-blur-md' : 'bg-transparent'}`}
       aria-label="Main"
     >
-      <div className={`relative flex w-full max-w-360 items-center justify-between ${pad} py-4`}>
-        <a href="#top" aria-label={`${brand.name} home`}>
+      <div
+        className={`relative flex w-full max-w-360 items-center justify-between gap-3 ${pad} py-4`}
+      >
+        <a href="#top" aria-label={`${brand.name} home`} className="min-w-0">
           <SummitLogo brand={brand} />
         </a>
         <button
@@ -129,7 +133,7 @@ export function SummitNav({ brand, nav, pictured }: Props) {
         <div
           id={PANEL_ID}
           inert={narrow && !open}
-          className={`${open ? 'max-md:w-full' : 'max-md:w-0'} flex items-center gap-10 text-sm max-md:fixed max-md:top-0 max-md:left-0 max-md:z-50 max-md:h-screen max-md:flex-col max-md:justify-center max-md:overflow-hidden max-md:bg-surface/75 max-md:backdrop-blur max-md:transition-all max-md:duration-300`}
+          className={`${open ? 'max-md:w-full' : 'max-md:w-0'} flex items-center gap-10 text-sm max-md:fixed max-md:top-0 max-md:left-0 max-md:z-50 max-md:h-screen max-md:flex-col max-md:justify-center max-md:overflow-hidden max-md:bg-surface/75 max-md:backdrop-blur max-md:transition-all max-md:duration-300 md:gap-5 lg:gap-10`}
         >
           {nav.links.map((link) => (
             <a
@@ -138,7 +142,7 @@ export function SummitNav({ brand, nav, pictured }: Props) {
               onClick={() => {
                 follow(link.href)
               }}
-              className={`font-medium text-on-surface/75 ${pictured ? 'underline-offset-4 hover:underline' : 'hover:text-on-surface'}`}
+              className={`font-medium whitespace-nowrap text-on-surface/75 ${pictured ? 'underline-offset-4 hover:underline' : 'hover:text-on-surface'}`}
             >
               {link.label}
             </a>
@@ -163,7 +167,7 @@ export function SummitNav({ brand, nav, pictured }: Props) {
         </div>
         <a
           href={nav.cta.href}
-          className="group hidden cursor-pointer items-center gap-1.5 rounded-sm bg-brand-deeper px-4 py-3 text-sm font-medium text-on-brand transition hover:bg-brand-deepest md:flex"
+          className="group hidden shrink-0 cursor-pointer items-center gap-1.5 rounded-sm bg-brand-deeper px-4 py-3 text-sm font-medium whitespace-nowrap text-on-brand transition hover:bg-brand-deepest md:flex"
         >
           {nav.cta.label}
           <ArrowRight size={18} strokeWidth={1.8} aria-hidden="true" className={arrow} />
