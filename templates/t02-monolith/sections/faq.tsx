@@ -33,7 +33,8 @@ export function MonolithFaq({ faq }: Props) {
         ))}
       </div>
 
-      <p className="mt-4 font-medium">
+      {/* On phones the line stops short of the fixed back-to-top button (40px, 16px in). */}
+      <p className="mt-4 font-medium max-sm:pr-10">
         {faq.prompt}{' '}
         <a
           href={faq.link.href}
