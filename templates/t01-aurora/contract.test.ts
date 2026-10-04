@@ -89,6 +89,20 @@ describe('auroraCopySchema', () => {
     expect(auroraContract.guide.split('\n')).toHaveLength(27)
   })
 
+  // Paid pass 3: the panel under the headline lost its window chrome, so its heading is no longer
+  // a screen's title; the short slot states its size in words.
+  it("asks for a heading for the hero's panel, not a screen title in an illustration", () => {
+    const lines = auroraContract.guide.split('\n')
+    expect(lines).toContain(
+      '- hero.frame.title: 3 to 16 characters, a heading of one or two words for the panel under the headline that lists three things they do',
+    )
+    expect(lines).toContain(
+      '- hero.frame.rows[]: 8 to 40 characters, exactly three short rows in that panel, things they do',
+    )
+    expect(auroraContract.guide).not.toContain('screen')
+    expect(auroraContract.guide).not.toContain('illustration')
+  })
+
   it('rejects a footer link with an unknown target', () => {
     const copy = auroraFallbackCopy(fallbackBrief('Kestrel', 'Job scheduling.'))
     const broken = {
