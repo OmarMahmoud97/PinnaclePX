@@ -58,12 +58,17 @@ export function MeridianHero({ hero }: Props) {
           </div>
         </div>
 
-        <div className="group relative mt-14">
+        {/* The picture keeps its box before it loads: it is drawn at its own shape, and on a phone
+            its wrapper takes the full width, where a wrapper as wide as its picture held a 2px box
+            until the picture arrived and the page below jumped (t03-D3). It is never wider than
+            1200px or the gutters allow, which sizes tells the browser. */}
+        <div className="group relative mt-14 w-full md:w-auto">
           <div className="absolute top-2 left-1/2 mx-auto h-24 w-[90%] -translate-x-1/2 transform rounded-full bg-brand-deeper/50 blur-3xl lg:-top-8 lg:h-80" />
           {hero.image !== null && (
             <Image
-              width={1200}
-              height={1200}
+              width={hero.image.width}
+              height={hero.image.height}
+              sizes="(min-width: 1248px) 1200px, calc(100vw - 48px)"
               className="relative mx-auto flex w-full items-center rounded-lg border border-t-2 border-surface-muted border-t-brand-deeper/30 leading-none md:w-[1200px]"
               src={hero.image.src}
               alt={hero.image.alt}
