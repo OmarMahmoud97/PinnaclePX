@@ -12,7 +12,7 @@ type Props = Pick<AtlasContent, 'offer'>
 // section drops in from above as it arrives.
 export function AtlasOffer({ offer }: Props) {
   return (
-    <section id="offer" className="my-36 w-full">
+    <section id="included" className="my-36 w-full">
       <div data-fade="down" className={section}>
         <div className="col-span-12 lg:col-span-7">
           <div className="w-full">

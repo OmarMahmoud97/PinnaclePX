@@ -47,7 +47,7 @@ export const KESTREL_ATLAS: AtlasContent = {
   nav: {
     links: [
       { label: 'Cryptocurrency', href: '#start' },
-      { label: 'Exchanges', href: '#offer' },
+      { label: 'Exchanges', href: '#included' },
       { label: 'Watchlist', href: '#approach' },
       { label: 'NFT', href: '#why' },
       { label: 'Portfolio', href: '#faq' },
@@ -56,7 +56,7 @@ export const KESTREL_ATLAS: AtlasContent = {
       label: 'Products',
       items: [
         { label: 'Exchange', href: '#start' },
-        { label: 'Wallet', href: '#offer' },
+        { label: 'Wallet', href: '#included' },
         { label: 'Explorer', href: '#approach' },
         { label: 'Charts', href: '#why' },
       ],
@@ -320,7 +320,7 @@ export const KESTREL_ATLAS: AtlasContent = {
     columns: [
       [
         { label: 'Cryptocurrency', href: '#start' },
-        { label: 'Exchanges', href: '#offer' },
+        { label: 'Exchanges', href: '#included' },
         { label: 'Watchlist', href: '#approach' },
         { label: 'Portfolio', href: '#why' },
         { label: 'NFT', href: '#faq' },
