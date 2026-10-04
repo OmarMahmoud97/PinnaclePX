@@ -17,6 +17,8 @@
 // profile, Atlas's hero and Summit's closing picture are not drawn at 390). Leftovers are the
 // rendered check's (scripts/checks/leftovers.mjs), not counted here. Started from
 // review/outcome/scorecard.cjs, which counted "all rejected" and "pool used up" as one cause.
+// A page written outside its fixture's pick (EVAL_PAIRS, the record's `extra`) is counted in
+// its template's row, replayed third after the pick's first two, the trio its record stores.
 //
 //   pnpm eval:scorecard <run> [<run> ...]
 import { existsSync, readdirSync, readFileSync } from 'node:fs'
@@ -80,6 +82,8 @@ function scoreRun(run) {
   const records = readdirSync(dir)
     .filter((name) => name.endsWith('.json') && name !== 'summary.json' && !name.startsWith('_'))
     .map((name) => JSON.parse(readFileSync(join(dir, name), 'utf8')))
+  // The pages written outside a fixture's pick, as "fixture template".
+  const extras = []
   for (const record of records) {
     const brief = record.brief.brief
     const given = new Set(
@@ -96,62 +100,76 @@ function scoreRun(run) {
     const verdicts = new Map(
       record.imagery.pools.flatMap((p) => (p.verdicts ?? []).map((v) => [v.id, v])),
     )
-    const taken = new Map()
-    for (const templateId of record.templates) {
-      const written = record.copy[templateId]
-      const copy = written?.final
-      if (written !== undefined && !written.fallback) {
-        add(templateId, 'pages')
-        if (PADDED[templateId] !== undefined) {
-          add(templateId, 'listPages')
-          if (PADDED[templateId](copy, brief)) add(templateId, 'padded')
+    // The designs in order, from nothing taken, each slot by the rule; only the designs in
+    // `counted` are added to the rows, and the others only take their pictures first.
+    const replay = (designs, slotsOf, counted) => {
+      const taken = new Map()
+      for (const templateId of designs) {
+        const counts = counted.includes(templateId)
+        const written = record.copy[templateId]
+        const copy = written?.final
+        if (counts && written !== undefined && !written.fallback) {
+          add(templateId, 'pages')
+          if (PADDED[templateId] !== undefined) {
+            add(templateId, 'listPages')
+            if (PADDED[templateId](copy, brief)) add(templateId, 'padded')
+          }
         }
+        slotsOf(templateId).forEach((slot, index) => {
+          const item = ITEMS[templateId]
+          if (item !== undefined && copy !== undefined && slot.startsWith(item[0])) {
+            if (Number(slot.slice(item[0].length)) > item[1](copy)) return
+          }
+          const pool = index === 0 ? hero : detail
+          const order = pool?.ordered ?? []
+          const fresh = order.find((id) => !taken.has(id))
+          const reused = order.find((id) => !(taken.get(id) ?? new Set()).has(templateId))
+          const chosen = fresh ?? reused ?? null
+          const phone = !(HIDDEN_AT_390[templateId] ?? []).includes(slot)
+          const count = (key) => {
+            if (!counts) return
+            add(templateId, key)
+            if (phone) add(templateId, `phone ${key}`)
+          }
+          count('slots')
+          if (chosen === null) {
+            const searchErrors =
+              pool === undefined ? 0 : pool.errors.filter((e) => e.startsWith('search')).length
+            const cause =
+              pool === undefined || pool.candidates.length === 0
+                ? searchErrors > 0
+                  ? 'empty: search error'
+                  : 'empty: no results'
+                : order.length === 0
+                  ? 'empty: all rejected'
+                  : 'empty: pool used up'
+            count('empty')
+            count(cause)
+            return
+          }
+          if (fresh === undefined) count('shared')
+          const takers = taken.get(chosen) ?? new Set()
+          takers.add(templateId)
+          taken.set(chosen, takers)
+          const verdict = verdicts.get(chosen)
+          if (verdict === undefined) count('unjudged')
+          else if (verdict.score >= 4 && verdict.score <= 6) count('scored 4 to 6')
+          count('filled')
+          if (altFlagged(candidates.get(chosen)?.alt ?? '', given)) count('alt flagged')
+        })
       }
-      const slots = Object.keys(record.imagery.assignment[templateId] ?? {})
-      slots.forEach((slot, index) => {
-        const item = ITEMS[templateId]
-        if (item !== undefined && copy !== undefined && slot.startsWith(item[0])) {
-          if (Number(slot.slice(item[0].length)) > item[1](copy)) return
-        }
-        const pool = index === 0 ? hero : detail
-        const order = pool?.ordered ?? []
-        const fresh = order.find((id) => !taken.has(id))
-        const reused = order.find((id) => !(taken.get(id) ?? new Set()).has(templateId))
-        const chosen = fresh ?? reused ?? null
-        const phone = !(HIDDEN_AT_390[templateId] ?? []).includes(slot)
-        const count = (key) => {
-          add(templateId, key)
-          if (phone) add(templateId, `phone ${key}`)
-        }
-        count('slots')
-        if (chosen === null) {
-          const searchErrors =
-            pool === undefined ? 0 : pool.errors.filter((e) => e.startsWith('search')).length
-          const cause =
-            pool === undefined || pool.candidates.length === 0
-              ? searchErrors > 0
-                ? 'empty: search error'
-                : 'empty: no results'
-              : order.length === 0
-                ? 'empty: all rejected'
-                : 'empty: pool used up'
-          count('empty')
-          count(cause)
-          return
-        }
-        if (fresh === undefined) count('shared')
-        const takers = taken.get(chosen) ?? new Set()
-        takers.add(templateId)
-        taken.set(chosen, takers)
-        const verdict = verdicts.get(chosen)
-        if (verdict === undefined) count('unjudged')
-        else if (verdict.score >= 4 && verdict.score <= 6) count('scored 4 to 6')
-        count('filled')
-        if (altFlagged(candidates.get(chosen)?.alt ?? '', given)) count('alt flagged')
-      })
+    }
+    const picked = (templateId) => Object.keys(record.imagery.assignment[templateId] ?? {})
+    replay(record.templates, picked, record.templates)
+    // Each page written outside the pick (EVAL_PAIRS) in the trio its record stores, after the
+    // pick's first two, which take their pictures first and are not counted again.
+    for (const [extraId, extra] of Object.entries(record.extra ?? {})) {
+      const slotsOf = (id) => (id === extraId ? Object.keys(extra.assignment) : picked(id))
+      replay(extra.chosen, slotsOf, [extraId])
+      extras.push(`${record.id} ${extraId}`)
     }
   }
-  return rows
+  return { rows, extras }
 }
 
 const COLUMNS = [
@@ -169,8 +187,13 @@ const COLUMNS = [
   'padded',
 ]
 for (const run of runs) {
-  const rows = scoreRun(run)
+  const { rows, extras } = scoreRun(run)
   console.log(`\n## ${run}\n`)
+  if (extras.length > 0) {
+    console.log(
+      `Counted with them, ${String(extras.length)} ${extras.length === 1 ? 'page' : 'pages'} outside the fixture's pick (EVAL_PAIRS), each third after the pick's first two: ${extras.join(', ')}.\n`,
+    )
+  }
   console.log(`| Template | ${COLUMNS.join(' | ')} | at 390: slots, empty, shared |`)
   console.log(`| ${['---', ...COLUMNS, '---'].map(() => '---').join(' | ')} |`)
   const ids = [...rows.keys()].filter((id) => id !== 'ALL').sort()

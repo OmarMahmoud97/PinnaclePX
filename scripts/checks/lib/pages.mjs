@@ -15,28 +15,47 @@ function recordsOf(run) {
     .map((name) => JSON.parse(readFileSync(join(dir, name), 'utf8')))
 }
 
-// Every model answer in a stored run, rendered through /dev/eval. Fallback copy is not a model
-// answer and is left out.
+// The templates a record's page is set with and the pictures it takes: the pick's, or, for a
+// template written outside the pick (EVAL_PAIRS), the trio and pictures its `extra` stores
+// (tests/eval/types.ts). Null for a template that is neither, which /dev/eval does not serve.
+function settingOf(record, templateId) {
+  if (record.templates.includes(templateId)) {
+    return { chosen: record.templates, picks: record.imagery.assignment[templateId] ?? {} }
+  }
+  const extra = Object.hasOwn(record.extra ?? {}, templateId) ? record.extra[templateId] : null
+  return extra === null ? null : { chosen: extra.chosen, picks: extra.assignment }
+}
+
+// Every model answer in a stored run, rendered through /dev/eval, the pick's and the extras'.
+// Fallback copy is not a model answer and is left out.
 function evalPages(run) {
   return recordsOf(run).flatMap((record) =>
     Object.entries(record.copy)
       .filter(([, written]) => !written.fallback)
-      .map(([templateId, written]) => ({
-        templateId,
-        name: record.id,
-        label: `${run}/${record.id}`,
-        path: `/dev/eval/${run}/${record.id}/${templateId}`,
-        answers: record.answers,
-        chosen: record.templates,
-        copy: written.final,
-        ctaLabel: record.brief.brief.ctaLabel ?? null,
-        picks: record.imagery.assignment[templateId] ?? {},
-        pools: record.imagery.pools,
-        // Each candidate's CDN address, which carries the photo's own file name.
-        thumbnails: Object.fromEntries(
-          record.imagery.pools.flatMap((pool) => pool.candidates.map((c) => [c.id, c.thumbnail])),
-        ),
-      })),
+      .flatMap(([templateId, written]) => {
+        const setting = settingOf(record, templateId)
+        if (setting === null) return []
+        return [
+          {
+            templateId,
+            name: record.id,
+            label: `${run}/${record.id}`,
+            path: `/dev/eval/${run}/${record.id}/${templateId}`,
+            answers: record.answers,
+            chosen: setting.chosen,
+            copy: written.final,
+            ctaLabel: record.brief.brief.ctaLabel ?? null,
+            picks: setting.picks,
+            pools: record.imagery.pools,
+            // Each candidate's CDN address, which carries the photo's own file name.
+            thumbnails: Object.fromEntries(
+              record.imagery.pools.flatMap((pool) =>
+                pool.candidates.map((c) => [c.id, c.thumbnail]),
+              ),
+            ),
+          },
+        ]
+      }),
   )
 }
 
