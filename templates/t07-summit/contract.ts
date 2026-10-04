@@ -201,7 +201,7 @@ const PURPOSE: Readonly<Record<ModelSlot, string>> = {
   'footer.description': 'one sentence about the company for the footer',
   'footer.columns[].heading': 'one to three footer column headings',
   'footer.columns[].links[].label':
-    'two to five link labels of one to three words per column; each link has a target of top, home, why-choose-us, our-services, booking-process, facilities, faq, book-appointment or cta, where booking-process is the steps, facilities the four photographs, book-appointment the form and cta the closing ask',
+    'two to five link labels per column; each link has a target of top, home, why-choose-us, our-services, booking-process, facilities, faq, book-appointment or cta',
   'footer.contact.heading': 'the heading of the footer column with the email, such as Get in touch',
   'footer.smallLinks[].label':
     'up to four short labels for the small links after the legal line, with the same targets; none is fine',
