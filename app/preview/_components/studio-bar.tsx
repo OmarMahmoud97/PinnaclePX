@@ -1,7 +1,9 @@
 import { ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
+import type { CSSProperties } from 'react'
 import { headerLink } from '@/app/_components/header-link'
 import { BOOK_CALL } from '@/app/_components/nav-links'
+import { ChromeTop } from '@/app/preview/_components/chrome-top'
 import { BACK_TO_DESIGNS } from '@/app/start/_components/done-copy'
 import { Logo } from '@/components/brand/logo'
 import { buttonStyles } from '@/components/ui/button'
@@ -10,19 +12,26 @@ import { SITE } from '@/lib/site'
 
 type Props = { slug: string; index: number; count: number; company: string }
 
+// The style of the column that holds the bar and the design under it: the bar's whole height
+// (h-14) as --chrome-top, so the first paint, at the top of the page, starts a fixed header below
+// the bar before ChromeTop measures it.
+export const UNDER_STUDIO_BAR = { '--chrome-top': '3.5rem' } as CSSProperties
+
 // The one strip of PinnaclePX chrome on a design: whose it is, which of theirs, the way back to
 // all of them, and the call (docs/start-page-journey-plan.md, 8.4). It sits on the studio's ink, a
 // ground of its own above the template's, so it needs no rule to part from it; the template below
 // sets its own tokens on its root, so the two never mix. The way back is the done page, which
 // lists every design, and below md it is the arrow alone, named for the screen reader, as the
 // questionnaire's own way out is. The call is the plain booking link: a design's tab has no name
-// in memory to fill it in with.
+// in memory to fill it in with. It scrolls away with the page, and ChromeTop tells the design how
+// much of it is left, so a header fixed to the top waits below it (decision 22).
 export function StudioBar({ slug, index, count, company }: Props) {
   return (
     <div
       data-theme="dark"
       className="flex h-14 items-center justify-between gap-4 bg-surface px-4 text-on-surface sm:px-6"
     >
+      <ChromeTop />
       <div className="flex min-w-0 items-center gap-4">
         <Link href="/" aria-label={`${SITE.name} home`} className="shrink-0">
           <Logo nameClassName="hidden md:inline" />
