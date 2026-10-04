@@ -24,10 +24,13 @@ const GLASS_AT = 10
 // from md where the same row is the menu, and Escape closes it. While the bar is clear over the
 // hero's photograph it sits on the hero's veil of the page surface, where its name and links keep
 // their greys. The sheet's glass is frosted thicker than the source's, enough for its grey links
-// to read over any photograph behind it. However the sheet closes (Escape, its close button or a
-// link), focus goes back to the toggle, where the source left it on a link the closed sheet hides.
-// On a page with a photograph the links are underlined under the pointer rather than faded, since
-// the lighter grey falls below WCAG AA over the picture, on the veil and on the glass.
+// to read over any photograph behind it. The toggle comes before the sheet in the page, where the
+// source put it after, so the first Tab after opening reaches the sheet's first link rather than
+// the hero behind it; it is the only thing in the bar below md, so it still sits at the right.
+// Escape and the close button hand focus back to the toggle; a link hands it to the block it
+// leads to, so the next Tab goes on from there. The source left focus on a link the closed sheet
+// hides. On a page with a photograph the links are underlined under the pointer rather than
+// faded, since the lighter grey falls below WCAG AA over the picture, on the veil and on the glass.
 export function SummitNav({ brand, nav, pictured }: Props) {
   const [open, setOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
@@ -70,18 +73,20 @@ export function SummitNav({ brand, nav, pictured }: Props) {
     }
   }, [open])
 
-  // The close button hands focus straight back; a link only once the page has moved to its
-  // anchor, which would otherwise leave focus on nothing. From md the toggle is not drawn, so
-  // it takes no focus.
+  // The close button hands focus straight back. A link in the open sheet still scrolls to its
+  // block; focus moves there without a second scroll. From md the same links are the bar's row,
+  // where the sheet is never open and a link leaves focus as the browser puts it.
   const close = () => {
     setOpen(false)
     toggle.current?.focus()
   }
-  const follow = () => {
+  const follow = (href: string) => {
+    if (!open) return
     setOpen(false)
-    window.setTimeout(() => {
-      toggle.current?.focus()
-    })
+    const target = href.startsWith('#') ? document.getElementById(href.slice(1)) : null
+    if (target === null) return
+    target.setAttribute('tabindex', '-1')
+    target.focus({ preventScroll: true })
   }
 
   return (
@@ -93,6 +98,34 @@ export function SummitNav({ brand, nav, pictured }: Props) {
         <a href="#top" aria-label={`${brand.name} home`}>
           <SummitLogo brand={brand} />
         </a>
+        <button
+          ref={toggle}
+          type="button"
+          onClick={() => {
+            setOpen(true)
+          }}
+          aria-expanded={open}
+          aria-controls={PANEL_ID}
+          aria-label="Menu"
+          className={menuButton}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M4 12h16" />
+            <path d="M4 18h16" />
+            <path d="M4 6h16" />
+          </svg>
+        </button>
         <div
           id={PANEL_ID}
           inert={narrow && !open}
@@ -102,7 +135,9 @@ export function SummitNav({ brand, nav, pictured }: Props) {
             <a
               key={link.href}
               href={link.href}
-              onClick={follow}
+              onClick={() => {
+                follow(link.href)
+              }}
               className={`font-medium text-on-surface/75 ${pictured ? 'underline-offset-4 hover:underline' : 'hover:text-on-surface'}`}
             >
               {link.label}
@@ -133,34 +168,6 @@ export function SummitNav({ brand, nav, pictured }: Props) {
           {nav.cta.label}
           <ArrowRight size={18} strokeWidth={1.8} aria-hidden="true" className={arrow} />
         </a>
-        <button
-          ref={toggle}
-          type="button"
-          onClick={() => {
-            setOpen(true)
-          }}
-          aria-expanded={open}
-          aria-controls={PANEL_ID}
-          aria-label="Menu"
-          className={menuButton}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden="true"
-          >
-            <path d="M4 12h16" />
-            <path d="M4 18h16" />
-            <path d="M4 6h16" />
-          </svg>
-        </button>
       </div>
     </nav>
   )
