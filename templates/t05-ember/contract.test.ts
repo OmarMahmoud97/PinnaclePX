@@ -67,6 +67,13 @@ describe('emberFallbackCopy', () => {
       'Import',
     ])
   })
+
+  // The third link leads to the card on the photograph, which invites them to get in touch, not
+  // to visit premises most businesses do not have (t05-L6; decision 15).
+  it('labels the third menu link Contact, not Find us', () => {
+    const copy = emberFallbackCopy(fallbackBrief('Kestrel', 'Job scheduling for trades.'))
+    expect(copy.nav.links[2]).toBe('Contact')
+  })
 })
 
 describe('emberCopySchema', () => {

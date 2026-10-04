@@ -314,7 +314,7 @@ export function emberFallbackCopy(brief: BrandBrief): EmberCopy {
       name: fitToSlot(name, EMBER_SLOTS['brand.name'], ['Ltd']),
       legalName: fitToSlot(name, EMBER_SLOTS['brand.legalName'], ['Ltd']),
     },
-    nav: { links: ['About', 'What we do', 'Find us', 'Questions'], cta },
+    nav: { links: ['About', 'What we do', 'Contact', 'Questions'], cta },
     hero: {
       eyebrow: label('hero.eyebrow', brief.audience, 'In our own words'),
       headline: prose('hero.headline', brief.headlines[0] ?? positioning),
