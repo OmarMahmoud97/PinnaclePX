@@ -26,7 +26,12 @@ const options = parseArgs(process.argv.slice(2), {
 // an element (equals), or a name a screen reader is given (label).
 const DRAWN = {
   't01-aurora': [
-    ['t01-L1', 'window dots', 'span.size-2\\.5.rounded-full'],
+    // The window's row of three, not the wordmark's single point (sections/logo.tsx).
+    [
+      't01-L1',
+      'window dots',
+      'div:has(> span.size-2\\.5.rounded-full + span.size-2\\.5.rounded-full) > span.size-2\\.5.rounded-full',
+    ],
     ['t01-L2', 'progress bars', 'span.h-1\\.5.w-12.rounded-full'],
     ['t01-L3', 'row dots, the first in brand colour', 'li > span.size-2.shrink-0.rounded-full'],
     ['t01-L4', 'title bar with its spacer', 'span.w-12:empty'],
