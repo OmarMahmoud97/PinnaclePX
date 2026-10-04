@@ -19,11 +19,22 @@
 //                             EVAL_REUSE_RUN to build on, and says which: paid passes 1 to 3 run
 //                             on l6-all-fixes, so they write copy for the twenty fixtures l6
 //                             holds, never decision 11's four, which wait for pass 4
+//   EVAL_PAIRS=hr:t01-aurora+t08-vector,florist:t03-meridian
+//                             write copy for exactly these fixtures, in this order, and these
+//                             templates each, chosen or not, so a pass can fill a cell the
+//                             selector never chose. It names the fixtures, so it takes no
+//                             EVAL_FIXTURES or EVAL_TEMPLATES; it works with any EVAL_STAGES (all
+//                             three when unset). A stage that is not run is reused as above; with
+//                             no copy stage, the named copy is carried from EVAL_REUSE_RUN, and a
+//                             pair it does not hold stops the run before any call. The record
+//                             keeps the pick in `templates`; a template outside it is in `extra`,
+//                             set with the pick's first two and its pictures chosen after theirs
+//                             on the record's pools, with no call (plan.ts, trioOf, picksAfter)
 //   EVAL_MAX_USD=1.78         the spend stop: no new fixture starts once the calls this run has
 //                             made reach this priced cost. Fixtures already started run to their
 //                             end, so a run can pass the cap by up to EVAL_CONCURRENCY fixtures
 //   EVAL_PLAN=1               validate the fixtures and print the template mix, and what
-//                             EVAL_TEMPLATES and EVAL_MAX_USD would do; no calls
+//                             EVAL_TEMPLATES, EVAL_PAIRS and EVAL_MAX_USD would do; no calls
 //   EVAL_SUMMARISE=<name>     recompute a run's summary from its files; no calls
 //   EVAL_CONCURRENCY=2        fixtures in flight at once
 import { createHash } from 'node:crypto'
@@ -48,15 +59,20 @@ import { selectTemplates } from '@/lib/select/select'
 import { contractFor, READY_TEMPLATES, TEMPLATES } from '@/templates/registry'
 import { copyAttemptOf, notebook, usageOf } from './notes'
 import {
+  assignPictures,
   type Choice,
   copyRunOf,
   copyTargets,
   maxUsdOf,
+  namedPairs,
   namedTemplates,
+  picksAfter,
+  poolKeyOf,
   reusedFor,
   runLimited,
   spendStop,
   splitByRecord,
+  trioOf,
 } from './plan'
 import { costOf, summarise } from './summary'
 import type { FixtureRecord, PoolRecord, RunFacts } from './types'
@@ -88,15 +104,33 @@ const templates = namedTemplates(
   process.env.EVAL_TEMPLATES,
   TEMPLATES.map((t) => t.id),
 )
+// EVAL_PAIRS names its own fixtures and templates. An id that names neither, or either other
+// switch beside it, stops the run here, before any call.
+const pairs = namedPairs(
+  process.env.EVAL_PAIRS,
+  (JSON.parse(readFileSync(FIXTURES_FILE, 'utf8')) as { fixtures: { id: string }[] }).fixtures.map(
+    (f) => f.id,
+  ),
+  TEMPLATES.map((t) => t.id),
+)
+if (pairs !== null && (templates !== null || (process.env.EVAL_FIXTURES ?? '').trim() !== '')) {
+  throw new Error(
+    'EVAL_PAIRS names the fixtures and templates itself; leave EVAL_FIXTURES and EVAL_TEMPLATES unset',
+  )
+}
 // Named templates write copy and nothing else: their briefs and pictures are reused.
 const stagesAsked: readonly string[] =
   process.env.EVAL_STAGES?.split(',') ?? (templates === null ? STAGES : ['copy'])
 const env = {
   run: process.env.EVAL_RUN ?? new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19),
-  fixtures: process.env.EVAL_FIXTURES?.split(',').filter((id) => id !== '') ?? null,
+  fixtures:
+    pairs?.map((pair) => pair.id) ??
+    process.env.EVAL_FIXTURES?.split(',').filter((id) => id !== '') ??
+    null,
   stages: stagesAsked.filter((s): s is Stage => STAGES.includes(s as Stage)),
   reuse: process.env.EVAL_REUSE_RUN ?? null,
   templates,
+  pairs,
   maxUsd: maxUsdOf(process.env.EVAL_MAX_USD),
   plan: process.env.EVAL_PLAN === '1',
   summarise: process.env.EVAL_SUMMARISE ?? null,
@@ -323,7 +357,7 @@ async function rankStage(
   for (const { plan } of plans) {
     for (const step of Object.values(plan)) {
       if (step.kind !== 'search') continue
-      const key = `${step.queries.join('\n')}\n${step.purpose}`
+      const key = poolKeyOf(step)
       void once(pools, key, async (): Promise<PoolRecord> => {
         const record: PoolRecord = {
           key,
@@ -386,35 +420,42 @@ async function rankStage(
   const settled = await Promise.all([...pools.values()])
   const byKey = new Map(settled.map((pool) => [pool.key, pool]))
 
-  // The choice rule of lib/images/stage.ts: the best candidate no design has taken, else the
-  // best this design has not shown, else nothing. Templates in order, slots in order.
-  const taken = new Map<number, Set<string>>()
-  const assignment: Record<string, Record<string, number | null>> = {}
-  let empty = 0
-  let repeated = 0
-  for (const { id, plan } of plans) {
-    assignment[id] = {}
-    for (const [slot, step] of Object.entries(plan)) {
-      if (step.kind !== 'search') {
-        assignment[id][slot] = null
-        continue
-      }
-      const pool = byKey.get(`${step.queries.join('\n')}\n${step.purpose}`)
-      const ordered = pool?.ordered ?? []
-      const fresh = ordered.find((c) => !taken.has(c))
-      const shared = ordered.find((c) => taken.get(c)?.has(id) !== true)
-      const chosen = fresh ?? shared ?? null
-      if (chosen === null) empty += 1
-      else {
-        if (fresh === undefined) repeated += 1
-        const takers = taken.get(chosen) ?? new Set<string>()
-        takers.add(id)
-        taken.set(chosen, takers)
-      }
-      assignment[id][slot] = chosen
-    }
-  }
+  // The choice rule of lib/images/stage.ts, templates in order and slots in order (plan.ts).
+  const { assignment, empty, repeated } = assignPictures(
+    plans,
+    (key) => byKey.get(key)?.ordered ?? [],
+  )
   return { pools: settled, assignment, empty, repeated, ms: Date.now() - begun }
+}
+
+// Each template the record holds copy for outside its pick (EVAL_PAIRS), set as a visitor in
+// that row could get it: with the pick's first two, and the pictures it takes after theirs
+// from the record's own pools, with no call (plan.ts, trioOf and picksAfter). Every fixture has
+// one hero pool and one detail pool that all templates share (lib/images/plan.ts), so the pools
+// the pick searched serve it; a slot whose pool the record lacks is left empty.
+function extrasOf(
+  fixture: Fixture,
+  templates: readonly string[],
+  copy: FixtureRecord['copy'],
+  brief: BrandBrief,
+  imagery: FixtureRecord['imagery'],
+): NonNullable<FixtureRecord['extra']> {
+  const byKey = new Map(imagery.pools.map((pool) => [pool.key, pool.ordered]))
+  return Object.fromEntries(
+    Object.keys(copy)
+      .filter((id) => !templates.includes(id))
+      .map((id) => {
+        const chosen = trioOf(templates, id)
+        const before = Object.fromEntries(
+          chosen.slice(0, -1).map((t) => [t, imagery.assignment[t] ?? {}]),
+        )
+        const plan = planImagery(contractFor(id).imageSlots, fixture.answers, brief)
+        return [
+          id,
+          { chosen, assignment: picksAfter(before, { id, plan }, (key) => byKey.get(key) ?? []) },
+        ]
+      }),
+  )
 }
 
 // Every fixture record of a run, read once.
@@ -434,8 +475,17 @@ function recordsOf(run: string): FixtureRecord[] {
   return records
 }
 
+// The templates a fixture's record keeps as its pick: the selector's, or, for a photograph
+// variant that carries another variant's copy, that variant's, so the copy it carries is the
+// copy they were written for (decision 11).
+function pickOf(fixture: Fixture, reused: FixtureRecord | null): readonly string[] {
+  return reused !== null && reused.id !== fixture.id && !env.stages.includes('copy')
+    ? reused.templates
+    : templatesFor(fixture).templates
+}
+
 // One fixture's stages. `write` is the templates whose copy the run writes: every template the
-// fixture was chosen, or the named ones of EVAL_TEMPLATES (plan.ts).
+// fixture was chosen, the named ones of EVAL_TEMPLATES, or the fixture's EVAL_PAIRS (plan.ts).
 async function runFixture(fixture: Fixture, write: readonly string[]): Promise<FixtureRecord> {
   const slug = `eval-${fixture.id}`
   const own = templatesFor(fixture)
@@ -444,10 +494,7 @@ async function runFixture(fixture: Fixture, write: readonly string[]): Promise<F
   if (!wants('brief') && reused === null) {
     throw new Error(`EVAL_STAGES leaves out brief but EVAL_REUSE_RUN has no ${fixture.id}.json`)
   }
-  // A photograph variant that reuses another variant's copy keeps that variant's templates, so
-  // the copy it carries is the copy they were written for (decision 11).
-  const templates =
-    reused !== null && reused.id !== fixture.id && !wants('copy') ? reused.templates : own.templates
+  const templates = pickOf(fixture, reused)
   const { seed } = own
   const brief = wants('brief') || reused === null ? await briefStage(fixture, slug) : reused.brief
   const copy: FixtureRecord['copy'] = {}
@@ -459,19 +506,28 @@ async function runFixture(fixture: Fixture, write: readonly string[]): Promise<F
       const result = written[index]
       if (result !== undefined) copy[id] = result
     })
-  } else if (reused !== null) {
+  } else if (reused !== null && env.pairs === null) {
     Object.assign(copy, reused.copy)
+  } else if (reused !== null) {
+    // EVAL_PAIRS with no copy stage carries the named copy alone; targetsOf has checked that
+    // the reused record holds every pair.
+    for (const id of write) {
+      const carried = reused.copy[id]
+      if (carried !== undefined) copy[id] = carried
+    }
   }
   const imagery =
     wants('rank') || reused === null
       ? await rankStage(slug, fixture, templates, brief.brief)
       : reused.imagery
+  const extra = extrasOf(fixture, templates, copy, brief.brief, imagery)
   return {
     id: fixture.id,
     notes: fixture.notes,
     answers: fixture.answers,
     seed,
     templates,
+    ...(Object.keys(extra).length === 0 ? {} : { extra }),
     stagesRun: env.stages,
     reusedFrom: env.reuse,
     brief,
@@ -484,20 +540,42 @@ async function runFixture(fixture: Fixture, write: readonly string[]): Promise<F
 type Target = Choice & { fixture: Fixture }
 
 // The fixtures to run and the templates each writes copy for, by EVAL_FIXTURES and
-// EVAL_TEMPLATES. A run that skips the brief stage builds on EVAL_REUSE_RUN's records, so each
-// fixture with none there to build on (its own or a variant's) is set aside here, before any
-// call (plan.ts, splitByRecord), and both lists are said.
+// EVAL_TEMPLATES, or by EVAL_PAIRS in its own order. A run that skips the brief stage builds on
+// EVAL_REUSE_RUN's records, so each fixture with none there to build on (its own or a
+// variant's) is set aside here, before any call (plan.ts, splitByRecord), and both lists are
+// said. EVAL_PAIRS with no copy stage carries the named copy from those records, so a pair they
+// do not hold stops the run here, before any call.
 function targetsOf(fixtures: readonly Fixture[]): { kept: Target[]; dropped: Target[] } {
   const byId = new Map(fixtures.map((f) => [f.id, f]))
-  const all = copyTargets(
-    fixtures.map((f) => ({ id: f.id, templates: templatesFor(f).templates })),
-    env.templates,
+  const all = (
+    env.pairs ??
+    copyTargets(
+      fixtures.map((f) => ({ id: f.id, templates: templatesFor(f).templates })),
+      env.templates,
+    )
   ).flatMap((target) => {
     const fixture = byId.get(target.id)
     return fixture === undefined ? [] : [{ ...target, fixture }]
   })
-  if (env.stages.includes('brief') || env.reuse === null) return { kept: all, dropped: [] }
-  return splitByRecord(all, recordsOf(env.reuse))
+  const split =
+    env.stages.includes('brief') || env.reuse === null
+      ? { kept: all, dropped: [] }
+      : splitByRecord(all, recordsOf(env.reuse))
+  if (env.pairs !== null && !env.stages.includes('copy')) {
+    const records = env.reuse === null ? [] : recordsOf(env.reuse)
+    const missing = split.kept.flatMap((target) => {
+      const held = reusedFor(target.fixture, records)?.copy ?? {}
+      return target.templates
+        .filter((id) => !Object.hasOwn(held, id))
+        .map((id) => `${target.id}:${id}`)
+    })
+    if (missing.length > 0) {
+      throw new Error(
+        `EVAL_PAIRS names copy this run does not write (EVAL_STAGES leaves out copy) and EVAL_REUSE_RUN does not hold: ${missing.join(', ')}`,
+      )
+    }
+  }
+  return split
 }
 
 // What the reused run paid for the same answers: a fair guess at what writing them again costs.
@@ -514,6 +592,47 @@ function estimateOf(targets: readonly Target[]): { usd: number; unknown: string[
     }
   }
   return { usd, unknown }
+}
+
+// The same for EVAL_PAIRS, where most pairs were never written: each pair at what the reused run
+// paid for it, else at its template's mean cost per answer there (every call of every answer,
+// fallbacks included, as the summary's cost per template counts it). A template the reused run
+// never wrote is unknown. Says how each pair was priced.
+function pairsEstimateOf(targets: readonly Target[]): {
+  usd: number
+  unknown: string[]
+  priced: Record<string, { usd: number; from: 'paid' | 'mean' }>
+} | null {
+  if (env.reuse === null) return null
+  const records = recordsOf(env.reuse)
+  const costOfAnswer = (written: FixtureRecord['copy'][string]) =>
+    written.attempts.reduce((sum, a) => sum + costOf(a.usage), 0)
+  const meanOf = (id: string) => {
+    const answers = records.flatMap((r) => {
+      const written = r.copy[id]
+      return written === undefined ? [] : [costOfAnswer(written)]
+    })
+    return answers.length === 0 ? null : answers.reduce((a, b) => a + b, 0) / answers.length
+  }
+  let usd = 0
+  const unknown: string[] = []
+  const priced: Record<string, { usd: number; from: 'paid' | 'mean' }> = {}
+  for (const target of targets) {
+    const reused = reusedFor(target.fixture, records)
+    for (const id of target.templates) {
+      const pair = `${target.id}/${id}`
+      const written = reused?.copy[id]
+      const mean = meanOf(id)
+      if (written !== undefined) priced[pair] = { usd: costOfAnswer(written), from: 'paid' }
+      else if (mean !== null) priced[pair] = { usd: mean, from: 'mean' }
+      else {
+        unknown.push(pair)
+        continue
+      }
+      usd += priced[pair].usd
+    }
+  }
+  return { usd, unknown, priced }
 }
 
 // A run's records: every fixture file. summary.json and the run's own _run.json are not ones.
@@ -568,11 +687,29 @@ test('the fixtures are valid and every ready template is chosen by at least five
           stages: env.stages,
           reuse: env.reuse,
           copy: Object.fromEntries(targets.map((t) => [t.id, t.templates])),
+          // With EVAL_PAIRS, the templates of each fixture's copy outside its pick.
+          ...(env.pairs === null
+            ? {}
+            : {
+                extra: Object.fromEntries(
+                  targets.map((t) => {
+                    const reused =
+                      env.reuse === null ? null : reusedFor(t.fixture, recordsOf(env.reuse))
+                    const picked = pickOf(t.fixture, reused)
+                    return [t.id, t.templates.filter((id) => !picked.includes(id))]
+                  }),
+                ),
+              }),
           answers: targets.reduce((n, t) => n + t.templates.length, 0),
           notRun: fixtures.filter((f) => !targets.some((t) => t.id === f.id)).map((f) => f.id),
           // Of those, the fixtures set aside for want of a record in the reused run.
           noRecord: dropped.map((t) => t.id),
-          estimate: env.templates === null ? null : estimateOf(targets),
+          estimate:
+            env.templates !== null
+              ? estimateOf(targets)
+              : env.pairs !== null && env.stages.includes('copy')
+                ? pairsEstimateOf(targets)
+                : null,
           // A fixture with no record of its own in the reused run, and the variant it reuses.
           reuses:
             env.reuse === null
@@ -618,6 +755,7 @@ test.skipIf(env.plan || env.summarise !== null)(
       `run ${env.run}: ${String(targets.length)} fixtures, stages ${env.stages.join('+')}` +
         (env.reuse === null ? '' : `, the rest from ${env.reuse}`) +
         (env.templates === null ? '' : `, copy for ${env.templates.join(', ')} only`) +
+        (env.pairs === null ? '' : ', copy for the EVAL_PAIRS pairs only, in their order') +
         (env.maxUsd === null ? '' : `, stopping at $${env.maxUsd.toFixed(2)}`) +
         (dropped.length === 0
           ? ''
@@ -638,6 +776,9 @@ test.skipIf(env.plan || env.summarise !== null)(
     )
     const facts: RunFacts = {
       templates: env.templates,
+      ...(env.pairs === null
+        ? {}
+        : { pairs: Object.fromEntries(env.pairs.map((pair) => [pair.id, pair.templates])) }),
       maxUsd: env.maxUsd,
       spent: stop.spent(),
       concurrency: env.concurrency,
