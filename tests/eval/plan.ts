@@ -1,7 +1,9 @@
 import type { SubmissionAnswers } from '@/lib/brief/submission'
+import type { SlotPlan } from '@/lib/images/plan'
 
-// Which fixtures a run writes copy for, which stored record each reuses, and when it stops
-// starting fixtures. Pure, so each is unit-tested (plan.test.ts) without a model call.
+// Which fixtures a run writes copy for, which stored record each reuses, when it stops starting
+// fixtures, and the pictures each page takes. Pure, so each is unit-tested (plan.test.ts)
+// without a model call.
 
 // A fixture and the templates the selector chose for it.
 export type Choice = Readonly<{ id: string; templates: readonly string[] }>
@@ -25,6 +27,53 @@ export function namedTemplates(
     throw new Error(`EVAL_TEMPLATES names no template: ${unknown.join(', ')}`)
   }
   return ids
+}
+
+// EVAL_PAIRS as fixtures in the run's order, each with the templates named for it in the order
+// named, or null when unset or empty: `hr:t01-aurora+t08-vector,florist:t03-meridian`. Every
+// named template is written, chosen or not, so a pass can fill a cell the selector never
+// chose for that fixture. An entry that is not a fixture and its templates, an id that names no
+// fixture or no template, or a fixture or template named twice stops the run, so a typo cannot
+// quietly write something else.
+export function namedPairs(
+  value: string | undefined,
+  fixtures: readonly string[],
+  templates: readonly string[],
+): Choice[] | null {
+  const entries = listOf(value ?? '')
+  if (entries.length === 0) return null
+  const pairs = entries.map((entry) => {
+    const [id = '', named = '', ...rest] = entry.split(':').map((part) => part.trim())
+    const ids = named
+      .split('+')
+      .map((t) => t.trim())
+      .filter((t) => t !== '')
+    if (id === '' || ids.length === 0 || rest.length > 0) {
+      throw new Error(`EVAL_PAIRS entry "${entry}" is not <fixture>:<template>+<template>`)
+    }
+    return { id, templates: ids }
+  })
+  const twice = <T>(list: readonly T[]) =>
+    list.filter((item, index) => list.indexOf(item) !== index)
+  const noFixture = pairs.map((p) => p.id).filter((id) => !fixtures.includes(id))
+  const noTemplate = [
+    ...new Set(pairs.flatMap((p) => p.templates).filter((id) => !templates.includes(id))),
+  ]
+  const problems = [
+    ...(noFixture.length === 0 ? [] : [`names no fixture: ${noFixture.join(', ')}`]),
+    ...(noTemplate.length === 0 ? [] : [`names no template: ${noTemplate.join(', ')}`]),
+    ...twice(pairs.map((p) => p.id)).map((id) => `names ${id} twice; give it one entry`),
+    ...pairs.flatMap((p) => twice(p.templates).map((id) => `names ${id} twice for ${p.id}`)),
+  ]
+  if (problems.length > 0) throw new Error(`EVAL_PAIRS ${problems.join('; ')}`)
+  return pairs
+}
+
+// The templates a page outside the selector's pick is set with: the pick's first two, then it,
+// a page a visitor in that row could get. Its tokens are solved over their pairs, its studio
+// bar counts them, and its pictures are chosen third, after theirs (picksAfter).
+export function trioOf(picked: readonly string[], id: string): string[] {
+  return [...picked.slice(0, 2), id]
 }
 
 // The templates whose copy each fixture's run writes: every template it was chosen with no
@@ -143,4 +192,84 @@ export function splitByRecord<T extends Readonly<{ fixture: Answered }>>(
     else kept.push(target)
   }
   return { kept, dropped }
+}
+
+// A template's picture plan (lib/images/plan.ts), and per slot the Pexels id it takes, or null.
+type Planned = Readonly<{ id: string; plan: Readonly<Record<string, SlotPlan>> }>
+type Picks = Record<string, number | null>
+
+// A pool's key, as the eval stores it (PoolRecord.key): the queries and the purpose they serve.
+export const poolKeyOf = (step: Readonly<{ queries: readonly string[]; purpose: string }>) =>
+  `${step.queries.join('\n')}\n${step.purpose}`
+
+// The choice rule of lib/images/stage.ts as the eval replays it on ranked pools: the best
+// candidate no design has taken, else the best this design has not shown, else nothing. Slots in
+// order; `taken` holds which designs have each picture, and grows.
+function takeFor(
+  { id, plan }: Planned,
+  orderOf: (key: string) => readonly number[],
+  taken: Map<number, Set<string>>,
+): { picks: Picks; empty: number; repeated: number } {
+  const picks: Picks = {}
+  let empty = 0
+  let repeated = 0
+  for (const [slot, step] of Object.entries(plan)) {
+    if (step.kind !== 'search') {
+      picks[slot] = null
+      continue
+    }
+    const ordered = orderOf(poolKeyOf(step))
+    const fresh = ordered.find((c) => !taken.has(c))
+    const shared = ordered.find((c) => taken.get(c)?.has(id) !== true)
+    const chosen = fresh ?? shared ?? null
+    if (chosen === null) empty += 1
+    else {
+      if (fresh === undefined) repeated += 1
+      const takers = taken.get(chosen) ?? new Set<string>()
+      takers.add(id)
+      taken.set(chosen, takers)
+    }
+    picks[slot] = chosen
+  }
+  return { picks, empty, repeated }
+}
+
+// Every design's pictures, designs in order, with the slots left empty and those holding a
+// picture another design took first.
+export function assignPictures(
+  plans: readonly Planned[],
+  orderOf: (key: string) => readonly number[],
+): { assignment: Record<string, Picks>; empty: number; repeated: number } {
+  const taken = new Map<number, Set<string>>()
+  const assignment: Record<string, Picks> = {}
+  let empty = 0
+  let repeated = 0
+  for (const planned of plans) {
+    const took = takeFor(planned, orderOf, taken)
+    assignment[planned.id] = took.picks
+    empty += took.empty
+    repeated += took.repeated
+  }
+  return { assignment, empty, repeated }
+}
+
+// The pictures of a page outside the pick, chosen third after the trio's first two (trioOf):
+// the rule above, continued from the pictures those two took as the record stores them, so it
+// needs no call and the pick's own pictures stay as they are. The pick's third design is not
+// before it in the trio, so what that design took is free to it.
+export function picksAfter(
+  before: Readonly<Record<string, Readonly<Record<string, number | null>>>>,
+  planned: Planned,
+  orderOf: (key: string) => readonly number[],
+): Picks {
+  const taken = new Map<number, Set<string>>()
+  for (const [id, picks] of Object.entries(before)) {
+    for (const chosen of Object.values(picks)) {
+      if (chosen === null) continue
+      const takers = taken.get(chosen) ?? new Set<string>()
+      takers.add(id)
+      taken.set(chosen, takers)
+    }
+  }
+  return takeFor(planned, orderOf, taken).picks
 }

@@ -1,19 +1,27 @@
+import { evalPageOf } from '@/app/dev/_render/eval-record'
 import type { SubmissionAnswers } from '@/lib/brief/submission'
+import type { SlotPlan } from '@/lib/images/plan'
 import {
+  assignPictures,
   copyRunOf,
   copyTargets,
   maxUsdOf,
+  namedPairs,
   namedTemplates,
+  picksAfter,
+  poolKeyOf,
   reusedFor,
   runLimited,
   spendStop,
   splitByRecord,
+  trioOf,
 } from './plan'
 import { summarise } from './summary'
 
-// The eval's two limits, proved without a call (decision 10, docs/template-fit-decisions.md):
-// EVAL_TEMPLATES writes copy for the named templates only, and EVAL_MAX_USD starts no fixture
-// once the run's priced cost reaches the cap.
+// The eval's limits, proved without a call (decision 10, docs/template-fit-decisions.md):
+// EVAL_TEMPLATES writes copy for the named templates only, EVAL_PAIRS for the named pairs only
+// and in their order, and EVAL_MAX_USD starts no fixture once the run's priced cost reaches the
+// cap. A page EVAL_PAIRS writes outside a fixture's pick is set with the trio its record stores.
 
 const KNOWN = ['t01-aurora', 't02-monolith', 't06-harbor', 't08-vector']
 const CHOICES = [
@@ -53,6 +61,174 @@ describe('EVAL_TEMPLATES', () => {
     const targets = copyTargets(CHOICES, ['t02-monolith'])
     expect(targets.map((t) => t.id)).toEqual(['a1-gas', 'florist'])
     expect(targets.flatMap((t) => t.templates)).toEqual(['t02-monolith', 't02-monolith'])
+  })
+})
+
+describe('EVAL_PAIRS', () => {
+  const FIXTURES = CHOICES.map((c) => c.id)
+  const ALL = [...KNOWN, 't03-meridian', 't04-atlas']
+
+  it('reads each fixture with its templates, in the order given, and nothing when unset or empty', () => {
+    expect(
+      namedPairs(' florist : t04-atlas + t01-aurora , joinery:t02-monolith', FIXTURES, ALL),
+    ).toEqual([
+      { id: 'florist', templates: ['t04-atlas', 't01-aurora'] },
+      { id: 'joinery', templates: ['t02-monolith'] },
+    ])
+    expect(namedPairs(undefined, FIXTURES, ALL)).toBeNull()
+    expect(namedPairs(' , ', FIXTURES, ALL)).toBeNull()
+  })
+
+  it('stops on an id that names no fixture or no template, so a typo cannot write another', () => {
+    expect(() => namedPairs('florst:t04-atlas', FIXTURES, ALL)).toThrow('names no fixture: florst')
+    expect(() => namedPairs('florist:t04-atlss', FIXTURES, ALL)).toThrow(
+      'names no template: t04-atlss',
+    )
+    expect(() => namedPairs('florst:t04-atlss', FIXTURES, ALL)).toThrow(
+      'EVAL_PAIRS names no fixture: florst; names no template: t04-atlss',
+    )
+  })
+
+  it('stops on an entry that is not a fixture and its templates, and on a name given twice', () => {
+    for (const bad of ['florist', 'florist:', ':t04-atlas', 'florist:t04-atlas:cafe']) {
+      expect(() => namedPairs(bad, FIXTURES, ALL), bad).toThrow('is not <fixture>:<template>')
+    }
+    expect(() => namedPairs('cafe:t04-atlas,cafe:t08-vector', FIXTURES, ALL)).toThrow(
+      'names cafe twice',
+    )
+    expect(() => namedPairs('cafe:t04-atlas+t04-atlas', FIXTURES, ALL)).toThrow(
+      'names t04-atlas twice for cafe',
+    )
+  })
+
+  it('runs its fixtures in its own order and writes templates the selector never chose', async () => {
+    // The file's order is joinery, a1-gas, florist, cafe; the pairs run cafe first. Atlas was
+    // chosen for none of them, so EVAL_TEMPLATES could never write it.
+    const pairs = namedPairs('cafe:t04-atlas+t01-aurora,joinery:t04-atlas', FIXTURES, ALL) ?? []
+    expect(copyTargets(CHOICES, ['t04-atlas'])).toEqual([])
+    const started: string[] = []
+    await runLimited(
+      pairs,
+      1,
+      () => true,
+      ({ id, templates }) => {
+        started.push(`${id}:${templates.join('+')}`)
+        return Promise.resolve()
+      },
+    )
+    expect(started).toEqual(['cafe:t04-atlas+t01-aurora', 'joinery:t04-atlas'])
+    const records = pairs.map((p) => ({ id: p.id, answers: {} as SubmissionAnswers }))
+    const { kept } = splitByRecord(
+      pairs.map((p) => ({ ...p, fixture: { id: p.id, answers: {} as SubmissionAnswers } })),
+      records,
+    )
+    expect(kept.map((t) => t.id)).toEqual(['cafe', 'joinery'])
+  })
+})
+
+describe('a page outside the pick', () => {
+  const HERO = { queries: ['kitchen'], purpose: 'the main picture' }
+  const DETAIL = { queries: ['oak', 'tools'], purpose: 'a supporting picture' }
+  const ORDER = new Map([
+    [poolKeyOf(HERO), [1, 2, 3]],
+    [poolKeyOf(DETAIL), [10, 11, 12, 13]],
+  ])
+  const orderOf = (key: string) => ORDER.get(key) ?? []
+  const search = (pool: { queries: string[]; purpose: string }, union = true): SlotPlan => ({
+    kind: 'search',
+    ...pool,
+    union,
+  })
+  // A design with a hero and this many detail slots.
+  const design = (id: string, details: number) => ({
+    id,
+    plan: Object.fromEntries<SlotPlan>([
+      ['hero', search(HERO, false)],
+      ...Array.from({ length: details }, (_, i): [string, SlotPlan] => [
+        `detail-${String(i + 1)}`,
+        search(DETAIL),
+      ]),
+    ]),
+  })
+
+  it('is set with the pick’s first two, then itself', () => {
+    expect(trioOf(['t06-harbor', 't05-ember', 't01-aurora'], 't08-vector')).toEqual([
+      't06-harbor',
+      't05-ember',
+      't08-vector',
+    ])
+  })
+
+  it('takes its pictures after the first two’s, as a full replay of the trio would', () => {
+    const [a, b, c, x] = [design('a', 2), design('b', 1), design('c', 1), design('x', 2)]
+    const pick = assignPictures([a, b, c], orderOf)
+    expect(pick.assignment).toEqual({
+      a: { hero: 1, 'detail-1': 10, 'detail-2': 11 },
+      b: { hero: 2, 'detail-1': 12 },
+      c: { hero: 3, 'detail-1': 13 },
+    })
+    // c is not before it in the trio, so c's pictures are free to it; with every detail picture
+    // taken, its second detail slot shares the best one it has not shown.
+    const extra = picksAfter({ a: pick.assignment.a ?? {}, b: pick.assignment.b ?? {} }, x, orderOf)
+    expect(extra).toEqual({ hero: 3, 'detail-1': 13, 'detail-2': 10 })
+    expect(assignPictures([a, b, x], orderOf).assignment.x).toEqual(extra)
+  })
+
+  it('keeps the rule the pick was always chosen by: unshown, then shared, then empty', () => {
+    const one = { queries: ['one'], purpose: 'one picture' }
+    const plans = [
+      {
+        id: 'a',
+        plan: {
+          hero: { kind: 'own', url: 'http://localhost/own.jpg', alt: '' } as const,
+          first: search(one),
+          second: search(one),
+        },
+      },
+      {
+        id: 'b',
+        plan: {
+          first: search(one),
+          unfound: search({ queries: ['none'], purpose: 'nothing found' }),
+          free: { kind: 'none' } as const,
+        },
+      },
+    ]
+    expect(assignPictures(plans, (key) => (key === poolKeyOf(one) ? [7] : []))).toEqual({
+      assignment: {
+        a: { hero: null, first: 7, second: null },
+        b: { first: 7, unfound: null, free: null },
+      },
+      empty: 2,
+      repeated: 1,
+    })
+  })
+
+  it('is served by /dev/eval with its trio, and a template neither chosen nor extra is a 404', () => {
+    const written = (final: string, fallback = false) => ({ final, fallback })
+    const record = {
+      templates: ['t06-harbor', 't05-ember', 't01-aurora'],
+      copy: {
+        't01-aurora': written('aurora', true),
+        't08-vector': written('vector'),
+        't04-atlas': written('atlas'),
+      },
+      extra: { 't08-vector': { chosen: ['t06-harbor', 't05-ember', 't08-vector'] } },
+    }
+    expect(evalPageOf(record, 't01-aurora')).toEqual({
+      written: written('aurora', true),
+      chosen: record.templates,
+    })
+    expect(evalPageOf(record, 't08-vector')).toEqual({
+      written: written('vector'),
+      chosen: ['t06-harbor', 't05-ember', 't08-vector'],
+    })
+    // Chosen but not written in this run; written but neither chosen nor an extra; neither.
+    expect(evalPageOf(record, 't06-harbor')).toBeNull()
+    expect(evalPageOf(record, 't04-atlas')).toBeNull()
+    expect(evalPageOf(record, 't03-meridian')).toBeNull()
+    expect(evalPageOf(record, 'constructor')).toBeNull()
+    expect(evalPageOf({ ...record, extra: undefined }, 't08-vector')).toBeNull()
   })
 })
 
@@ -157,6 +333,20 @@ describe('the summary of a limited run', () => {
     })
     expect(markdown).toContain(
       'Not run, with no record in the reused run to build on: app-pharmacy, no-trade.',
+    )
+  })
+
+  it('names the pairs of an EVAL_PAIRS run, in their order', () => {
+    const { markdown } = summarise('pass4-cells', [], {
+      templates: null,
+      pairs: { hr: ['t01-aurora', 't08-vector'], florist: ['t03-meridian'] },
+      maxUsd: 0.45,
+      spent: 0.43,
+      concurrency: 1,
+      notStarted: [],
+    })
+    expect(markdown).toContain(
+      'Copy for EVAL_PAIRS only, in this order: hr (t01-aurora, t08-vector), florist (t03-meridian).',
     )
   })
 })

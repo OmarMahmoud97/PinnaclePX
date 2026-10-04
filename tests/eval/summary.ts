@@ -200,10 +200,17 @@ function violationsOf(attempt: CopyAttempt): readonly JudgedViolation[] {
 function runLine(facts: RunFacts | null): string {
   if (facts === null) return 'Spend stop: none recorded (the run has no _run.json).'
   const noRecord = facts.noRecord ?? []
+  const pairs = Object.entries(facts.pairs ?? {})
+    .map(([id, templates]) => `${id} (${templates.join(', ')})`)
+    .join(', ')
   const written = `${
     facts.templates === null
       ? ''
       : `Copy written for EVAL_TEMPLATES only: ${facts.templates.join(', ')}. `
+  }${
+    facts.pairs === undefined
+      ? ''
+      : `Copy for EVAL_PAIRS only, in this order: ${pairs}. A template outside a fixture's pick is in its record's extra, set with the pick's first two. `
   }${
     noRecord.length === 0
       ? ''

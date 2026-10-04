@@ -47,6 +47,9 @@ export type CopyAttempt = Readonly<{
 export type RunFacts = Readonly<{
   // EVAL_TEMPLATES: the only templates whose copy the run wrote, or null for every chosen one.
   templates: readonly string[] | null
+  // EVAL_PAIRS: the only fixtures the run took, in its order, each with the only templates whose
+  // copy it wrote. Runs without the switch have none.
+  pairs?: Readonly<Record<string, readonly string[]>>
   // EVAL_MAX_USD, or null with no spend stop.
   maxUsd: number | null
   // The priced cost of the calls this run made, reused stages not included.
@@ -83,7 +86,21 @@ export type FixtureRecord = Readonly<{
   notes: string
   answers: SubmissionAnswers
   seed: string
+  // The selector's pick, whose pictures `imagery` holds.
   templates: readonly string[]
+  // The templates the record holds copy for outside the pick (EVAL_PAIRS), each with the trio
+  // its page is set with (the pick's first two, then it: plan.ts, trioOf) and the pictures it
+  // takes third after theirs, from the record's own pools with no call (picksAfter). Records with
+  // no such template have none.
+  extra?: Readonly<
+    Record<
+      string,
+      Readonly<{
+        chosen: readonly string[]
+        assignment: Readonly<Record<string, number | null>>
+      }>
+    >
+  >
   stagesRun: readonly ('brief' | 'copy' | 'rank')[]
   reusedFrom: string | null
   brief: Readonly<{
