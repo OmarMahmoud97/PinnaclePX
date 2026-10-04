@@ -60,7 +60,7 @@ export function MeridianContact({ contact }: Props) {
               className="grid w-full gap-4"
               action={
                 email === null
-                  ? '#community'
+                  ? '#ask'
                   : `mailto:${email}?subject=${encodeURIComponent(contact.form.button)}`
               }
               method={email === null ? 'get' : 'post'}

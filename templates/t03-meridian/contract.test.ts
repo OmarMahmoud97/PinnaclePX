@@ -174,7 +174,7 @@ describe('assembleMeridian', () => {
       '#services',
       '#contact',
     ])
-    expect(content.hero.primary.href).toBe('#community')
+    expect(content.hero.primary.href).toBe('#ask')
     expect(content.community.action.href).toBe('#contact')
     expect(content.footer.groups[1]?.links[1]?.href).toBe('#top')
   })

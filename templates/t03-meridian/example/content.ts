@@ -42,7 +42,7 @@ export const KESTREL_MERIDIAN: MeridianContent = {
       { label: 'Contact', href: '#contact' },
       { label: 'FAQ', href: '#faq' },
     ],
-    cta: { label: 'View on GitHub', href: '#community' },
+    cta: { label: 'View on GitHub', href: '#ask' },
     menu: {
       label: 'Features',
       items: [
@@ -64,7 +64,7 @@ export const KESTREL_MERIDIAN: MeridianContent = {
     headline: { text: 'Experience the Kestrel landing page', emphasis: 'Kestrel' },
     subhead:
       "We're more than just a tool, we're a community of passionate creators. Get access to exclusive resources, tutorials, and support.",
-    primary: { label: 'Get Started', href: '#community' },
+    primary: { label: 'Get Started', href: '#ask' },
     secondary: { label: 'Github respository', href: '#features' },
     image: HERO,
   },

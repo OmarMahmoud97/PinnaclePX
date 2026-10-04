@@ -208,7 +208,7 @@ describe('the Meridian page’s structure', () => {
 
   it('draws no empty card header or footer, nor an empty grid', () => {
     for (const [id, next] of [
-      ['services', 'community'],
+      ['services', 'ask'],
       ['contact', 'faq'],
     ] as const) {
       const block = html.slice(html.indexOf(`id="${id}"`), html.indexOf(`id="${next}"`))
@@ -231,7 +231,7 @@ describe('the Meridian page’s structure', () => {
       email: null,
     })
     const drawn = renderToStaticMarkup(<Meridian content={content} />)
-    const hero = drawn.slice(drawn.indexOf('<main'), drawn.indexOf('id="sponsors"'))
+    const hero = drawn.slice(drawn.indexOf('<main'), drawn.indexOf('id="labels"'))
     expect(hero).toMatch(/<div class="group relative mt-14 w-full md:w-auto"><div[^>]*><\/div><img/)
     expect(hero).toMatch(/<img[^>]*width="1600" height="900"/)
   })

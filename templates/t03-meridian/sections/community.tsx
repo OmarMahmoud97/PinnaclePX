@@ -13,7 +13,7 @@ type Props = Pick<MeridianContent, 'community'>
 // since the card is only as wide as its words.
 export function MeridianCommunity({ community }: Props) {
   return (
-    <section id="community" className="py-12">
+    <section id="ask" className="py-12">
       <hr className="border-surface-muted" />
       <div className={`${container} py-20 sm:py-20`}>
         <div className="@container mx-auto lg:w-[60%]">
