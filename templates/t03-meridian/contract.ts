@@ -335,7 +335,7 @@ export function meridianFallbackCopy(brief: BrandBrief): MeridianCopy {
     },
     services: {
       eyebrow: 'Services',
-      heading: 'In their own words',
+      heading: 'What we do and why',
       lead: prose('services.lead', positioning),
       items: [
         { title: 'What we do', body: prose('services.items[].body', positioning) },

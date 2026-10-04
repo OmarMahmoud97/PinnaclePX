@@ -15,7 +15,9 @@ const YEAR = new Date().getFullYear()
 // across the first columns, up to four columns of links, a rule, and the legal line, here
 // followed by the photographers' credit the Pexels licence asks for. On a phone the columns
 // stand two to a row while every word fits one (fit.ts), else one; the name is sized by its
-// longest word against its cell, and a name with nowhere to break breaks anywhere.
+// longest word against its cell, and a name with nowhere to break breaks anywhere. The source
+// faded its links to 60% of the text colour, 4.46:1 on a light page; they take the muted text
+// colour, a pair the engine keeps at AA, and the legal line is a line, not a heading.
 export function MeridianFooter({ brand, footer, credits }: Props) {
   const columns = footerPairs(footer)
     ? 'grid grid-cols-2 gap-x-12 gap-y-8 md:grid-cols-4 xl:grid-cols-6'
@@ -35,7 +37,7 @@ export function MeridianFooter({ brand, footer, credits }: Props) {
               <h3 className="text-lg font-bold">{group.heading}</h3>
               {group.links.map((link) => (
                 <div key={link.label}>
-                  <a href={link.href} className="opacity-60 hover:opacity-100">
+                  <a href={link.href} className="text-on-surface-muted hover:text-on-surface">
                     {link.label}
                   </a>
                 </div>
@@ -46,9 +48,9 @@ export function MeridianFooter({ brand, footer, credits }: Props) {
 
         <hr className={`${separator} my-6 border-0`} />
         <section>
-          <h3 className="wrap-anywhere">
+          <p className="wrap-anywhere">
             &copy; {YEAR} {brand.legalName}
-          </h3>
+          </p>
           {credits.length > 0 && (
             <p className="mt-2 text-sm text-on-surface-muted">
               Photos by{' '}

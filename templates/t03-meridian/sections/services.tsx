@@ -20,15 +20,14 @@ type Props = Pick<MeridianContent, 'services'>
 export function MeridianServices({ services }: Props) {
   return (
     <section id="services" className={`${container} py-24 sm:py-32`}>
-      <h2 className={`${eyebrow} text-center`}>{services.eyebrow}</h2>
+      <p className={`${eyebrow} text-center`}>{services.eyebrow}</p>
 
       <h2 className={`@container ${sectionTitle} text-center`}>
         <span className="meridian-fit" style={fitWord(services.heading)}>
           {services.heading}
         </span>
       </h2>
-      <h3 className={`${sectionLead} text-center`}>{services.lead}</h3>
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"></div>
+      <p className={`${sectionLead} text-center`}>{services.lead}</p>
 
       <div className="mx-auto grid w-full gap-4 sm:grid-cols-2 lg:w-[60%] lg:grid-cols-2">
         {services.items.map((item) => (
