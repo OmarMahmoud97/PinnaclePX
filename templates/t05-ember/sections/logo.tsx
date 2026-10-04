@@ -22,11 +22,12 @@ export function EmberLogo({ brand }: Props) {
     )
     // On a page of its own shade it sits on the plate the page gives it (decision 23), which
     // reaches past the mark so the bar keeps its height. It reaches down, never up: the footer
-    // starts at the logo's top and hides what lies above it.
+    // starts at the logo's top and hides what lies above it. A bare image sits in a 40px line box,
+    // so the plate is a block whose bottom margin gives back 3px of its 8px: the row stays 40px tall.
     if (logo.plate === undefined) return mark
     return (
       <span
-        className="-mx-2 -mb-2 inline-flex rounded-md px-2 py-1"
+        className="-mx-2 -mb-[3px] flex w-fit rounded-md px-2 py-1"
         style={{ backgroundColor: logo.plate }}
       >
         {mark}
