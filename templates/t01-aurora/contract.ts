@@ -96,8 +96,9 @@ const PURPOSE: Readonly<Record<keyof typeof AURORA_SLOTS, string>> = {
   'hero.primary.label': 'the main button, the same as ctaLabel',
   'hero.secondary.label': 'a quieter button that leads to how it works',
   'hero.reassurance': 'a line under the buttons that lowers the risk of getting in touch',
-  'hero.frame.title': 'a short screen title inside an illustration of their work',
-  'hero.frame.rows[]': 'exactly three short rows inside that illustration, things they do',
+  'hero.frame.title':
+    'a heading of one or two words for the panel under the headline that lists three things they do',
+  'hero.frame.rows[]': 'exactly three short rows in that panel, things they do',
   'features.title': 'the heading of the section about what they do',
   'features.lead': 'one or two sentences under that heading',
   'features.items[].title': 'exactly three feature titles',
