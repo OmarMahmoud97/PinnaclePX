@@ -18,7 +18,8 @@ const LINK = 'text-on-surface-muted hover:text-on-surface'
 // a mail link, a phone link and an address behind small icons, all centred below md; a rule;
 // the legal line beside the small links (here with the photographers' credit the Pexels
 // licence asks for); and behind it all the name drawn huge as an outline, its foot below the
-// page's edge. The logo, the line and every link rise as they arrive.
+// page's edge. The logo, the line and every link rise as they arrive. A legal name with no space
+// to wrap at wraps between letters, rather than run past a phone's screen.
 export function SummitFooter({ brand, footer, credits }: Props) {
   const { contact } = footer
   const rows = [
@@ -85,7 +86,8 @@ export function SummitFooter({ brand, footer, credits }: Props) {
         </div>
         <div className="flex flex-col items-center justify-between gap-4 border-t border-border/50 pt-4.5 text-sm text-on-surface-muted md:flex-row">
           <p>
-            &copy; {YEAR} {brand.legalName}. All rights reserved.
+            &copy; {YEAR} <span className="wrap-anywhere">{brand.legalName}</span>. All rights
+            reserved.
             {credits.length > 0 && (
               <>
                 {' '}
