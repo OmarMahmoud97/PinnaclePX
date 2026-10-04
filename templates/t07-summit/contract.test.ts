@@ -67,6 +67,21 @@ describe('summitFallbackCopy', () => {
       'Send the first quote',
     ])
   })
+
+  // The slot holds 50 characters, so a name of up to 32 fits the question whole.
+  it('names the business in the closing question only when the whole name fits', () => {
+    const heading = (company: string) =>
+      summitFallbackCopy(fallbackBrief(company, 'We sell bikes and we fix them too.')).cta.heading
+    expect(heading('Kestrel')).toBe('Ready to talk to Kestrel?')
+    expect(heading('Ashgrove Physiotherapy and Sport')).toBe(
+      'Ready to talk to Ashgrove Physiotherapy and Sport?',
+    )
+    expect(heading('Ashgrove Physiotherapy and Sports')).toBe('Ready when you are?')
+    expect(heading('Ashgrove Physiotherapy and Sports Injury Clinic Limited')).toBe(
+      'Ready when you are?',
+    )
+    expect(heading('AshgrovePhysiotherapyAndSportsInjuryClinic')).toBe('Ready when you are?')
+  })
 })
 
 describe('summitCopySchema', () => {
