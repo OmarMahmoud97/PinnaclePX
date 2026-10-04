@@ -53,7 +53,7 @@ const ASKS = {
   },
   't03-meridian': {
     decided: false,
-    closing: ['community'],
+    closing: ['ask', 'community'],
     button: 'community.action',
     asks: ['nav.cta', 'hero.primary'],
   },
