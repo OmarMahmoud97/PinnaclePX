@@ -51,7 +51,8 @@ export type MeridianContent = Readonly<{
   }>
   // The source's row of sponsor names beside icons, sliding: here labels for what they cover.
   sponsors: Readonly<{ heading: string; items: readonly string[] }>
-  benefits: Headed & Readonly<{ lead: string; items: Four<Titled> }>
+  // Stored designs hold four benefits; new ones hold three, one for each thing the owner said.
+  benefits: Headed & Readonly<{ lead: string; items: Three<Titled> | Four<Titled> }>
   features: Headed & Readonly<{ lead: string; items: readonly Titled[] }>
   services: Headed &
     Readonly<{ lead: string; items: readonly (Titled & Readonly<{ pro: boolean }>)[] }>

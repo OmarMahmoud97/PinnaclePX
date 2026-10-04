@@ -72,8 +72,37 @@ describe('the Meridian page', () => {
   it('keeps the benefits’ faint numbers as decoration at the cards’ right', () => {
     const benefits = section('benefits', 'features')
     expect(benefits.match(/<div class="flex justify-end"><span aria-hidden="true"/g)).toHaveLength(
-      4,
+      3,
     )
+    expect(texts(benefits, /data-number="(\d+)"/g)).toEqual(['01', '02', '03'])
+  })
+
+  // New designs hold three benefits and stored ones four (paid pass 3): from lg an odd last card
+  // spans both columns, so three are two over one wide card and four stay a two-by-two.
+  it('draws a stored design’s four benefits as they were, and widens an odd last card', () => {
+    const stored = page('owner@example.com', (copy) => ({
+      ...copy,
+      benefits: {
+        ...copy.benefits,
+        items: [
+          ...copy.benefits.items,
+          {
+            title: 'Happy to help',
+            body: 'We are glad to take a look at whatever needs doing and talk it through with you first.',
+          },
+        ],
+      },
+    }))
+    const four = stored.slice(stored.indexOf('id="benefits"'), stored.indexOf('id="features"'))
+    expect(texts(four, /data-number="(\d+)"/g)).toEqual(['01', '02', '03', '04'])
+    for (const [benefits, count] of [
+      [four, 4],
+      [section('benefits', 'features'), 3],
+    ] as const) {
+      const cards = [...benefits.matchAll(/<div class="([^"]*group\/number[^"]*)"/g)]
+      expect(cards).toHaveLength(count)
+      for (const card of cards) expect(card[1]?.split(' ')).toContain('lg:odd:last:col-span-2')
+    }
   })
 
   it('suggests no stranger’s name or address in the form, only a message', () => {
@@ -108,8 +137,8 @@ describe('the Meridian page', () => {
 
   it('sizes the headline and each section heading by its longest word', () => {
     const fitted = [...html.matchAll(/class="meridian-fit[^"]*" style="--meridian-word:([\d.]+)"/g)]
-    // The headline, the ask, five section headings and four benefit titles.
-    expect(fitted).toHaveLength(11)
+    // The headline, the ask, five section headings and the fallback's three benefit titles.
+    expect(fitted).toHaveLength(10)
   })
 })
 

@@ -44,6 +44,12 @@ const MODEL_BRIEF: BrandBrief = {
   imageQueries: { hero: ['calendar on a wall'], detail: ['van interior'] },
 }
 
+// A fourth benefit, as every design stored before paid pass 3 holds one (decision 12).
+const FOURTH = {
+  title: 'Happy to help',
+  body: 'We are glad to take a look at whatever needs doing and talk it through with you first.',
+}
+
 describe('meridianFallbackCopy', () => {
   it.each(CORPUS)('fits every slot for "%s"', (company, description) => {
     const copy = meridianFallbackCopy(fallbackBrief(company, description))
@@ -58,7 +64,6 @@ describe('meridianFallbackCopy', () => {
       'What we do',
       'Who it is for',
       'Get paid',
-      'What happens next',
     ])
     expect(copy.contact.rows[0]?.title).toBe('Import')
   })
@@ -77,15 +82,15 @@ describe('meridianFallbackCopy', () => {
 })
 
 describe('meridianCopySchema', () => {
-  it('accepts three benefits, which the violations then report as a count', () => {
+  it('accepts four benefits, which the violations then report as a count', () => {
     const copy = meridianFallbackCopy(fallbackBrief('Kestrel', 'Job scheduling.'))
     const broken = {
       ...copy,
-      benefits: { ...copy.benefits, items: copy.benefits.items.slice(0, 3) },
+      benefits: { ...copy.benefits, items: [...copy.benefits.items, FOURTH] },
     }
     expect(meridianCopySchema.safeParse(broken).success).toBe(true)
     expect(meridianContract.copyViolations(broken)).toEqual([
-      { slot: 'benefits.items', length: 3, min: 4, max: 4 },
+      { slot: 'benefits.items', length: 4, min: 3, max: 3 },
     ])
   })
 
@@ -140,6 +145,7 @@ describe('meridianCopySchema', () => {
 
 describe('assembleMeridian', () => {
   const copy = meridianFallbackCopy(fallbackBrief('Kestrel', 'Job scheduling for trades.'))
+  const NONE: TemplateAssets = { logo: { kind: 'wordmark' }, images: {}, email: null }
 
   it('gives a wordmark, no picture, no email and no optional sections without assets', () => {
     const content = assembleMeridian(copy, { logo: { kind: 'wordmark' }, images: {}, email: null })
@@ -171,5 +177,29 @@ describe('assembleMeridian', () => {
     expect(content.hero.primary.href).toBe('#community')
     expect(content.community.action.href).toBe('#contact')
     expect(content.footer.groups[1]?.links[1]?.href).toBe('#top')
+  })
+
+  // Designs stored before paid pass 3 hold four benefits and new ones three, so both are drawn
+  // as stored (decision 12: a copy object in the old shape still renders).
+  it('keeps a stored design’s four benefits and a new design’s three', () => {
+    const stored = {
+      ...copy,
+      benefits: { ...copy.benefits, items: [...copy.benefits.items, FOURTH] },
+    }
+    expect(meridianCopySchema.safeParse(stored).success).toBe(true)
+    expect(assembleMeridian(stored, NONE).benefits.items).toEqual(stored.benefits.items)
+    expect(assembleMeridian(copy, NONE).benefits.items).toEqual(copy.benefits.items)
+    expect(copy.benefits.items).toHaveLength(3)
+  })
+
+  it('throws for two benefits or five, as it did for any count but four', () => {
+    for (const items of [
+      copy.benefits.items.slice(0, 2),
+      [...copy.benefits.items, FOURTH, FOURTH],
+    ]) {
+      expect(() =>
+        assembleMeridian({ ...copy, benefits: { ...copy.benefits, items } }, NONE),
+      ).toThrow()
+    }
   })
 })
