@@ -91,6 +91,27 @@ describe('atlasCopySchema', () => {
     for (const slot of optional) expect(atlasContract.guide).not.toContain(`- ${slot}:`)
   })
 
+  // Paid pass 3: the line over the headline says what they do, not the company name again, and
+  // the lines that list the link targets say what offer and tools hold, so labels stop naming
+  // them; each short slot states its size in words.
+  it('asks for what they do over the headline and says what each link target holds', () => {
+    const lines = atlasContract.guide.split('\n')
+    expect(lines).toContain(
+      '- hero.eyebrow: 4 to 24 characters, two or three words over the headline, set in capitals, on what they do',
+    )
+    expect(lines).toContain(
+      '- faq.eyebrow: 3 to 16 characters, a small word over the FAQ heading, such as Questions',
+    )
+    expect(lines).toContain(
+      '- nav.menu.items[].label: 3 to 18 characters, two to four entries in that menu, one to three words each; each has a target of start, offer, tools, why, how-it-works, faq or top, where offer is what is included and tools is what they bring to the work',
+    )
+    expect(lines).toContain(
+      '- footer.columns[][].label: 3 to 24 characters, two or three footer columns of two to five links, one to three words each; each link has a target of start, offer, tools, why, how-it-works, faq or top, where offer is what is included and tools is what they bring to the work',
+    )
+    expect(atlasContract.guide).not.toContain('such as the company name')
+    expect(atlasContract.guide).not.toContain('such as Support')
+  })
+
   it('rejects a footer link with an unknown target', () => {
     const copy = atlasFallbackCopy(fallbackBrief('Kestrel', 'Job scheduling.'))
     const broken = {
