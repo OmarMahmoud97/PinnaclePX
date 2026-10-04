@@ -2,13 +2,18 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { ConceptPending } from '@/app/preview/_components/concept-pending'
 import { typeStyle } from '@/app/preview/_components/fonts'
+import { logoPlate } from '@/app/preview/_components/logo-plate'
 import { StudioBar, UNDER_STUDIO_BAR } from '@/app/preview/_components/studio-bar'
+import { paletteFor } from '@/lib/brief/palettes'
+import type { SubmissionAnswers } from '@/lib/brief/submission'
 import type { TemplateAssets } from '@/lib/copy-slots/assets'
 import { AppError } from '@/lib/errors'
 import { readSubmissionWithLead } from '@/lib/db/submissions'
+import type { LogoPolarity } from '@/lib/logo/types'
 import { type PreviewRow, readPreview } from '@/lib/preview/read'
 import { statusOf } from '@/lib/preview/status'
 import { tokenStyle } from '@/lib/tokens/css'
+import { schemeFor } from '@/lib/tokens/scheme'
 import { renderConcept } from '@/templates/render'
 
 type Params = Promise<{ slug: string; templateId: string }>
@@ -64,6 +69,17 @@ export default async function ConceptPage({ params }: { params: Params }) {
   )
 }
 
+// The plate the logo sits on when its artwork is the page's own shade (decision 23): the page's
+// scheme as the tokens stage chose it, from the look and the logo (build-concepts.ts), and the
+// brand colour the tokens came from.
+function plateOf(polarity: LogoPolarity, answers: SubmissionAnswers): string | undefined {
+  const hex =
+    answers.colours.kind === 'palette'
+      ? paletteFor(answers.colours.paletteId).hex
+      : answers.colours.hex
+  return logoPlate(polarity, schemeFor(answers.imagery.style, polarity), hex)
+}
+
 async function ConceptBody({ row, answers, templateId }: PreviewRow & { templateId: string }) {
   if (row.tokens === null) throw new AppError(`Submission ${row.slug} is ready without tokens`)
   // The owner's email, for a template whose forms open a mail message to them.
@@ -73,7 +89,13 @@ async function ConceptBody({ row, answers, templateId }: PreviewRow & { template
     logo:
       row.logo?.image === undefined || row.logo.image === null
         ? { kind: 'wordmark' }
-        : { kind: 'image', alt: answers.company, ...row.logo.image },
+        : {
+            kind: 'image',
+            alt: answers.company,
+            ...row.logo.image,
+            polarity: row.logo.polarity,
+            plate: plateOf(row.logo.polarity, answers),
+          },
     images: row.imagery[templateId] ?? {},
   }
   return (

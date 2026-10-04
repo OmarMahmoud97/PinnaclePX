@@ -12,7 +12,7 @@ type Props = { brand: MeridianContent['brand']; size?: 'header' | 'footer' }
 export function MeridianLogo({ brand, size = 'header' }: Props) {
   const { logo, name } = brand
   if (logo.kind === 'image') {
-    return (
+    const mark = (
       <Image
         src={logo.src}
         alt={logo.alt}
@@ -20,6 +20,14 @@ export function MeridianLogo({ brand, size = 'header' }: Props) {
         height={logo.height}
         className="h-9 w-auto min-w-0 object-contain object-left"
       />
+    )
+    // On a page of its own shade it sits on the plate the page gives it (decision 23), which
+    // reaches past the mark, by less than the header's own padding, so the pill keeps its size.
+    if (logo.plate === undefined) return mark
+    return (
+      <span className="-m-1 inline-flex rounded-md p-1" style={{ backgroundColor: logo.plate }}>
+        {mark}
+      </span>
     )
   }
   const unbroken = !/\s/.test(name.trim())

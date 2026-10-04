@@ -5,6 +5,7 @@
 // artwork below 0.35 dark and above 0.65 light (lib/logo/polarity.ts), so l034 and l066 sit
 // just inside each end, and l035, l050 and l065 span the mixed band between.
 import { CONFIG } from '@/lib/config'
+import type { LogoPolarity } from '@/lib/logo/types'
 
 export const STAND_IN_FILLS = [
   'white',
@@ -42,6 +43,14 @@ function lightnessOf(channel: number): number {
 // Which side of the logo stage's bands a lightness falls (lib/config.ts, logo).
 const bandOf = (lightness: number) =>
   lightness < CONFIG.logo.darkBelow ? -1 : lightness > CONFIG.logo.lightAbove ? 1 : 0
+
+// The polarity the logo stage reads from a stand-in mark (stand-in.test.ts holds it to the
+// stage's own reading), which the development routes pass with the logo as the preview page
+// passes the stored one (decision 23).
+export function polarityOf(fill: StandInFill): LogoPolarity {
+  const band = bandOf(LIGHTNESS[fill])
+  return band < 0 ? 'dark-artwork' : band > 0 ? 'light-artwork' : 'mixed'
+}
 
 // The 8-bit sRGB channel of a neutral grey of a CIE lightness: lightness to luminance (CIE
 // 1976), then luminance to the sRGB transfer curve. Of the two channels either side, the nearer

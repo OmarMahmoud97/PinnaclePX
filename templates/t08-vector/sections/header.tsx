@@ -129,6 +129,13 @@ export function VectorHeader({ brand, nav }: Props) {
     }
   }, [open])
 
+  // The name's pill is the dark glass, its ink on-scrim. A visitor's image logo cannot take that
+  // ink, so its pill is the page's surface, or the plate the page gives it when the artwork is the
+  // page's own shade, as dark artwork is on the dark look (decision 23).
+  const { logo } = brand
+  const logoPill = logo.kind === 'image' ? 'bg-surface' : 'bg-scrim/70 text-on-scrim'
+  const logoPlate = logo.kind === 'image' ? logo.plate : undefined
+
   return (
     <header
       data-rise="drop"
@@ -138,8 +145,8 @@ export function VectorHeader({ brand, nav }: Props) {
         <a
           href="#top"
           data-rise="drop"
-          style={LOGO_WAIT}
-          className="flex h-12 max-w-[calc(100%-12.5rem)] shrink-0 items-center justify-center rounded-xl bg-scrim/70 px-3 text-[clamp(0.875rem,4.11vw,1rem)] leading-tight font-medium tracking-tight text-on-scrim shadow-lg backdrop-blur-lg transition-transform duration-200 hover:scale-105 active:scale-95 sm:h-16 sm:max-w-[calc(100%-15.5rem)] sm:rounded-2xl sm:px-5 sm:text-xl"
+          style={logoPlate === undefined ? LOGO_WAIT : { ...LOGO_WAIT, backgroundColor: logoPlate }}
+          className={`flex h-12 max-w-[calc(100%-12.5rem)] shrink-0 items-center justify-center rounded-xl ${logoPill} px-3 text-[clamp(0.875rem,4.11vw,1rem)] leading-tight font-medium tracking-tight shadow-lg backdrop-blur-lg transition-transform duration-200 hover:scale-105 active:scale-95 sm:h-16 sm:max-w-[calc(100%-15.5rem)] sm:rounded-2xl sm:px-5 sm:text-xl`}
           aria-label={`${brand.name} home`}
         >
           <VectorLogo brand={brand} />

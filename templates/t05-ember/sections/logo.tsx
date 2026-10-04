@@ -11,7 +11,7 @@ type Props = { brand: EmberContent['brand'] }
 export function EmberLogo({ brand }: Props) {
   const { logo, name } = brand
   if (logo.kind === 'image') {
-    return (
+    const mark = (
       <Image
         src={logo.src}
         alt={logo.alt}
@@ -19,6 +19,17 @@ export function EmberLogo({ brand }: Props) {
         height={logo.height}
         className="h-[35px] w-auto"
       />
+    )
+    // On a page of its own shade it sits on the plate the page gives it (decision 23), which
+    // reaches past the mark so the bar keeps its height.
+    if (logo.plate === undefined) return mark
+    return (
+      <span
+        className="-mx-2 -my-1 inline-flex rounded-md px-2 py-1"
+        style={{ backgroundColor: logo.plate }}
+      >
+        {mark}
+      </span>
     )
   }
   return (
