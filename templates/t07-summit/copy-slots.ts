@@ -24,7 +24,7 @@ export type SummitImage = SlotImage
 
 type Titled = Readonly<{ title: string; body: string }>
 
-export type Three<T> = readonly [T, T, T]
+type Three<T> = readonly [T, T, T]
 export type Four<T> = readonly [T, T, T, T]
 
 // Every block opens with the source's small grey eyebrow over its heading.
@@ -48,9 +48,8 @@ export type SummitContent = Readonly<{
     // The photograph behind the whole first screen.
     background: SummitImage | null
   }>
-  // Cards each side of a picture; each card's mark is the template's own check. Stored designs
-  // hold four reasons, new ones three, one for each thing the owner said.
-  why: Headed & Readonly<{ cards: Three<Titled> | Four<Titled>; image: SummitImage | null }>
+  // Four cards, two each side of a picture; each card's mark is the template's own check.
+  why: Headed & Readonly<{ cards: Four<Titled>; image: SummitImage | null }>
   // The stacked deck: each card a pill, a title, a line, a checklist and a picture.
   services: Headed &
     Readonly<{
