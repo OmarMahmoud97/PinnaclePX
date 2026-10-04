@@ -77,7 +77,9 @@ for (const { name, context: options, scroll, clip } of VIEWPORTS) {
   const context = await browser.newContext({ ...options, deviceScaleFactor: 1 })
   const page = await context.newPage()
   for (const record of records) {
-    for (const templateId of record.templates) {
+    // The pick's pages, then those written outside it (EVAL_PAIRS), which /dev/eval sets with
+    // the trio their record stores.
+    for (const templateId of [...record.templates, ...Object.keys(record.extra ?? {})]) {
       const url = `${baseUrl}/dev/eval/${run}/${record.id}/${templateId}`
       const response = await page.goto(url, { waitUntil: 'networkidle', timeout: 120_000 })
       if (response === null || !response.ok()) {
