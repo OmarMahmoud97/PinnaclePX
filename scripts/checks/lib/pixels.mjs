@@ -22,10 +22,9 @@ export async function hideText(page, alsoHide = '') {
     style.id = 'check-hide-text'
     style.textContent = window.__hideText
     document.head.append(style)
-    const gradient = [...document.querySelectorAll('body *')].filter((el) => {
-      const cs = getComputedStyle(el)
-      return cs.backgroundClip === 'text' || cs.webkitBackgroundClip === 'text'
-    })
+    const gradient = [...document.querySelectorAll('body *')].filter((el) =>
+      window.__checks.clipsToText(getComputedStyle(el)),
+    )
     const named = selector === '' ? [] : [...document.querySelectorAll(selector)]
     for (const el of [...gradient, ...named]) el.setAttribute('data-check-hidden', '')
   }, alsoHide)
