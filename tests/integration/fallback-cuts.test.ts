@@ -16,8 +16,8 @@ vi.mock('@/lib/copy-slots/fit', async (importOriginal) => {
 // lib/copy-slots/fit.ts (decision 18, docs/template-fit-decisions.md). Through every ready
 // template's own fallback, over the frozen eval fixtures and company names at the edge lengths:
 // no hero headline, wordmark or legal name is cut on a joining word or a comma, and no other cut
-// is either, but for the one line in KNOWN. It lives here, not beside fit.ts, because
-// lib/copy-slots may not import the templates.
+// is either. It lives here, not beside fit.ts, because lib/copy-slots may not import the
+// templates.
 
 // Decision 18's list.
 const JOINING = new Set(
@@ -131,13 +131,6 @@ const BRIEFS = [
   ...NAMES.flatMap((company) => SENTENCES.map((sentence) => fallbackBrief(company, sentence))),
 ]
 
-// Summit's fallback closing heading, "Ready to talk to {company}?" (16 to 50 characters): with the
-// unbroken name, dropping "to" would leave 13 characters, under the minimum, so the cut keeps it.
-// The fix belongs in Summit's fallback (templates/t07-summit/contract.ts), and Summit's follow-up
-// schedules it: a plain closing heading when the name does not fit. Until that lands, this one
-// cut is allowed here.
-const KNOWN = new Set(['t07-summit: Ready to talk to'])
-
 // The cuts fitToSlot made since it was last cleared: each output whose input ran past its slot.
 function cuts(): string[] {
   const { calls, results } = vi.mocked(fitToSlot).mock
@@ -156,7 +149,7 @@ describe('every fallback cut', () => {
       expect(contract.copyViolations(contract.fallbackCopy(brief))).toEqual([])
       for (const cut of cuts()) {
         made += 1
-        if (!KNOWN.has(`${id}: ${cut}`)) expect(dangles(cut), `${id}: "${cut}"`).toBe(false)
+        expect(dangles(cut), `${id}: "${cut}"`).toBe(false)
       }
     }
     expect(made).toBeGreaterThan(0)
