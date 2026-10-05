@@ -20,7 +20,7 @@ const options = parseArgs(process.argv.slice(2), {
 const { pages, results, schemes } = await runContrast(options, { gradientOnly: true })
 const measured = results.filter((r) => r.worst !== null)
 const lines = [
-  `Gradient text: ${String(pages.length)} pages (${options.source}), schemes ${schemes.join(',')}, sizes ${options.sizes.map((s) => s.size).join(', ')}; ${String(measured.length)} gradient texts measured, ${String(measured.filter((r) => r.worst < r.level).length)} with a stop below its level.`,
+  `Gradient text: ${String(pages.length)} pages (${options.source}), schemes ${schemes.join(',')}, sizes ${options.sizes.map((s) => s.size).join(', ')}; ${String(measured.length)} gradient texts measured, ${String(measured.filter((r) => r.worst < r.level).length)} with a stop below its level, ${String(results.length - measured.length)} never seen with nothing over it (unjudged).`,
 ]
 for (const templateId of [...new Set(measured.map((r) => r.templateId))].sort()) {
   for (const scheme of schemes) {

@@ -10,7 +10,7 @@
 //     --jobs <n>         pages measured at once (default 2)
 import { parseArgs } from './lib/args.mjs'
 import { runContrast } from './lib/contrast-run.mjs'
-import { outDir, writeReport } from './lib/report.mjs'
+import { outDir, tally, writeReport } from './lib/report.mjs'
 
 const options = parseArgs(process.argv.slice(2), {
   source: 'corpus',
@@ -52,6 +52,24 @@ for (const templateId of [...new Set(solid.map((r) => r.templateId))].sort()) {
         .slice(0, 6)) {
         lines.push(
           `      ${String(group.n).padStart(3)} ${key} | lowest ${String(group.lowest)} | ${[...group.texts].slice(0, 2).join(' / ')}`,
+        )
+      }
+      // Texts never seen with nothing over them are not judged, so they are named rather than
+      // left out of the count as if they passed.
+      const unjudged = results.filter(
+        (r) =>
+          r.templateId === templateId &&
+          !r.gradient &&
+          r.worst === null &&
+          r.scheme === scheme &&
+          r.size === size,
+      )
+      if (unjudged.length > 0) {
+        const named = tally(unjudged, (r) => `${r.section} "${r.text.slice(0, 24)}"`)
+          .slice(0, 3)
+          .map(([k, n]) => `${k} x${String(n)}`)
+        lines.push(
+          `      unjudged, never seen with nothing over it: ${String(unjudged.length)}: ${named.join('; ')}`,
         )
       }
     }

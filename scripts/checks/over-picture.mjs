@@ -398,6 +398,20 @@ if (mode === 'worst') {
     if (worstItems.length > 0) {
       lines.push(`  most failing: ${worstItems.map(([k, n]) => `${k} x${String(n)}`).join('; ')}`)
     }
+    // Items never seen with nothing over them are not judged, so they are named here rather
+    // than counted as passing (a text a fixed header lies over at every scroll).
+    const unjudged = mine.filter((r) => r.worst === null)
+    if (unjudged.length > 0) {
+      const named = tally(
+        unjudged,
+        (r) => `${r.state} ${r.size} ${r.section} "${r.text.slice(0, 24)}"`,
+      )
+        .slice(0, 4)
+        .map(([k, n]) => `${k} x${String(n)}`)
+      lines.push(
+        `  unjudged, never seen with nothing over it: ${String(unjudged.length)}: ${named.join('; ')}`,
+      )
+    }
   }
 } else if (mode === 'picks' || mode === 'pool') {
   const named = (options.rest['pool-templates'] ?? 't05-ember,t07-summit').split(',')
