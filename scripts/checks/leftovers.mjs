@@ -184,11 +184,16 @@ const keyWords = (keys) =>
     ),
   ].filter((w) => w.length >= 4 && !PLAIN_KEYS.has(w))
 
+// The copy's strings a visitor may read. A link's target (the id of the block it leads to, such
+// as footer.navigation[].target) and a link's address are names the page uses, never words it
+// shows, so the echo check leaves them out: a target named after a copy key or a guide example
+// ("services") is not the copy model copying it.
+const UNREAD = new Set(['target', 'href'])
 function stringsIn(value, out = []) {
   if (typeof value === 'string') out.push(value)
   else if (Array.isArray(value)) for (const v of value) stringsIn(v, out)
   else if (value !== null && typeof value === 'object')
-    for (const v of Object.values(value)) stringsIn(v, out)
+    for (const [key, v] of Object.entries(value)) if (!UNREAD.has(key)) stringsIn(v, out)
   return out
 }
 
