@@ -297,8 +297,9 @@ export function installHelpers() {
   }
 
   // A form field's own text, which no text node holds: an empty field's placeholder, a select's
-  // chosen option. Its box is the field's content box.
-  const fieldItems = () => {
+  // chosen option. Its box is the field's content box, which is judged, as a text's lines are,
+  // only where nothing lies over it (a textarea whose top lies under a sticky header bar).
+  const fieldItems = (painters = pinnedPainters()) => {
     const fields = [...document.querySelectorAll('input, textarea, select')].filter(
       (f) =>
         shown(f) &&
@@ -318,6 +319,7 @@ export function installHelpers() {
       const right = r.right - parseFloat(own.borderRightWidth) - parseFloat(own.paddingRight)
       const bottom = r.bottom - parseFloat(own.borderBottomWidth) - parseFloat(own.paddingBottom)
       if (right - left < 1 || bottom - top < 1) return []
+      const { pinned, covered } = overlaid(field, [{ left, top, right, bottom }], painters)
       return [
         {
           key: `${sectionOf(field)}|${field.tagName.toLowerCase()} ${text.slice(0, 40)}|0`,
@@ -330,7 +332,8 @@ export function installHelpers() {
             bottom <= window.innerHeight + 0.5 &&
             left >= -0.5 &&
             right <= document.documentElement.clientWidth + 0.5,
-          covered: false,
+          covered,
+          pinned,
           inHeader: false,
           gradient: false,
           colours: [paint(cs.color)],
@@ -476,8 +479,10 @@ export function textItems({ keys = null, scope = 'page', menuId = null }) {
       picture: picture === null ? null : pictureName(picture.el),
     })
   }
-  if (keys === 'all') items.push(...C.fieldItems())
-  else if (Array.isArray(keys)) items.push(...C.fieldItems().filter((f) => keys.includes(f.key)))
+  if (keys === 'all') items.push(...C.fieldItems(painters))
+  else if (Array.isArray(keys)) {
+    items.push(...C.fieldItems(painters).filter((f) => keys.includes(f.key)))
+  }
   return items
 }
 
