@@ -3,7 +3,6 @@
   "fixedBy": "Vector’s Phase 2 pull request, fix/vector-template-fit",
   "textFit": {
     "failing": [
-      "l6-dentist-claims",
       "l6-physio-longest",
       "synthetic-long-words",
       "synthetic-longest",

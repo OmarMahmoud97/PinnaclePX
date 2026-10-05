@@ -62,9 +62,10 @@ function focusBlock(href: string) {
 // shrinks under the finger. Its pill never reaches under the menu's: it stops half a rem short
 // of it at any width, its sides are 12px below 640px (the source's 16px left fewer names on
 // one line), on phones narrower than 390px its name steps down towards 14px, and a name too
-// long for one line takes a second, then ends in an ellipsis, the whole name staying in the
-// link's label. The whole bar goes while a project is open full screen (vector.css). It starts
-// below the studio's bar while any of it shows (--chrome-top, decision 22).
+// long for one line takes a second, or on the narrowest phones a third, at the size that keeps
+// its words whole (vector.css, .vector-name; the row is its @container), the whole name staying
+// in the link's label. The whole bar goes while a project is open full screen (vector.css). It
+// starts below the studio's bar while any of it shows (--chrome-top, decision 22).
 export function VectorHeader({ brand, nav }: Props) {
   const [open, setOpen] = useState(false)
   const [closing, setClosing] = useState(false)
@@ -141,12 +142,12 @@ export function VectorHeader({ brand, nav }: Props) {
       data-rise="drop"
       className="vector-bar fixed top-(--chrome-top,0px) right-0 left-0 z-50 px-4 py-6 sm:px-12 sm:py-12 lg:px-24"
     >
-      <div className={`${container} flex items-center justify-between gap-4`}>
+      <div className={`@container ${container} flex items-center justify-between gap-4`}>
         <a
           href="#top"
           data-rise="drop"
           style={logoPlate === undefined ? LOGO_WAIT : { ...LOGO_WAIT, backgroundColor: logoPlate }}
-          className={`flex h-12 max-w-[calc(100%-12.5rem)] shrink-0 items-center justify-center rounded-xl ${logoPill} px-3 text-[clamp(0.875rem,4.11vw,1rem)] leading-tight font-medium tracking-tight shadow-lg backdrop-blur-lg transition-transform duration-200 hover:scale-105 active:scale-95 sm:h-16 sm:max-w-[calc(100%-15.5rem)] sm:rounded-2xl sm:px-5 sm:text-xl`}
+          className={`flex h-12 max-w-[calc(100%-12.5rem)] shrink-0 items-center justify-center rounded-xl ${logoPill} px-3 leading-tight font-medium tracking-tight shadow-lg backdrop-blur-lg transition-transform duration-200 hover:scale-105 active:scale-95 sm:h-16 sm:max-w-[calc(100%-15.5rem)] sm:rounded-2xl sm:px-5`}
           aria-label={`${brand.name} home`}
         >
           <VectorLogo brand={brand} />

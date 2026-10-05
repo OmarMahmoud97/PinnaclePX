@@ -1,4 +1,5 @@
 import type { VectorContent } from '../copy-slots'
+import { fitHeadline } from '../fit'
 import { container, delay, pad } from '../styles'
 import { VectorWaves } from './waves'
 
@@ -12,7 +13,8 @@ type Props = Pick<VectorContent, 'hero'>
 // words are centred between two bands that clear the bar's pills, so they sit where the source
 // set them wherever they fit; where they do not (a phone held sideways, a long headline), the
 // screen grows to hold them below the pills and above the "Scroll", rather than running them
-// under the pills or cutting them off at its foot.
+// under the pills or cutting them off at its foot. The headline is smaller where its longest
+// word would not fit its line (fit.ts), so no word is cut off by its row.
 export function VectorHero({ hero }: Props) {
   const last = hero.headline.length - 1
   return (
@@ -23,10 +25,13 @@ export function VectorHero({ hero }: Props) {
         </div>
       </div>
       <div
-        className={`relative z-10 ${container} flex min-h-screen flex-col justify-start pt-44 pb-24 ${pad} text-left sm:pt-48 md:justify-center md:py-36`}
+        className={`@container relative z-10 ${container} flex min-h-screen flex-col justify-start pt-44 pb-24 ${pad} text-left sm:pt-48 md:justify-center md:py-36`}
         style={{ perspective: '1200px' }}
       >
-        <h1 className="text-[clamp(3rem,8vw,12rem)] leading-[1.05] tracking-tight text-on-surface">
+        <h1
+          className="text-[length:min(clamp(3rem,8vw,12rem),97cqi/var(--vector-word,1))] leading-[1.05] tracking-tight text-on-surface"
+          style={fitHeadline(hero.headline)}
+        >
           {hero.headline.map((line, index) => (
             <span key={line} className="block overflow-hidden pb-[0.1em]">
               <span
