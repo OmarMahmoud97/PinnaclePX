@@ -3,17 +3,20 @@ import type { CSSProperties } from 'react'
 import type { VectorContent } from '../copy-slots'
 import { anchored, container, pad, pill } from '../styles'
 
-type Props = Pick<VectorContent, 'about'>
+type Props = Pick<VectorContent, 'about' | 'brand'>
 
 // The source's About: a wide pill-shaped picture that settles from nine tenths as the block
 // comes up the screen (from its top at four fifths to at three tenths), a centred statement
 // that rises from 60px (from its top at 85% to at 60%) and a round inverted button that rises
 // from 40px (from 90% to 70%), all tied to the scroll. Without a picture the pill is the
-// quieter surface.
-export function VectorAbout({ about }: Props) {
+// quieter surface. The source set the statement as the block's heading, but a statement runs to
+// 160 characters, a sentence and no heading (decision 15's outline), so it is a paragraph drawn
+// the same, and a screen reader meets the block by a hidden heading, "About" and the name.
+export function VectorAbout({ about, brand }: Props) {
   const { image } = about
   return (
     <section id="about" className={`vector-about ${anchored} bg-surface pb-24 lg:pb-32`}>
+      <h2 className="sr-only">{`About ${brand.name}`}</h2>
       <div className={`${pad} flex flex-col items-center ${container}`}>
         <div
           data-scrub="about"
@@ -35,7 +38,7 @@ export function VectorAbout({ about }: Props) {
             <Image src={image.src} alt={image.alt} fill sizes="100vw" className="object-cover" />
           )}
         </div>
-        <h2
+        <p
           data-scrub
           data-start="85"
           data-end="60"
@@ -43,7 +46,7 @@ export function VectorAbout({ about }: Props) {
           className="mx-auto max-w-4xl text-center text-[clamp(1.75rem,4vw,3rem)] leading-[1.2] font-medium tracking-tight text-on-surface"
         >
           {about.statement}
-        </h2>
+        </p>
         <a
           data-scrub
           data-start="90"

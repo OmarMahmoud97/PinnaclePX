@@ -40,7 +40,7 @@ export function Vector({ content }: Props) {
         <VectorHero hero={hero} />
         <VectorProjects projects={projects} />
         <VectorServices services={services} href="#contact" />
-        <VectorAbout about={about} />
+        <VectorAbout about={about} brand={brand} />
         {proof !== null && <VectorProof proof={proof} />}
         <VectorFaq faq={faq} />
       </main>
