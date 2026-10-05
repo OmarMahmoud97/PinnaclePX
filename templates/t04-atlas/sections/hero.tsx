@@ -13,12 +13,16 @@ function delay(ms: number): CSSProperties {
   return { '--delay': `${String(ms)}ms` } as CSSProperties
 }
 
-// The source's four ornaments, placed as it placed them: three small discs and a star, in the
-// brand hues, hidden on phones. The source drew them as pictures; these are the same shapes.
+// The source's four ornaments: three small discs and a star, in the brand hues, hidden on phones.
+// The source drew them as pictures; these are the same shapes. It placed them around its own
+// short words, and over a visitor's longer ones they landed on the words, so each is placed off
+// them at every width: until the words have half the width (lg), the top disc above the eyebrow
+// and the right disc and the star in the right margin, as the left disc sits in the left one;
+// from lg, the star at the picture's edge, beside the words where it had sat among them.
 const DOTS = [
   { className: 'bottom-12 left-4 xl:bottom-16 xl:left-0', hue: 'bg-glow' },
-  { className: 'top-4 right-64 sm:top-10 sm:right-96 xl:right-[32rem]', hue: 'bg-brand-deeper' },
-  { className: 'right-24 bottom-56', hue: 'bg-glow-secondary' },
+  { className: 'top-4 right-64 sm:right-96 lg:top-10 xl:right-[32rem]', hue: 'bg-brand-deeper' },
+  { className: 'right-4 bottom-56 lg:right-24', hue: 'bg-glow-secondary' },
 ] as const
 
 // The source's hero: the words at the left with an uppercase eyebrow in the gradient, a
@@ -89,7 +93,7 @@ export function AtlasHero({ hero }: Props) {
           data-rise="up"
           style={delay(300)}
           viewBox="0 0 24 24"
-          className="absolute top-20 right-16 hidden w-8 sm:top-28 sm:block lg:right-0 lg:left-[30rem]"
+          className="absolute top-20 right-16 hidden w-8 sm:top-28 sm:right-10 sm:block lg:right-0 lg:left-1/2"
         >
           <defs>
             <linearGradient id="atlas-star" x1="0" y1="0" x2="1" y2="1">
