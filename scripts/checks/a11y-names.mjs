@@ -235,10 +235,17 @@ async function check(browser, page, viewport) {
     }
     for (const letters of facts.initials) add('initials', `"${letters}" read aloud`)
     // Each heading's name is cut as domFacts cuts a lettered heading's drawn words (no spaces,
-    // the first 40 characters), so a heading of more than 40 finds its own.
+    // the first 40 characters), so a heading of more than 40 finds its own. Its name reads as
+    // words when it has spaces and no more than half of what they part is a single character:
+    // a name the tree builds from the letters themselves ("F r e s h   b r e a d") has spaces
+    // too, and matches the drawn letters at any length.
+    const spelt = (name) => {
+      const parts = name.split(/\s+/).filter(Boolean)
+      return parts.filter((p) => [...p].length === 1).length > parts.length / 2
+    }
     for (const heading of facts.lettered) {
       const match = headings.find((h) => h.name.replace(/\s+/g, '').slice(0, 40) === heading.shows)
-      if (match === undefined || match.name.includes(' ') === false) {
+      if (match === undefined || match.name.includes(' ') === false || spelt(match.name)) {
         add('letters', `"${heading.shows}" has no name read as words`)
       }
     }
