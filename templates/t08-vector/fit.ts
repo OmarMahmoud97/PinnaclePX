@@ -116,7 +116,10 @@ export function longestWord(lines: readonly string[]): number {
 }
 
 // A name of one word is kept whole up to this width, at which the narrowest phone's pill (62px of
-// room at 320, header.tsx) still sets it at 11px; a longer one breaks anywhere (plan 7.7).
+// room at 320, header.tsx) still sets it at 11px; a longer one breaks anywhere (plan 7.7). A name
+// of several words has no such floor: its words stay whole, so a long one sets the whole name
+// smaller ("ashgrove physiotherapy" at 9.4px at 320, and at 11px or more from 332). Held to
+// 11px, it would break "physiotherapy" in every look at 320, and "Photography" in two.
 const WHOLE = 62 / 11
 
 // The width in ems of the longest line when a name is set in at most this many lines, broken

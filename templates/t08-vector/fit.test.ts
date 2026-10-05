@@ -29,6 +29,13 @@ describe('the Vector fit', () => {
     expect(linesEms('Hollin Oak', 2)).toBeLessThan(textEms('Hollin Oak'))
   })
 
+  it('keeps every word of a name of several words whole, however long', () => {
+    // "physiotherapy" is past the width a name of one word is kept whole to (62px at 11px).
+    expect(textEms('physiotherapy')).toBeGreaterThan(62 / 11)
+    expect(linesEms('ashgrove physiotherapy', 2)).toBeCloseTo(textEms('physiotherapy'))
+    expect(linesEms('ashgrove physiotherapy', 3)).toBeCloseTo(textEms('physiotherapy'))
+  })
+
   it('keeps a short name of one word whole and shares a long one between its lines', () => {
     expect(linesEms('Benchrota', 2)).toBeCloseTo(textEms('Benchrota'))
     expect(linesEms('Benchrota', 3)).toBeCloseTo(textEms('Benchrota'))
