@@ -201,10 +201,105 @@ export function installHelpers() {
     }
     return ''
   }
+  // Whether a box paints: a fill, a backdrop filter or a background image. A header's empty
+  // dropdown frame does not.
+  const paints = (n) => {
+    const s = getComputedStyle(n)
+    return (
+      paint(s.backgroundColor)[3] > 0 || s.backdropFilter !== 'none' || s.backgroundImage !== 'none'
+    )
+  }
+  const holds = (n, x, y) => {
+    const box = n.getBoundingClientRect()
+    return x >= box.left && x <= box.right && y >= box.top && y <= box.bottom
+  }
+  const paintsAt = (n, x, y) => holds(n, x, y) && paints(n)
+  const fixedOrSticky = (n) => ['fixed', 'sticky'].includes(getComputedStyle(n).position)
+  // Each box that paints inside a fixed or sticky element (a header bar's glass pills), with
+  // that element, as the page stands now.
+  const pinnedPainters = () =>
+    [...document.querySelectorAll('body *')]
+      .filter(fixedOrSticky)
+      .flatMap((holder) =>
+        [holder, ...holder.querySelectorAll('*')]
+          .filter((n) => shown(n) && paints(n))
+          .map((n) => ({ el: n, holder, box: n.getBoundingClientRect() })),
+      )
+  // What lies over a text's lines (rectangles on the screen) from here.
+  // Pinned: a fixed or sticky element paints over part of a line (a glass header bar the page
+  // scrolls under), however clear its fill, so a pixel read here would be the bar's. Each line's
+  // middle and four corners are tried, and three by three points of each place where a box that
+  // paints inside a fixed or sticky element crosses it (painters, from pinnedPainters): a pill
+  // over one end of a line, or the rounded foot of one over its top, lies clear of the middle
+  // and corners. What is on top at a point counts when it, or a box above it up to the fixed or
+  // sticky one, paints there, so a header's empty dropdown frame that hangs clear below it does
+  // not, nor a sticky footer the page is drawn over.
+  // Covered: pinned, or anything opaque on top at a line's middle, top or bottom (a footer the
+  // page reveals by scrolling past lies under the page until then, and the page's edge can cut
+  // a line of it short of its middle). A fill counts only where its box lies, so a clear box
+  // that hangs from an opaque one (Meridian's dropdown frame below its header) hides nothing.
+  const overlaid = (el, rects, painters) => {
+    const pinnedAt = ([x, y]) => {
+      const hit = document.elementFromPoint(x, y)
+      if (hit === null || el.contains(hit) || hit.contains(el)) return false
+      let painted = false
+      for (let n = hit; n !== null && !n.contains(el); n = n.parentElement) {
+        painted ||= paintsAt(n, x, y)
+        if (fixedOrSticky(n)) return painted
+      }
+      return false
+    }
+    const thirds = [1 / 6, 1 / 2, 5 / 6]
+    const crossings = (r) =>
+      painters
+        .filter((p) => !p.holder.contains(el) && !el.contains(p.el))
+        .flatMap(({ box }) => {
+          const left = Math.max(r.left, box.left)
+          const right = Math.min(r.right, box.right)
+          const top = Math.max(r.top, box.top)
+          const bottom = Math.min(r.bottom, box.bottom)
+          if (right - left < 1 || bottom - top < 1) return []
+          return thirds.flatMap((fx) =>
+            thirds.map((fy) => [left + (right - left) * fx, top + (bottom - top) * fy]),
+          )
+        })
+    const pinned = rects.some((r) =>
+      [
+        [(r.left + r.right) / 2, (r.top + r.bottom) / 2],
+        [r.left + 1, r.top + 1],
+        [r.right - 1, r.top + 1],
+        [r.left + 1, r.bottom - 1],
+        [r.right - 1, r.bottom - 1],
+        ...crossings(r),
+      ].some(pinnedAt),
+    )
+    // From what is on top up to the box both share: anything opaque there hides the text.
+    const coveredAt = ([x, y]) => {
+      const hit = document.elementFromPoint(x, y)
+      if (hit === null || el.contains(hit) || hit.contains(el)) return false
+      for (let n = hit; n !== null && !n.contains(el); n = n.parentElement) {
+        if (['IMG', 'CANVAS', 'VIDEO'].includes(n.tagName)) return true
+        if (paint(getComputedStyle(n).backgroundColor)[3] > 0.5 && holds(n, x, y)) return true
+      }
+      return false
+    }
+    const covered =
+      pinned ||
+      rects.some((r) => {
+        const x = (r.left + r.right) / 2
+        return [
+          [x, (r.top + r.bottom) / 2],
+          [x, r.top + 1],
+          [x, r.bottom - 1],
+        ].some(coveredAt)
+      })
+    return { pinned, covered }
+  }
 
   // A form field's own text, which no text node holds: an empty field's placeholder, a select's
-  // chosen option. Its box is the field's content box.
-  const fieldItems = () => {
+  // chosen option. Its box is the field's content box, which is judged, as a text's lines are,
+  // only where nothing lies over it (a textarea whose top lies under a sticky header bar).
+  const fieldItems = (painters = pinnedPainters()) => {
     const fields = [...document.querySelectorAll('input, textarea, select')].filter(
       (f) =>
         shown(f) &&
@@ -224,6 +319,7 @@ export function installHelpers() {
       const right = r.right - parseFloat(own.borderRightWidth) - parseFloat(own.paddingRight)
       const bottom = r.bottom - parseFloat(own.borderBottomWidth) - parseFloat(own.paddingBottom)
       if (right - left < 1 || bottom - top < 1) return []
+      const { pinned, covered } = overlaid(field, [{ left, top, right, bottom }], painters)
       return [
         {
           key: `${sectionOf(field)}|${field.tagName.toLowerCase()} ${text.slice(0, 40)}|0`,
@@ -236,7 +332,8 @@ export function installHelpers() {
             bottom <= window.innerHeight + 0.5 &&
             left >= -0.5 &&
             right <= document.documentElement.clientWidth + 0.5,
-          covered: false,
+          covered,
+          pinned,
           inHeader: false,
           gradient: false,
           colours: [paint(cs.color)],
@@ -272,6 +369,8 @@ export function installHelpers() {
     rectsOf,
     readableText,
     tokensOf,
+    pinnedPainters,
+    overlaid,
     fieldItems,
   }
 }
@@ -306,9 +405,14 @@ export function textItems({ keys = null, scope = 'page', menuId = null }) {
           .filter((p) => p.r.width >= 24 && p.r.height >= 24)
   const header = C.headerOf()
   const panel = scope !== 'menu' ? null : menuId === null ? header : document.getElementById(menuId)
+  // The readable texts are listed before the painters are found: reading every element's style
+  // first leaves out, on that first pass, text the page lays out only on demand (a closed
+  // details element's answer, Ember's questions), which the list has always held.
+  const texts = C.readableText()
+  const painters = C.pinnedPainters()
   const counts = new Map()
   const items = []
-  for (const { node, el } of C.readableText()) {
+  for (const { node, el } of texts) {
     const text = node.textContent.replace(/\s+/g, ' ').trim()
     const section = C.sectionOf(el)
     const base = `${section}|${text.slice(0, 60)}`
@@ -346,52 +450,9 @@ export function textItems({ keys = null, scope = 'page', menuId = null }) {
         r.left >= -0.5 &&
         r.right <= width + 0.5,
     )
-    // A fixed or sticky element that paints over any part of a line (a glass header bar the page
-    // scrolls under) hides it from here too, however clear its fill: a pixel read here would be
-    // the bar's. The middle and the four corners of each line are tried; what is on top there
-    // counts when it, or a box above it up to the fixed or sticky one, paints at that point (a
-    // fill, a backdrop filter or a background image), so a header's empty dropdown frame that
-    // hangs clear below it does not.
-    const paintsAt = (n, x, y) => {
-      const box = n.getBoundingClientRect()
-      if (x < box.left || x > box.right || y < box.top || y > box.bottom) return false
-      const s = getComputedStyle(n)
-      return (
-        C.paint(s.backgroundColor)[3] > 0 ||
-        s.backdropFilter !== 'none' ||
-        s.backgroundImage !== 'none'
-      )
-    }
-    const pinned = rects.some((r) =>
-      [
-        [(r.left + r.right) / 2, (r.top + r.bottom) / 2],
-        [r.left + 1, r.top + 1],
-        [r.right - 1, r.top + 1],
-        [r.left + 1, r.bottom - 1],
-        [r.right - 1, r.bottom - 1],
-      ].some(([x, y]) => {
-        const hit = document.elementFromPoint(x, y)
-        if (hit === null || el.contains(hit) || hit.contains(el)) return false
-        let paints = false
-        for (let n = hit; n !== null && !n.contains(el); n = n.parentElement) {
-          paints ||= paintsAt(n, x, y)
-          const { position } = getComputedStyle(n)
-          if (position === 'fixed' || position === 'sticky') return paints
-        }
-        return false
-      }),
-    )
-    const covered = rects.some((r) => {
-      if (pinned) return true
-      const hit = document.elementFromPoint((r.left + r.right) / 2, (r.top + r.bottom) / 2)
-      if (hit === null || el.contains(hit) || hit.contains(el)) return false
-      // From what is on top up to the box both share: anything opaque there hides the text.
-      for (let n = hit; n !== null && !n.contains(el); n = n.parentElement) {
-        if (['IMG', 'CANVAS', 'VIDEO'].includes(n.tagName)) return true
-        if (C.paint(getComputedStyle(n).backgroundColor)[3] > 0.5) return true
-      }
-      return false
-    })
+    // A fixed or sticky element that paints over any part of a line hides it from here too
+    // (pinned), however clear its fill (installHelpers, overlaid).
+    const { pinned, covered } = C.overlaid(el, rects, painters)
     const gradient = C.clipsToText(cs)
     const stops = gradient ? C.gradientColours(cs.backgroundImage) : []
     items.push({
@@ -418,8 +479,10 @@ export function textItems({ keys = null, scope = 'page', menuId = null }) {
       picture: picture === null ? null : pictureName(picture.el),
     })
   }
-  if (keys === 'all') items.push(...C.fieldItems())
-  else if (Array.isArray(keys)) items.push(...C.fieldItems().filter((f) => keys.includes(f.key)))
+  if (keys === 'all') items.push(...C.fieldItems(painters))
+  else if (Array.isArray(keys)) {
+    items.push(...C.fieldItems(painters).filter((f) => keys.includes(f.key)))
+  }
   return items
 }
 

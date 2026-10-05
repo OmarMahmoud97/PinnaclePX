@@ -47,6 +47,8 @@ export async function runContrast(options, { gradientOnly }) {
               const rest = withoutGeometry(r)
               rows.push({
                 ...rest,
+                // The text's own size in px; size names the screen.
+                px: r.size,
                 worst: r.worst === null ? null : round2(r.worst),
                 share: r.share === null ? null : round2(r.share),
                 templateId: page.templateId,

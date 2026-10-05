@@ -106,6 +106,16 @@ function domFacts() {
       return r.width > 0 && (circle(el) || (el.parentElement !== null && circle(el.parentElement)))
     })
     .map((el) => C.ownText(el))
+  // A heading's drawn words: its text without a visually hidden copy for screen readers, which
+  // a heading drawn a letter at a time keeps before its letters (Vector's services sentence).
+  const drawn = (h) => {
+    const walker = document.createTreeWalker(h, NodeFilter.SHOW_TEXT)
+    let text = ''
+    while (walker.nextNode()) {
+      if (!C.srOnly(walker.currentNode.parentElement)) text += walker.currentNode.textContent
+    }
+    return text
+  }
   const lettered = [...document.querySelectorAll('h1, h2, h3, h4, h5, h6')]
     .filter((h) => {
       const parts = [...h.querySelectorAll('span')].filter((s) => s.children.length === 0)
@@ -114,7 +124,7 @@ function domFacts() {
         parts.filter((s) => s.textContent.trim().length === 1).length >= parts.length * 0.8
       )
     })
-    .map((h) => ({ shows: (h.textContent ?? '').replace(/\s+/g, '').slice(0, 40), id: h.id }))
+    .map((h) => ({ shows: drawn(h).replace(/\s+/g, '').slice(0, 40), id: h.id }))
   // Which headings, by their place among all headings, follow the one before in the same
   // section with no text between them.
   const all = [...document.querySelectorAll('h1, h2, h3, h4, h5, h6, [role="heading"]')].filter(
@@ -224,9 +234,18 @@ async function check(browser, page, viewport) {
       }
     }
     for (const letters of facts.initials) add('initials', `"${letters}" read aloud`)
+    // Each heading's name is cut as domFacts cuts a lettered heading's drawn words (no spaces,
+    // the first 40 characters), so a heading of more than 40 finds its own. Its name reads as
+    // words when it has spaces and no more than half of what they part is a single character:
+    // a name the tree builds from the letters themselves ("F r e s h   b r e a d") has spaces
+    // too, and matches the drawn letters at any length.
+    const spelt = (name) => {
+      const parts = name.split(/\s+/).filter(Boolean)
+      return parts.filter((p) => [...p].length === 1).length > parts.length / 2
+    }
     for (const heading of facts.lettered) {
-      const match = headings.find((h) => h.name.replace(/\s+/g, '') === heading.shows)
-      if (match === undefined || match.name.includes(' ') === false) {
+      const match = headings.find((h) => h.name.replace(/\s+/g, '').slice(0, 40) === heading.shows)
+      if (match === undefined || match.name.includes(' ') === false || spelt(match.name)) {
         add('letters', `"${heading.shows}" has no name read as words`)
       }
     }

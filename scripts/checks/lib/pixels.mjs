@@ -131,28 +131,40 @@ function unionOf(rects) {
 // Each item judged over the pixels under it, read where a visitor sees it. query(keys) asks the
 // page for those items as it stands (in-page.mjs, textItems). With walk, the page is scrolled a
 // screen at a time from the top, and each item is judged at the first stop where it lies whole
-// on the screen with nothing opaque, fixed or sticky over it (an item seen only under a fixed or
-// sticky element is tried once more in the middle of the screen); without, it is judged where
-// the page stands (the header scrolled, a menu open). An item never seen so is returned with
-// unseen: true.
+// on the screen with nothing opaque, fixed or sticky over it (an item seen only with something
+// over it is looked for again between the stops either side of where it was first seen, then in
+// the middle of the screen); without, it is judged where the page stands (the header scrolled, a
+// menu open). An item never judged is returned with unseen: true and no reading. One seen whole
+// on the screen only with something over it is never readable there, which is a failure of its
+// own kind: hidden is 'fixed' when a fixed or sticky element lay over it the last time it was
+// seen (a sticky footer's button under the header's pill at every scroll), else 'covered'. One
+// never seen whole on the screen (a marquee's row that runs past it) has hidden null and is
+// unjudged.
 export async function measureItems(tab, items, query, { walk = true } = {}) {
   const judged = []
   if (items.length === 0) return judged
   const pending = new Map(items.map((item) => [item.key, item]))
-  const stops = walk
+  const { stops, screen } = walk
     ? await tab.evaluate(() => {
         const height = document.documentElement.scrollHeight
         const step = Math.max(200, Math.floor(window.innerHeight * 0.85))
         const ys = []
         for (let y = 0; y < height - window.innerHeight; y += step) ys.push(y)
         ys.push(Math.max(0, height - window.innerHeight))
-        return ys
+        return { stops: ys, screen: window.innerHeight }
       })
-    : [null]
-  // Items seen whole at a stop but under a fixed or sticky element there (in-page.mjs, pinned).
-  const pinned = new Map()
+    : { stops: [null], screen: 0 }
+  // Items seen whole at a stop but with something over them there (in-page.mjs, covered and
+  // pinned), as last seen, and the walk's stop where each was first seen so.
+  const hidden = new Map()
+  const firstHidden = new Map()
+  let stop = 0
   const judgeHere = async (found) => {
-    for (const i of found) if (i.inView && i.pinned) pinned.set(i.key, i)
+    for (const i of found) {
+      if (!i.inView || !i.covered) continue
+      hidden.set(i.key, i)
+      if (!firstHidden.has(i.key)) firstHidden.set(i.key, stop)
+    }
     const here = found.filter((i) => i.inView && !i.covered)
     if (here.length === 0) return
     const scroll = await tab.evaluate(() => ({ x: window.scrollX, y: window.scrollY }))
@@ -180,6 +192,7 @@ export async function measureItems(tab, items, query, { walk = true } = {}) {
             rects: item.rects,
             ...judge(item, placed),
             unseen: false,
+            hidden: null,
           })
           pending.delete(item.key)
         }
@@ -188,19 +201,44 @@ export async function measureItems(tab, items, query, { walk = true } = {}) {
       await restore()
     }
   }
-  for (const y of stops) {
+  for (const [index, y] of stops.entries()) {
     if (pending.size === 0) break
+    stop = index
     if (y !== null) {
       await tab.evaluate((top) => window.scrollTo(0, top), y)
       await tab.waitForTimeout(120)
     }
     await judgeHere(await query([...pending.keys()]))
   }
-  // An item the walk saw only under a fixed or sticky element (at 320x568, a button just below
-  // one stop's fold lies under the glass header bar at the next) is measured again, scrolled to
-  // the middle of the screen, and judged there if nothing lies over it.
+  // An item the walk saw only with something over it may be clear between two stops: a card of a
+  // deck that stacks as the page scrolls (Summit's services) is whole on the screen with nothing
+  // over it only until the next card rises over it, a window narrower than the walk's step. It is
+  // looked for at each eighth of a screen from the stop before the one where it was first seen to
+  // the stop after.
   if (walk) {
-    for (const [key, item] of pinned) {
+    const between = new Map()
+    for (const [key, index] of firstHidden) {
+      if (!pending.has(key)) continue
+      const from = stops[Math.max(0, index - 1)]
+      const to = stops[Math.min(stops.length - 1, index + 1)]
+      for (let y = from + screen / 8; y < to; y += screen / 8) {
+        const at = Math.round(y)
+        between.set(at, [...(between.get(at) ?? []), key])
+      }
+    }
+    for (const [y, keys] of [...between.entries()].sort((a, b) => a[0] - b[0])) {
+      const still = keys.filter((key) => pending.has(key))
+      if (still.length === 0) continue
+      await tab.evaluate((top) => window.scrollTo(0, top), y)
+      await tab.waitForTimeout(120)
+      await judgeHere(await query(still))
+    }
+  }
+  // One still unseen (at 320x568, a button just below one stop's fold lies under the glass header
+  // bar at the next) is measured again, scrolled to the middle of the screen, and judged there if
+  // nothing lies over it.
+  if (walk) {
+    for (const [key, item] of hidden) {
       if (!pending.has(key)) continue
       const box = unionOf(item.rects)
       await tab.evaluate(
@@ -214,9 +252,32 @@ export async function measureItems(tab, items, query, { walk = true } = {}) {
   }
   if (walk) await tab.evaluate(() => window.scrollTo(0, 0))
   for (const item of pending.values()) {
-    judged.push({ ...item, level: null, worst: null, share: null, pixels: 0, unseen: true })
+    const seen = hidden.get(item.key)
+    judged.push({
+      ...item,
+      // As last seen, for one seen at all.
+      ...(seen === undefined
+        ? {}
+        : { inView: true, covered: seen.covered, pinned: seen.pinned, rects: seen.rects }),
+      level: seen === undefined ? null : levelOf(item.size, item.weight),
+      worst: null,
+      share: null,
+      pixels: 0,
+      unseen: true,
+      hidden: seen === undefined ? null : seen.pinned ? 'fixed' : 'covered',
+    })
   }
   return judged
+}
+
+// The verdicts a pixel check's row gives (measureItems): judged below its level; seen only with
+// something over it, which fails too; or never seen whole on the screen, unjudged and named.
+export const isBelow = (r) => r.worst !== null && r.worst < r.level
+export const isHidden = (r) => r.worst === null && (r.hidden ?? null) !== null
+export const isUnjudged = (r) => r.worst === null && (r.hidden ?? null) === null
+export const HIDDEN = {
+  fixed: 'never seen clear, last under a fixed or sticky element',
+  covered: 'never seen clear, last under an opaque box',
 }
 
 // An item as a result keeps: everything but its line boxes and colours, which only the

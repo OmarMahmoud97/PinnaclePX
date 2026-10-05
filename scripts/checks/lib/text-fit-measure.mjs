@@ -103,10 +103,13 @@ export function measureTextFit({ names }) {
         add('header-outside', c, { px: Math.round(Math.max(r.right - width, -r.left)) })
       }
       if (c === wordmark) continue
+      // Its lines, from the words it draws: a visually hidden word that gives a screen reader
+      // more (Vector's " menu" after the label it shows) is drawn nowhere, so it makes no line.
       const lines = []
       const walker = document.createTreeWalker(c, NodeFilter.SHOW_TEXT)
       while (walker.nextNode()) {
         if (walker.currentNode.textContent.trim() === '') continue
+        if (C.srOnly(walker.currentNode.parentElement)) continue
         lines.push(...C.rectsOf(walker.currentNode))
       }
       if (lines.length > 1) {
