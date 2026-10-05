@@ -1,0 +1,204 @@
+{
+  "source": "pass3-meridian/shortest",
+  "answers": {
+    "description": "Dog grooming and walking in Chorlton.",
+    "company": "Muddy Paws",
+    "logo": {
+      "kind": "wordmark"
+    },
+    "imagery": {
+      "style": "minimal",
+      "photos": []
+    },
+    "colours": {
+      "kind": "palette",
+      "paletteId": "ink"
+    }
+  },
+  "chosen": ["t06-harbor", "t05-ember", "t03-meridian"],
+  "ctaLabel": "Get in touch",
+  "copy": {
+    "brand": {
+      "name": "Muddy Paws",
+      "legalName": "Muddy Paws"
+    },
+    "nav": {
+      "links": ["Why us", "Services", "Contact", "Questions"],
+      "cta": "Get in touch",
+      "menu": {
+        "label": "Services",
+        "items": [
+          {
+            "title": "Dog grooming",
+            "body": "Gentle, careful grooming for your dog, done close to home in Chorlton."
+          },
+          {
+            "title": "Dog walking",
+            "body": "Regular walks to keep your dog happy, exercised and well looked after."
+          },
+          {
+            "title": "Local care",
+            "body": "Based in Chorlton, so your dog is cared for right in your neighbourhood."
+          }
+        ]
+      }
+    },
+    "hero": {
+      "badge": {
+        "label": "Chorlton",
+        "text": "Dog grooming and walking, local to you"
+      },
+      "headline": {
+        "text": "Dog grooming and walking in Chorlton",
+        "emphasis": "Chorlton"
+      },
+      "subhead": "We look after dogs in Chorlton with grooming and walks. Friendly, local care for your dog, right in your neighbourhood.",
+      "primary": "Get in touch",
+      "secondary": "See what we do"
+    },
+    "sponsors": {
+      "heading": "What we cover in Chorlton",
+      "items": ["Grooming", "Dog walking", "Chorlton based", "Local care"]
+    },
+    "benefits": {
+      "eyebrow": "Why us",
+      "heading": "Why Chorlton dog owners choose us",
+      "lead": "We care about your dog's comfort and happiness. Everything we do is local, gentle and straightforward.",
+      "items": [
+        {
+          "title": "Gentle grooming",
+          "body": "Careful, gentle grooming for your dog, done close to home in Chorlton."
+        },
+        {
+          "title": "Regular walks",
+          "body": "Walks that keep your dog happy, exercised and well looked after."
+        },
+        {
+          "title": "Right nearby",
+          "body": "Based in Chorlton, so your dog is cared for right in your neighbourhood."
+        }
+      ]
+    },
+    "features": {
+      "eyebrow": "What we do",
+      "heading": "Grooming and walks for Chorlton dogs",
+      "lead": "Two simple services, both run with care, both based in Chorlton.",
+      "items": [
+        {
+          "title": "Dog grooming",
+          "body": "Gentle, careful grooming for your dog, done close to home in Chorlton."
+        },
+        {
+          "title": "Dog walking",
+          "body": "Regular walks to keep your dog happy, exercised and well looked after."
+        },
+        {
+          "title": "Local to you",
+          "body": "We're based in Chorlton, so your dog is cared for in your own neighbourhood."
+        }
+      ]
+    },
+    "services": {
+      "eyebrow": "Services",
+      "heading": "Grooming and walking in Chorlton",
+      "lead": "Choose grooming, walking, or both, all arranged around you and your dog.",
+      "items": [
+        {
+          "title": "Dog grooming",
+          "body": "Gentle, careful grooming for your dog in Chorlton."
+        },
+        {
+          "title": "Dog walking",
+          "body": "Regular walks to keep your dog happy and exercised."
+        }
+      ]
+    },
+    "community": {
+      "heading": {
+        "text": "Get in touch about your dog",
+        "emphasis": "your dog"
+      },
+      "body": "Tell us about your dog and what you need, grooming or walking, in Chorlton.",
+      "action": "Get in touch"
+    },
+    "contact": {
+      "eyebrow": "Contact",
+      "heading": "Get in touch with us",
+      "lead": "Tell us about your dog and what you need, grooming or walking, and we'll take it from there.",
+      "rows": [
+        {
+          "title": "Get in touch",
+          "lines": ["Contact us to tell us about your dog and what you need."]
+        },
+        {
+          "title": "We arrange a visit",
+          "lines": ["We find a time that suits you and your dog, and talk through the details."]
+        },
+        {
+          "title": "Ongoing care",
+          "lines": ["Your dog settles into regular grooming or walks, cared for in Chorlton."]
+        }
+      ],
+      "form": {
+        "subjects": ["Dog grooming", "Dog walking", "General question"],
+        "button": "Send message"
+      }
+    },
+    "faq": {
+      "eyebrow": "Questions",
+      "heading": "Questions Chorlton owners ask",
+      "items": [
+        {
+          "question": "Do you offer both grooming and walking?",
+          "answer": "Yes, we offer dog grooming and walking in Chorlton, so you can choose what your dog needs."
+        },
+        {
+          "question": "Are you based in Chorlton?",
+          "answer": "Yes, we're based in Chorlton, so your dog is cared for right in your neighbourhood."
+        },
+        {
+          "question": "How do I get started?",
+          "answer": "Get in touch to tell us about your dog and what you need, grooming or walking, and we'll arrange a visit."
+        },
+        {
+          "question": "Will the same people care for my dog?",
+          "answer": "We care for your dog ourselves in Chorlton, settling them into regular grooming or walks."
+        }
+      ]
+    },
+    "footer": {
+      "groups": [
+        {
+          "heading": "Explore",
+          "links": [
+            {
+              "label": "Why us",
+              "target": "benefits"
+            },
+            {
+              "label": "Services",
+              "target": "services"
+            },
+            {
+              "label": "Questions",
+              "target": "faq"
+            }
+          ]
+        },
+        {
+          "heading": "Get in touch",
+          "links": [
+            {
+              "label": "Contact us",
+              "target": "contact"
+            },
+            {
+              "label": "Get in touch",
+              "target": "community"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

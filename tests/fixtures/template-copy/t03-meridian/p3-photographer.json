@@ -1,0 +1,208 @@
+{
+  "source": "pass3-meridian/photographer",
+  "answers": {
+    "description": "Wedding and family photography across Northumberland in a relaxed documentary style with no forced poses. Albums printed in the UK.",
+    "company": "Coldharbour Photography",
+    "logo": {
+      "kind": "wordmark"
+    },
+    "imagery": {
+      "style": "minimal",
+      "photos": []
+    },
+    "colours": {
+      "kind": "custom",
+      "hex": "#0f766e"
+    }
+  },
+  "chosen": ["t03-meridian", "t04-atlas", "t06-harbor"],
+  "ctaLabel": "Get in touch",
+  "copy": {
+    "brand": {
+      "name": "Coldharbour Photography",
+      "legalName": "Coldharbour Photography"
+    },
+    "nav": {
+      "links": ["Why us", "Services", "Contact", "Questions"],
+      "cta": "Get in touch",
+      "menu": {
+        "label": "Our work",
+        "items": [
+          {
+            "title": "Wedding photography",
+            "body": "Relaxed, documentary coverage of your wedding day, start to finish."
+          },
+          {
+            "title": "Family sessions",
+            "body": "Natural photographs of your family, without stiff poses or fuss."
+          },
+          {
+            "title": "Printed albums",
+            "body": "Your photographs printed in the UK, made into something to keep."
+          }
+        ]
+      }
+    },
+    "hero": {
+      "badge": {
+        "label": "Based here",
+        "text": "Wedding and family photography"
+      },
+      "headline": {
+        "text": "Your day, captured naturally across Northumberland",
+        "emphasis": "captured naturally"
+      },
+      "subhead": "Relaxed documentary photography for weddings and families, with no forced poses. We quietly capture your day as it happens.",
+      "primary": "Get in touch",
+      "secondary": "See our services"
+    },
+    "sponsors": {
+      "heading": "Where we work",
+      "items": ["Weddings", "Family sessions", "Northumberland", "Albums"]
+    },
+    "benefits": {
+      "eyebrow": "Why choose us",
+      "heading": "Photographs that feel like your day",
+      "lead": "You get natural, relaxed photographs rather than stiff, posed shots. We stay calm and quietly out of the way.",
+      "items": [
+        {
+          "title": "Documentary style",
+          "body": "You get natural, relaxed photographs rather than stiff, posed shots. Your day unfolds as it happens."
+        },
+        {
+          "title": "Weddings and family",
+          "body": "Covering weddings and family sessions across Northumberland, with a calm approach that puts you at ease."
+        },
+        {
+          "title": "UK printed albums",
+          "body": "Your albums are printed in the UK, so your photographs become something you can hold and keep."
+        }
+      ]
+    },
+    "features": {
+      "eyebrow": "What we do",
+      "heading": "A relaxed, documentary approach",
+      "lead": "No forced poses, just your day unfolding naturally in front of the camera.",
+      "items": [
+        {
+          "title": "No forced poses",
+          "body": "We do not pose you. Instead, we photograph things as they naturally happen."
+        },
+        {
+          "title": "Quiet presence",
+          "body": "We stay in the background, so you can focus on your day, not the camera."
+        },
+        {
+          "title": "Covering Northumberland",
+          "body": "We photograph weddings and family sessions right across Northumberland."
+        }
+      ]
+    },
+    "services": {
+      "eyebrow": "Services",
+      "heading": "Weddings, family and albums",
+      "lead": "Photography for your wedding day or a family session, with albums printed in the UK.",
+      "items": [
+        {
+          "title": "Wedding photography",
+          "body": "Relaxed, documentary coverage of your wedding day across Northumberland."
+        },
+        {
+          "title": "Family photography",
+          "body": "Natural, unposed photographs of your family together."
+        },
+        {
+          "title": "UK printed albums",
+          "body": "Your photographs printed into an album in the UK."
+        }
+      ]
+    },
+    "community": {
+      "heading": {
+        "text": "Let's talk about your wedding or family session",
+        "emphasis": "family session"
+      },
+      "body": "Get in touch to tell us about your day and how the relaxed documentary style could work for you.",
+      "action": "Get in touch"
+    },
+    "contact": {
+      "eyebrow": "Contact",
+      "heading": "Get in touch",
+      "lead": "Send a message about your wedding or family session, and tell us what you have in mind.",
+      "rows": [
+        {
+          "title": "Get in touch",
+          "lines": ["Send a message about your wedding or family session."]
+        },
+        {
+          "title": "Meet and plan",
+          "lines": ["We talk through your day and how the style will work for you."]
+        },
+        {
+          "title": "Photograph the day",
+          "lines": ["We stay quietly in the background, capturing things naturally."]
+        }
+      ],
+      "form": {
+        "subjects": ["Wedding photography", "Family photography", "General question"],
+        "button": "Send message"
+      }
+    },
+    "faq": {
+      "eyebrow": "Questions",
+      "heading": "A few common questions",
+      "items": [
+        {
+          "question": "Do you cover weddings outside Northumberland?",
+          "answer": "We photograph weddings and family sessions across Northumberland."
+        },
+        {
+          "question": "Will you make us pose for photographs?",
+          "answer": "No. We work in a relaxed documentary style with no forced poses."
+        },
+        {
+          "question": "Can we get our photographs as an album?",
+          "answer": "Yes, albums are printed in the UK, so you have something to hold and keep."
+        },
+        {
+          "question": "Do you photograph family sessions too?",
+          "answer": "Yes, alongside weddings we photograph family sessions in the same relaxed style."
+        }
+      ]
+    },
+    "footer": {
+      "groups": [
+        {
+          "heading": "Explore",
+          "links": [
+            {
+              "label": "Why us",
+              "target": "benefits"
+            },
+            {
+              "label": "Services",
+              "target": "services"
+            },
+            {
+              "label": "Questions",
+              "target": "faq"
+            }
+          ]
+        },
+        {
+          "heading": "Get in touch",
+          "links": [
+            {
+              "label": "Contact us",
+              "target": "contact"
+            },
+            {
+              "label": "Back to top",
+              "target": "top"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
