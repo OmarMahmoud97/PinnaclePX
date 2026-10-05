@@ -74,6 +74,7 @@ What each one cannot see:
   - The header is the first `header`, else `nav`, drawn across the top of the first screen.
   - A business name with nowhere to break may break anywhere (plan 7.7), so its own breaks are not counted.
   - A wordmark that shows neither name in its text, holds no logo image and is not a link home is measured as any other control.
+  - A header control's lines are those of the words it draws: a visually hidden word in it (`sr-only`) is not one, so a control is never failed for where its hidden words sit.
 - **Words over a picture.**
   - The stand-in pictures are flat 3:2 fills; the picks and pool modes serve each picture as a 3:2 centre crop, close to but not exactly the crop a visitor's page makes.
   - A picture a template draws into a canvas through its own treatment (Vector's duotone) is measured as the canvas paints it, not as pure white and black.
@@ -123,3 +124,4 @@ Blind spots the template checks of 3 and 4 October found. What each found before
 False positives that a verified check of main (0c422a6, after pull requests #57 to #81) confirmed. What each found before and after it, on main's corpus and eval:l6-all-fixes, template by template, is in the pull request's description.
 
 - **A lettered heading finds its name past 40 characters.** The accessible-names check cut a heading drawn a letter at a time to its first 40 characters, spaces left out, then looked for a heading whose whole name, spaces left out, was the same, so a heading of more than 40 characters never found its own and was reported as having "no name read as words", though the tree names it in words (Vector's services sentence on every stored answer, which #61 gave a hidden copy). Each name is now cut the same way. The heading's drawn words also leave its visually hidden copy out: the copy comes before the letters, so a heading of under 40 characters read as its words and then its first letters again, and could not find its name either.
+- **A header control's hidden words make no line of it.** Text fit counted a visually hidden word in a header control as one of its lines. Vector's menu button shows its label and keeps " menu" for a screen reader; from 640 px that word sits 12.5 px below the label, more than 0.6 of the label's line in every look but the bold one, so the button was reported wrapped on every page from 640 px up in the warm, minimal and dark looks.

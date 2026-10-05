@@ -3,13 +3,10 @@
   "fixedBy": "Vector’s Phase 2 pull request, fix/vector-template-fit",
   "textFit": {
     "failing": [
-      "l6-bakery",
       "l6-dentist-claims",
       "l6-physio-longest",
       "synthetic-long-words",
       "synthetic-longest",
-      "synthetic-name-10",
-      "synthetic-name-16",
       "synthetic-name-40",
       "synthetic-name-60",
       "synthetic-name-80"
