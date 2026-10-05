@@ -26,7 +26,11 @@ import { installHelpers, logoBoxes, textItems } from './lib/in-page.mjs'
 import { pagesOf, urlOf } from './lib/pages.mjs'
 import {
   grab,
+  HIDDEN,
   hideText,
+  isBelow,
+  isHidden,
+  isUnjudged,
   judge,
   measureItems,
   prepareHiding,
@@ -363,9 +367,16 @@ if (mode === 'worst') {
       ({ page, scheme }) => `${page.label} ${scheme}`,
     )
   ).flat()
-  const fails = results.filter((r) => r.worst !== null && r.worst < r.level)
+  // Each item's verdict (lib/pixels.mjs): below its level, or seen whole on the screen only
+  // with something over it (a text a fixed header's pill lies over at every scroll), both
+  // failing; an item never seen whole on the screen is unjudged, named and not counted as
+  // judged.
+  const failing = (r) => isBelow(r) || isHidden(r)
+  const fails = results.filter(failing)
+  const hidden = results.filter(isHidden).length
+  const unjudgedAll = results.filter(isUnjudged).length
   lines.push(
-    `Words over a picture, worst case: ${String(pages.length)} pages (${options.source}), schemes ${schemes.join(',')}, ${String(options.sizes.length)} sizes; ${String(results.length)} item measurements, ${String(fails.length)} below their level.`,
+    `Words over a picture, worst case: ${String(pages.length)} pages (${options.source}), schemes ${schemes.join(',')}, ${String(options.sizes.length)} sizes; ${String(results.length - unjudgedAll)} item measurements, ${String(fails.length)} failing: ${String(fails.length - hidden)} below their level and ${String(hidden)} hidden (seen whole on the screen only with something over them); ${String(unjudgedAll)} never whole on the screen (unjudged).`,
   )
   for (const templateId of [...new Set(pages.map((p) => p.templateId))].sort()) {
     const mine = results.filter((r) => r.templateId === templateId)
@@ -375,7 +386,7 @@ if (mode === 'worst') {
       continue
     }
     lines.push(
-      `\n${templateId} (${String(pageCount)} pages): items failing / measured, by state and picture`,
+      `\n${templateId} (${String(pageCount)} pages): items failing / judged (+ unjudged), by state and picture`,
     )
     for (const size of options.sizes.map((s) => s.size)) {
       const at = mine.filter((r) => r.size === size)
@@ -385,22 +396,26 @@ if (mode === 'worst') {
         for (const pictures of ['white', 'black', 'none']) {
           const cell = at.filter((r) => r.state === state && r.pictures === pictures)
           if (cell.length === 0) continue
-          const bad = cell.filter((r) => r.worst !== null && r.worst < r.level)
-          cells.push(`${state}/${pictures} ${String(bad.length)}/${String(cell.length)}`)
+          const bad = cell.filter(failing).length
+          const notSeen = cell.filter(isUnjudged).length
+          cells.push(
+            `${state}/${pictures} ${String(bad)}/${String(cell.length - notSeen)}${notSeen === 0 ? '' : ` (+${String(notSeen)})`}`,
+          )
         }
       }
       lines.push(`  ${size.padEnd(9)} ${cells.join('  ')}`)
     }
     const worstItems = tally(
-      mine.filter((r) => r.worst !== null && r.worst < r.level),
-      (r) => `${r.state} ${r.section} "${r.text.slice(0, 24)}"`,
+      mine.filter(failing),
+      (r) =>
+        `${r.state} ${r.section} "${r.text.slice(0, 24)}"${isHidden(r) ? ` (${HIDDEN[r.hidden]})` : ''}`,
     ).slice(0, 4)
     if (worstItems.length > 0) {
       lines.push(`  most failing: ${worstItems.map(([k, n]) => `${k} x${String(n)}`).join('; ')}`)
     }
-    // Items never seen with nothing over them are not judged, so they are named here rather
-    // than counted as passing (a text a fixed header lies over at every scroll).
-    const unjudged = mine.filter((r) => r.worst === null)
+    // Items never seen whole on the screen are not judged, so they are named here rather than
+    // counted as passing.
+    const unjudged = mine.filter(isUnjudged)
     if (unjudged.length > 0) {
       const named = tally(
         unjudged,
@@ -409,7 +424,7 @@ if (mode === 'worst') {
         .slice(0, 4)
         .map(([k, n]) => `${k} x${String(n)}`)
       lines.push(
-        `  unjudged, never seen with nothing over it: ${String(unjudged.length)}: ${named.join('; ')}`,
+        `  unjudged, never whole on the screen: ${String(unjudged.length)}: ${named.join('; ')}`,
       )
     }
   }
