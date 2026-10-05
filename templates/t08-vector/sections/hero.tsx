@@ -6,15 +6,16 @@ import { VectorWaves } from './waves'
 type Props = Pick<VectorContent, 'hero'>
 
 // A pool of the page surface behind the headline and the paragraph, from md, where the waves
-// show at 85% twice over (the block below and the waves' own), against half of half on phones:
-// blurred so it fades out with no edge, and reaching twice the blur past the words, so under
-// them it keeps all but a few hundredths of its strength and the waves beyond them keep theirs.
-// The bands drift, sweep and turn with the scroll, so any of their colours can pass under any
-// word; at 60% every word meets WCAG AA with the waves painted pure white or pure black at full
-// strength, in both schemes, at the top and scrolled (4.86:1 at the least, the paragraph on a
-// dark page), as the phones' half of half already did (decision 7's first treatment, a local
-// gradient behind the words only).
-const pool = 'bg-surface/60 blur-[30px]'
+// show at 85% twice over (the block below and the waves' own), against half of half on phones.
+// It reaches twice its blur past the words, so under them it keeps all but a few hundredths of
+// its strength and the waves well beyond them keep theirs. The blur is wide, so a band crossing
+// the pool's edge brightens over about 240px; with half the blur and half the reach, the edge
+// showed as a line across the band. The bands drift, sweep and turn with the scroll, so any of
+// their colours can pass under any word; at 60% every word meets WCAG AA with the waves painted
+// pure white or pure black at full strength, in both schemes, at the top and scrolled (4.86:1 at
+// the least, the paragraph on a dark page), as the phones' half of half already did (decision
+// 7's first treatment, a local gradient behind the words only).
+const pool = 'bg-surface/60 blur-[60px]'
 
 // The source's Hero: a full screen over a shader of sweeping waves, holding at the left a
 // headline whose lines rise out of clipped rows in three dimensions (from 120% below, tilted
@@ -41,7 +42,7 @@ export function VectorHero({ hero }: Props) {
         <div className="relative w-fit max-w-full" style={{ perspective: '1200px' }}>
           <div
             aria-hidden="true"
-            className={`${pool} pointer-events-none absolute -inset-15 -z-10 hidden rounded-[3rem] md:block`}
+            className={`${pool} pointer-events-none absolute -inset-30 -z-10 hidden rounded-[3rem] md:block`}
           />
           <h1
             className="text-[length:min(clamp(3rem,8vw,12rem),97cqi/var(--vector-word,1))] leading-[1.05] tracking-tight text-on-surface"
