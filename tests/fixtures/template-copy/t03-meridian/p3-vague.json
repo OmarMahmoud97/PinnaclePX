@@ -1,0 +1,212 @@
+{
+  "source": "pass3-meridian/vague",
+  "answers": {
+    "description": "We help people with things around the house and garden, all sorts really, just give us a ring.",
+    "company": "Dave and Sons",
+    "logo": {
+      "kind": "wordmark"
+    },
+    "imagery": {
+      "style": "warm",
+      "photos": []
+    },
+    "colours": {
+      "kind": "palette",
+      "paletteId": "clay"
+    }
+  },
+  "chosen": ["t07-summit", "t03-meridian", "t04-atlas"],
+  "ctaLabel": "Give us a ring",
+  "copy": {
+    "brand": {
+      "name": "Dave and Sons",
+      "legalName": "Dave and Sons"
+    },
+    "nav": {
+      "links": ["Why us", "Services", "Contact", "Questions"],
+      "cta": "Give us a ring",
+      "menu": {
+        "label": "Our help",
+        "items": [
+          {
+            "title": "House jobs",
+            "body": "All sorts of jobs around the house, big or small, sorted for you."
+          },
+          {
+            "title": "Garden jobs",
+            "body": "Help with whatever needs doing outside, whatever the task."
+          },
+          {
+            "title": "Just ask",
+            "body": "Not sure if we cover it? Give us a ring and ask us anything."
+          }
+        ]
+      }
+    },
+    "hero": {
+      "badge": {
+        "label": "Hello",
+        "text": "A friendly hand for house and garden jobs"
+      },
+      "headline": {
+        "text": "Help around the house and garden, all sorts",
+        "emphasis": "all sorts"
+      },
+      "subhead": "We help homeowners with jobs around the house and garden, all sorts really. Just give us a ring and we'll have a chat.",
+      "primary": "Give us a ring",
+      "secondary": "See what we do"
+    },
+    "sponsors": {
+      "heading": "Areas we help with",
+      "items": ["House jobs", "Garden jobs", "Little fixes", "Bigger tasks", "Indoors", "Outdoors"]
+    },
+    "benefits": {
+      "eyebrow": "Why us",
+      "heading": "A friendly hand, whatever the job",
+      "lead": "We're easy to reach and happy to help with all sorts. No job is too complicated to ask about.",
+      "items": [
+        {
+          "title": "All sorts of jobs",
+          "body": "From little fixes to bigger tasks, we help with all sorts around the house and garden."
+        },
+        {
+          "title": "Easy to reach",
+          "body": "No need for anything complicated, just give us a ring and we'll have a chat."
+        },
+        {
+          "title": "House and garden covered",
+          "body": "Whatever needs doing indoors or out, we're happy to take a look and help out."
+        }
+      ]
+    },
+    "features": {
+      "eyebrow": "What we do",
+      "heading": "House and garden jobs, all sorts",
+      "lead": "We just like helping people sort things out around their house and garden.",
+      "items": [
+        {
+          "title": "Little fixes",
+          "body": "Small jobs around the house that need sorting, we're happy to help."
+        },
+        {
+          "title": "Bigger tasks",
+          "body": "For the larger jobs around your home or garden, give us a call."
+        },
+        {
+          "title": "Indoor help",
+          "body": "Whatever needs doing inside your house, we're happy to take a look."
+        },
+        {
+          "title": "Outdoor help",
+          "body": "Garden jobs of all kinds, we're glad to come round and help."
+        }
+      ]
+    },
+    "services": {
+      "eyebrow": "Get in touch",
+      "heading": "How we can help you",
+      "lead": "Whatever needs doing around your house or garden, just give us a ring.",
+      "items": [
+        {
+          "title": "House and garden help",
+          "body": "We help with all sorts of jobs, around the house and in the garden."
+        },
+        {
+          "title": "A chat first",
+          "body": "We talk through what you need before we come round."
+        }
+      ]
+    },
+    "community": {
+      "heading": {
+        "text": "Got a job that needs doing? Get in touch",
+        "emphasis": "Get in touch"
+      },
+      "body": "We just like helping people sort things out around their house and garden.",
+      "action": "Give us a ring"
+    },
+    "contact": {
+      "eyebrow": "Contact",
+      "heading": "Give us a ring",
+      "lead": "Tell us what needs doing around your house or garden, big or small.",
+      "rows": [
+        {
+          "title": "Give us a ring",
+          "lines": ["Call us and tell us what needs doing."]
+        },
+        {
+          "title": "We talk it through",
+          "lines": ["We'll have a chat about what you need."]
+        },
+        {
+          "title": "We get it sorted",
+          "lines": ["We come round and get the job done."]
+        }
+      ],
+      "form": {
+        "subjects": ["House job", "Garden job", "Not sure, just asking"],
+        "button": "Send message"
+      }
+    },
+    "faq": {
+      "eyebrow": "Questions",
+      "heading": "A few things people ask",
+      "items": [
+        {
+          "question": "What kind of jobs do you help with?",
+          "answer": "All sorts really, around the house and garden. Just give us a ring and ask."
+        },
+        {
+          "question": "How do I get in touch?",
+          "answer": "Just give us a ring and we'll have a chat about what you need."
+        },
+        {
+          "question": "Do you help with garden jobs too?",
+          "answer": "Yes, whatever needs doing indoors or out, we're happy to take a look."
+        },
+        {
+          "question": "What happens after I call?",
+          "answer": "We'll talk it through, then come round and get the job done."
+        }
+      ]
+    },
+    "footer": {
+      "groups": [
+        {
+          "heading": "Explore",
+          "links": [
+            {
+              "label": "Why us",
+              "target": "benefits"
+            },
+            {
+              "label": "What we do",
+              "target": "features"
+            },
+            {
+              "label": "Services",
+              "target": "services"
+            }
+          ]
+        },
+        {
+          "heading": "Get help",
+          "links": [
+            {
+              "label": "Contact us",
+              "target": "contact"
+            },
+            {
+              "label": "Questions",
+              "target": "faq"
+            },
+            {
+              "label": "Back to top",
+              "target": "top"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

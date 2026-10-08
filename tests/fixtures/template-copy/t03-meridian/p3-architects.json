@@ -1,0 +1,230 @@
+{
+  "source": "pass3-meridian/architects",
+  "answers": {
+    "description": "Small architecture studio working on house extensions, loft conversions and barn conversions in the Peak District and Sheffield. We draw, we handle the planning, and we stay involved until the builder leaves.",
+    "company": "Studio Marlowe",
+    "logo": {
+      "kind": "wordmark"
+    },
+    "imagery": {
+      "style": "dark",
+      "photos": []
+    },
+    "colours": {
+      "kind": "custom",
+      "hex": "#334155"
+    }
+  },
+  "chosen": ["t01-aurora", "t07-summit", "t03-meridian"],
+  "ctaLabel": "Get in touch",
+  "copy": {
+    "brand": {
+      "name": "Studio Marlowe",
+      "legalName": "Studio Marlowe"
+    },
+    "nav": {
+      "links": ["Why us", "Services", "Contact", "Questions"],
+      "cta": "Get in touch",
+      "menu": {
+        "label": "Services",
+        "items": [
+          {
+            "title": "House extensions",
+            "body": "Drawings that suit your home and the way you use your space."
+          },
+          {
+            "title": "Loft conversions",
+            "body": "Turning loft space into a room you will actually use."
+          },
+          {
+            "title": "Barn conversions",
+            "body": "Considered design for barn conversions across the Peak District."
+          }
+        ]
+      }
+    },
+    "hero": {
+      "badge": {
+        "label": "Studio",
+        "text": "A small architecture studio based nearby"
+      },
+      "headline": {
+        "text": "From first sketch to finished build, we stay close",
+        "emphasis": "stay close"
+      },
+      "subhead": "We design house extensions, loft conversions and barn conversions for homeowners in the Peak District and Sheffield.",
+      "primary": "Get in touch",
+      "secondary": "See our services"
+    },
+    "sponsors": {
+      "heading": "Where we work",
+      "items": ["Peak District", "Sheffield", "Extensions", "Loft conversions", "Barn conversions"]
+    },
+    "benefits": {
+      "eyebrow": "Why us",
+      "heading": "Design that stays close to you",
+      "lead": "We draw, we handle the planning, and we stay involved until the builder leaves. You are not left to manage it alone.",
+      "items": [
+        {
+          "title": "We draw everything",
+          "body": "We prepare the drawings for your extension, loft or barn conversion, suited to your home."
+        },
+        {
+          "title": "We handle planning",
+          "body": "We manage the planning application for you, so you can focus on the result."
+        },
+        {
+          "title": "We stay involved",
+          "body": "We remain part of your project right through construction, until the builder leaves."
+        }
+      ]
+    },
+    "features": {
+      "eyebrow": "What we do",
+      "heading": "Architecture for extensions, lofts and barns",
+      "lead": "We work on house extensions, loft conversions and barn conversions in the Peak District and Sheffield.",
+      "items": [
+        {
+          "title": "House extensions",
+          "body": "We design extensions that fit how you live and work with the shape of your home."
+        },
+        {
+          "title": "Loft conversions",
+          "body": "We turn loft space into rooms you will actually use, from design through to build."
+        },
+        {
+          "title": "Barn conversions",
+          "body": "We design barn conversions across the Peak District, handling the project from start to finish."
+        }
+      ]
+    },
+    "services": {
+      "eyebrow": "Our services",
+      "heading": "Considered design for your home",
+      "lead": "Whatever you are planning, we draw it up and stay involved until the work is done.",
+      "items": [
+        {
+          "title": "Design and drawings",
+          "body": "We draw up plans that suit your home and your space."
+        },
+        {
+          "title": "Planning applications",
+          "body": "We handle the planning process so you can focus on the result."
+        },
+        {
+          "title": "Support through construction",
+          "body": "We stay part of the project until the builder leaves."
+        }
+      ]
+    },
+    "community": {
+      "heading": {
+        "text": "Thinking about an extension or conversion?",
+        "emphasis": "conversion?"
+      },
+      "body": "Get in touch and tell us what you need from your home. We will listen before we start drawing anything.",
+      "action": "Get in touch"
+    },
+    "contact": {
+      "eyebrow": "Contact",
+      "heading": "Get in touch with us",
+      "lead": "Tell us about your extension, loft or barn conversion, and we will take it from there.",
+      "rows": [
+        {
+          "title": "We talk it through",
+          "lines": [
+            "You tell us what you need from your home.",
+            "We listen before we start drawing anything."
+          ]
+        },
+        {
+          "title": "We draw and plan",
+          "lines": [
+            "We prepare the drawings and handle planning.",
+            "We keep you updated as it moves along."
+          ]
+        },
+        {
+          "title": "We stay involved",
+          "lines": [
+            "We remain part of the project through construction.",
+            "We stay until the builder finally leaves."
+          ]
+        }
+      ],
+      "form": {
+        "subjects": ["House extension", "Loft conversion", "Barn conversion", "General question"],
+        "button": "Send message"
+      }
+    },
+    "faq": {
+      "eyebrow": "Questions",
+      "heading": "A few common questions",
+      "items": [
+        {
+          "question": "Where do you work?",
+          "answer": "We work on projects in the Peak District and Sheffield."
+        },
+        {
+          "question": "What kind of projects do you take on?",
+          "answer": "We work on house extensions, loft conversions and barn conversions."
+        },
+        {
+          "question": "Do you handle planning permission?",
+          "answer": "Yes, we handle the planning process so you can focus on the result rather than the paperwork."
+        },
+        {
+          "question": "Do you stay involved once building starts?",
+          "answer": "We stay involved until the builder leaves, right through construction."
+        }
+      ]
+    },
+    "footer": {
+      "groups": [
+        {
+          "heading": "Studio",
+          "links": [
+            {
+              "label": "Why us",
+              "target": "benefits"
+            },
+            {
+              "label": "What we do",
+              "target": "features"
+            },
+            {
+              "label": "Services",
+              "target": "services"
+            }
+          ]
+        },
+        {
+          "heading": "Get in touch",
+          "links": [
+            {
+              "label": "Contact",
+              "target": "contact"
+            },
+            {
+              "label": "Questions",
+              "target": "faq"
+            }
+          ]
+        },
+        {
+          "heading": "More",
+          "links": [
+            {
+              "label": "Back to top",
+              "target": "top"
+            },
+            {
+              "label": "Get in touch",
+              "target": "community"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

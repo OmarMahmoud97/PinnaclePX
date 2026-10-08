@@ -16,17 +16,21 @@ import type { FixtureRecord } from './types'
 // template's shape, every business in it is an invented one, and the synthetic answers are what
 // the generator makes from each template's longest stored answer, so a changed slot limit shows
 // here until the corpus is written again. With CORPUS_WRITE=1 it is written first, from the
-// stored runs l6 and l7, which are kept locally in test-results/eval, and then given Prettier's
-// layout (the checks here compare the parsed answers, never the layout):
+// stored runs l6 and l7 and paid pass 3's Meridian answers, which are kept locally in
+// test-results/eval, and then given Prettier's layout (the checks here compare the parsed
+// answers, never the layout):
 //
 //   CORPUS_WRITE=1 pnpm exec vitest run tests/eval/corpus.test.ts
 //   pnpm exec prettier --write tests/fixtures/template-copy
 
 const DIR = join(process.cwd(), 'tests', 'fixtures', 'template-copy')
-const RUNS = [
-  ['l6', 'l6-all-fixes'],
-  ['l7', 'l7-sentence'],
-] as const
+// Each run, the prefix its answers take, and the one template taken from it (null for all).
+const RUNS: readonly (readonly [short: string, run: string, only: string | null])[] = [
+  ['l6', 'l6-all-fixes', null],
+  ['l7', 'l7-sentence', null],
+  // The only stored answers with the three benefits a new Meridian answer holds (#79).
+  ['p3', 'pass3-meridian', 't03-meridian'],
+]
 const SYNTHETIC = [
   'synthetic-longest',
   'synthetic-long-words',
@@ -49,10 +53,10 @@ const write = (templateId: string, name: string, file: CorpusFile) => {
   writeFileSync(join(DIR, templateId, `${name}.json`), `${JSON.stringify(file, null, 2)}\n`)
 }
 
-// Every model answer of the two stored runs, then each template's synthetic answers.
+// Every model answer of the stored runs, then each template's synthetic answers.
 function writeCorpus(): void {
   for (const { id } of READY_TEMPLATES) mkdirSync(join(DIR, id), { recursive: true })
-  for (const [short, run] of RUNS) {
+  for (const [short, run, only] of RUNS) {
     const dir = join(process.cwd(), 'test-results', 'eval', run)
     for (const name of readdirSync(dir)) {
       if (!name.endsWith('.json') || name === 'summary.json' || name.startsWith('_')) continue
@@ -60,7 +64,7 @@ function writeCorpus(): void {
       for (const [templateId, written] of Object.entries(record.copy)) {
         // A template written outside the pick (EVAL_PAIRS) keeps the trio its record stores.
         const page = evalPageOf(record, templateId)
-        if (written.fallback || page === null) continue
+        if (written.fallback || page === null || (only !== null && templateId !== only)) continue
         write(templateId, `${short}-${record.id}`, {
           source: `${run}/${record.id}`,
           answers: record.answers,
@@ -97,12 +101,24 @@ describe('the template copy corpus', () => {
 
   it('holds stored answers and every synthetic one for each ready template', () => {
     for (const { id } of READY_TEMPLATES) {
-      const names = Object.keys(readFolder(id))
+      const files = readFolder(id)
+      const names = Object.keys(files)
+      const base = baseOf(files)
       expect(names.filter((n) => !n.startsWith('synthetic-')).length, id).toBeGreaterThan(0)
-      expect(names.filter((n) => n.startsWith('synthetic-')).sort(), id).toEqual(
-        [...SYNTHETIC].sort(),
-      )
+      const made =
+        base === null ? [] : Object.keys(syntheticFrom(contractFor(id), base[1], base[0]))
+      expect(made, id).toEqual(expect.arrayContaining(SYNTHETIC))
+      expect(names.filter((n) => n.startsWith('synthetic-')).sort(), id).toEqual(made.sort())
     }
+  })
+
+  it('holds Meridian’s three benefits, stored and at their longest, as a new answer has them', () => {
+    const files = readFolder('t03-meridian')
+    const three = Object.entries(files).filter(
+      ([, file]) => (file.copy as { benefits: { items: unknown[] } }).benefits.items.length === 3,
+    )
+    expect(three.some(([name]) => !name.startsWith('synthetic-'))).toBe(true)
+    expect(three.map(([name]) => name)).toContain('synthetic-longest-benefits-items-3')
   })
 
   it('renders: each answer is in its template’s copy shape, for an invented business', () => {
@@ -137,7 +153,9 @@ describe('the template copy corpus', () => {
       expect(base, id).not.toBeNull()
       if (base === null) continue
       const made = syntheticFrom(contractFor(id), base[1], base[0])
-      for (const name of SYNTHETIC) expect(files[name], `${id}/${name}`).toEqual(made[name])
+      for (const name of Object.keys(made)) {
+        expect(files[name], `${id}/${name}`).toEqual(made[name])
+      }
     }
   })
 })

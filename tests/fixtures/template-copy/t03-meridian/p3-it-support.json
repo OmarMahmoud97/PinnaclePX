@@ -1,0 +1,212 @@
+{
+  "source": "pass3-meridian/it-support",
+  "answers": {
+    "description": "Outsourced IT for small offices in Nottingham: helpdesk, Microsoft 365, backups and security. One fixed monthly price per user, and a real person who answers the phone.",
+    "company": "Beacon IT Support",
+    "logo": {
+      "kind": "wordmark"
+    },
+    "imagery": {
+      "style": "minimal",
+      "photos": []
+    },
+    "colours": {
+      "kind": "palette",
+      "paletteId": "ink"
+    }
+  },
+  "chosen": ["t07-summit", "t04-atlas", "t03-meridian"],
+  "ctaLabel": "Get in touch",
+  "copy": {
+    "brand": {
+      "name": "Beacon IT Support",
+      "legalName": "Beacon IT Support"
+    },
+    "nav": {
+      "links": ["Why us", "Services", "Contact", "Questions"],
+      "cta": "Get in touch",
+      "menu": {
+        "label": "Services",
+        "items": [
+          {
+            "title": "Helpdesk support",
+            "body": "Everyday IT help for small offices, from someone who understands your setup."
+          },
+          {
+            "title": "Microsoft 365",
+            "body": "We set up and manage Microsoft 365 so your office runs smoothly."
+          },
+          {
+            "title": "Backups & security",
+            "body": "Your data stays backed up and protected, day in, day out."
+          }
+        ]
+      }
+    },
+    "hero": {
+      "badge": {
+        "label": "Nottingham",
+        "text": "Outsourced IT for small offices nearby"
+      },
+      "headline": {
+        "text": "Steady IT support, no fuss, no jargon",
+        "emphasis": "no fuss"
+      },
+      "subhead": "Outsourced IT for small offices in Nottingham, covering helpdesk, Microsoft 365, backups and security.",
+      "primary": "Get in touch",
+      "secondary": "See our services"
+    },
+    "sponsors": {
+      "heading": "What we cover",
+      "items": ["Helpdesk", "Microsoft 365", "Backups", "Security"]
+    },
+    "benefits": {
+      "eyebrow": "Why us",
+      "heading": "IT support that stays steady",
+      "lead": "Small offices need IT that just works. We keep things simple, so you can get on with running your business.",
+      "items": [
+        {
+          "title": "One fixed price",
+          "body": "One fixed monthly price per user, so you always know what you're paying."
+        },
+        {
+          "title": "A real person answers",
+          "body": "Call us and a real person picks up the phone, not a recorded message."
+        },
+        {
+          "title": "Built for small offices",
+          "body": "We understand small offices in Nottingham and what they need from IT support."
+        }
+      ]
+    },
+    "features": {
+      "eyebrow": "What we do",
+      "heading": "Outsourced IT, covered end to end",
+      "lead": "From everyday problems to everyday tools, we look after the IT so you don't have to.",
+      "items": [
+        {
+          "title": "Helpdesk",
+          "body": "Get help with everyday IT problems from a helpdesk that understands small offices."
+        },
+        {
+          "title": "Microsoft 365",
+          "body": "We set up and manage Microsoft 365 so your office can work smoothly."
+        },
+        {
+          "title": "Backups",
+          "body": "Your data stays backed up, so nothing important is ever lost."
+        },
+        {
+          "title": "Security",
+          "body": "We help keep your office protected from everyday IT risks."
+        }
+      ]
+    },
+    "services": {
+      "eyebrow": "Services",
+      "heading": "IT support for small offices",
+      "lead": "Outsourced IT for small offices in Nottingham, covering the essentials you rely on every day.",
+      "items": [
+        {
+          "title": "Helpdesk support",
+          "body": "Everyday help with IT problems, whenever your office needs it."
+        },
+        {
+          "title": "Microsoft 365 management",
+          "body": "We handle the setup and day-to-day running of Microsoft 365."
+        },
+        {
+          "title": "Backups and security",
+          "body": "We keep your data backed up and your office protected."
+        }
+      ]
+    },
+    "community": {
+      "heading": {
+        "text": "Get in touch with a real person",
+        "emphasis": "real person"
+      },
+      "body": "Tell us about your office and what support you need. We'll take it from there.",
+      "action": "Get in touch"
+    },
+    "contact": {
+      "eyebrow": "Contact",
+      "heading": "Talk to Beacon IT Support",
+      "lead": "Call or email us to tell us about your office and what support you need right now.",
+      "rows": [
+        {
+          "title": "Get in touch",
+          "lines": ["Call or email us about your office"]
+        },
+        {
+          "title": "We set things up",
+          "lines": ["Helpdesk, Microsoft 365, backups and security arranged"]
+        },
+        {
+          "title": "Ongoing support",
+          "lines": ["One fixed monthly price per user, real person on the phone"]
+        }
+      ],
+      "form": {
+        "subjects": ["Helpdesk query", "Microsoft 365", "Backups and security", "General enquiry"],
+        "button": "Send message"
+      }
+    },
+    "faq": {
+      "eyebrow": "Questions",
+      "heading": "Questions you might have",
+      "items": [
+        {
+          "question": "What areas do you cover?",
+          "answer": "We support small offices in Nottingham."
+        },
+        {
+          "question": "What's included in your IT support?",
+          "answer": "Helpdesk, Microsoft 365, backups and security, all covered."
+        },
+        {
+          "question": "How does pricing work?",
+          "answer": "One fixed monthly price per user, so costs stay simple and predictable."
+        },
+        {
+          "question": "Will I speak to a real person?",
+          "answer": "Yes. A real person answers the phone when you call."
+        }
+      ]
+    },
+    "footer": {
+      "groups": [
+        {
+          "heading": "Company",
+          "links": [
+            {
+              "label": "Why us",
+              "target": "benefits"
+            },
+            {
+              "label": "Services",
+              "target": "services"
+            },
+            {
+              "label": "Questions",
+              "target": "faq"
+            }
+          ]
+        },
+        {
+          "heading": "Get started",
+          "links": [
+            {
+              "label": "Contact us",
+              "target": "contact"
+            },
+            {
+              "label": "Back to top",
+              "target": "top"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

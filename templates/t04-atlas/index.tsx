@@ -18,7 +18,10 @@ type Props = { content: AtlasContent }
 
 // Atlas, after Rafli Surya Pratama's Nefa (MIT): its layout (the cover wash behind the top of
 // the page, the header, the main, the footer) and its ten sections in its order, one content
-// object, tokens only.
+// object, tokens only. The root clips what runs past its sides: a block that slides in from the
+// right waits 100px past the screen's edge until it enters (atlas.css), which made a phone's
+// page wider than its screen and let it pan sideways. Clipped, not hidden, so the root never
+// becomes a scroll container of its own.
 export function Atlas({ content }: Props) {
   const { brand, nav, hero, market, glance, pitch, partners, offer, tools, why, steps, faq } =
     content
@@ -37,7 +40,7 @@ export function Atlas({ content }: Props) {
   return (
     <div
       id="top"
-      className="atlas relative min-h-screen bg-surface font-body text-on-surface antialiased"
+      className="atlas relative min-h-screen overflow-x-clip bg-surface font-body text-on-surface antialiased"
     >
       <div className="relative">
         <div

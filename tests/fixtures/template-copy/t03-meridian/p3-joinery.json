@@ -1,0 +1,212 @@
+{
+  "source": "pass3-meridian/joinery",
+  "answers": {
+    "description": "We make fitted wardrobes, alcove units and kitchens by hand in our Leeds workshop for homes across West Yorkshire. Every piece is measured, drawn and fitted by the two of us, and we only take on a few jobs a month so each one gets our full attention.",
+    "company": "Hollin Lane Joinery",
+    "logo": {
+      "kind": "wordmark"
+    },
+    "imagery": {
+      "style": "warm",
+      "photos": []
+    },
+    "colours": {
+      "kind": "palette",
+      "paletteId": "forest"
+    }
+  },
+  "chosen": ["t03-meridian", "t07-summit", "t05-ember"],
+  "ctaLabel": "Get in touch",
+  "copy": {
+    "brand": {
+      "name": "Hollin Lane Joinery",
+      "legalName": "Hollin Lane Joinery"
+    },
+    "nav": {
+      "links": ["Why us", "Services", "Contact", "Questions"],
+      "cta": "Get in touch",
+      "menu": {
+        "label": "Services",
+        "items": [
+          {
+            "title": "Fitted wardrobes",
+            "body": "Made by hand in our Leeds workshop, measured and fitted to your room."
+          },
+          {
+            "title": "Alcove units",
+            "body": "Designed and built to fit your alcoves exactly, made by hand."
+          },
+          {
+            "title": "Kitchens",
+            "body": "Handmade kitchens, measured, drawn and fitted by the two of us."
+          }
+        ]
+      }
+    },
+    "hero": {
+      "badge": {
+        "label": "Leeds",
+        "text": "Handmade joinery for homes nearby"
+      },
+      "headline": {
+        "text": "Fitted wardrobes and kitchens made by hand in Leeds",
+        "emphasis": "made by hand"
+      },
+      "subhead": "We make fitted wardrobes, alcove units and kitchens by hand in our Leeds workshop, for homes across West Yorkshire.",
+      "primary": "Get in touch",
+      "secondary": "See our work"
+    },
+    "sponsors": {
+      "heading": "Areas we work in",
+      "items": ["Leeds", "West Yorkshire", "Wardrobes", "Alcove units", "Kitchens"]
+    },
+    "benefits": {
+      "eyebrow": "Why us",
+      "heading": "Why choose Hollin Lane Joinery",
+      "lead": "We make every piece by hand in our Leeds workshop. We keep our workload small so each job gets proper care.",
+      "items": [
+        {
+          "title": "Made by hand",
+          "body": "Every wardrobe, alcove unit and kitchen is made by hand in our Leeds workshop, not mass produced."
+        },
+        {
+          "title": "Just the two of us",
+          "body": "Every piece is measured, drawn and fitted by the two of us, from first visit to final fit."
+        },
+        {
+          "title": "Full attention, every job",
+          "body": "We only take on a few jobs a month, so each one gets our complete attention and care."
+        }
+      ]
+    },
+    "features": {
+      "eyebrow": "What we do",
+      "heading": "Fitted furniture made for your home",
+      "lead": "We measure, draw and make fitted furniture by hand for homes across West Yorkshire.",
+      "items": [
+        {
+          "title": "Measured to fit",
+          "body": "We measure your space ourselves, so every piece fits exactly where it should."
+        },
+        {
+          "title": "Drawn before we build",
+          "body": "We draw up a design for your room before any work begins in the workshop."
+        },
+        {
+          "title": "Fitted by us",
+          "body": "We fit everything ourselves, so the people who made it are the ones who install it."
+        }
+      ]
+    },
+    "services": {
+      "eyebrow": "Services",
+      "heading": "What we make",
+      "lead": "We make three things, all by hand, all fitted by us in your home.",
+      "items": [
+        {
+          "title": "Fitted wardrobes",
+          "body": "Wardrobes made by hand and fitted to your room."
+        },
+        {
+          "title": "Alcove units",
+          "body": "Alcove units measured and built to fit your space."
+        },
+        {
+          "title": "Kitchens",
+          "body": "Kitchens made by hand in our Leeds workshop."
+        }
+      ]
+    },
+    "community": {
+      "heading": {
+        "text": "Get in touch about your next project",
+        "emphasis": "your next project"
+      },
+      "body": "Tell us about your space and what you need, and we will arrange a time to visit.",
+      "action": "Get in touch"
+    },
+    "contact": {
+      "eyebrow": "Contact",
+      "heading": "Get in touch with us",
+      "lead": "Tell us about your space and what you need, and we will arrange a visit.",
+      "rows": [
+        {
+          "title": "Get in touch",
+          "lines": ["Tell us about your space and what you need"]
+        },
+        {
+          "title": "Measure and draw",
+          "lines": ["We visit your home, measure and draw up a design"]
+        },
+        {
+          "title": "Make and fit",
+          "lines": ["We make your piece by hand, then fit it ourselves"]
+        }
+      ],
+      "form": {
+        "subjects": ["Fitted wardrobes", "Alcove units", "Kitchens", "General enquiry"],
+        "button": "Send message"
+      }
+    },
+    "faq": {
+      "eyebrow": "Questions",
+      "heading": "A few common questions",
+      "items": [
+        {
+          "question": "Where are you based?",
+          "answer": "We work from our workshop in Leeds and cover homes across West Yorkshire."
+        },
+        {
+          "question": "Who makes the furniture?",
+          "answer": "Every piece is measured, drawn and fitted by the two of us, start to finish."
+        },
+        {
+          "question": "How many jobs do you take on?",
+          "answer": "We only take on a few jobs a month, so each one gets our full attention."
+        },
+        {
+          "question": "What do you make?",
+          "answer": "We make fitted wardrobes, alcove units and kitchens, all by hand in our Leeds workshop."
+        }
+      ]
+    },
+    "footer": {
+      "groups": [
+        {
+          "heading": "Explore",
+          "links": [
+            {
+              "label": "Why us",
+              "target": "benefits"
+            },
+            {
+              "label": "Services",
+              "target": "services"
+            },
+            {
+              "label": "Questions",
+              "target": "faq"
+            }
+          ]
+        },
+        {
+          "heading": "Company",
+          "links": [
+            {
+              "label": "What we do",
+              "target": "features"
+            },
+            {
+              "label": "Get in touch",
+              "target": "contact"
+            },
+            {
+              "label": "Back to top",
+              "target": "top"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

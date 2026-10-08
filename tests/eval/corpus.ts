@@ -74,6 +74,17 @@ function leavesOf(value: unknown, path: Path = []): { path: Path; value: string 
   return []
 }
 
+// The list at a violation's path (benefits.items), or null where the path names a text or
+// nothing.
+function listAt(root: unknown, path: string): unknown[] | null {
+  let node = root
+  for (const part of path.split('.')) {
+    if (node === null || typeof node !== 'object') return null
+    node = (node as Record<string, unknown>)[part]
+  }
+  return Array.isArray(node) ? node : null
+}
+
 function setAt(root: unknown, path: Path, value: string): void {
   let node = root as Record<string | number, unknown>
   for (const part of path.slice(0, -1)) node = node[part] as Record<string | number, unknown>
@@ -177,6 +188,20 @@ export function syntheticFrom(
       source: `synthetic: the long real words in every headline and phrase slot, ${from}`,
       copy: words,
     },
+  }
+  // A list the base holds more of than the template now asks (Meridian's benefits: its stored
+  // answers hold four, a new answer three, and the page lays three out differently): the
+  // longest answer again with that list cut to the count asked, so the layout a new answer gets
+  // is measured with every text slot at its longest too.
+  for (const violation of contract.copyViolations(longest)) {
+    if ((listAt(longest, violation.slot)?.length ?? 0) <= violation.max) continue
+    const copy = structuredClone(longest)
+    listAt(copy, violation.slot)?.splice(violation.max)
+    out[`synthetic-longest-${violation.slot.replaceAll('.', '-')}-${String(violation.max)}`] = {
+      ...base,
+      source: `synthetic: every text slot at its longest allowed length, and ${violation.slot} at the ${String(violation.max)} the template asks, ${from}`,
+      copy,
+    }
   }
   // A name reaches the page only through the copy's brand slots, which hold at most their
   // limits, so each name variant carries the name cut to each brand slot's limit.

@@ -471,6 +471,31 @@
     translate 0.3s var(--vector-out);
 }
 
+/*
+ * The visitor's name in its pill (header.tsx): at the source's size where it fits two lines of
+ * the pill's room, else the larger of the size that fits it to two lines and the size that fits
+ * it to three, three lines no larger than will sit inside the pill (fit.ts, --vector-two and
+ * --vector-three). The room is the bar's row, its @container, less the menu's pill, the half rem
+ * between them and the name pill's sides, with 3% to spare.
+ */
+.vector-name {
+  --vector-room: calc((100cqi - 14rem) * 0.97);
+  font-size: max(
+    min(clamp(0.875rem, 4.11vw, 1rem), var(--vector-room) / var(--vector-two, 1)),
+    min(0.75rem, var(--vector-room) / var(--vector-three, 1))
+  );
+}
+
+@media (min-width: 40rem) {
+  .vector-name {
+    --vector-room: calc((100cqi - 18rem) * 0.97);
+    font-size: max(
+      min(1.25rem, var(--vector-room) / var(--vector-two, 1)),
+      min(1rem, var(--vector-room) / var(--vector-three, 1))
+    );
+  }
+}
+
 /* The waves behind the hero, standing in for the source's shader until the WebGL arrives:
  * three sinuous bands in the glow, the second glow and the brand, each with a bright core,
  * turned by the scroll, faded out over the foot of the screen and lined like a screen. */
